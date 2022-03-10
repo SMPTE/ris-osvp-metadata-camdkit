@@ -32,6 +32,6 @@ import camdkit.red.reader
 class REDReaderTest(unittest.TestCase):
 
   def test_reader(self):
-    with open("src/test/resources/red/A001_C066_0303LZ_001.csv", encoding="UTF-8") as f:
-      model = camdkit.red.reader.to_model(f)
-      self.assertEqual(model.get_iso(), 250)
+    clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
+    self.assertEqual(clip.get_iso(), 250)
+    self.assertEqual(clip[0].get_focal_length(), 40)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2020, Sandflow Consulting LLC
+# Copyright (c) 2022, Sandflow Consulting LLC
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,17 +25,36 @@
 
 """Data model"""
 
-class FrameMetadata:
-  """Camera metadata for one or more image frames
+class Frame:
+  """Metadata for a camera frame
   """
+  def __init__(self):
+    self._focal_length = None
 
-  def __init__(self) -> None:
+  def set_focal_length(self, position: float):
+    if not isinstance(position, int):
+      raise TypeError("Focal length must be an int")
+    self._focal_length = position
+
+  def get_focal_length(self) -> float:
+    return self._focal_length
+
+class Clip(list):
+  """Metadata for a camera clip
+  """
+  def __init__(self, *args):
     self._iso = None
+    super().__init__(args)
+
+  def __setitem__(self, i, item):
+    if not isinstance(item, Frame):
+      raise TypeError("Item must be a Frame")
+    super().__setitem__(i, item)
 
   def get_iso(self) -> int:
     return self._iso
 
   def set_iso(self, iso : int):
     if not isinstance(iso, int):
-      raise TypeError("Parameter must be an int")
+      raise TypeError("ISO must be an int")
     self._iso = iso

@@ -23,38 +23,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''RED camera reader'''
+"""JSON writer"""
 
-import csv
-import io
-import typing
-import subprocess
+import json
+import camdkit
 
-import camdkit.model
-
-def to_clip(camera_file_path: str, _config: typing.Optional[typing.Any] = None, _progress_callback=lambda _: None) -> camdkit.model.Clip:
-  # read clip metadata
-  clip_metadata = next(
-    csv.DictReader(
-      io.StringIO(
-        subprocess.run(f"REDline --i {camera_file_path} --printMeta 3", check=False, encoding="UTF-8", stdout=subprocess.PIPE).stdout
-      )
-    )
-  )
-  clip = camdkit.model.Clip()
-  clip.set_iso(int(clip_metadata['ISO']))
-
-  # read frame metadata
-  csv_data = csv.DictReader(
-    io.StringIO(
-      subprocess.run(f"REDline --i {camera_file_path} --printMeta 5", check=False, encoding="UTF-8", stdout=subprocess.PIPE).stdout
-    )
-  )
-
-  for frame_metadata in csv_data:
-    frame = camdkit.model.Frame()
-    frame.set_focal_length(int(frame_metadata["Focal Length"]))
-    clip.append(frame)
-
-
-  return clip
+def from_model(clip: camdkit.model.Clip):
+  pass
