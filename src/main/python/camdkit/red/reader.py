@@ -32,12 +32,19 @@ import subprocess
 
 import camdkit.model
 
-def to_clip(camera_file_path: str, _config: typing.Optional[typing.Any] = None, _progress_callback=lambda _: None) -> camdkit.model.Clip:
+def to_clip(camera_file_path: str) -> camdkit.model.Clip:
+  """Read RED camera metadata into a `Clip`. Requires the RED camera REDline tool (https://www.red.com/downloads)."""
+
   # read clip metadata
   clip_metadata = next(
     csv.DictReader(
       io.StringIO(
-        subprocess.run(f"REDline --i {camera_file_path} --printMeta 3", check=False, encoding="UTF-8", stdout=subprocess.PIPE).stdout
+        subprocess.run(
+          f"REDline --silent --i {camera_file_path} --printMeta 3",
+          check=False,
+          encoding="UTF-8",
+          stdout=subprocess.PIPE
+        ).stdout
       )
     )
   )
@@ -47,7 +54,12 @@ def to_clip(camera_file_path: str, _config: typing.Optional[typing.Any] = None, 
   # read frame metadata
   csv_data = csv.DictReader(
     io.StringIO(
-      subprocess.run(f"REDline --i {camera_file_path} --printMeta 5", check=False, encoding="UTF-8", stdout=subprocess.PIPE).stdout
+      subprocess.run(
+        f"REDline --silent --i {camera_file_path} --printMeta 5",
+        check=False,
+        encoding="UTF-8",
+        stdout=subprocess.PIPE
+      ).stdout
     )
   )
 

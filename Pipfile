@@ -7,8 +7,5 @@ verify_ssl = true
 pylint = "==2.6.0"
 coverage = "*"
 
-[packages]
-opentimelineio = "*"
-
 [requires]
-python_version = "3.8"
+python_version = "3.7"

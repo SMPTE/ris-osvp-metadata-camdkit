@@ -23,18 +23,21 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''CLI tool'''
+'''RED CLI tool'''
 
 import json
-import logging
 import argparse
-
-import opentimelineio as otio
+import camdkit.red.reader
 
 def main():
-  """Main function"""
-  
-  timeline = otio.schema.Timeline()
+  parser = argparse.ArgumentParser(description="Conver RED camera metadata to JSON according to the OSVP Camera Metadata Model.")
+  parser.add_argument('camera_file_path', type=str, help='R3D camera file')
+
+  args = parser.parse_args()
+
+  model = camdkit.red.reader.to_clip(args.camera_file_path)
+
+  print(json.dumps(model.serialize(), indent=2))
 
 if __name__ == "__main__":
   main()

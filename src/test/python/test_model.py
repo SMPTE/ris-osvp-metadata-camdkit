@@ -23,6 +23,25 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""OTIO writer"""
+'''RED camera reader tests'''
 
-import opentimelineio
+import unittest
+import json
+
+import camdkit.model
+
+class ModelTest(unittest.TestCase):
+
+  def test_serialize(self):
+    clip = camdkit.model.Clip()
+    clip.set_iso(13)
+
+    frame = camdkit.model.Frame()
+    frame.set_focal_length(2.5)
+
+    clip.append(frame)
+
+    d = clip.serialize()
+
+    self.assertEqual(d["frames"][0]["focal_length"], 2.5)
+    self.assertEqual(d["iso"], 13)

@@ -25,19 +25,28 @@
 
 """Data model"""
 
+import numbers
+
 class Frame:
   """Metadata for a camera frame
   """
   def __init__(self):
     self._focal_length = None
 
-  def set_focal_length(self, position: float):
-    if not isinstance(position, int):
-      raise TypeError("Focal length must be an int")
+  def set_focal_length(self, position: numbers.Real):
+    if not isinstance(position, numbers.Real):
+      raise TypeError("Focal length must be a real number")
     self._focal_length = position
 
   def get_focal_length(self) -> float:
     return self._focal_length
+
+  focal_length = property(get_focal_length, set_focal_length)
+
+  def serialize(self) -> dict:    
+    return {
+      "focal_length": self.get_focal_length()
+    }
 
 class Clip(list):
   """Metadata for a camera clip
@@ -58,3 +67,9 @@ class Clip(list):
     if not isinstance(iso, int):
       raise TypeError("ISO must be an int")
     self._iso = iso
+
+  def serialize(self) -> dict:
+    return {
+      "frames": tuple(map(lambda e: e.serialize(), self)),
+      "iso": self.get_iso()
+    }
