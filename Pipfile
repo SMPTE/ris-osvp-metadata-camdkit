@@ -8,4 +8,4 @@ pylint = "==2.6.0"
 coverage = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
