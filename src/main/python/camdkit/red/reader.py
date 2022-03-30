@@ -27,7 +27,7 @@
 
 import csv
 import io
-import typing
+from fractions import Fraction
 import subprocess
 
 import camdkit.model
@@ -52,7 +52,7 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   clip.set_iso(int(clip_metadata['ISO']))
 
   # read frame metadata
-  csv_data = csv.DictReader(
+  csv_data = list(csv.DictReader(
     io.StringIO(
       subprocess.run(
         f"REDline --silent --i {camera_file_path} --printMeta 5",
@@ -61,12 +61,15 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
         stdout=subprocess.PIPE
       ).stdout
     )
-  )
+  ))
 
-  for frame_metadata in csv_data:
-    frame = camdkit.model.Frame()
-    frame.set_focal_length(int(frame_metadata["Focal Length"]))
-    clip.append(frame)
+  n_frames = int(clip_metadata["Total Frames"])
 
+  if len(csv_data) != n_frames:
+    raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
+
+  clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
+
+  clip.set_focal_length(tuple(int(m["Focal Length"]) for m in csv_data))
 
   return clip
