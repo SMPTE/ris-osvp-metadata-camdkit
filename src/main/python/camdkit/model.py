@@ -26,50 +26,63 @@
 """Data model"""
 
 import numbers
+import typing
 
-class Frame:
-  """Metadata for a camera frame
-  """
-  def __init__(self):
-    self._focal_length = None
-
-  def set_focal_length(self, position: numbers.Real):
-    if not isinstance(position, numbers.Real):
-      raise TypeError("Focal length must be a real number")
-    self._focal_length = position
-
-  def get_focal_length(self) -> float:
-    return self._focal_length
-
-  focal_length = property(get_focal_length, set_focal_length)
-
-  def serialize(self) -> dict:    
-    return {
-      "focal_length": self.get_focal_length()
-    }
-
-class Clip(list):
+class Clip:
   """Metadata for a camera clip
   """
-  def __init__(self, *args):
+  def __init__(self):
     self._iso = None
-    super().__init__(args)
+    self._duration = None
+    self._focal_length = []
+    
+  #
+  # duration
+  #
 
-  def __setitem__(self, i, item):
-    if not isinstance(item, Frame):
-      raise TypeError("Item must be a Frame")
-    super().__setitem__(i, item)
+  def get_duration(self) -> typing.Optional[numbers.Rational]:
+    return self._duration
 
-  def get_iso(self) -> int:
+  def set_duration(self, duration: typing.Optional[numbers.Rational]):
+    if duration is not None and not (isinstance(duration, numbers.Rational) and duration >= 0):
+      raise TypeError("duration must be a positive rational number")
+    self._duration = duration
+
+
+  #
+  # ISO
+  #
+
+  def set_iso(self, iso : typing.Optional[numbers.Integral]):
+    if iso is not None and not (isinstance(iso, numbers.Integral) and iso > 0):
+      raise TypeError("ISO must be an integral number larger than 0")
+    self._iso = iso
+
+  def get_iso(self) -> typing.Optional[numbers.Integral]:
     return self._iso
 
-  def set_iso(self, iso : int):
-    if not isinstance(iso, int):
-      raise TypeError("ISO must be an int")
-    self._iso = iso
+
+  #
+  # Focal length
+  #
+
+  def set_focal_length(self, samples: typing.Iterable[numbers.Real]):
+    if not all(isinstance(s, numbers.Real) for s in samples):
+      raise TypeError("Focal length sample must be a real number")
+
+    self._focal_length = samples
+
+  def get_focal_length(self) -> typing.List[numbers.Real]:
+    return self._focal_length
+
+
+  #
+  # Serialization length
+  #
 
   def serialize(self) -> dict:
     return {
-      "frames": tuple(map(lambda e: e.serialize(), self)),
+      "duration": str(self.get_duration()),
+      "focal_length": tuple(self.get_focal_length()),
       "iso": self.get_iso()
     }

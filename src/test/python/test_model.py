@@ -26,22 +26,28 @@
 '''RED camera reader tests'''
 
 import unittest
-import json
 
 import camdkit.model
 
 class ModelTest(unittest.TestCase):
 
+  def test_duration(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.get_duration())
+
+    clip.set_duration(3)
+
+    self.assertEqual(clip.get_duration(), 3)
+
   def test_serialize(self):
     clip = camdkit.model.Clip()
+    clip.set_duration(3)
     clip.set_iso(13)
-
-    frame = camdkit.model.Frame()
-    frame.set_focal_length(2.5)
-
-    clip.append(frame)
+    clip.set_focal_length([2.5])
 
     d = clip.serialize()
 
-    self.assertEqual(d["frames"][0]["focal_length"], 2.5)
+    self.assertEqual(d["focal_length"][0], 2.5)
+    self.assertEqual(d["duration"], "3")
     self.assertEqual(d["iso"], 13)
