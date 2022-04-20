@@ -78,6 +78,7 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
   clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
+  clip.set_fps(Fraction(clip_metadata["FPS"]))
 
   clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
 
