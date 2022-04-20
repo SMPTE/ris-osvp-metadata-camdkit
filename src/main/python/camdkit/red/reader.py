@@ -50,6 +50,15 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   )
   clip = camdkit.model.Clip()
   clip.set_iso(int(clip_metadata['ISO']))
+  clip.set_lens_serial_number(clip_metadata["Lens Serial Number"])
+  clip.set_sensor_pixel_dimensions(
+    camdkit.model.SensorPixelDimensions(
+      width=int(clip_metadata["Frame Width"]),
+      height=int(clip_metadata["Frame Height"])
+    )
+  )
+
+  # TODO: missing sensor physical dimensions
 
   # read frame metadata
   csv_data = list(csv.DictReader(
@@ -70,6 +79,11 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
 
   clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
 
-  clip.set_focal_length(tuple(int(m["Focal Length"]) for m in csv_data))
+  clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
+
+  clip.set_focal_position(tuple(int(m["Focus Distance"]) * 1000 for m in csv_data))
+
+  # TODO: missing Entrance Pupil Position
+  # TODO: missing Iris position
 
   return clip
