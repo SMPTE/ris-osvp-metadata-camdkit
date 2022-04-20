@@ -116,6 +116,23 @@ class ModelTest(unittest.TestCase):
 
     self.assertEqual(clip.get_iso(), value)
 
+  def test_fps(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.get_fps())
+
+    with self.assertRaises(TypeError):
+      clip.set_fps(0.7)
+
+    with self.assertRaises(ValueError):
+      clip.set_fps(-24)
+
+    value = Fraction(24000, 1001)
+
+    clip.set_fps(value)
+
+    self.assertEqual(clip.get_fps(), value)
+
 
   def test_iris_position(self):
     clip = camdkit.model.Clip()

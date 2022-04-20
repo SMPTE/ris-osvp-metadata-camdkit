@@ -70,6 +70,7 @@ class Clip:
     self._sensor_physical_dimensions = None
     self._sensor_pixel_dimensions = None
     self._lens_serial_number = None
+    self._fps = None
     self._focal_length = tuple()
     self._focal_position = tuple()
     self._iris_position = tuple()
@@ -86,6 +87,23 @@ class Clip:
     if duration is not None and not (isinstance(duration, numbers.Rational) and duration >= 0):
       raise TypeError("duration must be a positive rational number")
     self._duration = duration
+
+  #
+  # fps
+  #
+
+  def get_fps(self) -> typing.Optional[numbers.Rational]:
+    return self._fps
+
+  def set_fps(self, fps: typing.Optional[numbers.Rational]):
+    if fps is not None:
+      if not isinstance(fps, numbers.Rational):
+        raise TypeError("Must be a rational")
+
+      if fps <= 0:
+        raise ValueError("Must be a positive number")
+
+    self._fps = fps
 
   #
   # Sensor physical dimensions
