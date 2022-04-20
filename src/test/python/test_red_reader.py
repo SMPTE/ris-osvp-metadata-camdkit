@@ -34,4 +34,4 @@ class REDReaderTest(unittest.TestCase):
   def test_reader(self):
     clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
     self.assertEqual(clip.get_iso(), 250)
-    self.assertEqual(clip.get_focal_length()[0], 40)
+    self.assertEqual(clip.get_focal_length()[0], 40000)
