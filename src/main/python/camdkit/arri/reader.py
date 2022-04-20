@@ -43,8 +43,24 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
       raise ValueError("No data")
 
     clip = camdkit.model.Clip()
+
+    assert csv_data[0]["Lens Distance Unit"] == "Meter"
+
     clip.set_iso(int(csv_data[0]["Exposure Index ASA"]))
     clip.set_duration(len(csv_data)/Fraction(csv_data[0]["Project FPS"]))
-    clip.set_focal_length(tuple(float(m["Lens Focal Length"]) for m in csv_data))
+    clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
+    clip.set_sensor_pixel_dimensions(
+      camdkit.model.SensorPixelDimensions(
+        width=int(csv_data[0]["Image Width"]),
+        height=int(csv_data[0]["Image Height"])
+      )
+    )
 
+    clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
+    clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
+
+    # TODO: Iris position
+    # TODO: Entrance Pupil Position
+    # TODO: Sensor physical dimensions
+    
   return clip
