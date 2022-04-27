@@ -33,12 +33,21 @@ class REDReaderTest(unittest.TestCase):
 
   def test_reader(self):
     clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
+
     self.assertEqual(clip.get_iso(), 250)
+
     self.assertEqual(clip.get_focal_length()[0], 40000)
+
     self.assertEqual(clip.get_fps(), 24)
+
     self.assertEqual(clip.get_lens_serial_number(), "G53599764")
+
     self.assertEqual(
       clip.get_sensor_pixel_dimensions(),
       camdkit.model.SensorPixelDimensions(width=4096, height=2160)
-    
+    )
+
+    self.assertEqual(
+      clip.get_sensor_physical_dimensions(),
+      camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
     )

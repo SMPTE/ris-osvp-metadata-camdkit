@@ -32,6 +32,15 @@ import subprocess
 
 import camdkit.model
 
+_LENS_NAME_PIXEL_PITCH_MAP = {
+  "RAPTOR 8K VV": 5,
+  "MONSTRO 8K VV": 5,
+  "KOMODO 6K S35": 4.4,
+  "HELIUM 8K S35": 3.65,
+  "GEMINI 5K S35": 6,
+  "DRAGON": 5
+}
+
 def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   """Read RED camera metadata into a `Clip`. Requires the RED camera REDline tool (https://www.red.com/downloads)."""
 
@@ -58,7 +67,14 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
     )
   )
 
-  # TODO: missing sensor physical dimensions
+  pixel_pitch = _LENS_NAME_PIXEL_PITCH_MAP[clip_metadata["Sensor Name"]]
+  pix_dims = clip.get_sensor_pixel_dimensions()
+  clip.set_sensor_physical_dimensions(
+    camdkit.model.SensorPhysicalDimensions(
+      width=round(pix_dims.width * pixel_pitch),
+      height=round(pix_dims.height * pixel_pitch)
+    )
+  )
 
   # read frame metadata
   csv_data = list(csv.DictReader(
