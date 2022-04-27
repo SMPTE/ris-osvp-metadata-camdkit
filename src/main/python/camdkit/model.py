@@ -201,8 +201,8 @@ class Clip:
   #
 
   def set_entrance_pupil_position(self, samples: typing.Iterable[numbers.Rational]):
-    if not all(isinstance(s, numbers.Rational) and s > 0 for s in samples):
-      raise TypeError("Each sample must be a rational number larger than 0 in units of millimeter.")
+    if not all(isinstance(s, numbers.Rational) for s in samples):
+      raise TypeError("Each sample must be a rational number in units of millimeter.")
 
     self._entrance_pupil_position = tuple(samples)
 

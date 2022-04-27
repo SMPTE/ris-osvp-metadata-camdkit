@@ -27,29 +27,15 @@
 
 import unittest
 
-import camdkit.red.reader
+import camdkit.red.cooke
 
-class REDReaderTest(unittest.TestCase):
+_COOKE_STRING = "64/40/40/46/68/48/70/B8/80/40/40/40/42/66/6D/40/40/46/5E/40/40/46/73/45/4E/41/7F/40/40/53/47/35/33/35/39/39/37/36/34/0A/0D"
 
-  def test_reader(self):
-    clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
+class CookeDataTest(unittest.TestCase):
 
-    self.assertEqual(clip.get_iso(), 250)
+  def test_entrance_pupil_position(self):
+    s = bytes(map(lambda i: int(i, 16), _COOKE_STRING.split("/")))
 
-    self.assertEqual(clip.get_focal_length()[0], 40000)
+    c = camdkit.red.cooke.from_binary_string(s)
 
-    self.assertEqual(clip.get_entrance_pupil_position()[0], 127)
-
-    self.assertEqual(clip.get_fps(), 24)
-
-    self.assertEqual(clip.get_lens_serial_number(), "G53599764")
-
-    self.assertEqual(
-      clip.get_sensor_pixel_dimensions(),
-      camdkit.model.SensorPixelDimensions(width=4096, height=2160)
-    )
-
-    self.assertEqual(
-      clip.get_sensor_physical_dimensions(),
-      camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
-    )
+    self.assertEqual(c.entrance_pupil_position, 127)

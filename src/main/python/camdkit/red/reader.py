@@ -31,6 +31,7 @@ from fractions import Fraction
 import subprocess
 
 import camdkit.model
+import camdkit.red.cooke as cooke
 
 _LENS_NAME_PIXEL_PITCH_MAP = {
   "RAPTOR 8K VV": 5,
@@ -99,6 +100,10 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
 
   clip.set_focal_position(tuple(int(m["Focus Distance"]) * 1000 for m in csv_data))
+
+  clip.set_entrance_pupil_position(tuple(
+    cooke.from_binary_string(bytes(map(lambda i: int(i, 16), m["Cooke Metadata"].split("/")))).entrance_pupil_position for m in csv_data
+  ))
 
   # TODO: missing Entrance Pupil Position
   # TODO: missing Iris position
