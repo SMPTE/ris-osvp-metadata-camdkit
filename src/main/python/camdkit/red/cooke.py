@@ -30,8 +30,10 @@ import dataclasses
 @dataclasses.dataclass
 class CookeData:
   entrance_pupil_position: int
+  aperture_value: int
 
 def from_binary_string(cooked_packed_bin_data: bytes) -> CookeData:
   sign = -1 if cooked_packed_bin_data[25] & 0b00100000 else 1
   entrance_pupil_position = sign * (((cooked_packed_bin_data[25] & 0b00001111) << 6) + (cooked_packed_bin_data[26] & 0b00111111))
-  return CookeData(entrance_pupil_position=entrance_pupil_position)
+  aperture_value = (((cooked_packed_bin_data[5] & 0b00111111) << 6) + (cooked_packed_bin_data[6] & 0b00111111))
+  return CookeData(entrance_pupil_position=entrance_pupil_position, aperture_value=aperture_value)

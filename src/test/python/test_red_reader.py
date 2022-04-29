@@ -28,6 +28,7 @@
 import unittest
 
 import camdkit.red.reader
+from fractions import Fraction
 
 class REDReaderTest(unittest.TestCase):
 
@@ -39,6 +40,8 @@ class REDReaderTest(unittest.TestCase):
     self.assertEqual(clip.get_focal_length()[0], 40000)
 
     self.assertEqual(clip.get_entrance_pupil_position()[0], 127)
+
+    self.assertEqual(clip.get_iris_position()[0], Fraction(56, 10))
 
     self.assertEqual(clip.get_fps(), 24)
 

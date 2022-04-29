@@ -95,17 +95,17 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
   clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
+
   clip.set_fps(Fraction(clip_metadata["FPS"]))
 
   clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
 
   clip.set_focal_position(tuple(int(m["Focus Distance"]) * 1000 for m in csv_data))
 
-  clip.set_entrance_pupil_position(tuple(
-    cooke.from_binary_string(bytes(map(lambda i: int(i, 16), m["Cooke Metadata"].split("/")))).entrance_pupil_position for m in csv_data
-  ))
+  cooke_metadata = tuple(cooke.from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
-  # TODO: missing Entrance Pupil Position
-  # TODO: missing Iris position
+  clip.set_entrance_pupil_position(m.entrance_pupil_position for m in cooke_metadata)
+
+  clip.set_iris_position(Fraction(m.aperture_value, 100) for m in cooke_metadata)
 
   return clip
