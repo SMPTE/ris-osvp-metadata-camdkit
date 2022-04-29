@@ -31,6 +31,16 @@ from fractions import Fraction
 import subprocess
 
 import camdkit.model
+import camdkit.red.cooke as cooke
+
+_LENS_NAME_PIXEL_PITCH_MAP = {
+  "RAPTOR 8K VV": 5,
+  "MONSTRO 8K VV": 5,
+  "KOMODO 6K S35": 4.4,
+  "HELIUM 8K S35": 3.65,
+  "GEMINI 5K S35": 6,
+  "DRAGON": 5
+}
 
 def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   """Read RED camera metadata into a `Clip`. Requires the RED camera REDline tool (https://www.red.com/downloads)."""
@@ -58,7 +68,14 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
     )
   )
 
-  # TODO: missing sensor physical dimensions
+  pixel_pitch = _LENS_NAME_PIXEL_PITCH_MAP[clip_metadata["Sensor Name"]]
+  pix_dims = clip.get_sensor_pixel_dimensions()
+  clip.set_sensor_physical_dimensions(
+    camdkit.model.SensorPhysicalDimensions(
+      width=round(pix_dims.width * pixel_pitch),
+      height=round(pix_dims.height * pixel_pitch)
+    )
+  )
 
   # read frame metadata
   csv_data = list(csv.DictReader(
@@ -78,13 +95,17 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
   clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
+
   clip.set_fps(Fraction(clip_metadata["FPS"]))
 
   clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
 
   clip.set_focal_position(tuple(int(m["Focus Distance"]) * 1000 for m in csv_data))
 
-  # TODO: missing Entrance Pupil Position
-  # TODO: missing Iris position
+  cooke_metadata = tuple(cooke.from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
+
+  clip.set_entrance_pupil_position(m.entrance_pupil_position for m in cooke_metadata)
+
+  clip.set_iris_position(Fraction(m.aperture_value, 100) for m in cooke_metadata)
 
   return clip

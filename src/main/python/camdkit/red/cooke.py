@@ -23,36 +23,17 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''RED camera reader tests'''
+'''Cook lens binary data parser'''
 
-import unittest
+import dataclasses
 
-import camdkit.red.reader
-from fractions import Fraction
+@dataclasses.dataclass
+class CookeData:
+  entrance_pupil_position: int
+  aperture_value: int
 
-class REDReaderTest(unittest.TestCase):
-
-  def test_reader(self):
-    clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
-
-    self.assertEqual(clip.get_iso(), 250)
-
-    self.assertEqual(clip.get_focal_length()[0], 40000)
-
-    self.assertEqual(clip.get_entrance_pupil_position()[0], 127)
-
-    self.assertEqual(clip.get_iris_position()[0], Fraction(56, 10))
-
-    self.assertEqual(clip.get_fps(), 24)
-
-    self.assertEqual(clip.get_lens_serial_number(), "G53599764")
-
-    self.assertEqual(
-      clip.get_sensor_pixel_dimensions(),
-      camdkit.model.SensorPixelDimensions(width=4096, height=2160)
-    )
-
-    self.assertEqual(
-      clip.get_sensor_physical_dimensions(),
-      camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
-    )
+def from_binary_string(cooked_packed_bin_data: bytes) -> CookeData:
+  sign = -1 if cooked_packed_bin_data[25] & 0b00100000 else 1
+  entrance_pupil_position = sign * (((cooked_packed_bin_data[25] & 0b00001111) << 6) + (cooked_packed_bin_data[26] & 0b00111111))
+  aperture_value = (((cooked_packed_bin_data[5] & 0b00111111) << 6) + (cooked_packed_bin_data[6] & 0b00111111))
+  return CookeData(entrance_pupil_position=entrance_pupil_position, aperture_value=aperture_value)

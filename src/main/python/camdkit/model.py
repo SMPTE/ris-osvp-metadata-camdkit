@@ -160,10 +160,12 @@ class Clip:
   #
 
   def set_iris_position(self, samples: typing.Iterable[numbers.Rational]):
-    if not all(isinstance(s, numbers.Rational) and s > 0 for s in samples):
-      raise TypeError("Each iris position sample must be a rational larger than 0 in units of microns.")
+    iris_position = tuple(samples)
 
-    self._iris_position = tuple(samples)
+    if not all(isinstance(s, numbers.Rational) and s > 0 for s in iris_position):
+      raise TypeError("Each iris position sample must be a rational larger than 0.")
+
+    self._iris_position = iris_position
 
   def get_iris_position(self) -> typing.Tuple[numbers.Rational]:
     return self._iris_position
@@ -173,10 +175,12 @@ class Clip:
   #
 
   def set_focal_length(self, samples: typing.Iterable[numbers.Integral]):
-    if not all(isinstance(s, numbers.Integral) and s > 0 for s in samples):
+    focal_length = tuple(samples)
+
+    if not all(isinstance(s, numbers.Integral) and s > 0 for s in focal_length):
       raise TypeError("Each sample must be an integer larger than 0 in units of millimeter.")
 
-    self._focal_length = tuple(samples)
+    self._focal_length = focal_length
 
   def get_focal_length(self) -> typing.Tuple[numbers.Integral]:
     return self._focal_length
@@ -187,10 +191,12 @@ class Clip:
   #
 
   def set_focal_position(self, samples: typing.Iterable[numbers.Integral]):
-    if not all(isinstance(s, numbers.Integral) and s > 0 for s in samples):
+    focal_position = tuple(samples)
+
+    if not all(isinstance(s, numbers.Integral) and s > 0 for s in focal_position):
       raise TypeError("Each sample must be an integer larger than 0 in units of millimeter.")
 
-    self._focal_position = tuple(samples)
+    self._focal_position = focal_position
 
   def get_focal_position(self) -> typing.Tuple[numbers.Integral]:
     return self._focal_position
@@ -201,10 +207,12 @@ class Clip:
   #
 
   def set_entrance_pupil_position(self, samples: typing.Iterable[numbers.Rational]):
-    if not all(isinstance(s, numbers.Rational) and s > 0 for s in samples):
-      raise TypeError("Each sample must be a rational number larger than 0 in units of millimeter.")
+    entrance_pupil_position = tuple(samples)
 
-    self._entrance_pupil_position = tuple(samples)
+    if not all(isinstance(s, numbers.Rational) for s in entrance_pupil_position):
+      raise TypeError("Each sample must be a rational number in units of millimeter.")
+
+    self._entrance_pupil_position = entrance_pupil_position
 
   def get_entrance_pupil_position(self) -> typing.Tuple[numbers.Rational]:
     return self._entrance_pupil_position
