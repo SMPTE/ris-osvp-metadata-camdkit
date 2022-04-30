@@ -26,9 +26,8 @@
 '''RED camera reader'''
 
 import csv
-import io
+import typing
 from fractions import Fraction
-import subprocess
 
 import camdkit.model
 import camdkit.red.cooke as cooke
@@ -42,22 +41,14 @@ _LENS_NAME_PIXEL_PITCH_MAP = {
   "DRAGON": 5
 }
 
-def to_clip(camera_file_path: str) -> camdkit.model.Clip:
-  """Read RED camera metadata into a `Clip`. Requires the RED camera REDline tool (https://www.red.com/downloads)."""
+def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Clip:
+  """Read RED camera metadata into a `Clip`.
+  `meta_3_file`: Static camera metadata. CSV file generated using REDline (`REDline --silent --i {camera_file_path} --printMeta 3`)
+  `meta_5_file`: Per-frame camera metadata. CSV file generated using REDline (`REDline --silent --i {camera_file_path} --printMeta 5`)
+  """
 
   # read clip metadata
-  clip_metadata = next(
-    csv.DictReader(
-      io.StringIO(
-        subprocess.run(
-          f"REDline --silent --i {camera_file_path} --printMeta 3",
-          check=False,
-          encoding="UTF-8",
-          stdout=subprocess.PIPE
-        ).stdout
-      )
-    )
-  )
+  clip_metadata = next(csv.DictReader(meta_3_file))
   clip = camdkit.model.Clip()
   clip.set_iso(int(clip_metadata['ISO']))
   clip.set_lens_serial_number(clip_metadata["Lens Serial Number"])
@@ -78,16 +69,7 @@ def to_clip(camera_file_path: str) -> camdkit.model.Clip:
   )
 
   # read frame metadata
-  csv_data = list(csv.DictReader(
-    io.StringIO(
-      subprocess.run(
-        f"REDline --silent --i {camera_file_path} --printMeta 5",
-        check=False,
-        encoding="UTF-8",
-        stdout=subprocess.PIPE
-      ).stdout
-    )
-  ))
+  csv_data = list(csv.DictReader(meta_5_file))
 
   n_frames = int(clip_metadata["Total Frames"])
 

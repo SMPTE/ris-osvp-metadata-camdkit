@@ -33,7 +33,9 @@ from fractions import Fraction
 class REDReaderTest(unittest.TestCase):
 
   def test_reader(self):
-    clip = camdkit.red.reader.to_clip("src/test/resources/red/A001_C066_0303LZ_001.R3D")
+    with open("src/test/resources/red/A001_C066_0303LZ_001.static.csv", "r", encoding="utf-8") as type_3_file, \
+      open("src/test/resources/red/A001_C066_0303LZ_001.frames.csv", "r", encoding="utf-8") as type_5_file:
+      clip = camdkit.red.reader.to_clip(type_3_file, type_5_file)
 
     self.assertEqual(clip.get_iso(), 250)
 

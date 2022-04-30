@@ -46,8 +46,6 @@ can then be serialized into representations such as JSON.
 
 `export PYTHONPATH=src/main/python`
 
-* install the REDline camera software (https://www.red.com/downloads)
+* convert RED camera files
 
-* convert a sample RED camera files
-
-`pipenv run python src/main/python/camdkit/red/cli.py src/test/resources/red/A001_C066_0303LZ_001.R3D`
+`pipenv run python src/main/python/camdkit/red/cli.py src/test/resources/red/A001_C066_0303LZ_001.static.csv src/test/resources/red/A001_C066_0303LZ_001.frames.csv`
