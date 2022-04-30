@@ -47,9 +47,15 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
     assert csv_data[0]["Lens Distance Unit"] == "Meter"
 
     clip.set_iso(int(csv_data[0]["Exposure Index ASA"]))
+
     clip.set_duration(len(csv_data)/Fraction(csv_data[0]["Project FPS"]))
+
     clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
+
     clip.set_fps(Fraction(csv_data[0]["Project FPS"]))
+
+    clip.set_white_balance(int(csv_data[0]["White Balance"]))
+
     clip.set_sensor_pixel_dimensions(
       camdkit.model.SensorPixelDimensions(
         width=int(csv_data[0]["Image Width"]),
@@ -58,6 +64,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
     )
 
     clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
+
     clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
 
     # TODO: Iris position

@@ -71,6 +71,7 @@ class Clip:
     self._sensor_pixel_dimensions = None
     self._lens_serial_number = None
     self._fps = None
+    self._white_balance = None
     self._focal_length = tuple()
     self._focal_position = tuple()
     self._iris_position = tuple()
@@ -154,6 +155,19 @@ class Clip:
   def get_iso(self) -> typing.Optional[numbers.Integral]:
     return self._iso
 
+  #
+  # White balance
+  #
+
+  def set_white_balance(self, white_balance : typing.Optional[numbers.Integral]):
+    """White balance of the camera expressed as an integer in units of degrees kelvin.
+    """
+    if white_balance is not None and not (isinstance(white_balance, numbers.Integral) and white_balance > 0):
+      raise TypeError("White balance must be an integral number larger than 0")
+    self._white_balance = white_balance
+
+  def get_white_balance(self) -> typing.Optional[numbers.Integral]:
+    return self._white_balance
 
   #
   # Iris position

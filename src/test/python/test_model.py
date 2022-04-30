@@ -189,3 +189,17 @@ class ModelTest(unittest.TestCase):
     clip.set_entrance_pupil_position(value)
 
     self.assertTupleEqual(clip.get_entrance_pupil_position(), value)
+
+  def test_white_balance(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.get_white_balance())
+
+    with self.assertRaises(TypeError):
+      clip.set_white_balance(0.5)
+
+    value = 6500
+
+    clip.set_white_balance(value)
+
+    self.assertEqual(clip.get_white_balance(), value)
