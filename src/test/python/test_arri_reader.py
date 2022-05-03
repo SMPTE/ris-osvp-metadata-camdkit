@@ -25,6 +25,7 @@
 
 '''ARRI camera reader tests'''
 
+from fractions import Fraction
 import unittest
 
 import camdkit.arri.reader
@@ -42,6 +43,11 @@ class ARRIReaderTest(unittest.TestCase):
       camdkit.model.SensorPixelDimensions(width=1920, height=1080)
     )
 
+    self.assertEqual(
+      clip.get_sensor_physical_dimensions(),
+      camdkit.model.SensorPhysicalDimensions(width=316800, height=178200)
+    )
+
     self.assertEqual(clip.get_lens_serial_number(), "2")
 
     self.assertEqual(clip.get_fps(), 24)
@@ -51,4 +57,6 @@ class ARRIReaderTest(unittest.TestCase):
     self.assertEqual(clip.get_focal_position()[0], 4812)
 
     self.assertEqual(clip.get_white_balance(), 3200)
+    
+    self.assertEqual(clip.get_iris_position()[0], Fraction(2667, 1000))
     
