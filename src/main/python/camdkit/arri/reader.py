@@ -59,8 +59,8 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
     clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
+    clip.set_iris_position(tuple(Fraction(int(m["Lens Linear Iris"]), 1000) for m in csv_data))
 
-    # TODO: Iris position
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions
     
