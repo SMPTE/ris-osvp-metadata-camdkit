@@ -56,5 +56,7 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.get_focal_position()[0], 4812)
 
+    self.assertEqual(clip.get_white_balance(), 3200)
+    
     self.assertEqual(clip.get_iris_position()[0], Fraction(2667, 1000))
     

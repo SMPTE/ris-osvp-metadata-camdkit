@@ -63,6 +63,8 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_fps(Fraction(csv_data[0]["Project FPS"]))
 
+    clip.set_white_balance(int(csv_data[0]["White Balance"]))
+
     clip.set_sensor_pixel_dimensions(
       camdkit.model.SensorPixelDimensions(
         width=int(csv_data[0]["Image Width"]),
@@ -80,7 +82,9 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
     )
 
     clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
+
     clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
+
     clip.set_iris_position(tuple(Fraction(int(m["Lens Linear Iris"]), 1000) for m in csv_data))
 
     # TODO: Entrance Pupil Position
