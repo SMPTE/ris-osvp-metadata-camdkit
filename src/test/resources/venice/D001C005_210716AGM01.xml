@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NonRealTimeMeta xmlns="urn:schemas-professionalDisc:nonRealTimeMeta:ver.2.10" xmlns:lib="urn:schemas-professionalDisc:lib:ver.2.00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" lastUpdate="2021-07-16T11:46:47-08:00">
+	<TargetMaterial umidRef="060A2B340101010501010D4313000000373DE9D2119405DB080046021707296C"/>
+	<Duration value="588"/>
+	<LtcChangeTable tcFps="24" halfStep="false">
+		<LtcChange frameCount="0" value="19044716" status="increment"/>
+		<LtcChange frameCount="587" value="06294716" status="end"/>
+	</LtcChangeTable>
+	<CreationDate value="2021-07-16T11:46:22-08:00"/>
+	<TypicalUbit value="0000000000000000"/>
+	<KlvPacketTable>
+		<KlvPacket key="060E2B34010101050301020A02000000" frameCount="0" lengthValue="095F5265635374617274" status="spot"/>
+	</KlvPacketTable>
+	<VideoFormat>
+		<VideoRecPort port="DIRECT"/>
+		<VideoFrame videoCodec="F55_X-OCN_XT_6K_16:9" captureFps="24.00p" formatFps="24p"/>
+		<VideoLayout pixel="5674" numOfVerticalLine="3192" aspectRatio="16:9" pixelAspect="1:1" flip="none"/>
+	</VideoFormat>
+	<AudioFormat numOfChannel="4">
+		<AudioRecPort port="OTHERS" audioCodec="LPCM24" trackDst="CH1" samplingRate="48000"/>
+		<AudioRecPort port="OTHERS" audioCodec="LPCM24" trackDst="CH2" samplingRate="48000"/>
+		<AudioRecPort port="OTHERS" audioCodec="LPCM24" trackDst="CH3" samplingRate="48000"/>
+		<AudioRecPort port="OTHERS" audioCodec="LPCM24" trackDst="CH4" samplingRate="48000"/>
+	</AudioFormat>
+	<Device manufacturer="Sony" modelName="AXS-R7" serialNo="00010604">
+		<Element hardware="Main-Board" software="6.00"/>
+	</Device>
+	<Camera manufacturer="Sony" modelName="MPC-3610" serialNo="0010201">
+		<Element hardware="Main-Board" software="6.10"/>
+	</Camera>
+	<Lens manufacturer="" modelName="S7i-32                       "/>
+	<RecordingMode type="normal" cacheRec="false"/>
+	<AcquisitionRecord>
+		<Group name="LensUnitMetadataSet">
+			<Item name="AnamorphicLensSqueezeRatio" value="100"/>
+			<Item name="LensAttributes" value="7032.0100"/>
+		</Group>
+		<Group name="CameraUnitMetadataSet">
+			<Item name="ExposureIndexOfPhotoMeter" value="250"/>
+			<Item name="NeutralDensityFilterWheelSetting" value="1"/>
+			<Item name="ImageSensorReadoutMode" value="ProgressiveFrame"/>
+			<Item name="ShutterSpeedAngle" value="10380"/>
+			<Item name="ISOSensitivity" value="500"/>
+			<Item name="WhiteBalance" value="4300"/>
+			<Item name="CaptureGammaEquation" value="scene-linear"/>
+			<Item name="GammaForCDL" value="rec709"/>
+			<Item name="CameraAttributes" value="MPC-3610 0010201 Version6.10"/>
+		</Group>
+		<Group name="SonyF65CameraMetadataSet">
+			<Item name="EffectiveMarkerCoverage" value="5674/5674"/>
+			<Item name="EffectiveMarkerAspectRatio" value="5674:3192"/>
+			<Item name="ActiveAreaAspectRatio" value="5674:3192"/>
+			<Item name="PixelAspectRatio" value="1:1"/>
+			<Item name="CameraProcessDiscriminationCode" value="0601"/>
+			<Item name="RawBlackCodeValue" value="512"/>
+			<Item name="RawGrayCodeValue" value="1504"/>
+			<Item name="RawWhiteCodeValue" value="5472"/>
+			<Item name="MonitoringBaseCurve" value="rec709"/>
+			<Item name="GammaForLook" value="s-log3-cine"/>
+			<Item name="ColorForLook" value="s-gamut3-cine"/>
+			<Item name="PreCDLTransform" value="LUT:SL3SG3Ctos709.cube"/>
+			<Item name="PostCDLTransform" value="none"/>
+			<Item name="LookProcessBaked" value="false"/>
+			<Item name="MonitoringCharacteristics" value="rec709"/>
+			<Item name="MonitoringColorPrimaries" value="rec709"/>
+			<Item name="MonitoringCodingEquations" value="rec709"/>
+			<Item name="MonitoringDescriptions" value="LUT:SL3SG3Ctos709.cube"/>
+		</Group>
+	</AcquisitionRecord>
+	<UserDescriptiveMetadata>
+		<Meta name="Circle" content=""/>
+		<Meta name="Project" content=""/>
+		<Meta name="DirectorName" content=""/>
+		<Meta name="DirectorOfPhotographyName" content=""/>
+		<Meta name="Production" content=""/>
+		<Meta name="CameraIndex" content="D"/>
+		<Meta name="Reel" content="001"/>
+		<Meta name="Scene" content=""/>
+		<Meta name="Cut" content=""/>
+		<Meta name="Take" content=""/>
+		<Meta name="Shot" content="005"/>
+		<Meta name="MarkIn" content=""/>
+		<Meta name="MarkOut" content=""/>
+	</UserDescriptiveMetadata>
+</NonRealTimeMeta>
