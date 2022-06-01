@@ -74,7 +74,7 @@ class Clip:
     self._white_balance = None
     self._focal_length = tuple()
     self._focal_position = tuple()
-    self._iris_position = tuple()
+    self._t_number = tuple()
     self._entrance_pupil_position = tuple()
     
   #
@@ -170,19 +170,21 @@ class Clip:
     return self._white_balance
 
   #
-  # Iris position
+  # t-number
   #
 
-  def set_iris_position(self, samples: typing.Iterable[numbers.Rational]):
-    iris_position = tuple(samples)
+  def set_t_number(self, samples: typing.Iterable[numbers.Integral]):
+    """T-number of the lens (thousandth)
+    """
+    t_number = tuple(samples)
 
-    if not all(isinstance(s, numbers.Rational) and s > 0 for s in iris_position):
-      raise TypeError("Each iris position sample must be a rational larger than 0.")
+    if not all(isinstance(s, numbers.Integral) and s > 0 for s in t_number):
+      raise TypeError("Each t-number sample must be an integer larger than 0.")
 
-    self._iris_position = iris_position
+    self._t_number = t_number
 
-  def get_iris_position(self) -> typing.Tuple[numbers.Rational]:
-    return self._iris_position
+  def get_t_number(self) -> typing.Tuple[numbers.Integral]:
+    return self._t_number
 
   #
   # Focal length
@@ -246,5 +248,5 @@ class Clip:
       "sensor_physical_dimensions": None if self.get_sensor_physical_dimensions() is None else self.get_sensor_physical_dimensions().serialize(),
       "entrance_pupil_position": tuple(map(str, self.get_entrance_pupil_position())),
       "focal_position": self.get_focal_position(),
-      "iris_position": tuple(map(str, self.get_iris_position())),
+      "t_number": tuple(map(str, self.get_t_number())),
     }

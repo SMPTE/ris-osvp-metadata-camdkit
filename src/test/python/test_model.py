@@ -134,19 +134,19 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.get_fps(), value)
 
 
-  def test_iris_position(self):
+  def test_t_number(self):
     clip = camdkit.model.Clip()
 
-    self.assertTupleEqual(clip.get_iris_position(), tuple())
+    self.assertTupleEqual(clip.get_t_number(), tuple())
 
     with self.assertRaises(TypeError):
-      clip.set_iris_position([0.7])
+      clip.set_t_number([0.7])
 
-    value = (Fraction(5,7), 7)
+    value = (4000, 8000)
 
-    clip.set_iris_position(value)
+    clip.set_t_number(value)
 
-    self.assertTupleEqual(clip.get_iris_position(), value)
+    self.assertTupleEqual(clip.get_t_number(), value)
 
   def test_focal_length(self):
     clip = camdkit.model.Clip()

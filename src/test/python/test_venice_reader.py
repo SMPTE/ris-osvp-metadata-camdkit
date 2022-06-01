@@ -33,12 +33,9 @@ from fractions import Fraction
 class VenicReaderTest(unittest.TestCase):
 
   def test_frac_stop(self):
-    self.assertEqual(
-      camdkit.venice.reader.f_num_from_frac_stop("T 2 3/10"),
-      Fraction(222, 100)
-      )
+    self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 2 3/10") * 1000), 2219)
 
-    self.assertEqual(camdkit.venice.reader.f_num_from_frac_stop("T 6"), 8)
+    self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 6") * 1000), 8000)
 
   def test_reader(self):
     with open("src/test/resources/venice/D001C005_210716AGM01.xml", "r", encoding="utf-8") as static_file, \
@@ -49,7 +46,7 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.get_focal_length()[0], 32)
 
-    self.assertEqual(clip.get_iris_position()[0], Fraction(222, 100))
+    self.assertEqual(clip.get_t_number()[0], 2219)
 
     self.assertEqual(clip.get_fps(), 24)
 
