@@ -26,10 +26,11 @@
 '''ARRI camera metadata reader'''
 
 import csv
+import math
+import typing
 from fractions import Fraction
 
 import camdkit.model
-
 
 # https://www.arri.com/resource/blob/31908/14147b455c90a9a35018c0d091350ff3/2021-10-arri-formatsandresolutionsoverview-3-4-data.pdf
 _CAMERA_FAMILY_PIXEL_PITCH_MAP = {
@@ -38,6 +39,11 @@ _CAMERA_FAMILY_PIXEL_PITCH_MAP = {
   ("ALEXALF", 3840) : Fraction(316800, 3840),
   ("ALEXALF", 4448) : Fraction(367000, 4448),
 }
+
+def t_number_from_linear_iris_value(lin_value: int) -> typing.Optional[Fraction]:
+  """Calculate t-number (regular iris values) from linear iris values
+  """
+  return math.pow(2, (lin_value - 1000)/1000/2)
 
 def to_clip(csv_path: str) -> camdkit.model.Clip:
   """Read ARRI camera metadata into a `Clip`. `csv_path` is the path to a CSV
@@ -85,7 +91,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
 
-    clip.set_iris_position(tuple(Fraction(int(m["Lens Linear Iris"]), 1000) for m in csv_data))
+    clip.set_t_number(tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data))
 
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions

@@ -101,7 +101,7 @@ def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.SensorPix
   except TypeError:
     return None
 
-def f_num_from_frac_stop(frac_stop_str: str) -> typing.Optional[int]:
+def t_number_from_frac_stop(frac_stop_str: str) -> typing.Optional[float]:
 
   m = re.fullmatch("T ([0-9]+)(?: ([0-9]/10))?", frac_stop_str)
 
@@ -113,7 +113,7 @@ def f_num_from_frac_stop(frac_stop_str: str) -> typing.Optional[int]:
   if m.group(2) is not None:
     aperture_value += Fraction(m.group(2))
 
-  return Fraction(round(2**(float(aperture_value) / 2) * 100), 100)
+  return 2**(float(aperture_value) / 2)
 
 def int_or_none(value: typing.Optional[str]) -> typing.Optional[int]:
   return int(value) if value is not None else None
@@ -170,8 +170,8 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.set_focal_position(tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data))
 
-  # clip.set_entrance_pupil_position(m.entrance_pupil_position for m in cooke_metadata)
+  # TODO: clip.set_entrance_pupil_position()
 
-  clip.set_iris_position(tuple(f_num_from_frac_stop(m["Aperture"]) for m in csv_data))
+  clip.set_t_number(tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data))
 
   return clip
