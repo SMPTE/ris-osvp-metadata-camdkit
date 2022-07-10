@@ -52,11 +52,11 @@ class REDReaderTest(unittest.TestCase):
     self.assertEqual(clip.get_white_balance(), 5600)
 
     self.assertEqual(
-      clip.get_sensor_pixel_dimensions(),
+      clip.get_image_pixel_dimensions(),
       camdkit.model.SensorPixelDimensions(width=4096, height=2160)
     )
 
     self.assertEqual(
-      clip.get_sensor_physical_dimensions(),
+      clip.get_image_physical_dimensions(),
       camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
     )
