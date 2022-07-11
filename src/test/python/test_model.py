@@ -65,28 +65,28 @@ class ModelTest(unittest.TestCase):
 
     self.assertEqual(clip.get_duration(), Fraction(6, 7))
   
-  def test_image_physical_dimensions(self):
+  def test_active_sensor_physical_dimensions(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_image_physical_dimensions())
+    self.assertIsNone(clip.get_active_sensor_physical_dimensions())
 
     dims = camdkit.model.SensorPhysicalDimensions(4, 5)
 
-    clip.set_image_physical_dimensions(dims)
+    clip.set_active_sensor_physical_dimensions(dims)
 
-    self.assertEqual(clip.get_image_physical_dimensions(), dims)
+    self.assertEqual(clip.get_active_sensor_physical_dimensions(), dims)
 
 
-  def test_image_pixel_dimensions(self):
+  def test_active_sensor_pixel_dimensions(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_image_pixel_dimensions())
+    self.assertIsNone(clip.get_active_sensor_pixel_dimensions())
 
     dims = camdkit.model.SensorPixelDimensions(4, 5)
 
-    clip.set_image_pixel_dimensions(dims)
+    clip.set_active_sensor_pixel_dimensions(dims)
 
-    self.assertEqual(clip.get_image_pixel_dimensions(), dims)
+    self.assertEqual(clip.get_active_sensor_pixel_dimensions(), dims)
 
   def test_lens_serial_number(self):
     clip = camdkit.model.Clip()

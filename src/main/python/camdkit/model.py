@@ -67,8 +67,8 @@ class Clip:
   def __init__(self):
     self._iso = None
     self._duration = None
-    self._image_physical_dimensions = None
-    self._image_pixel_dimensions = None
+    self._active_sensor_physical_dimensions = None
+    self._active_sensor_pixel_dimensions = None
     self._lens_serial_number = None
     self._fps = None
     self._white_balance = None
@@ -110,26 +110,26 @@ class Clip:
   # Sensor physical dimensions
   #
 
-  def set_image_physical_dimensions(self, dims : typing.Optional[SensorPhysicalDimensions]):
+  def set_active_sensor_physical_dimensions(self, dims : typing.Optional[SensorPhysicalDimensions]):
     if dims is not None and not isinstance(dims, SensorPhysicalDimensions):
       raise TypeError("Sensor dimensions must be an instance of SensorDimensions")
-    self._image_physical_dimensions = dims
+    self._active_sensor_physical_dimensions = dims
 
-  def get_image_physical_dimensions(self) -> typing.Optional[SensorPhysicalDimensions]:
-    return self._image_physical_dimensions
+  def get_active_sensor_physical_dimensions(self) -> typing.Optional[SensorPhysicalDimensions]:
+    return self._active_sensor_physical_dimensions
 
 
   #
   # Sensor pixel dimensions
   #
 
-  def set_image_pixel_dimensions(self, dims : typing.Optional[SensorPixelDimensions]):
+  def set_active_sensor_pixel_dimensions(self, dims : typing.Optional[SensorPixelDimensions]):
     if dims is not None and not isinstance(dims, SensorPixelDimensions):
       raise TypeError("Sensor dimensions must be an instance of SensorPixelDimensions")
-    self._image_pixel_dimensions = dims
+    self._active_sensor_pixel_dimensions = dims
 
-  def get_image_pixel_dimensions(self) -> typing.Optional[SensorPixelDimensions]:
-    return self._image_pixel_dimensions
+  def get_active_sensor_pixel_dimensions(self) -> typing.Optional[SensorPixelDimensions]:
+    return self._active_sensor_pixel_dimensions
 
   #
   # Lens serial number
@@ -242,8 +242,8 @@ class Clip:
       "iso": self.get_iso(),
       "focal_length": self.get_focal_length(),
       "lens_serial_number": self.get_lens_serial_number(),
-      "image_pixel_dimensions": None if self.get_image_pixel_dimensions() is None else self.get_image_pixel_dimensions().serialize(),
-      "image_physical_dimensions": None if self.get_image_physical_dimensions() is None else self.get_image_physical_dimensions().serialize(),
+      "active_sensor_pixel_dimensions": None if self.get_active_sensor_pixel_dimensions() is None else self.get_active_sensor_pixel_dimensions().serialize(),
+      "active_sensor_physical_dimensions": None if self.get_active_sensor_physical_dimensions() is None else self.get_active_sensor_physical_dimensions().serialize(),
       "entrance_pupil_position": tuple(map(str, self.get_entrance_pupil_position())),
       "focal_position": self.get_focal_position(),
       "iris_position": tuple(map(str, self.get_iris_position())),

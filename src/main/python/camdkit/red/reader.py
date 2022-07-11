@@ -57,7 +57,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.set_white_balance(int(clip_metadata["Kelvin"]))
 
-  clip.set_image_pixel_dimensions(
+  clip.set_active_sensor_pixel_dimensions(
     camdkit.model.SensorPixelDimensions(
       width=int(clip_metadata["Frame Width"]),
       height=int(clip_metadata["Frame Height"])
@@ -65,8 +65,8 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   )
 
   pixel_pitch = _LENS_NAME_PIXEL_PITCH_MAP[clip_metadata["Sensor Name"]]
-  pix_dims = clip.get_image_pixel_dimensions()
-  clip.set_image_physical_dimensions(
+  pix_dims = clip.get_active_sensor_pixel_dimensions()
+  clip.set_active_sensor_physical_dimensions(
     camdkit.model.SensorPhysicalDimensions(
       width=round(pix_dims.width * pixel_pitch),
       height=round(pix_dims.height * pixel_pitch)

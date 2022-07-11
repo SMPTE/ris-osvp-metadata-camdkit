@@ -65,16 +65,16 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_white_balance(int(csv_data[0]["White Balance"]))
 
-    clip.set_image_pixel_dimensions(
+    clip.set_active_sensor_pixel_dimensions(
       camdkit.model.SensorPixelDimensions(
         width=int(csv_data[0]["Image Width"]),
         height=int(csv_data[0]["Image Height"])
       )
     )
 
-    pix_dims = clip.get_image_pixel_dimensions()
+    pix_dims = clip.get_active_sensor_pixel_dimensions()
     pixel_pitch = _CAMERA_FAMILY_PIXEL_PITCH_MAP[(csv_data[0]["Camera Family"], pix_dims.width)]
-    clip.set_image_physical_dimensions(
+    clip.set_active_sensor_physical_dimensions(
       camdkit.model.SensorPhysicalDimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)
