@@ -55,11 +55,11 @@ class VenicReaderTest(unittest.TestCase):
     self.assertEqual(clip.get_white_balance(), 4300)
 
     self.assertEqual(
-      clip.get_sensor_pixel_dimensions(),
+      clip.get_active_sensor_pixel_dimensions(),
       camdkit.model.SensorPixelDimensions(width=5674, height=3192)
     )
 
     self.assertEqual(
-      clip.get_sensor_physical_dimensions(),
+      clip.get_active_sensor_physical_dimensions(),
       camdkit.model.SensorPhysicalDimensions(width=round(5674 * 5.9375), height=round(3192 * 5.9375))
     )

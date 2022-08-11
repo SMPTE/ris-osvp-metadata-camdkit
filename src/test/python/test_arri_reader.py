@@ -39,12 +39,12 @@ class ARRIReaderTest(unittest.TestCase):
     self.assertEqual(clip.get_iso(), 400)
 
     self.assertEqual(
-      clip.get_sensor_pixel_dimensions(),
+      clip.get_active_sensor_pixel_dimensions(),
       camdkit.model.SensorPixelDimensions(width=1920, height=1080)
     )
 
     self.assertEqual(
-      clip.get_sensor_physical_dimensions(),
+      clip.get_active_sensor_physical_dimensions(),
       camdkit.model.SensorPhysicalDimensions(width=316800, height=178200)
     )
 
