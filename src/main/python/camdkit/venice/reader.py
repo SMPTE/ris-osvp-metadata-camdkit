@@ -85,7 +85,7 @@ def find_duration(doc: ET.ElementTree) -> typing.Optional[int]:
   except TypeError:
     return None
 
-def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.SensorPixelDimensions]:
+def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.IntegerDimensions]:
   try:
     elem = doc.find(".//nrt:VideoLayout" , namespaces=NS_PREFIXES)
     
@@ -96,7 +96,7 @@ def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.SensorPix
 
     v_pixels = int(elem.get("pixel"))
 
-    return camdkit.model.SensorPixelDimensions(height=h_pixels, width=v_pixels)
+    return camdkit.model.IntegerDimensions(height=h_pixels, width=v_pixels)
 
   except TypeError:
     return None
@@ -135,7 +135,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.set_white_balance(int_or_none(find_value(clip_metadata, "WhiteBalance")))
 
-  clip.set_active_sensor_pixel_dimensions(find_px_dims(clip_metadata))
+  clip.active_sensor_pixel_dimensions = find_px_dims(clip_metadata)
 
   clip_fps = find_fps(clip_metadata)
 
@@ -150,7 +150,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
     raise ValueError("No valid duration found")
 
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
-  pix_dims = clip.get_active_sensor_pixel_dimensions()
+  pix_dims = clip.active_sensor_pixel_dimensions
   clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)

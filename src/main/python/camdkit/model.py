@@ -30,93 +30,39 @@ import numbers
 import typing
 import dataclasses
 
+from camdkit.framework import Parameter, ParameterContainer
+
 @dataclasses.dataclass
 class IntegerDimensions:
   "Integer height and width of a rectangular area"
   height: numbers.Integral
   width: numbers.Integral
 
-@dataclasses.dataclass
-class SensorPixelDimensions:
-  "Height and width of the camera sensor in pixels (debayered)"
-  height: numbers.Integral
-  width: numbers.Integral
-
-  def __post_init__(self):
-    if not isinstance(self.height, numbers.Integral) \
-      or not isinstance(self.height, numbers.Integral) \
-      or self.height <= 0 \
-      or self.width <= 0:
-      raise TypeError("Height and width must must be positive integers in pixels")
-
-  def serialize(self):
-    return dataclasses.asdict(self)
-
-class Parameter:
-  """Metadata parameter base class"""
-  @classmethod
-  def __init_subclass__(cls) -> None:
-    if not hasattr(cls, "canonical_name"):
-      raise TypeError("Parameters must has a canonical_name parameter")
+class ActiveSensorPixelDimensions(Parameter):
+  "Height and width in pixels of the active area of the camera sensor"
+  
+  canonical_name = "active_sensor_pixels_dimensions"
 
   @staticmethod
   def validate(value) -> bool:
-    raise NotImplementedError
+    if value is None:
+      return True
+
+    if not isinstance(value, IntegerDimensions):
+      return False
+
+    if value.height <= 0 or value.width <= 0:
+      return False
+
+    return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    raise NotImplementedError
+    return value.asdict()
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    raise NotImplementedError
-
-class ParameterContainer:
-  def __init__(self) -> None:
-    self._values = {k: None for k in self._params}
-
-  @classmethod
-  def __init_subclass__(cls) -> None:
-    cls._params = {}
-    for f in dir(cls):
-      desc = getattr(cls, f)
-
-      if not isinstance(desc, Parameter):
-        continue
-
-      cls._params[f] = desc
-
-      def _gen_getter(f):
-        def getter(self):
-          return self._values[f]
-        return getter
-      def _gen_setter(f):
-        def setter(self, value):
-          if not self._params[f].validate(value):
-            raise ValueError
-          self._values[f] = value
-        return setter
-
-      setattr(cls, f, property(_gen_getter(f), _gen_setter(f)))
-
-    def _auto__call__init__(self, *a, **kwargs):
-      for base in cls.__bases__:
-        base.__init__(self, *a, **kwargs)
-      ParameterContainer.__init__(self)
-      cls._saved_init(self, *a, **kwargs)
-    cls._saved_init = cls.__init__
-    cls.__init__ = _auto__call__init__
-
-  def to_json(self) -> dict:
-    obj = {}
-    for k, desc in self._params.items():
-      obj[desc.canonical_name] = desc.to_json(self._values[k])
-    return obj
-
-  def from_json(self, json_dict: dict):
-    for k, v in json_dict:
-      if k in self._params:
-        self._values[k] = self._params[k].from_json(v)
+    return IntegerDimensions(**value)
 
 class ActiveSensorPhysicalDimensions(Parameter):
   "Height and width in whole microns of the active area of the camera sensor"
@@ -183,17 +129,7 @@ class Clip(ParameterContainer):
   duration: numbers.Rational = Duration()
   fps: numbers.Rational = FPS()
   active_sensor_physical_dimensions: IntegerDimensions = ActiveSensorPhysicalDimensions()
-  #
-  # Sensor pixel dimensions
-  #
-
-  def set_active_sensor_pixel_dimensions(self, dims : typing.Optional[SensorPixelDimensions]):
-    if dims is not None and not isinstance(dims, SensorPixelDimensions):
-      raise TypeError("Sensor dimensions must be an instance of SensorPixelDimensions")
-    self._active_sensor_pixel_dimensions = dims
-
-  def get_active_sensor_pixel_dimensions(self) -> typing.Optional[SensorPixelDimensions]:
-    return self._active_sensor_pixel_dimensions
+  active_sensor_pixel_dimensions: IntegerDimensions = ActiveSensorPixelDimensions()
 
   #
   # Lens serial number
@@ -303,10 +239,7 @@ class Clip(ParameterContainer):
 
   def __init__(self) -> None:
     self._iso = None
-    self._active_sensor_physical_dimensions = None
-    self._active_sensor_pixel_dimensions = None
     self._lens_serial_number = None
-    self._fps = None
     self._white_balance = None
     self._focal_length = tuple()
     self._focal_position = tuple()
