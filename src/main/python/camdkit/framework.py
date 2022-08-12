@@ -59,10 +59,11 @@ class ParameterContainer:
   def to_json(self) -> dict:
     obj = {}
     for k, desc in self._params.items():
-      obj[desc.canonical_name] = desc.to_json(self._values[k])
+      value = self._values[k]
+      obj[desc.canonical_name] = desc.to_json(self._values[k]) if value is not None else None
     return obj
 
   def from_json(self, json_dict: dict):
-    for k, v in json_dict:
+    for k, v in json_dict.items():
       if k in self._params:
         self._values[k] = self._params[k].from_json(v)

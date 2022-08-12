@@ -81,13 +81,13 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.fps = Fraction(clip_metadata["FPS"])
 
-  clip.set_focal_length(tuple(int(m["Focal Length"]) * 1000 for m in csv_data))
+  clip.focal_length = tuple(int(m["Focal Length"]) * 1000 for m in csv_data)
 
-  clip.set_focal_position(tuple(int(m["Focus Distance"]) * 1000 for m in csv_data))
+  clip.focal_position = tuple(int(m["Focus Distance"]) * 1000 for m in csv_data)
 
   cooke_metadata = tuple(cooke.from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
-  clip.set_entrance_pupil_position(m.entrance_pupil_position for m in cooke_metadata)
+  clip.entrance_pupil_position = tuple(m.entrance_pupil_position for m in cooke_metadata)
 
   clip.t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
 

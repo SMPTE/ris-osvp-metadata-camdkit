@@ -44,7 +44,7 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 500)
 
-    self.assertEqual(clip.get_focal_length()[0], 32)
+    self.assertEqual(clip.focal_length[0], 32)
 
     self.assertEqual(clip.t_number[0], 2219)
 

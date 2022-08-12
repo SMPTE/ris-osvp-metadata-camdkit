@@ -164,11 +164,11 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.duration = len(csv_data)/clip_fps
 
-  clip.set_focal_length(tuple(int(m["Focal Length (mm)"]) for m in csv_data))
+  clip.focal_length = tuple(int(m["Focal Length (mm)"]) for m in csv_data)
 
-  clip.set_focal_position(tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data))
+  clip.focal_position = tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data)
 
-  # TODO: clip.set_entrance_pupil_position()
+  # TODO: clip.entrance_pupil_position
 
   clip.t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
 

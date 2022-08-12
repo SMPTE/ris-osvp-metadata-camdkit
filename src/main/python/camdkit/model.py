@@ -41,7 +41,7 @@ class IntegerDimensions:
 class ActiveSensorPixelDimensions(Parameter):
   "Height and width in pixels of the active area of the camera sensor"
   
-  canonical_name = "active_sensor_pixels_dimensions"
+  canonical_name = "active_sensor_pixel_dimensions"
 
   @staticmethod
   def validate(value) -> bool:
@@ -58,7 +58,7 @@ class ActiveSensorPixelDimensions(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return value.asdict()
+    return dataclasses.asdict(value)
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -84,7 +84,7 @@ class ActiveSensorPhysicalDimensions(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return value.asdict()
+    return dataclasses.asdict(value)
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -135,7 +135,7 @@ class ISO(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
+    return value
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -153,7 +153,7 @@ class WhiteBalance(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
+    return value
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -187,6 +187,27 @@ class TNumber(Parameter):
   def validate(value) -> bool:
     if value is None:
       return True
+
+    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return tuple(value)
+
+
+class FocalLength(Parameter):
+  """Focal length of the lens in whole millimeters"""
+
+  canonical_name = "focal_length"
+
+  @staticmethod
+  def validate(value) -> bool:
+    if value is None:
+      return True
       
     return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
 
@@ -198,8 +219,51 @@ class TNumber(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     return tuple(value)
 
+
+class FocalPosition(Parameter):
+  """Focus distance/position of the lens in whole millimeters"""
+
+  canonical_name = "focal_position"
+
+  @staticmethod
+  def validate(value) -> bool:
+    if value is None:
+      return True
+      
+    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return tuple(value)
+
+
+class EntrancePupilPosition(Parameter):
+  """Entrance pupil of the lens in fractional millimeters"""
+
+  canonical_name = "entrance_pupil_position"
+
+  @staticmethod
+  def validate(value) -> bool:
+    if value is None:
+      return True
+      
+    return isinstance(value, tuple) and all(isinstance(s, numbers.Rational) and s > 0 for s in value)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return tuple(map(str, value))
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return tuple(map(Fraction, value))
+
+
 class Clip(ParameterContainer):
-  """Metadata for a camera clip
+  """Metadata for a camera clip.
   """
   duration: typing.Optional[numbers.Rational] = Duration()
   fps: typing.Optional[numbers.Rational] = FPS()
@@ -209,61 +273,6 @@ class Clip(ParameterContainer):
   white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()
   t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
-
-
-  #
-  # Focal length
-  #
-
-  def set_focal_length(self, samples: typing.Iterable[numbers.Integral]):
-    focal_length = tuple(samples)
-
-    if not all(isinstance(s, numbers.Integral) and s > 0 for s in focal_length):
-      raise TypeError("Each sample must be an integer larger than 0 in units of millimeter.")
-
-    self._focal_length = focal_length
-
-  def get_focal_length(self) -> typing.Tuple[numbers.Integral]:
-    return self._focal_length
-
-
-  #
-  # Focal position
-  #
-
-  def set_focal_position(self, samples: typing.Iterable[numbers.Integral]):
-    focal_position = tuple(samples)
-
-    if not all(isinstance(s, numbers.Integral) and s > 0 for s in focal_position):
-      raise TypeError("Each sample must be an integer larger than 0 in units of millimeter.")
-
-    self._focal_position = focal_position
-
-  def get_focal_position(self) -> typing.Tuple[numbers.Integral]:
-    return self._focal_position
-
-
-  #
-  # Entrance Pupil Position
-  #
-
-  def set_entrance_pupil_position(self, samples: typing.Iterable[numbers.Rational]):
-    entrance_pupil_position = tuple(samples)
-
-    if not all(isinstance(s, numbers.Rational) for s in entrance_pupil_position):
-      raise TypeError("Each sample must be a rational number in units of millimeter.")
-
-    self._entrance_pupil_position = entrance_pupil_position
-
-  def get_entrance_pupil_position(self) -> typing.Tuple[numbers.Rational]:
-    return self._entrance_pupil_position
-
-  #
-  # constructor
-  #
-
-  def __init__(self) -> None:
-    self._focal_length = tuple()
-    self._focal_position = tuple()
-    self._entrance_pupil_position = tuple()
-
+  focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
+  focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
+  entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()

@@ -43,15 +43,37 @@ class ModelTest(unittest.TestCase):
 
   def test_serialize(self):
     clip = camdkit.model.Clip()
+
     clip.duration = 3
+    clip.fps = Fraction(24000, 1001)
+    clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(width=640, height=480)
+    clip.active_sensor_pixel_dimensions = camdkit.model.IntegerDimensions(width=640, height=480)
+    clip.lens_serial_number = "123456789"
+    clip.white_balance = 7200
     clip.iso = 13
-    clip.set_focal_length([2, 4])
+    clip.t_number = (2, 4)
+    clip.focal_length = (2, 4)
+    clip.focal_position = (2, 4)
+    clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
 
     d = clip.to_json()
 
-    self.assertEqual(d["focal_length"], (2, 4))
     self.assertEqual(d["duration"], "3")
+    self.assertEqual(d["fps"], "24000/1001")
+    self.assertDictEqual(d["active_sensor_physical_dimensions"], {"height": 480, "width": 640})
+    self.assertDictEqual(d["active_sensor_pixel_dimensions"], {"height": 480, "width": 640})
+    self.assertEqual(d["lens_serial_number"], "123456789")
+    self.assertEqual(d["white_balance"], 7200)
     self.assertEqual(d["iso"], 13)
+    self.assertTupleEqual(d["t_number"], (2, 4))
+    self.assertTupleEqual(d["focal_length"], (2, 4))
+    self.assertTupleEqual(d["focal_position"], (2, 4))
+    self.assertTupleEqual(d["entrance_pupil_position"], ("1/2", "13/7"))
+
+    d_clip = camdkit.model.Clip()
+    d_clip.from_json(d)
+
+    self.assertDictEqual(d_clip._values, clip._values)
 
   def test_duration_fraction(self):
     clip = camdkit.model.Clip()
@@ -151,44 +173,44 @@ class ModelTest(unittest.TestCase):
   def test_focal_length(self):
     clip = camdkit.model.Clip()
 
-    self.assertTupleEqual(clip.get_focal_length(), tuple())
+    self.assertIsNone(clip.focal_length)
 
-    with self.assertRaises(TypeError):
-      clip.set_focal_length([Fraction(5,7)])
+    with self.assertRaises(ValueError):
+      clip.focal_length = [Fraction(5,7)]
 
     value = (100, 7)
 
-    clip.set_focal_length(value)
+    clip.focal_length = value
 
-    self.assertTupleEqual(clip.get_focal_length(), value)
+    self.assertTupleEqual(clip.focal_length, value)
 
   def test_focal_position(self):
     clip = camdkit.model.Clip()
 
-    self.assertTupleEqual(clip.get_focal_position(), tuple())
+    self.assertIsNone(clip.focal_position)
 
-    with self.assertRaises(TypeError):
-      clip.set_focal_position([Fraction(5,7)])
+    with self.assertRaises(ValueError):
+      clip.focal_position = [Fraction(5,7)]
 
     value = (100, 7)
 
-    clip.set_focal_position(value)
+    clip.focal_position = value
 
-    self.assertTupleEqual(clip.get_focal_position(), value)
+    self.assertTupleEqual(clip.focal_position, value)
 
   def test_entrance_pupil_position(self):
     clip = camdkit.model.Clip()
 
-    self.assertTupleEqual(clip.get_entrance_pupil_position(), tuple())
+    self.assertIsNone(clip.entrance_pupil_position)
 
-    with self.assertRaises(TypeError):
-      clip.set_focal_position([0.6])
+    with self.assertRaises(ValueError):
+      clip.focal_position = [0.6]
 
     value = (Fraction(5,7), 7)
 
-    clip.set_entrance_pupil_position(value)
+    clip.set_entrance_pupil_position = value
 
-    self.assertTupleEqual(clip.get_entrance_pupil_position(), value)
+    self.assertIsNone(clip.entrance_pupil_position, value)
 
   def test_white_balance(self):
     clip = camdkit.model.Clip()
