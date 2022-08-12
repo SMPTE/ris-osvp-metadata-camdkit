@@ -48,7 +48,7 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.get_t_number()[0], 2219)
 
-    self.assertEqual(clip.get_fps(), 24)
+    self.assertEqual(clip.fps, 24)
 
     self.assertEqual(clip.get_lens_serial_number(), "7032.0100")
 

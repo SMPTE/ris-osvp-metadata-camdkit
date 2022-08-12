@@ -142,7 +142,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   if clip_fps is None:
     raise ValueError("No valid fps found")
 
-  clip.set_fps(clip_fps)
+  clip.fps = clip_fps
 
   n_frames = find_duration(clip_metadata)
 

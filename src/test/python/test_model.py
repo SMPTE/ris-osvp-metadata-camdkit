@@ -60,7 +60,7 @@ class ModelTest(unittest.TestCase):
 
     clip.duration = Fraction(6, 7)
 
-    with self.assertRaises(TypeError):
+    with self.assertRaises(ValueError):
       clip.duration = 0.7
 
     self.assertEqual(clip.duration, Fraction(6, 7))
@@ -119,19 +119,19 @@ class ModelTest(unittest.TestCase):
   def test_fps(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_fps())
-
-    with self.assertRaises(TypeError):
-      clip.set_fps(0.7)
+    self.assertIsNone(clip.fps)
 
     with self.assertRaises(ValueError):
-      clip.set_fps(-24)
+      clip.fps = 0.7
+
+    with self.assertRaises(ValueError):
+      clip.fps = -24
 
     value = Fraction(24000, 1001)
 
-    clip.set_fps(value)
+    clip.fps = value
 
-    self.assertEqual(clip.get_fps(), value)
+    self.assertEqual(clip.fps, value)
 
 
   def test_t_number(self):

@@ -67,7 +67,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
 
-    clip.set_fps(Fraction(csv_data[0]["Project FPS"]))
+    clip.fps = Fraction(csv_data[0]["Project FPS"])
 
     clip.set_white_balance(int(csv_data[0]["White Balance"]))
 

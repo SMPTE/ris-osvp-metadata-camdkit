@@ -104,7 +104,7 @@ class ParameterContainer:
       def _gen_setter(f):
         def setter(self, value):
           if not self._params[f].validate(value):
-            raise TypeError
+            raise ValueError
           self._values[f] = value
         return setter
 
@@ -145,27 +145,28 @@ class Duration(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     return Fraction(value)
 
+class FPS(Parameter):
+  """Frame frate in frames per second (fps)"""
+
+  canonical_name = "fps"
+
+  @staticmethod
+  def validate(value) -> bool:
+    return value is None or (isinstance(value, numbers.Rational) and value > 0)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Fraction(value)
+
 class Clip(ParameterContainer):
   """Metadata for a camera clip
   """
-  duration : numbers.Rational = Duration()
-
-  #
-  # fps
-  #
-
-  def get_fps(self) -> typing.Optional[numbers.Rational]:
-    return self._fps
-
-  def set_fps(self, fps: typing.Optional[numbers.Rational]):
-    if fps is not None:
-      if not isinstance(fps, numbers.Rational):
-        raise TypeError("Must be a rational")
-
-      if fps <= 0:
-        raise ValueError("Must be a positive number")
-
-    self._fps = fps
+  duration: numbers.Rational = Duration()
+  fps: numbers.Rational = FPS()
 
   #
   # Sensor physical dimensions
