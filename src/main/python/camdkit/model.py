@@ -177,6 +177,27 @@ class LensSerialNumber(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     return str(value)
 
+
+class TNumber(Parameter):
+  """Thousandths of the t-number of the lens as positive integer"""
+
+  canonical_name = "t_number"
+
+  @staticmethod
+  def validate(value) -> bool:
+    if value is None:
+      return True
+      
+    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return tuple(value)
+
 class Clip(ParameterContainer):
   """Metadata for a camera clip
   """
@@ -187,23 +208,8 @@ class Clip(ParameterContainer):
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()
+  t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
 
-  #
-  # t-number
-  #
-
-  def set_t_number(self, samples: typing.Iterable[numbers.Integral]):
-    """T-number of the lens (thousandth)
-    """
-    t_number = tuple(samples)
-
-    if not all(isinstance(s, numbers.Integral) and s > 0 for s in t_number):
-      raise TypeError("Each t-number sample must be an integer larger than 0.")
-
-    self._t_number = t_number
-
-  def get_t_number(self) -> typing.Tuple[numbers.Integral]:
-    return self._t_number
 
   #
   # Focal length
@@ -259,6 +265,5 @@ class Clip(ParameterContainer):
   def __init__(self) -> None:
     self._focal_length = tuple()
     self._focal_position = tuple()
-    self._t_number = tuple()
     self._entrance_pupil_position = tuple()
 

@@ -170,6 +170,6 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   # TODO: clip.set_entrance_pupil_position()
 
-  clip.set_t_number(tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data))
+  clip.t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
 
   return clip

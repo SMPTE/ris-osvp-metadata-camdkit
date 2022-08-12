@@ -58,7 +58,7 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.white_balance, 3200)
     
-    self.assertEqual(clip.get_t_number()[0], 1782)
+    self.assertEqual(clip.t_number[0], 1782)
 
   def test_linear_iris_value(self):
     self.assertEqual(round(camdkit.arri.reader.t_number_from_linear_iris_value(6000) * 1000), 5657)

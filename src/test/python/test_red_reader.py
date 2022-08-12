@@ -43,7 +43,7 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.get_entrance_pupil_position()[0], 127)
 
-    self.assertEqual(clip.get_t_number()[0], 5600)
+    self.assertEqual(clip.t_number[0], 5600)
 
     self.assertEqual(clip.fps, 24)
 

@@ -137,16 +137,16 @@ class ModelTest(unittest.TestCase):
   def test_t_number(self):
     clip = camdkit.model.Clip()
 
-    self.assertTupleEqual(clip.get_t_number(), tuple())
+    self.assertEqual(clip.t_number, None)
 
-    with self.assertRaises(TypeError):
-      clip.set_t_number([0.7])
+    with self.assertRaises(ValueError):
+      clip.t_number = [0.7]
 
     value = (4000, 8000)
 
-    clip.set_t_number(value)
+    clip.t_number = value
 
-    self.assertTupleEqual(clip.get_t_number(), value)
+    self.assertTupleEqual(clip.t_number, value)
 
   def test_focal_length(self):
     clip = camdkit.model.Clip()

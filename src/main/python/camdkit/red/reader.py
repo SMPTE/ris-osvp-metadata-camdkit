@@ -89,6 +89,6 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.set_entrance_pupil_position(m.entrance_pupil_position for m in cooke_metadata)
 
-  clip.set_t_number(m.aperture_value * 10 for m in cooke_metadata)
+  clip.t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
 
   return clip
