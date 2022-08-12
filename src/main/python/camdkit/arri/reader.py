@@ -61,15 +61,15 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     assert csv_data[0]["Lens Distance Unit"] == "Meter"
 
-    clip.set_iso(int(csv_data[0]["Exposure Index ASA"]))
+    clip.iso = int(csv_data[0]["Exposure Index ASA"])
 
     clip.duration = len(csv_data)/Fraction(csv_data[0]["Project FPS"])
 
-    clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
+    clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
     clip.fps = Fraction(csv_data[0]["Project FPS"])
 
-    clip.set_white_balance(int(csv_data[0]["White Balance"]))
+    clip.white_balance = int(csv_data[0]["White Balance"])
 
     clip.active_sensor_pixel_dimensions = camdkit.model.IntegerDimensions(
       width=int(csv_data[0]["Image Width"]),

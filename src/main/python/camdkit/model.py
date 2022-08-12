@@ -123,51 +123,70 @@ class FPS(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     return Fraction(value)
 
+
+class ISO(Parameter):
+  """ISO number as an integer"""
+
+  canonical_name = "iso"
+
+  @staticmethod
+  def validate(value) -> bool:
+    return value is None or (isinstance(value, numbers.Integral) and value > 0)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return int(value)
+
+
+class WhiteBalance(Parameter):
+  """White balance of the camera expressed as an integer in units of degrees kelvin."""
+
+  canonical_name = "white_balance"
+
+  @staticmethod
+  def validate(value) -> bool:
+    return value is None or (isinstance(value, numbers.Integral) and value > 0)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return int(value)
+
+
+class LensSerialNumber(Parameter):
+  """Unique identifier of the lens"""
+
+  canonical_name = "lens_serial_number"
+
+  @staticmethod
+  def validate(value) -> bool:
+    return value is None or isinstance(value, str)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
 class Clip(ParameterContainer):
   """Metadata for a camera clip
   """
-  duration: numbers.Rational = Duration()
-  fps: numbers.Rational = FPS()
-  active_sensor_physical_dimensions: IntegerDimensions = ActiveSensorPhysicalDimensions()
-  active_sensor_pixel_dimensions: IntegerDimensions = ActiveSensorPixelDimensions()
-
-  #
-  # Lens serial number
-  #
-
-  def set_lens_serial_number(self, serial_number : typing.Optional[str]):
-    if serial_number is not None and not isinstance(serial_number, str):
-      raise TypeError("The lens serial number must be a string")
-    self._lens_serial_number = serial_number
-
-  def get_lens_serial_number(self) -> typing.Optional[str]:
-    return self._lens_serial_number
-
-  #
-  # ISO
-  #
-
-  def set_iso(self, iso : typing.Optional[numbers.Integral]):
-    if iso is not None and not (isinstance(iso, numbers.Integral) and iso > 0):
-      raise TypeError("ISO must be an integral number larger than 0")
-    self._iso = iso
-
-  def get_iso(self) -> typing.Optional[numbers.Integral]:
-    return self._iso
-
-  #
-  # White balance
-  #
-
-  def set_white_balance(self, white_balance : typing.Optional[numbers.Integral]):
-    """White balance of the camera expressed as an integer in units of degrees kelvin.
-    """
-    if white_balance is not None and not (isinstance(white_balance, numbers.Integral) and white_balance > 0):
-      raise TypeError("White balance must be an integral number larger than 0")
-    self._white_balance = white_balance
-
-  def get_white_balance(self) -> typing.Optional[numbers.Integral]:
-    return self._white_balance
+  duration: typing.Optional[numbers.Rational] = Duration()
+  fps: typing.Optional[numbers.Rational] = FPS()
+  active_sensor_physical_dimensions: typing.Optional[IntegerDimensions] = ActiveSensorPhysicalDimensions()
+  active_sensor_pixel_dimensions: typing.Optional[IntegerDimensions] = ActiveSensorPixelDimensions()
+  lens_serial_number: typing.Optional[str] = LensSerialNumber()
+  white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
+  iso: typing.Optional[numbers.Integral] = ISO()
 
   #
   # t-number
@@ -238,9 +257,6 @@ class Clip(ParameterContainer):
   #
 
   def __init__(self) -> None:
-    self._iso = None
-    self._lens_serial_number = None
-    self._white_balance = None
     self._focal_length = tuple()
     self._focal_position = tuple()
     self._t_number = tuple()

@@ -44,7 +44,7 @@ class ModelTest(unittest.TestCase):
   def test_serialize(self):
     clip = camdkit.model.Clip()
     clip.duration = 3
-    clip.set_iso(13)
+    clip.iso = 13
     clip.set_focal_length([2, 4])
 
     d = clip.to_json()
@@ -91,30 +91,30 @@ class ModelTest(unittest.TestCase):
   def test_lens_serial_number(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_lens_serial_number())
+    self.assertIsNone(clip.lens_serial_number)
 
-    with self.assertRaises(TypeError):
-      clip.set_lens_serial_number(0.7)
+    with self.assertRaises(ValueError):
+      clip.lens_serial_number = 0.7
 
     value = "1231231321"
 
-    clip.set_lens_serial_number(value)
+    clip.lens_serial_number = value
 
-    self.assertEqual(clip.get_lens_serial_number(), value)
+    self.assertEqual(clip.lens_serial_number, value)
 
   def test_iso(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_iso())
+    self.assertIsNone(clip.iso)
 
-    with self.assertRaises(TypeError):
-      clip.set_iso(0.7)
+    with self.assertRaises(ValueError):
+      clip.iso = 0.7
 
     value = 200
 
-    clip.set_iso(value)
+    clip.iso = value
 
-    self.assertEqual(clip.get_iso(), value)
+    self.assertEqual(clip.iso, value)
 
   def test_fps(self):
     clip = camdkit.model.Clip()
@@ -193,13 +193,13 @@ class ModelTest(unittest.TestCase):
   def test_white_balance(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_white_balance())
+    self.assertIsNone(clip.white_balance)
 
-    with self.assertRaises(TypeError):
-      clip.set_white_balance(0.5)
+    with self.assertRaises(ValueError):
+      clip.white_balance = 0.5
 
     value = 6500
 
-    clip.set_white_balance(value)
+    clip.white_balance = value
 
-    self.assertEqual(clip.get_white_balance(), value)
+    self.assertEqual(clip.white_balance, value)

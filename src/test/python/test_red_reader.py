@@ -37,7 +37,7 @@ class REDReaderTest(unittest.TestCase):
       open("src/test/resources/red/A001_C066_0303LZ_001.frames.csv", "r", encoding="utf-8") as type_5_file:
       clip = camdkit.red.reader.to_clip(type_3_file, type_5_file)
 
-    self.assertEqual(clip.get_iso(), 250)
+    self.assertEqual(clip.iso, 250)
 
     self.assertEqual(clip.get_focal_length()[0], 40000)
 
@@ -47,9 +47,9 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.fps, 24)
 
-    self.assertEqual(clip.get_lens_serial_number(), "G53599764")
+    self.assertEqual(clip.lens_serial_number, "G53599764")
 
-    self.assertEqual(clip.get_white_balance(), 5600)
+    self.assertEqual(clip.white_balance, 5600)
 
     self.assertEqual(
       clip.active_sensor_pixel_dimensions,
@@ -58,5 +58,5 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(
       clip.active_sensor_physical_dimensions,
-      camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
+      camdkit.model.IntegerDimensions(width=4096 * 5, height=2160 * 5)
     )

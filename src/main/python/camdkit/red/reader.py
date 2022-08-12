@@ -51,11 +51,11 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   clip_metadata = next(csv.DictReader(meta_3_file))
   clip = camdkit.model.Clip()
 
-  clip.set_iso(int(clip_metadata['ISO']))
+  clip.iso = int(clip_metadata['ISO'])
 
-  clip.set_lens_serial_number(clip_metadata["Lens Serial Number"])
+  clip.lens_serial_number = clip_metadata["Lens Serial Number"]
 
-  clip.set_white_balance(int(clip_metadata["Kelvin"]))
+  clip.white_balance = int(clip_metadata["Kelvin"])
 
   clip.active_sensor_pixel_dimensions = camdkit.model.IntegerDimensions(
     width=int(clip_metadata["Frame Width"]),

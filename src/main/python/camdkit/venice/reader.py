@@ -129,11 +129,11 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip_metadata = ET.parse(static_file)
 
-  clip.set_iso(int_or_none(find_value(clip_metadata, "ISOSensitivity")))
+  clip.iso = int_or_none(find_value(clip_metadata, "ISOSensitivity"))
 
-  clip.set_lens_serial_number(find_value(clip_metadata, "LensAttributes"))
+  clip.lens_serial_number = find_value(clip_metadata, "LensAttributes")
 
-  clip.set_white_balance(int_or_none(find_value(clip_metadata, "WhiteBalance")))
+  clip.white_balance = int_or_none(find_value(clip_metadata, "WhiteBalance"))
 
   clip.active_sensor_pixel_dimensions = find_px_dims(clip_metadata)
 
