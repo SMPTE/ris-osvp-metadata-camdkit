@@ -35,35 +35,35 @@ class ModelTest(unittest.TestCase):
   def test_duration(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_duration())
+    self.assertIsNone(clip.duration)
 
-    clip.set_duration(3)
+    clip.duration = 3
 
-    self.assertEqual(clip.get_duration(), 3)
+    self.assertEqual(clip.duration, 3)
 
   def test_serialize(self):
     clip = camdkit.model.Clip()
-    clip.set_duration(3)
+    clip.duration = 3
     clip.set_iso(13)
     clip.set_focal_length([2, 4])
 
-    d = clip.serialize()
+    d = clip.to_json()
 
     self.assertEqual(d["focal_length"], (2, 4))
     self.assertEqual(d["duration"], "3")
     self.assertEqual(d["iso"], 13)
 
-  def test_duration(self):
+  def test_duration_fraction(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_duration())
+    self.assertIsNone(clip.duration)
 
-    clip.set_duration(Fraction(6, 7))
+    clip.duration = Fraction(6, 7)
 
     with self.assertRaises(TypeError):
-      clip.set_duration(0.7)
+      clip.duration = 0.7
 
-    self.assertEqual(clip.get_duration(), Fraction(6, 7))
+    self.assertEqual(clip.duration, Fraction(6, 7))
   
   def test_active_sensor_physical_dimensions(self):
     clip = camdkit.model.Clip()

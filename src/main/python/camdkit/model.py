@@ -25,6 +25,8 @@
 
 """Data model"""
 
+from fractions import Fraction
+import types
 import numbers
 import typing
 import dataclasses
@@ -61,33 +63,92 @@ class SensorPixelDimensions:
   def serialize(self):
     return dataclasses.asdict(self)
 
-class Clip:
+class Parameter:
+  """Metadata parameter base class"""
+  @classmethod
+  def __init_subclass__(cls) -> None:
+    if not hasattr(cls, "canonical_name"):
+      raise TypeError("Parameters must has a canonical_name parameter")
+
+  @staticmethod
+  def validate(value) -> bool:
+    raise NotImplementedError
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    raise NotImplementedError
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    raise NotImplementedError
+
+class ParameterContainer:
+  def __init__(self) -> None:
+    self._values = {k: None for k in self._params}
+
+  @classmethod
+  def __init_subclass__(cls) -> None:
+    cls._params = {}
+    for f in dir(cls):
+      desc = getattr(cls, f)
+
+      if not isinstance(desc, Parameter):
+        continue
+
+      cls._params[f] = desc
+
+      def _gen_getter(f):
+        def getter(self):
+          return self._values[f]
+        return getter
+      def _gen_setter(f):
+        def setter(self, value):
+          if not self._params[f].validate(value):
+            raise TypeError
+          self._values[f] = value
+        return setter
+
+      setattr(cls, f, property(_gen_getter(f), _gen_setter(f)))
+
+    def _auto__call__init__(self, *a, **kwargs):
+      for base in cls.__bases__:
+        base.__init__(self, *a, **kwargs)
+      ParameterContainer.__init__(self)
+      cls._saved_init(self, *a, **kwargs)
+    cls._saved_init = cls.__init__
+    cls.__init__ = _auto__call__init__
+
+  def to_json(self) -> dict:
+    obj = {}
+    for k, desc in self._params.items():
+      obj[desc.canonical_name] = desc.to_json(self._values[k])
+    return obj
+
+  def from_json(self, json_dict: dict):
+    for k, v in json_dict:
+      if k in self._params:
+        self._values[k] = self._params[k].from_json(v)
+
+class Duration(Parameter):
+  """Duration in seconds"""
+  canonical_name = "duration"
+
+  @staticmethod
+  def validate(value) -> bool:
+    return value is None or (isinstance(value, numbers.Rational) and value >= 0)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Fraction(value)
+
+class Clip(ParameterContainer):
   """Metadata for a camera clip
   """
-  def __init__(self):
-    self._iso = None
-    self._duration = None
-    self._active_sensor_physical_dimensions = None
-    self._active_sensor_pixel_dimensions = None
-    self._lens_serial_number = None
-    self._fps = None
-    self._white_balance = None
-    self._focal_length = tuple()
-    self._focal_position = tuple()
-    self._t_number = tuple()
-    self._entrance_pupil_position = tuple()
-    
-  #
-  # duration
-  #
-
-  def get_duration(self) -> typing.Optional[numbers.Rational]:
-    return self._duration
-
-  def set_duration(self, duration: typing.Optional[numbers.Rational]):
-    if duration is not None and not (isinstance(duration, numbers.Rational) and duration >= 0):
-      raise TypeError("duration must be a positive rational number")
-    self._duration = duration
+  duration : numbers.Rational = Duration()
 
   #
   # fps
@@ -234,19 +295,18 @@ class Clip:
     return self._entrance_pupil_position
 
   #
-  # Serialization length
+  # constructor
   #
 
-  def serialize(self) -> dict:
+  def __init__(self) -> None:
+    self._iso = None
+    self._active_sensor_physical_dimensions = None
+    self._active_sensor_pixel_dimensions = None
+    self._lens_serial_number = None
+    self._fps = None
+    self._white_balance = None
+    self._focal_length = tuple()
+    self._focal_position = tuple()
+    self._t_number = tuple()
+    self._entrance_pupil_position = tuple()
 
-    return {
-      "duration": str(self.get_duration()),
-      "iso": self.get_iso(),
-      "focal_length": self.get_focal_length(),
-      "lens_serial_number": self.get_lens_serial_number(),
-      "active_sensor_pixel_dimensions": None if self.get_active_sensor_pixel_dimensions() is None else self.get_active_sensor_pixel_dimensions().serialize(),
-      "active_sensor_physical_dimensions": None if self.get_active_sensor_physical_dimensions() is None else self.get_active_sensor_physical_dimensions().serialize(),
-      "entrance_pupil_position": tuple(map(str, self.get_entrance_pupil_position())),
-      "focal_position": self.get_focal_position(),
-      "t_number": tuple(map(str, self.get_t_number())),
-    }

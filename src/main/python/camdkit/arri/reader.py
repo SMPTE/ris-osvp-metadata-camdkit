@@ -63,7 +63,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.set_iso(int(csv_data[0]["Exposure Index ASA"]))
 
-    clip.set_duration(len(csv_data)/Fraction(csv_data[0]["Project FPS"]))
+    clip.duration = len(csv_data)/Fraction(csv_data[0]["Project FPS"])
 
     clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
 

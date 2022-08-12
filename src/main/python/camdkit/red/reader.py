@@ -81,7 +81,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   if len(csv_data) != n_frames:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
-  clip.set_duration(len(csv_data)/Fraction(clip_metadata["FPS"]))
+  clip.duration = len(csv_data)/Fraction(clip_metadata["FPS"])
 
   clip.set_fps(Fraction(clip_metadata["FPS"]))
 
