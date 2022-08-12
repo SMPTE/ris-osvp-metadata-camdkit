@@ -80,12 +80,10 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     pix_dims = clip.get_active_sensor_pixel_dimensions()
     pixel_pitch = _CAMERA_FAMILY_PIXEL_PITCH_MAP[(csv_data[0]["Camera Family"], pix_dims.width)]
-    clip.set_active_sensor_physical_dimensions(
-      camdkit.model.SensorPhysicalDimensions(
+    clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)
       )
-    )
 
     clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
 

@@ -68,13 +68,13 @@ class ModelTest(unittest.TestCase):
   def test_active_sensor_physical_dimensions(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.get_active_sensor_physical_dimensions())
+    self.assertIsNone(clip.active_sensor_physical_dimensions)
 
-    dims = camdkit.model.SensorPhysicalDimensions(4, 5)
+    dims = camdkit.model.IntegerDimensions(4, 5)
 
-    clip.set_active_sensor_physical_dimensions(dims)
+    clip.active_sensor_physical_dimensions = dims
 
-    self.assertEqual(clip.get_active_sensor_physical_dimensions(), dims)
+    self.assertEqual(clip.active_sensor_physical_dimensions, dims)
 
 
   def test_active_sensor_pixel_dimensions(self):

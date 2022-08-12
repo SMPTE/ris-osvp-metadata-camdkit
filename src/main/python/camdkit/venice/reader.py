@@ -151,12 +151,10 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
   pix_dims = clip.get_active_sensor_pixel_dimensions()
-  clip.set_active_sensor_physical_dimensions(
-    camdkit.model.SensorPhysicalDimensions(
-      width=round(pix_dims.width * pixel_pitch),
-      height=round(pix_dims.height * pixel_pitch)
-    )
-  )
+  clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
+        width=round(pix_dims.width * pixel_pitch),
+        height=round(pix_dims.height * pixel_pitch)
+      )
 
   # read frame metadata
   csv_data = list(csv.DictReader(dynamic_file))

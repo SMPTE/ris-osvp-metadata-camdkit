@@ -26,26 +26,15 @@
 """Data model"""
 
 from fractions import Fraction
-import types
 import numbers
 import typing
 import dataclasses
 
 @dataclasses.dataclass
-class SensorPhysicalDimensions:
-  "Height and width of the camera sensor in microns"
+class IntegerDimensions:
+  "Integer height and width of a rectangular area"
   height: numbers.Integral
   width: numbers.Integral
-
-  def __post_init__(self):
-    if not isinstance(self.height, numbers.Integral) \
-      or not isinstance(self.height, numbers.Integral) \
-      or self.height <= 0 \
-      or self.width <= 0:
-      raise TypeError("Height and width must must be positive integers in microns")
-
-  def serialize(self):
-    return dataclasses.asdict(self)
 
 @dataclasses.dataclass
 class SensorPixelDimensions:
@@ -129,6 +118,32 @@ class ParameterContainer:
       if k in self._params:
         self._values[k] = self._params[k].from_json(v)
 
+class ActiveSensorPhysicalDimensions(Parameter):
+  "Height and width in whole microns of the active area of the camera sensor"
+  
+  canonical_name = "active_sensor_physical_dimensions"
+
+  @staticmethod
+  def validate(value) -> bool:
+    if value is None:
+      return True
+
+    if not isinstance(value, IntegerDimensions):
+      return False
+
+    if value.height <= 0 or value.width <= 0:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value.asdict()
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return IntegerDimensions(**value)
+
 class Duration(Parameter):
   """Duration in seconds"""
   canonical_name = "duration"
@@ -167,20 +182,7 @@ class Clip(ParameterContainer):
   """
   duration: numbers.Rational = Duration()
   fps: numbers.Rational = FPS()
-
-  #
-  # Sensor physical dimensions
-  #
-
-  def set_active_sensor_physical_dimensions(self, dims : typing.Optional[SensorPhysicalDimensions]):
-    if dims is not None and not isinstance(dims, SensorPhysicalDimensions):
-      raise TypeError("Sensor dimensions must be an instance of SensorDimensions")
-    self._active_sensor_physical_dimensions = dims
-
-  def get_active_sensor_physical_dimensions(self) -> typing.Optional[SensorPhysicalDimensions]:
-    return self._active_sensor_physical_dimensions
-
-
+  active_sensor_physical_dimensions: IntegerDimensions = ActiveSensorPhysicalDimensions()
   #
   # Sensor pixel dimensions
   #

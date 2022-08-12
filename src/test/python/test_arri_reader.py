@@ -44,7 +44,7 @@ class ARRIReaderTest(unittest.TestCase):
     )
 
     self.assertEqual(
-      clip.get_active_sensor_physical_dimensions(),
+      clip.active_sensor_physical_dimensions,
       camdkit.model.SensorPhysicalDimensions(width=316800, height=178200)
     )
 

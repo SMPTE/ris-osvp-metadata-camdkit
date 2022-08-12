@@ -57,6 +57,6 @@ class REDReaderTest(unittest.TestCase):
     )
 
     self.assertEqual(
-      clip.get_active_sensor_physical_dimensions(),
+      clip.active_sensor_physical_dimensions,
       camdkit.model.SensorPhysicalDimensions(width=4096 * 5, height=2160 * 5)
     )
