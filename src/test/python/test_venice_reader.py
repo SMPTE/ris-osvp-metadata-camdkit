@@ -42,24 +42,24 @@ class VenicReaderTest(unittest.TestCase):
       open("src/test/resources/venice/D001C005_210716AG.csv", "r", encoding="utf-8") as dynamic_file:
       clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
-    self.assertEqual(clip.get_iso(), 500)
+    self.assertEqual(clip.iso, 500)
 
-    self.assertEqual(clip.get_focal_length()[0], 32)
+    self.assertEqual(clip.focal_length[0], 32)
 
-    self.assertEqual(clip.get_t_number()[0], 2219)
+    self.assertEqual(clip.t_number[0], 2219)
 
-    self.assertEqual(clip.get_fps(), 24)
+    self.assertEqual(clip.fps, 24)
 
-    self.assertEqual(clip.get_lens_serial_number(), "7032.0100")
+    self.assertEqual(clip.lens_serial_number, "7032.0100")
 
-    self.assertEqual(clip.get_white_balance(), 4300)
+    self.assertEqual(clip.white_balance, 4300)
 
     self.assertEqual(
-      clip.get_active_sensor_pixel_dimensions(),
-      camdkit.model.SensorPixelDimensions(width=5674, height=3192)
+      clip.active_sensor_pixel_dimensions,
+      camdkit.model.IntegerDimensions(width=5674, height=3192)
     )
 
     self.assertEqual(
-      clip.get_active_sensor_physical_dimensions(),
-      camdkit.model.SensorPhysicalDimensions(width=round(5674 * 5.9375), height=round(3192 * 5.9375))
+      clip.active_sensor_physical_dimensions,
+      camdkit.model.IntegerDimensions(width=round(5674 * 5.9375), height=round(3192 * 5.9375))
     )

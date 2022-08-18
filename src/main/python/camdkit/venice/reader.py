@@ -85,7 +85,7 @@ def find_duration(doc: ET.ElementTree) -> typing.Optional[int]:
   except TypeError:
     return None
 
-def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.SensorPixelDimensions]:
+def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.IntegerDimensions]:
   try:
     elem = doc.find(".//nrt:VideoLayout" , namespaces=NS_PREFIXES)
     
@@ -96,7 +96,7 @@ def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.SensorPix
 
     v_pixels = int(elem.get("pixel"))
 
-    return camdkit.model.SensorPixelDimensions(height=h_pixels, width=v_pixels)
+    return camdkit.model.IntegerDimensions(height=h_pixels, width=v_pixels)
 
   except TypeError:
     return None
@@ -129,20 +129,20 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip_metadata = ET.parse(static_file)
 
-  clip.set_iso(int_or_none(find_value(clip_metadata, "ISOSensitivity")))
+  clip.iso = int_or_none(find_value(clip_metadata, "ISOSensitivity"))
 
-  clip.set_lens_serial_number(find_value(clip_metadata, "LensAttributes"))
+  clip.lens_serial_number = find_value(clip_metadata, "LensAttributes")
 
-  clip.set_white_balance(int_or_none(find_value(clip_metadata, "WhiteBalance")))
+  clip.white_balance = int_or_none(find_value(clip_metadata, "WhiteBalance"))
 
-  clip.set_active_sensor_pixel_dimensions(find_px_dims(clip_metadata))
+  clip.active_sensor_pixel_dimensions = find_px_dims(clip_metadata)
 
   clip_fps = find_fps(clip_metadata)
 
   if clip_fps is None:
     raise ValueError("No valid fps found")
 
-  clip.set_fps(clip_fps)
+  clip.fps = clip_fps
 
   n_frames = find_duration(clip_metadata)
 
@@ -150,13 +150,11 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
     raise ValueError("No valid duration found")
 
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
-  pix_dims = clip.get_active_sensor_pixel_dimensions()
-  clip.set_active_sensor_physical_dimensions(
-    camdkit.model.SensorPhysicalDimensions(
-      width=round(pix_dims.width * pixel_pitch),
-      height=round(pix_dims.height * pixel_pitch)
-    )
-  )
+  pix_dims = clip.active_sensor_pixel_dimensions
+  clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
+        width=round(pix_dims.width * pixel_pitch),
+        height=round(pix_dims.height * pixel_pitch)
+      )
 
   # read frame metadata
   csv_data = list(csv.DictReader(dynamic_file))
@@ -164,14 +162,14 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   if len(csv_data) != n_frames:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
-  clip.set_duration(len(csv_data)/clip_fps)
+  clip.duration = len(csv_data)/clip_fps
 
-  clip.set_focal_length(tuple(int(m["Focal Length (mm)"]) for m in csv_data))
+  clip.focal_length = tuple(int(m["Focal Length (mm)"]) for m in csv_data)
 
-  clip.set_focal_position(tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data))
+  clip.focal_position = tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data)
 
-  # TODO: clip.set_entrance_pupil_position()
+  # TODO: clip.entrance_pupil_position
 
-  clip.set_t_number(tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data))
+  clip.t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
 
   return clip

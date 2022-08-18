@@ -36,29 +36,29 @@ class ARRIReaderTest(unittest.TestCase):
   def test_reader(self):
     clip = camdkit.arri.reader.to_clip("src/test/resources/arri/B001C001_180327_R1ZA.mov.csv")
 
-    self.assertEqual(clip.get_iso(), 400)
+    self.assertEqual(clip.iso, 400)
 
     self.assertEqual(
-      clip.get_active_sensor_pixel_dimensions(),
-      camdkit.model.SensorPixelDimensions(width=1920, height=1080)
+      clip.active_sensor_pixel_dimensions,
+      camdkit.model.IntegerDimensions(width=1920, height=1080)
     )
 
     self.assertEqual(
-      clip.get_active_sensor_physical_dimensions(),
-      camdkit.model.SensorPhysicalDimensions(width=316800, height=178200)
+      clip.active_sensor_physical_dimensions,
+      camdkit.model.IntegerDimensions(width=316800, height=178200)
     )
 
-    self.assertEqual(clip.get_lens_serial_number(), "2")
+    self.assertEqual(clip.lens_serial_number, "2")
 
-    self.assertEqual(clip.get_fps(), 24)
+    self.assertEqual(clip.fps, 24)
 
-    self.assertEqual(clip.get_focal_length()[0], 40000)
+    self.assertEqual(clip.focal_length[0], 40000)
 
-    self.assertEqual(clip.get_focal_position()[0], 4812)
+    self.assertEqual(clip.focal_position[0], 4812)
 
-    self.assertEqual(clip.get_white_balance(), 3200)
+    self.assertEqual(clip.white_balance, 3200)
     
-    self.assertEqual(clip.get_t_number()[0], 1782)
+    self.assertEqual(clip.t_number[0], 1782)
 
   def test_linear_iris_value(self):
     self.assertEqual(round(camdkit.arri.reader.t_number_from_linear_iris_value(6000) * 1000), 5657)

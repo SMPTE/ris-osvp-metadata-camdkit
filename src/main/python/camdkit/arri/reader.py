@@ -61,37 +61,33 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     assert csv_data[0]["Lens Distance Unit"] == "Meter"
 
-    clip.set_iso(int(csv_data[0]["Exposure Index ASA"]))
+    clip.iso = int(csv_data[0]["Exposure Index ASA"])
 
-    clip.set_duration(len(csv_data)/Fraction(csv_data[0]["Project FPS"]))
+    clip.duration = len(csv_data)/Fraction(csv_data[0]["Project FPS"])
 
-    clip.set_lens_serial_number(csv_data[0]["Lens Serial Number"])
+    clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
-    clip.set_fps(Fraction(csv_data[0]["Project FPS"]))
+    clip.fps = Fraction(csv_data[0]["Project FPS"])
 
-    clip.set_white_balance(int(csv_data[0]["White Balance"]))
+    clip.white_balance = int(csv_data[0]["White Balance"])
 
-    clip.set_active_sensor_pixel_dimensions(
-      camdkit.model.SensorPixelDimensions(
-        width=int(csv_data[0]["Image Width"]),
-        height=int(csv_data[0]["Image Height"])
-      )
+    clip.active_sensor_pixel_dimensions = camdkit.model.IntegerDimensions(
+      width=int(csv_data[0]["Image Width"]),
+      height=int(csv_data[0]["Image Height"])
     )
 
-    pix_dims = clip.get_active_sensor_pixel_dimensions()
+    pix_dims = clip.active_sensor_pixel_dimensions
     pixel_pitch = _CAMERA_FAMILY_PIXEL_PITCH_MAP[(csv_data[0]["Camera Family"], pix_dims.width)]
-    clip.set_active_sensor_physical_dimensions(
-      camdkit.model.SensorPhysicalDimensions(
+    clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)
       )
-    )
 
-    clip.set_focal_length(tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data))
+    clip.focal_length = tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data)
 
-    clip.set_focal_position(tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data))
+    clip.focal_position = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
 
-    clip.set_t_number(tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data))
+    clip.t_number = tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data)
 
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions
