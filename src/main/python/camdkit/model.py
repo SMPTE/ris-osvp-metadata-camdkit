@@ -30,7 +30,7 @@ import numbers
 import typing
 import dataclasses
 
-from camdkit.framework import Parameter, ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter
+from camdkit.framework import Parameter, ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling
 
 INT_MAX = 2147483647 # 2^31 - 1
 
@@ -44,6 +44,7 @@ class ActiveSensorPixelDimensions(Parameter):
   "Height and width, in pixels, of the active area of the camera sensor"
 
   canonical_name = "active_sensor_pixel_dimensions"
+  sampling = Sampling.STATIC
 
   @staticmethod
   def validate(value) -> bool:
@@ -72,8 +73,9 @@ class ActiveSensorPixelDimensions(Parameter):
 
 class ActiveSensorPhysicalDimensions(Parameter):
   "Height and width, in microns, of the active area of the camera sensor"
-  
+
   canonical_name = "active_sensor_physical_dimensions"
+  sampling = Sampling.STATIC
 
   @staticmethod
   def validate(value) -> bool:
@@ -104,110 +106,55 @@ class Duration(StrictlyPostiveRationalParameter):
   """Duration of the clip in seconds"""
 
   canonical_name = "duration"
+  sampling = Sampling.STATIC
 
 class FPS(StrictlyPostiveRationalParameter):
   """Capture frame frate of the camera in frames per second (fps)"""
 
   canonical_name = "fps"
+  sampling = Sampling.STATIC
 
 class ISO(StrictlyPositiveIntegerParameter):
   """Arithmetic ISO scale as defined in ISO 12232"""
 
   canonical_name = "iso"
+  sampling = Sampling.STATIC
 
 class WhiteBalance(StrictlyPositiveIntegerParameter):
   """White balance of the camera expressed in degrees kelvin."""
 
   canonical_name = "white_balance"
+  sampling = Sampling.STATIC
 
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
   canonical_name = "lens_serial_number"
+  sampling = Sampling.STATIC
 
-
-class TNumber(Parameter):
+class TNumber(StrictlyPositiveIntegerParameter):
   """Thousandths of the t-number of the lens as positive integer"""
 
   canonical_name = "t_number"
+  sampling = Sampling.REGULAR
 
-  @staticmethod
-  def validate(value) -> bool:
-    if value is None:
-      return True
-
-    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return tuple(value)
-
-
-class FocalLength(Parameter):
-  """Focal length of the lens in whole millimeters"""
+class FocalLength(StrictlyPositiveIntegerParameter):
+  """Focal length of the lens in millimeter"""
 
   canonical_name = "focal_length"
+  sampling = Sampling.REGULAR
 
-  @staticmethod
-  def validate(value) -> bool:
-    if value is None:
-      return True
-      
-    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return tuple(value)
-
-
-class FocalPosition(Parameter):
+class FocalPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens in whole millimeters"""
 
   canonical_name = "focal_position"
+  sampling = Sampling.REGULAR
 
-  @staticmethod
-  def validate(value) -> bool:
-    if value is None:
-      return True
-      
-    return isinstance(value, tuple) and all(isinstance(s, numbers.Integral) and s > 0 for s in value)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return tuple(value)
-
-
-class EntrancePupilPosition(Parameter):
-  """Entrance pupil of the lens in fractional millimeters"""
+class EntrancePupilPosition(StrictlyPostiveRationalParameter):
+  """Entrance pupil of the lens in millimeters"""
 
   canonical_name = "entrance_pupil_position"
-
-  @staticmethod
-  def validate(value) -> bool:
-    if value is None:
-      return True
-      
-    return isinstance(value, tuple) and all(isinstance(s, numbers.Rational) and s > 0 for s in value)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return tuple(map(str, value))
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return tuple(map(Fraction, value))
+  sampling = Sampling.REGULAR
 
 
 class Clip(ParameterContainer):

@@ -1,8 +1,13 @@
 import typing
 import numbers
 from fractions import Fraction
+from enum import Enum
 
 INT_MAX = 2147483647 # 2^31 - 1
+
+class Sampling(Enum):
+  STATIC = "Static"
+  REGULAR = "Regular"
 
 class Parameter:
   """Metadata parameter base class"""
@@ -27,11 +32,16 @@ class Parameter:
   def get_constraints(cls) -> str:
     return cls.validate.__doc__
 
+  @classmethod
+  def get_sampling(cls) -> Sampling:
+    return cls.sampling
+
 class StringParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    return value is None or isinstance(value, str) and len(value) < 1024
+    """The parameter shall be a Unicode string betwee 0 and 1023 codepoints."""
+    return isinstance(value, str) and len(value) < 1024
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -46,9 +56,6 @@ class StrictlyPostiveRationalParameter(Parameter):
   @staticmethod
   def validate(value) -> bool:
     """The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647]."""
-
-    if value is None:
-      return True
 
     if not isinstance(value, numbers.Rational):
       return False
@@ -67,10 +74,12 @@ class StrictlyPostiveRationalParameter(Parameter):
     return Fraction(value)
 
 class StrictlyPositiveIntegerParameter(Parameter):
-  
+
   @staticmethod
   def validate(value) -> bool:
-    return value is None or (isinstance(value, numbers.Integral) and value > 0)
+    """The parameter shall be a integer in the range (0..2,147,483,647]."""
+
+    return isinstance(value, numbers.Integral) and value > 0
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -93,8 +102,11 @@ class ParameterContainer:
       if not isinstance(desc, Parameter):
         continue
 
-      if not hasattr(desc, "canonical_name"):
+      if not hasattr(desc, "canonical_name") or not isinstance(desc.canonical_name, str):
         raise TypeError("A Parameter must have a canonical_name parameter")
+
+      if not hasattr(desc, "sampling") or not isinstance(desc.sampling, Sampling):
+        raise TypeError("A Parameter must have a sampling parameter")
 
       cls._params[f] = desc
 
@@ -104,8 +116,15 @@ class ParameterContainer:
         return getter
       def _gen_setter(f):
         def setter(self, value):
-          if not self._params[f].validate(value):
-            raise ValueError
+          if value is not None:
+            if self._params[f].sampling is Sampling.STATIC:
+              if not self._params[f].validate(value):
+                raise ValueError
+            elif self._params[f].sampling is Sampling.REGULAR:
+              if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
+                raise ValueError
+            else:
+              raise ValueError
           self._values[f] = value
         return setter
 
@@ -123,20 +142,35 @@ class ParameterContainer:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
-      obj[desc.canonical_name] = desc.to_json(self._values[k]) if value is not None else None
+      if value is None:
+        obj[desc.canonical_name] = None
+      if desc.sampling is Sampling.STATIC:
+        obj[desc.canonical_name] = desc.to_json(self._values[k])
+      elif desc.sampling is Sampling.REGULAR:
+        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+      else:
+        raise ValueError
+
     return obj
 
   def from_json(self, json_dict: dict):
     for k, v in json_dict.items():
       if k in self._params:
-        self._values[k] = self._params[k].from_json(v)
+        desc = self._params[k]
+        if desc.sampling is Sampling.STATIC:
+          self._values[k] = desc.from_json(v)
+        elif desc.sampling is Sampling.REGULAR:
+          self._values[k] = tuple(map(desc.from_json, v))
+        else:
+          raise ValueError
 
   @classmethod
   def get_documentation(cls) -> dict:
     doc = {}
     for _, desc in cls._params.items():
       doc[desc.canonical_name] = {
-        "description" : desc.get_description(),
-        "constraints" : desc.get_constraints(),
+        "description" : desc.__doc__,
+        "constraints" : desc.validate.__doc__,
+        "sampling" : str(desc.sampling.value)
       }
     return doc

@@ -93,7 +93,7 @@ class ModelTest(unittest.TestCase):
       clip.duration = 0.7
 
     self.assertEqual(clip.duration, Fraction(6, 7))
-  
+
   def test_active_sensor_physical_dimensions(self):
     clip = camdkit.model.Clip()
 
