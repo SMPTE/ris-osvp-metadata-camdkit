@@ -16,15 +16,14 @@ jobs:
           PYTHONPATH: src/main/python
         run: |
           python -m unittest discover -v -s src/test/python
-          mkdir -p build/md
-          mkdir -p build/html
+          mkdir -p build
           python src/main/python/camdkit/make_documentation.py > build/md/index.md
 
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
-          input_path: build/md
-          output_dir: build/html
+          input_path: build/index.md
+          output_dir: build/
 
       - run: ls -al build
 
@@ -33,4 +32,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/html
+          publish_dir: build/
