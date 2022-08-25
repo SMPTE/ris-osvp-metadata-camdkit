@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Generate documentation
+      - name: Unit tests and generate documentation
         env:
           PYTHONPATH: src/main/python
         run: |
