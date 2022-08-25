@@ -27,6 +27,8 @@ jobs:
           build_html: true
           theme: src/main/resources/css/generic-light.min.css
 
+      - run: ls -al build
+
       - name: Deploy to GitHub pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
