@@ -21,6 +21,8 @@ files, and converting it into a single internal model that follows the metadata
 model currently in development by the SMPTE RIS OSVP effort. The internal model
 can then be serialized into representations such as JSON.
 
+The model documentation is [auto-generated](https://sandflow.github.io/camdkit/).
+
 ## How to extend
 
 * source readers, e.g. RED Camera reader at `src/main/python/red`.
