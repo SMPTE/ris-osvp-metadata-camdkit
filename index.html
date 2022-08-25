@@ -1123,14 +1123,14 @@ as well as a specific set of constraints.</p>
 <h4 id="sampling" tabindex="-1"><a class="anchor" href="#sampling" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints" tabindex="-1"><a class="anchor" href="#constraints" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The height and width shall be each be an integer in the range (0..2,147,483,647].</p>
+<p>The height and width shall be each be an integer in the range [0..2,147,483,647].</p>
 <h3 id="activesensorpixeldimensions" tabindex="-1"><a class="anchor" href="#activesensorpixeldimensions" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>active_sensor_pixel_dimensions</code></h3>
 <h4 id="description-1" tabindex="-1"><a class="anchor" href="#description-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Height and width, in pixels, of the active area of the camera sensor</p>
 <h4 id="sampling-1" tabindex="-1"><a class="anchor" href="#sampling-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints-1" tabindex="-1"><a class="anchor" href="#constraints-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The height and width shall be each be an integer in the range (0..2,147,483,647].</p>
+<p>The height and width shall be each be an integer in the range [0..2,147,483,647].</p>
 <h3 id="duration" tabindex="-1"><a class="anchor" href="#duration" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>duration</code></h3>
 <h4 id="description-2" tabindex="-1"><a class="anchor" href="#description-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Duration of the clip in seconds</p>
@@ -1194,6 +1194,106 @@ as well as a specific set of constraints.</p>
 <p>Static</p>
 <h4 id="constraints-10" tabindex="-1"><a class="anchor" href="#constraints-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
+<h4 id="json-schema" tabindex="-1"><a class="anchor" href="#json-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a> JSON Schema</h4>
+<pre><code class="language-{">  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {},
+  "active_sensor_physical_dimensions": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "height",
+      "width"
+    ],
+    "properties": {
+      "height": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      }
+    }
+  },
+  "active_sensor_pixel_dimensions": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "height",
+      "width"
+    ],
+    "properties": {
+      "height": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      }
+    }
+  },
+  "duration": {
+    "type": "string",
+    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+  },
+  "entrance_pupil_position": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    }
+  },
+  "focal_length": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "focal_position": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "fps": {
+    "type": "string",
+    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+  },
+  "iso": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
+  },
+  "lens_serial_number": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "t_number": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "white_balance": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
+  }
+}```
+</code></pre>
 
 		</main>
 	</body>

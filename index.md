@@ -25,7 +25,7 @@ Static
 
 #### Constraints
 
-The height and width shall be each be an integer in the range (0..2,147,483,647].
+The height and width shall be each be an integer in the range [0..2,147,483,647].
 
 ### `active_sensor_pixel_dimensions`
 
@@ -39,7 +39,7 @@ Static
 
 #### Constraints
 
-The height and width shall be each be an integer in the range (0..2,147,483,647].
+The height and width shall be each be an integer in the range [0..2,147,483,647].
 
 ### `duration`
 
@@ -167,3 +167,104 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
+#### JSON Schema
+
+```{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {},
+  "active_sensor_physical_dimensions": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "height",
+      "width"
+    ],
+    "properties": {
+      "height": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      }
+    }
+  },
+  "active_sensor_pixel_dimensions": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "height",
+      "width"
+    ],
+    "properties": {
+      "height": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2147483647
+      }
+    }
+  },
+  "duration": {
+    "type": "string",
+    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+  },
+  "entrance_pupil_position": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    }
+  },
+  "focal_length": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "focal_position": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "fps": {
+    "type": "string",
+    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+  },
+  "iso": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
+  },
+  "lens_serial_number": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "t_number": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "white_balance": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
+  }
+}```
