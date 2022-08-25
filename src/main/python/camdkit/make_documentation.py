@@ -1,5 +1,6 @@
 import typing
 import sys
+import json
 import camdkit.model
 
 _INTRODUCTION = """# OSVP Clip documentation
@@ -20,7 +21,7 @@ as well as a specific set of constraints.
 """
 
 def generate_documentation(fp: typing.TextIO):
-  doc = camdkit.model.Clip.get_documentation()
+  doc = camdkit.model.Clip.make_documentation()
 
   fp.write(_INTRODUCTION)
 
@@ -42,6 +43,13 @@ def generate_documentation(fp: typing.TextIO):
     fp.write(info["constraints"])
     fp.write("\n")
     fp.write("\n")
+
+  fp.write("#### JSON Schema\n")
+  fp.write("\n")
+  fp.write("```")
+  json.dump(camdkit.model.Clip.make_json_schema(), fp, indent=2)
+  fp.write("```")
+  fp.write("\n")
 
 if __name__ == "__main__":
   generate_documentation(sys.stdout)

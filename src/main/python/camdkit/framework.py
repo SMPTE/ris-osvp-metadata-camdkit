@@ -32,11 +32,15 @@ class Parameter:
   def from_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
 
+  @staticmethod
+  def make_json_schema() -> dict:
+    raise NotImplementedError
+
 class IntegerDimensionsParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
+    """The height and width shall be each be an integer in the range [0..2,147,483,647]."""
 
     if not isinstance(value, Dimensions):
       return False
@@ -44,7 +48,7 @@ class IntegerDimensionsParameter(Parameter):
     if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
       return False
 
-    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
+    if value.height < 0 or value.width < 0 or value.height > INT_MAX or value.width > INT_MAX:
       return False
 
     return True
@@ -56,6 +60,29 @@ class IntegerDimensionsParameter(Parameter):
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Dimensions(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "height",
+          "width"
+      ],
+      "properties": {
+        "height": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+        },
+        "width": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+        }
+      }
+    }
 
 class StringParameter(Parameter):
 
@@ -71,6 +98,14 @@ class StringParameter(Parameter):
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return str(value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023
+    }
 
 class StrictlyPostiveRationalParameter(Parameter):
 
@@ -94,6 +129,13 @@ class StrictlyPostiveRationalParameter(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     return Fraction(value)
 
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "string",
+      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    }
+
 class StrictlyPositiveIntegerParameter(Parameter):
 
   @staticmethod
@@ -109,6 +151,14 @@ class StrictlyPositiveIntegerParameter(Parameter):
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return int(value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
 
 class ParameterContainer:
   def __init__(self) -> None:
@@ -186,7 +236,28 @@ class ParameterContainer:
           raise ValueError
 
   @classmethod
-  def get_documentation(cls) -> dict:
+  def make_json_schema(cls) -> dict:
+    schema = {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {}
+    }
+
+    for _, desc in cls._params.items():
+      if desc.sampling is Sampling.STATIC:
+        schema[desc.canonical_name] = desc.make_json_schema()
+      elif desc.sampling is Sampling.REGULAR:
+        schema[desc.canonical_name] = {
+          "type": "array",
+          "items": desc.make_json_schema()
+        }
+      else:
+        raise ValueError
+
+    return schema
+
+  @classmethod
+  def make_documentation(cls) -> dict:
     doc = {}
     for _, desc in cls._params.items():
       doc[desc.canonical_name] = {
