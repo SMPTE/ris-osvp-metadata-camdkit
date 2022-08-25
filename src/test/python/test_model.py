@@ -76,7 +76,7 @@ class ModelTest(unittest.TestCase):
     self.assertDictEqual(d_clip._values, clip._values)
 
   def test_documentation(self):
-    doc = camdkit.model.Clip.get_documentation()
+    doc = camdkit.model.Clip.make_documentation()
 
     self.assertIn(camdkit.model.ActiveSensorPhysicalDimensions.canonical_name, doc)
 
