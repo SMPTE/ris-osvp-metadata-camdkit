@@ -18,6 +18,14 @@ jobs:
           python -m unittest discover -v -s src/test/python
           mkdir -p build
           python src/main/python/camdkit/make_documentation.py > build/index.md
+          cp src/main/resources/generic-light-min.css build/
+
+      - name: Generate HTML
+        uses: ZacJW/markdown-html-action@1.1.0
+        with:
+          input_files: '["build/index.md"]'
+          output_files: '["build/index.html"]'
+          builtin_stylesheet: "generic-light-min.css"
 
       - name: Deploy to GitHub pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

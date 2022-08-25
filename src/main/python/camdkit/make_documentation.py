@@ -25,7 +25,7 @@ def generate_documentation(fp: typing.TextIO):
   fp.write(_INTRODUCTION)
 
   for name, info in doc.items():
-    fp.write(f"### {name}\n")
+    fp.write(f"### `{name}`\n")
     fp.write("\n")
     fp.write("#### Description\n")
     fp.write("\n")
