@@ -25,82 +25,24 @@
 
 """Data model"""
 
-from fractions import Fraction
 import numbers
 import typing
-import dataclasses
 
-from camdkit.framework import Parameter, ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling
+from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling, IntegerDimensionsParameter, Dimensions
 
-INT_MAX = 2147483647 # 2^31 - 1
-
-@dataclasses.dataclass
-class Dimensions:
-  "Height and width of a rectangular area"
-  height: numbers.Real
-  width: numbers.Real
-
-class ActiveSensorPixelDimensions(Parameter):
+class ActiveSensorPixelDimensions(IntegerDimensionsParameter):
   "Height and width, in pixels, of the active area of the camera sensor"
 
   canonical_name = "active_sensor_pixel_dimensions"
   sampling = Sampling.STATIC
 
-  @staticmethod
-  def validate(value) -> bool:
-    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
-    if value is None:
-      return True
 
-    if not isinstance(value, Dimensions):
-      return False
-
-    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
-      return False
-
-    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
-      return False
-
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Dimensions(**value)
-
-class ActiveSensorPhysicalDimensions(Parameter):
+class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width, in microns, of the active area of the camera sensor"
 
   canonical_name = "active_sensor_physical_dimensions"
   sampling = Sampling.STATIC
 
-  @staticmethod
-  def validate(value) -> bool:
-    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
-    if value is None:
-      return True
-
-    if not isinstance(value, Dimensions):
-      return False
-
-    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
-      return False
-
-    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
-      return False
-
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Dimensions(**value)
 
 class Duration(StrictlyPostiveRationalParameter):
   """Duration of the clip in seconds"""
@@ -108,11 +50,13 @@ class Duration(StrictlyPostiveRationalParameter):
   canonical_name = "duration"
   sampling = Sampling.STATIC
 
+
 class FPS(StrictlyPostiveRationalParameter):
   """Capture frame frate of the camera in frames per second (fps)"""
 
   canonical_name = "fps"
   sampling = Sampling.STATIC
+
 
 class ISO(StrictlyPositiveIntegerParameter):
   """Arithmetic ISO scale as defined in ISO 12232"""
@@ -120,11 +64,13 @@ class ISO(StrictlyPositiveIntegerParameter):
   canonical_name = "iso"
   sampling = Sampling.STATIC
 
+
 class WhiteBalance(StrictlyPositiveIntegerParameter):
   """White balance of the camera expressed in degrees kelvin."""
 
   canonical_name = "white_balance"
   sampling = Sampling.STATIC
+
 
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
@@ -132,11 +78,13 @@ class LensSerialNumber(StringParameter):
   canonical_name = "lens_serial_number"
   sampling = Sampling.STATIC
 
+
 class TNumber(StrictlyPositiveIntegerParameter):
-  """Thousandths of the t-number of the lens as positive integer"""
+  """Thousandths of the t-number of the lens"""
 
   canonical_name = "t_number"
   sampling = Sampling.REGULAR
+
 
 class FocalLength(StrictlyPositiveIntegerParameter):
   """Focal length of the lens in millimeter"""
@@ -144,11 +92,13 @@ class FocalLength(StrictlyPositiveIntegerParameter):
   canonical_name = "focal_length"
   sampling = Sampling.REGULAR
 
+
 class FocalPosition(StrictlyPositiveIntegerParameter):
-  """Focus distance/position of the lens in whole millimeters"""
+  """Focus distance/position of the lens millimeters"""
 
   canonical_name = "focal_position"
   sampling = Sampling.REGULAR
+
 
 class EntrancePupilPosition(StrictlyPostiveRationalParameter):
   """Entrance pupil of the lens in millimeters"""

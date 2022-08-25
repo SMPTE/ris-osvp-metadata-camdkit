@@ -2,12 +2,20 @@ import typing
 import numbers
 from fractions import Fraction
 from enum import Enum
+import dataclasses
 
 INT_MAX = 2147483647 # 2^31 - 1
 
 class Sampling(Enum):
   STATIC = "Static"
   REGULAR = "Regular"
+
+@dataclasses.dataclass
+class Dimensions:
+  "Height and width of a rectangular area"
+  height: numbers.Real
+  width: numbers.Real
+
 
 class Parameter:
   """Metadata parameter base class"""
@@ -24,17 +32,30 @@ class Parameter:
   def from_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
 
-  @classmethod
-  def get_description(cls) -> str:
-    return cls.__doc__
+class IntegerDimensionsParameter(Parameter):
 
-  @classmethod
-  def get_constraints(cls) -> str:
-    return cls.validate.__doc__
+  @staticmethod
+  def validate(value) -> bool:
+    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
 
-  @classmethod
-  def get_sampling(cls) -> Sampling:
-    return cls.sampling
+    if not isinstance(value, Dimensions):
+      return False
+
+    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
+      return False
+
+    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Dimensions(**value)
 
 class StringParameter(Parameter):
 
