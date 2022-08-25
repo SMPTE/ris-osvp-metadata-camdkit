@@ -85,7 +85,7 @@ def find_duration(doc: ET.ElementTree) -> typing.Optional[int]:
   except TypeError:
     return None
 
-def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.IntegerDimensions]:
+def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.Dimensions]:
   try:
     elem = doc.find(".//nrt:VideoLayout" , namespaces=NS_PREFIXES)
     
@@ -96,7 +96,7 @@ def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.IntegerDi
 
     v_pixels = int(elem.get("pixel"))
 
-    return camdkit.model.IntegerDimensions(height=h_pixels, width=v_pixels)
+    return camdkit.model.Dimensions(height=h_pixels, width=v_pixels)
 
   except TypeError:
     return None
@@ -151,7 +151,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
   pix_dims = clip.active_sensor_pixel_dimensions
-  clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(
+  clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)
       )
