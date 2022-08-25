@@ -16,20 +16,21 @@ jobs:
           PYTHONPATH: src/main/python
         run: |
           python -m unittest discover -v -s src/test/python
-          mkdir -p build
-          python src/main/python/camdkit/make_documentation.py > build/index.md
+          mkdir -p build/md
+          mkdir -p build/html
+          python src/main/python/camdkit/make_documentation.py > build/md/index.md
 
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
-          input_path: build/index.md
-          output_dir: build
+          input_path: build/md
+          output_dir: build/html
 
       - run: ls -al build
 
       - name: Deploy to GitHub pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+#        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: build/html
