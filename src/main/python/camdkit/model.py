@@ -30,28 +30,34 @@ import numbers
 import typing
 import dataclasses
 
-from camdkit.framework import Parameter, ParameterContainer
+from camdkit.framework import Parameter, ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter
+
+INT_MAX = 2147483647 # 2^31 - 1
 
 @dataclasses.dataclass
-class IntegerDimensions:
-  "Integer height and width of a rectangular area"
-  height: numbers.Integral
-  width: numbers.Integral
+class Dimensions:
+  "Height and width of a rectangular area"
+  height: numbers.Real
+  width: numbers.Real
 
 class ActiveSensorPixelDimensions(Parameter):
-  "Height and width in pixels of the active area of the camera sensor"
-  
+  "Height and width, in pixels, of the active area of the camera sensor"
+
   canonical_name = "active_sensor_pixel_dimensions"
 
   @staticmethod
   def validate(value) -> bool:
+    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
     if value is None:
       return True
 
-    if not isinstance(value, IntegerDimensions):
+    if not isinstance(value, Dimensions):
       return False
 
-    if value.height <= 0 or value.width <= 0:
+    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
+      return False
+
+    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
       return False
 
     return True
@@ -62,22 +68,26 @@ class ActiveSensorPixelDimensions(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return IntegerDimensions(**value)
+    return Dimensions(**value)
 
 class ActiveSensorPhysicalDimensions(Parameter):
-  "Height and width in whole microns of the active area of the camera sensor"
+  "Height and width, in microns, of the active area of the camera sensor"
   
   canonical_name = "active_sensor_physical_dimensions"
 
   @staticmethod
   def validate(value) -> bool:
+    """The height and width shall be each be an integer in the range (0..2,147,483,647]."""
     if value is None:
       return True
 
-    if not isinstance(value, IntegerDimensions):
+    if not isinstance(value, Dimensions):
       return False
 
-    if value.height <= 0 or value.width <= 0:
+    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
+      return False
+
+    if value.height <= 0 or value.width <= 0 or value.height > INT_MAX or value.width > INT_MAX:
       return False
 
     return True
@@ -88,94 +98,32 @@ class ActiveSensorPhysicalDimensions(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return IntegerDimensions(**value)
+    return Dimensions(**value)
 
-class Duration(Parameter):
-  """Duration in seconds"""
+class Duration(StrictlyPostiveRationalParameter):
+  """Duration of the clip in seconds"""
+
   canonical_name = "duration"
 
-  @staticmethod
-  def validate(value) -> bool:
-    return value is None or (isinstance(value, numbers.Rational) and value >= 0)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Fraction(value)
-
-class FPS(Parameter):
-  """Frame frate in frames per second (fps)"""
+class FPS(StrictlyPostiveRationalParameter):
+  """Capture frame frate of the camera in frames per second (fps)"""
 
   canonical_name = "fps"
 
-  @staticmethod
-  def validate(value) -> bool:
-    return value is None or (isinstance(value, numbers.Rational) and value > 0)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Fraction(value)
-
-
-class ISO(Parameter):
-  """ISO number as an integer"""
+class ISO(StrictlyPositiveIntegerParameter):
+  """Arithmetic ISO scale as defined in ISO 12232"""
 
   canonical_name = "iso"
 
-  @staticmethod
-  def validate(value) -> bool:
-    return value is None or (isinstance(value, numbers.Integral) and value > 0)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return int(value)
-
-
-class WhiteBalance(Parameter):
-  """White balance of the camera expressed as an integer in units of degrees kelvin."""
+class WhiteBalance(StrictlyPositiveIntegerParameter):
+  """White balance of the camera expressed in degrees kelvin."""
 
   canonical_name = "white_balance"
 
-  @staticmethod
-  def validate(value) -> bool:
-    return value is None or (isinstance(value, numbers.Integral) and value > 0)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return int(value)
-
-
-class LensSerialNumber(Parameter):
+class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
   canonical_name = "lens_serial_number"
-
-  @staticmethod
-  def validate(value) -> bool:
-    return value is None or isinstance(value, str)
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return str(value)
 
 
 class TNumber(Parameter):
@@ -267,8 +215,8 @@ class Clip(ParameterContainer):
   """
   duration: typing.Optional[numbers.Rational] = Duration()
   fps: typing.Optional[numbers.Rational] = FPS()
-  active_sensor_physical_dimensions: typing.Optional[IntegerDimensions] = ActiveSensorPhysicalDimensions()
-  active_sensor_pixel_dimensions: typing.Optional[IntegerDimensions] = ActiveSensorPixelDimensions()
+  active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
+  active_sensor_pixel_dimensions: typing.Optional[Dimensions] = ActiveSensorPixelDimensions()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()

@@ -46,8 +46,8 @@ class ModelTest(unittest.TestCase):
 
     clip.duration = 3
     clip.fps = Fraction(24000, 1001)
-    clip.active_sensor_physical_dimensions = camdkit.model.IntegerDimensions(width=640, height=480)
-    clip.active_sensor_pixel_dimensions = camdkit.model.IntegerDimensions(width=640, height=480)
+    clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
+    clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.lens_serial_number = "123456789"
     clip.white_balance = 7200
     clip.iso = 13
@@ -75,6 +75,13 @@ class ModelTest(unittest.TestCase):
 
     self.assertDictEqual(d_clip._values, clip._values)
 
+  def test_documentation(self):
+    doc = camdkit.model.Clip.get_documentation()
+
+    print(doc)
+
+    self.assertIn(camdkit.model.ActiveSensorPhysicalDimensions.canonical_name, doc)
+
   def test_duration_fraction(self):
     clip = camdkit.model.Clip()
 
@@ -92,7 +99,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertIsNone(clip.active_sensor_physical_dimensions)
 
-    dims = camdkit.model.IntegerDimensions(4, 5)
+    dims = camdkit.model.Dimensions(4, 5)
 
     clip.active_sensor_physical_dimensions = dims
 
@@ -104,7 +111,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertIsNone(clip.active_sensor_pixel_dimensions)
 
-    dims = camdkit.model.IntegerDimensions(4, 5)
+    dims = camdkit.model.Dimensions(4, 5)
 
     clip.active_sensor_pixel_dimensions = dims
 
