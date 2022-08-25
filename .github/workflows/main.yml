@@ -18,7 +18,6 @@ jobs:
           python -m unittest discover -v -s src/test/python
           mkdir -p build
           python src/main/python/camdkit/make_documentation.py > build/index.md
-          cp src/main/resources/css/generic-light.min.css build/
 
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
@@ -26,7 +25,7 @@ jobs:
           input_path: "build/index.md"
           output_dir: "build"
           build_html: true
-          theme: "generic-light-min.css"
+          theme: "src/main/resources/css/generic-light.min.css"
 
       - name: Deploy to GitHub pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
