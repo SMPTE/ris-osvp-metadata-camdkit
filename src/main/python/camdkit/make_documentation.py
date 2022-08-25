@@ -48,6 +48,7 @@ def generate_documentation(fp: typing.TextIO):
   fp.write("\n")
   fp.write("```")
   json.dump(camdkit.model.Clip.make_json_schema(), fp, indent=2)
+  fp.write("\n")
   fp.write("```")
   fp.write("\n")
 
