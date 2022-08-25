@@ -18,7 +18,7 @@ jobs:
           python -m unittest discover -v -s src/test/python
           mkdir -p build
           python src/main/python/camdkit/make_documentation.py > build/index.md
-          cp src/main/resources/generic-light-min.css build/
+          cp src/main/resources/css/generic-light-min.css build/
 
       - name: Generate HTML
         uses: ZacJW/markdown-html-action@1.1.0
