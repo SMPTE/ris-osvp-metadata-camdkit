@@ -22,10 +22,10 @@ jobs:
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
-          input_path: "build/index.md"
-          output_dir: "build"
+          input_path: build/index.md
+          output_dir: build
           build_html: true
-          theme: "src/main/resources/css/generic-light.min.css"
+          theme: src/main/resources/css/generic-light.min.css
 
       - name: Deploy to GitHub pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
