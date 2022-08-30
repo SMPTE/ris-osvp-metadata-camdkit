@@ -30,6 +30,7 @@ import typing
 from fractions import Fraction
 
 import camdkit.model
+import camdkit.utils as utils
 import camdkit.red.cooke as cooke
 
 _LENS_NAME_PIXEL_PITCH_MAP = {
@@ -79,7 +80,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.duration = len(csv_data)/Fraction(clip_metadata["FPS"])
 
-  clip.fps = Fraction(clip_metadata["FPS"])
+  clip.fps = utils.guess_fps(Fraction(clip_metadata["FPS"]))
 
   clip.focal_length = tuple(int(m["Focal Length"]) * 1000 for m in csv_data)
 

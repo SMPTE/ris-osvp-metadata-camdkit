@@ -32,6 +32,7 @@ import xml.etree.ElementTree as ET
 from fractions import Fraction
 
 import camdkit.model
+import camdkit.utils as utils
 
 NS_PREFIXES = {
   "nrt" : "urn:schemas-professionalDisc:nonRealTimeMeta:ver.2.10"
@@ -71,7 +72,7 @@ def find_fps(doc: ET.ElementTree)  -> typing.Optional[Fraction]:
 def find_duration(doc: ET.ElementTree) -> typing.Optional[int]:
   try:
     elem = doc.find(".//nrt:Duration" , namespaces=NS_PREFIXES)
-    
+
     if elem is None:
       return None
 
@@ -88,7 +89,7 @@ def find_duration(doc: ET.ElementTree) -> typing.Optional[int]:
 def find_px_dims(doc: ET.ElementTree) -> typing.Optional[camdkit.model.Dimensions]:
   try:
     elem = doc.find(".//nrt:VideoLayout" , namespaces=NS_PREFIXES)
-    
+
     if elem is None:
       return None
 
@@ -142,7 +143,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   if clip_fps is None:
     raise ValueError("No valid fps found")
 
-  clip.fps = clip_fps
+  clip.fps = utils.guess_fps(clip_fps)
 
   n_frames = find_duration(clip_metadata)
 
