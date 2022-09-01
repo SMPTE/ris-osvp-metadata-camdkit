@@ -26,7 +26,6 @@
 '''Sony Venice camera reader'''
 
 import csv
-from tokenize import group
 import typing
 import re
 import xml.etree.ElementTree as ET
