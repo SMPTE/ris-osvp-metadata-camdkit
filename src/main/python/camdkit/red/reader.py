@@ -78,9 +78,11 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   if len(csv_data) != n_frames:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
-  clip.duration = len(csv_data)/Fraction(clip_metadata["FPS"])
-
   clip.capture_fps = utils.guess_fps(Fraction(clip_metadata["FPS"]))
+
+  clip.duration = len(csv_data)/clip.capture_fps
+
+  clip.anamorphic_squeeze = int(float(clip_metadata["Pixel Aspect Ratio"]) * 100)
 
   clip.focal_length = tuple(int(m["Focal Length"]) * 1000 for m in csv_data)
 
