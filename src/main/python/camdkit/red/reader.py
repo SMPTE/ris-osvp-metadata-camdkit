@@ -80,7 +80,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.duration = len(csv_data)/Fraction(clip_metadata["FPS"])
 
-  clip.fps = utils.guess_fps(Fraction(clip_metadata["FPS"]))
+  clip.capture_fps = utils.guess_fps(Fraction(clip_metadata["FPS"]))
 
   clip.focal_length = tuple(int(m["Focal Length"]) * 1000 for m in csv_data)
 

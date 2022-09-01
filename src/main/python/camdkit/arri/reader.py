@@ -68,7 +68,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
-    clip.fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
+    clip.capture_fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
 
     clip.white_balance = int(csv_data[0]["White Balance"])
 
@@ -92,5 +92,5 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions
-    
+
   return clip
