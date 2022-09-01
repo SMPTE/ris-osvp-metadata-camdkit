@@ -54,10 +54,10 @@ class Duration(StrictlyPostiveRationalParameter):
   units = "second"
 
 
-class FPS(StrictlyPostiveRationalParameter):
+class CaptureFPS(StrictlyPostiveRationalParameter):
   """Capture frame frate of the camera"""
 
-  canonical_name = "fps"
+  canonical_name = "capture_fps"
   sampling = Sampling.STATIC
   units = "hertz"
 
@@ -120,7 +120,7 @@ class Clip(ParameterContainer):
   """Metadata for a camera clip.
   """
   duration: typing.Optional[numbers.Rational] = Duration()
-  fps: typing.Optional[numbers.Rational] = FPS()
+  capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
   active_sensor_pixel_dimensions: typing.Optional[Dimensions] = ActiveSensorPixelDimensions()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()

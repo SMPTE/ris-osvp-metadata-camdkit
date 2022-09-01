@@ -45,7 +45,7 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.t_number[0], 5600)
 
-    self.assertEqual(clip.fps, 24)
+    self.assertEqual(clip.capture_fps, 24)
 
     self.assertEqual(clip.lens_serial_number, "G53599764")
 

@@ -45,7 +45,7 @@ class ModelTest(unittest.TestCase):
     clip = camdkit.model.Clip()
 
     clip.duration = 3
-    clip.fps = Fraction(24000, 1001)
+    clip.capture_fps = Fraction(24000, 1001)
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.lens_serial_number = "123456789"
@@ -59,7 +59,7 @@ class ModelTest(unittest.TestCase):
     d = clip.to_json()
 
     self.assertEqual(d["duration"], "3")
-    self.assertEqual(d["fps"], "24000/1001")
+    self.assertEqual(d["capture_fps"], "24000/1001")
     self.assertDictEqual(d["active_sensor_physical_dimensions"], {"height": 480, "width": 640})
     self.assertDictEqual(d["active_sensor_pixel_dimensions"], {"height": 480, "width": 640})
     self.assertEqual(d["lens_serial_number"], "123456789")
@@ -146,19 +146,19 @@ class ModelTest(unittest.TestCase):
   def test_fps(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.fps)
+    self.assertIsNone(clip.capture_fps)
 
     with self.assertRaises(ValueError):
-      clip.fps = 0.7
+      clip.capture_fps = 0.7
 
     with self.assertRaises(ValueError):
-      clip.fps = -24
+      clip.capture_fps = -24
 
     value = Fraction(24000, 1001)
 
-    clip.fps = value
+    clip.capture_fps = value
 
-    self.assertEqual(clip.fps, value)
+    self.assertEqual(clip.capture_fps, value)
 
 
   def test_t_number(self):
