@@ -31,6 +31,7 @@ import typing
 from fractions import Fraction
 
 import camdkit.model
+import camdkit.utils as utils
 
 # https://www.arri.com/resource/blob/31908/14147b455c90a9a35018c0d091350ff3/2021-10-arri-formatsandresolutionsoverview-3-4-data.pdf
 _CAMERA_FAMILY_PIXEL_PITCH_MAP = {
@@ -67,7 +68,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
-    clip.fps = Fraction(csv_data[0]["Project FPS"])
+    clip.fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
 
     clip.white_balance = int(csv_data[0]["White Balance"])
 
