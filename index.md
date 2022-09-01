@@ -17,7 +17,11 @@ as well as a specific set of constraints.
 
 #### Description
 
-Height and width, in microns, of the active area of the camera sensor
+Height and width of the active area of the camera sensor
+
+#### Units
+
+micron
 
 #### Sampling
 
@@ -31,7 +35,11 @@ The height and width shall be each be an integer in the range [0..2,147,483,647]
 
 #### Description
 
-Height and width, in pixels, of the active area of the camera sensor
+Height and width of the active area of the camera sensor
+
+#### Units
+
+pixel
 
 #### Sampling
 
@@ -45,7 +53,11 @@ The height and width shall be each be an integer in the range [0..2,147,483,647]
 
 #### Description
 
-Duration of the clip in seconds
+Duration of the clip
+
+#### Units
+
+second
 
 #### Sampling
 
@@ -59,7 +71,11 @@ The parameter shall be a rational number whose numerator and denominator are in 
 
 #### Description
 
-Entrance pupil of the lens in millimeters
+Entrance pupil diameter of the lens
+
+#### Units
+
+millimeter
 
 #### Sampling
 
@@ -73,7 +89,11 @@ The parameter shall be a rational number whose numerator and denominator are in 
 
 #### Description
 
-Focal length of the lens in millimeter
+Focal length of the lens
+
+#### Units
+
+millimeter
 
 #### Sampling
 
@@ -87,7 +107,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 #### Description
 
-Focus distance/position of the lens millimeters
+Focus distance/position of the lens
+
+#### Units
+
+millimeter
 
 #### Sampling
 
@@ -101,7 +125,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 #### Description
 
-Capture frame frate of the camera in frames per second (fps)
+Capture frame frate of the camera
+
+#### Units
+
+hertz
 
 #### Sampling
 
@@ -117,6 +145,10 @@ The parameter shall be a rational number whose numerator and denominator are in 
 
 Arithmetic ISO scale as defined in ISO 12232
 
+#### Units
+
+unit
+
 #### Sampling
 
 Static
@@ -131,6 +163,10 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 Unique identifier of the lens
 
+#### Units
+
+n/a
+
 #### Sampling
 
 Static
@@ -143,7 +179,11 @@ The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
 #### Description
 
-Thousandths of the t-number of the lens
+The linear t-number of the lens
+
+#### Units
+
+0.001 unit
 
 #### Sampling
 
@@ -157,7 +197,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 #### Description
 
-White balance of the camera expressed in degrees kelvin.
+White balance of the camera.
+
+#### Units
+
+kelvin
 
 #### Sampling
 
