@@ -49,6 +49,24 @@ Static
 
 The height and width shall be each be an integer in the range [0..2,147,483,647].
 
+### `capture_fps`
+
+#### Description
+
+Capture frame frate of the camera
+
+#### Units
+
+hertz
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
+
 ### `duration`
 
 #### Description
@@ -120,24 +138,6 @@ Regular
 #### Constraints
 
 The parameter shall be a integer in the range (0..2,147,483,647].
-
-### `fps`
-
-#### Description
-
-Capture frame frate of the camera
-
-#### Units
-
-hertz
-
-#### Sampling
-
-Static
-
-#### Constraints
-
-The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
 ### `iso`
 
@@ -257,6 +257,10 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       }
     }
   },
+  "capture_fps": {
+    "type": "string",
+    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+  },
   "duration": {
     "type": "string",
     "regex": "[0-9]{1,10}/[0-9]{1,10}"
@@ -283,10 +287,6 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "minimum": 1,
       "maximum": 2147483647
     }
-  },
-  "fps": {
-    "type": "string",
-    "regex": "[0-9]{1,10}/[0-9]{1,10}"
   },
   "iso": {
     "type": "integer",
