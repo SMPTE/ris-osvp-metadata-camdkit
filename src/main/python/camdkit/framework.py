@@ -263,6 +263,7 @@ class ParameterContainer:
       doc[desc.canonical_name] = {
         "description" : desc.__doc__,
         "constraints" : desc.validate.__doc__,
-        "sampling" : str(desc.sampling.value)
+        "sampling" : str(desc.sampling.value),
+        "units": desc.units
       }
     return doc
