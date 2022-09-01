@@ -31,31 +31,35 @@ import typing
 from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling, IntegerDimensionsParameter, Dimensions
 
 class ActiveSensorPixelDimensions(IntegerDimensionsParameter):
-  "Height and width, in pixels, of the active area of the camera sensor"
+  "Height and width of the active area of the camera sensor"
 
   canonical_name = "active_sensor_pixel_dimensions"
   sampling = Sampling.STATIC
+  units = "pixel"
 
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
-  "Height and width, in microns, of the active area of the camera sensor"
+  "Height and width of the active area of the camera sensor"
 
   canonical_name = "active_sensor_physical_dimensions"
   sampling = Sampling.STATIC
+  units = "micron"
 
 
 class Duration(StrictlyPostiveRationalParameter):
-  """Duration of the clip in seconds"""
+  """Duration of the clip"""
 
   canonical_name = "duration"
   sampling = Sampling.STATIC
+  units = "second"
 
 
 class FPS(StrictlyPostiveRationalParameter):
-  """Capture frame frate of the camera in frames per second (fps)"""
+  """Capture frame frate of the camera"""
 
   canonical_name = "fps"
   sampling = Sampling.STATIC
+  units = "hertz"
 
 
 class ISO(StrictlyPositiveIntegerParameter):
@@ -63,13 +67,15 @@ class ISO(StrictlyPositiveIntegerParameter):
 
   canonical_name = "iso"
   sampling = Sampling.STATIC
+  units = "unit"
 
 
 class WhiteBalance(StrictlyPositiveIntegerParameter):
-  """White balance of the camera expressed in degrees kelvin."""
+  """White balance of the camera."""
 
   canonical_name = "white_balance"
   sampling = Sampling.STATIC
+  units = "kelvin"
 
 
 class LensSerialNumber(StringParameter):
@@ -77,34 +83,37 @@ class LensSerialNumber(StringParameter):
 
   canonical_name = "lens_serial_number"
   sampling = Sampling.STATIC
-
+  units = None
 
 class TNumber(StrictlyPositiveIntegerParameter):
-  """Thousandths of the t-number of the lens"""
+  """The linear t-number of the lens"""
 
   canonical_name = "t_number"
   sampling = Sampling.REGULAR
-
+  units = "0.001 unit"
 
 class FocalLength(StrictlyPositiveIntegerParameter):
-  """Focal length of the lens in millimeter"""
+  """Focal length of the lens"""
 
   canonical_name = "focal_length"
   sampling = Sampling.REGULAR
+  units = "millimeter"
 
 
 class FocalPosition(StrictlyPositiveIntegerParameter):
-  """Focus distance/position of the lens millimeters"""
+  """Focus distance/position of the lens"""
 
   canonical_name = "focal_position"
   sampling = Sampling.REGULAR
+  units = "millimeter"
 
 
 class EntrancePupilPosition(StrictlyPostiveRationalParameter):
-  """Entrance pupil of the lens in millimeters"""
+  """Entrance pupil diameter of the lens"""
 
   canonical_name = "entrance_pupil_position"
   sampling = Sampling.REGULAR
+  units = "millimeter"
 
 
 class Clip(ParameterContainer):

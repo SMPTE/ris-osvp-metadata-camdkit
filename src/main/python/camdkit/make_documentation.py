@@ -33,11 +33,19 @@ def generate_documentation(fp: typing.TextIO):
     fp.write(info["description"])
     fp.write("\n")
     fp.write("\n")
+
+    fp.write("#### Units\n")
+    fp.write("\n")
+    fp.write(info["units"] if info["units"] is not None else "n/a")
+    fp.write("\n")
+    fp.write("\n")
+
     fp.write("#### Sampling\n")
     fp.write("\n")
     fp.write(info["sampling"])
     fp.write("\n")
     fp.write("\n")
+
     fp.write("#### Constraints\n")
     fp.write("\n")
     fp.write(info["constraints"])
