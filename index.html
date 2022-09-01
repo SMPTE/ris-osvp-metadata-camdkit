@@ -1135,86 +1135,98 @@ as well as a specific set of constraints.</p>
 <p>Static</p>
 <h4 id="constraints-1" tabindex="-1"><a class="anchor" href="#constraints-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The height and width shall be each be an integer in the range [0..2,147,483,647].</p>
-<h3 id="capturefps" tabindex="-1"><a class="anchor" href="#capturefps" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>capture_fps</code></h3>
+<h3 id="anamorphicsqueeze" tabindex="-1"><a class="anchor" href="#anamorphicsqueeze" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>anamorphic_squeeze</code></h3>
 <h4 id="description-2" tabindex="-1"><a class="anchor" href="#description-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Capture frame frate of the camera</p>
+<p>Nominal ratio of height to width of the image of an axis-aligned square
+captured by the camera sensor. It can be used to de-squeeze images but is not
+however an exact number over the entire captured area due to a lens' intrinsic
+analog nature.</p>
 <h4 id="units-2" tabindex="-1"><a class="anchor" href="#units-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>hertz</p>
+<p>0.01 unit</p>
 <h4 id="sampling-2" tabindex="-1"><a class="anchor" href="#sampling-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints-2" tabindex="-1"><a class="anchor" href="#constraints-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].</p>
-<h3 id="duration" tabindex="-1"><a class="anchor" href="#duration" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>duration</code></h3>
+<p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
+<h3 id="capturefps" tabindex="-1"><a class="anchor" href="#capturefps" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>capture_fps</code></h3>
 <h4 id="description-3" tabindex="-1"><a class="anchor" href="#description-3" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Duration of the clip</p>
+<p>Capture frame frate of the camera</p>
 <h4 id="units-3" tabindex="-1"><a class="anchor" href="#units-3" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>second</p>
+<p>hertz</p>
 <h4 id="sampling-3" tabindex="-1"><a class="anchor" href="#sampling-3" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints-3" tabindex="-1"><a class="anchor" href="#constraints-3" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].</p>
-<h3 id="entrancepupilposition" tabindex="-1"><a class="anchor" href="#entrancepupilposition" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>entrance_pupil_position</code></h3>
+<h3 id="duration" tabindex="-1"><a class="anchor" href="#duration" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>duration</code></h3>
 <h4 id="description-4" tabindex="-1"><a class="anchor" href="#description-4" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Entrance pupil diameter of the lens</p>
+<p>Duration of the clip</p>
 <h4 id="units-4" tabindex="-1"><a class="anchor" href="#units-4" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
+<p>second</p>
 <h4 id="sampling-4" tabindex="-1"><a class="anchor" href="#sampling-4" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-4" tabindex="-1"><a class="anchor" href="#constraints-4" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].</p>
-<h3 id="focallength" tabindex="-1"><a class="anchor" href="#focallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focal_length</code></h3>
+<h3 id="entrancepupilposition" tabindex="-1"><a class="anchor" href="#entrancepupilposition" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>entrance_pupil_position</code></h3>
 <h4 id="description-5" tabindex="-1"><a class="anchor" href="#description-5" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focal length of the lens</p>
+<p>Entrance pupil diameter of the lens</p>
 <h4 id="units-5" tabindex="-1"><a class="anchor" href="#units-5" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>millimeter</p>
 <h4 id="sampling-5" tabindex="-1"><a class="anchor" href="#sampling-5" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-5" tabindex="-1"><a class="anchor" href="#constraints-5" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
-<h3 id="focalposition" tabindex="-1"><a class="anchor" href="#focalposition" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focal_position</code></h3>
+<p>The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].</p>
+<h3 id="focallength" tabindex="-1"><a class="anchor" href="#focallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focal_length</code></h3>
 <h4 id="description-6" tabindex="-1"><a class="anchor" href="#description-6" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focus distance/position of the lens</p>
+<p>Focal length of the lens</p>
 <h4 id="units-6" tabindex="-1"><a class="anchor" href="#units-6" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>millimeter</p>
 <h4 id="sampling-6" tabindex="-1"><a class="anchor" href="#sampling-6" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-6" tabindex="-1"><a class="anchor" href="#constraints-6" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
-<h3 id="iso" tabindex="-1"><a class="anchor" href="#iso" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>iso</code></h3>
+<h3 id="focalposition" tabindex="-1"><a class="anchor" href="#focalposition" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focal_position</code></h3>
 <h4 id="description-7" tabindex="-1"><a class="anchor" href="#description-7" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Arithmetic ISO scale as defined in ISO 12232</p>
+<p>Focus distance/position of the lens</p>
 <h4 id="units-7" tabindex="-1"><a class="anchor" href="#units-7" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>unit</p>
+<p>millimeter</p>
 <h4 id="sampling-7" tabindex="-1"><a class="anchor" href="#sampling-7" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-7" tabindex="-1"><a class="anchor" href="#constraints-7" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
-<h3 id="lensserialnumber" tabindex="-1"><a class="anchor" href="#lensserialnumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>lens_serial_number</code></h3>
+<h3 id="iso" tabindex="-1"><a class="anchor" href="#iso" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>iso</code></h3>
 <h4 id="description-8" tabindex="-1"><a class="anchor" href="#description-8" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Unique identifier of the lens</p>
+<p>Arithmetic ISO scale as defined in ISO 12232</p>
 <h4 id="units-8" tabindex="-1"><a class="anchor" href="#units-8" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
+<p>unit</p>
 <h4 id="sampling-8" tabindex="-1"><a class="anchor" href="#sampling-8" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints-8" tabindex="-1"><a class="anchor" href="#constraints-8" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
+<h3 id="lensserialnumber" tabindex="-1"><a class="anchor" href="#lensserialnumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>lens_serial_number</code></h3>
+<h4 id="description-9" tabindex="-1"><a class="anchor" href="#description-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Unique identifier of the lens</p>
+<h4 id="units-9" tabindex="-1"><a class="anchor" href="#units-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-9" tabindex="-1"><a class="anchor" href="#sampling-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Static</p>
+<h4 id="constraints-9" tabindex="-1"><a class="anchor" href="#constraints-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023 codepoints.</p>
 <h3 id="tnumber" tabindex="-1"><a class="anchor" href="#tnumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>t_number</code></h3>
-<h4 id="description-9" tabindex="-1"><a class="anchor" href="#description-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-10" tabindex="-1"><a class="anchor" href="#description-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>The linear t-number of the lens</p>
-<h4 id="units-9" tabindex="-1"><a class="anchor" href="#units-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-10" tabindex="-1"><a class="anchor" href="#units-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>0.001 unit</p>
-<h4 id="sampling-9" tabindex="-1"><a class="anchor" href="#sampling-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-10" tabindex="-1"><a class="anchor" href="#sampling-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-9" tabindex="-1"><a class="anchor" href="#constraints-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-10" tabindex="-1"><a class="anchor" href="#constraints-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
 <h3 id="whitebalance" tabindex="-1"><a class="anchor" href="#whitebalance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>white_balance</code></h3>
-<h4 id="description-10" tabindex="-1"><a class="anchor" href="#description-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-11" tabindex="-1"><a class="anchor" href="#description-11" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>White balance of the camera.</p>
-<h4 id="units-10" tabindex="-1"><a class="anchor" href="#units-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-11" tabindex="-1"><a class="anchor" href="#units-11" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>kelvin</p>
-<h4 id="sampling-10" tabindex="-1"><a class="anchor" href="#sampling-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-11" tabindex="-1"><a class="anchor" href="#sampling-11" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
-<h4 id="constraints-10" tabindex="-1"><a class="anchor" href="#constraints-10" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-11" tabindex="-1"><a class="anchor" href="#constraints-11" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..2,147,483,647].</p>
 <h4 id="json-schema" tabindex="-1"><a class="anchor" href="#json-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a> JSON Schema</h4>
 <pre><code class="language-{">  "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1259,6 +1271,11 @@ as well as a specific set of constraints.</p>
         "maximum": 2147483647
       }
     }
+  },
+  "anamorphic_squeeze": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
   },
   "capture_fps": {
     "type": "string",

@@ -49,6 +49,27 @@ Static
 
 The height and width shall be each be an integer in the range [0..2,147,483,647].
 
+### `anamorphic_squeeze`
+
+#### Description
+
+Nominal ratio of height to width of the image of an axis-aligned square
+  captured by the camera sensor. It can be used to de-squeeze images but is not
+  however an exact number over the entire captured area due to a lens' intrinsic
+  analog nature.
+
+#### Units
+
+0.01 unit
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a integer in the range (0..2,147,483,647].
+
 ### `capture_fps`
 
 #### Description
@@ -256,6 +277,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
         "maximum": 2147483647
       }
     }
+  },
+  "anamorphic_squeeze": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 2147483647
   },
   "capture_fps": {
     "type": "string",
