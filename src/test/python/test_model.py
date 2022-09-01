@@ -50,6 +50,7 @@ class ModelTest(unittest.TestCase):
     clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.lens_serial_number = "123456789"
     clip.white_balance = 7200
+    clip.anamorphic_squeeze = 120
     clip.iso = 13
     clip.t_number = (2, 4)
     clip.focal_length = (2, 4)
@@ -64,6 +65,7 @@ class ModelTest(unittest.TestCase):
     self.assertDictEqual(d["active_sensor_pixel_dimensions"], {"height": 480, "width": 640})
     self.assertEqual(d["lens_serial_number"], "123456789")
     self.assertEqual(d["white_balance"], 7200)
+    self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
     self.assertTupleEqual(d["t_number"], (2, 4))
     self.assertTupleEqual(d["focal_length"], (2, 4))

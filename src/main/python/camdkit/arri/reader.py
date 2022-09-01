@@ -72,6 +72,8 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.white_balance = int(csv_data[0]["White Balance"])
 
+    clip.anamorphic_squeeze = round(float(csv_data[0]["Lens Squeeze"]) * 100)
+
     clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(
       width=int(csv_data[0]["Image Width"]),
       height=int(csv_data[0]["Image Height"])

@@ -115,6 +115,16 @@ class EntrancePupilPosition(StrictlyPostiveRationalParameter):
   sampling = Sampling.REGULAR
   units = "millimeter"
 
+class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
+  """Nominal ratio of height to width of the image of an axis-aligned square
+  captured by the camera sensor. It can be used to de-squeeze images but is not
+  however an exact number over the entire captured area due to a lens' intrinsic
+  analog nature."""
+
+  canonical_name = "anamorphic_squeeze"
+  sampling = Sampling.STATIC
+  units = "0.01 unit"
+
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -130,3 +140,4 @@ class Clip(ParameterContainer):
   focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
   focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
+  anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()

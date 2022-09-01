@@ -138,6 +138,8 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.active_sensor_pixel_dimensions = find_px_dims(clip_metadata)
 
+  clip.anamorphic_squeeze = int_or_none(find_value(clip_metadata, "AnamorphicLensSqueezeRatio"))
+
   clip_fps = find_fps(clip_metadata)
 
   if clip_fps is None:
