@@ -37,7 +37,7 @@ def main():
 
   model = camdkit.arri.reader.to_clip(args.csv_path)
 
-  print(json.dumps(model.serialize(), indent=2))
+  print(json.dumps(model.to_json(), indent=2))
 
 if __name__ == "__main__":
   main()

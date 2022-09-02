@@ -48,7 +48,7 @@ def main():
     open(args.dyn_csv_path, "r", encoding="utf-8") as dynamic_file:
     clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
-  print(json.dumps(clip.serialize(), indent=2))
+  print(json.dumps(clip.to_json(), indent=2))
 
 if __name__ == "__main__":
   main()

@@ -215,7 +215,7 @@ class ParameterContainer:
       value = self._values[k]
       if value is None:
         obj[desc.canonical_name] = None
-      if desc.sampling is Sampling.STATIC:
+      elif desc.sampling is Sampling.STATIC:
         obj[desc.canonical_name] = desc.to_json(self._values[k])
       elif desc.sampling is Sampling.REGULAR:
         obj[desc.canonical_name] = tuple(map(desc.to_json, value))

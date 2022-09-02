@@ -48,7 +48,7 @@ def main():
     open(args.meta_5_file_path, "r", encoding="utf-8") as type_5_file:
     clip = camdkit.red.reader.to_clip(type_3_file, type_5_file)
 
-  print(json.dumps(clip.serialize(), indent=2))
+  print(json.dumps(clip.to_json(), indent=2))
 
 if __name__ == "__main__":
   main()
