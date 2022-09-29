@@ -232,7 +232,7 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-#### JSON Schema
+## JSON Schema
 
 ```{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -339,3 +339,12 @@ The parameter shall be a integer in the range (0..2,147,483,647].
   }
 }
 ```
+## Reader coverage
+
+The following table indicates the camera parameters supported by each of the readers.
+
+| Reader      | active_sensor_physical_dimensions | active_sensor_pixel_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | + | + | + | + | + | + | + |
+| ARRI | + | + | + | + | + | | + | + | + | + | + | + |
+| Venice | + | + | + | + | + | | + | + | + | + | + | + |
