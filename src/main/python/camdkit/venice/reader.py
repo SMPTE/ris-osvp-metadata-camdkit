@@ -136,8 +136,6 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.white_balance = int_or_none(find_value(clip_metadata, "WhiteBalance"))
 
-  clip.active_sensor_pixel_dimensions = find_px_dims(clip_metadata)
-
   clip.anamorphic_squeeze = int_or_none(find_value(clip_metadata, "AnamorphicLensSqueezeRatio"))
 
   clip_fps = find_fps(clip_metadata)
@@ -153,7 +151,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
     raise ValueError("No valid duration found")
 
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
-  pix_dims = clip.active_sensor_pixel_dimensions
+  pix_dims = find_px_dims(clip_metadata)
   clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(
         width=round(pix_dims.width * pixel_pitch),
         height=round(pix_dims.height * pixel_pitch)

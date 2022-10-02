@@ -57,11 +57,6 @@ class VenicReaderTest(unittest.TestCase):
     self.assertEqual(clip.anamorphic_squeeze, 100)
 
     self.assertEqual(
-      clip.active_sensor_pixel_dimensions,
-      camdkit.model.Dimensions(width=5674, height=3192)
-    )
-
-    self.assertEqual(
       clip.active_sensor_physical_dimensions,
       camdkit.model.Dimensions(width=round(5674 * 5.9375), height=round(3192 * 5.9375))
     )

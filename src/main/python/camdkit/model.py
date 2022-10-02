@@ -30,14 +30,6 @@ import typing
 
 from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling, IntegerDimensionsParameter, Dimensions
 
-class ActiveSensorPixelDimensions(IntegerDimensionsParameter):
-  "Height and width of the active area of the camera sensor"
-
-  canonical_name = "active_sensor_pixel_dimensions"
-  sampling = Sampling.STATIC
-  units = "pixel"
-
-
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
 
@@ -132,7 +124,6 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
-  active_sensor_pixel_dimensions: typing.Optional[Dimensions] = ActiveSensorPixelDimensions()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()
