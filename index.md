@@ -31,24 +31,6 @@ Static
 
 The height and width shall be each be an integer in the range [0..2,147,483,647].
 
-### `active_sensor_pixel_dimensions`
-
-#### Description
-
-Height and width of the active area of the camera sensor
-
-#### Units
-
-pixel
-
-#### Sampling
-
-Static
-
-#### Constraints
-
-The height and width shall be each be an integer in the range [0..2,147,483,647].
-
 ### `anamorphic_squeeze`
 
 #### Description
@@ -258,26 +240,6 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       }
     }
   },
-  "active_sensor_pixel_dimensions": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "height",
-      "width"
-    ],
-    "properties": {
-      "height": {
-        "type": "integer",
-        "minimum": 0,
-        "maximum": 2147483647
-      },
-      "width": {
-        "type": "integer",
-        "minimum": 0,
-        "maximum": 2147483647
-      }
-    }
-  },
   "anamorphic_squeeze": {
     "type": "integer",
     "minimum": 1,
@@ -343,8 +305,8 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | active_sensor_pixel_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | + | + | + | + | + | + | + |
-| ARRI | + | + | + | + | + | | + | + | + | + | + | + |
-| Venice | + | + | + | + | + | | + | + | + | + | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | + | + | + | + | + | + |
+| ARRI | + | + | + | + | | + | + | + | + | + | + |
+| Venice | + | + | + | + | | + | + | + | + | + | + |
