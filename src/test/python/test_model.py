@@ -218,3 +218,20 @@ class ModelTest(unittest.TestCase):
     clip.white_balance = value
 
     self.assertEqual(clip.white_balance, value)
+
+  def test_fdl_link(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.fdl_link)
+
+    with self.assertRaises(ValueError):
+      clip.fdl_link = "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+
+    value = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    clip.fdl_link = value
+    self.assertEqual(clip.fdl_link, value)
+
+    # test mixed case
+
+    with self.assertRaises(ValueError):
+      clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
