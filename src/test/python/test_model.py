@@ -55,6 +55,7 @@ class ModelTest(unittest.TestCase):
     clip.focal_length = (2, 4)
     clip.focal_position = (2, 4)
     clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
+    clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
 
     d = clip.to_json()
 
@@ -65,6 +66,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["white_balance"], 7200)
     self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
+    self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertTupleEqual(d["t_number"], (2, 4))
     self.assertTupleEqual(d["focal_length"], (2, 4))
     self.assertTupleEqual(d["focal_position"], (2, 4))
