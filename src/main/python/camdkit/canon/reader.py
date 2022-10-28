@@ -27,9 +27,13 @@
 
 import csv
 import typing
+import struct
 from fractions import Fraction
 
 import camdkit.model
+
+def _read_float32_as_hex(float32_hex: str) -> float:
+  return struct.unpack('>f', bytes.fromhex(float32_hex))[0]
 
 def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   """Read Canon camera metadata into a `Clip`.
@@ -87,7 +91,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   clip.focal_length = tuple(round(Fraction(m["FocalLength"]) * 1000) for m in frame_data)
 
   # focal_position
-  clip.focal_position = tuple(int(m["FocusPosition"]) * 1000 for m in frame_data)
+  clip.focal_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
 
   # entrance_pupil_position not supported
 

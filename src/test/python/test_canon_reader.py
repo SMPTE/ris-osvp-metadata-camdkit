@@ -32,19 +32,19 @@ import camdkit.canon.reader
 class CanonReaderTest(unittest.TestCase):
 
   def test_reader(self):
-    with open("src/test/resources/canon/20220830_CanonCameraMetadata_Static.csv", "r", encoding="utf-8") as static_csv, \
-      open("src/test/resources/canon/20220830_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
+    with open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Static.csv", "r", encoding="utf-8") as static_csv, \
+      open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
       clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
 
-    self.assertEqual(clip.iso, 200)
+    self.assertEqual(clip.iso, 1600)
 
-    self.assertEqual(clip.focal_length[0], 50000)
+    self.assertEqual(clip.focal_length[0], 18000)
 
-    self.assertEqual(clip.focal_position[0], 1055286886000)
+    self.assertEqual(clip.focal_position[0], 500)
 
     self.assertIsNone(clip.entrance_pupil_position)
 
-    self.assertIsNone(clip.t_number)
+    self.assertEqual(clip.t_number[0], 4500)
 
     self.assertIsNone(clip.capture_fps)
 
