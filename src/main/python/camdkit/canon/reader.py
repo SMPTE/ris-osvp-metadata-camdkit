@@ -88,7 +88,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   # sampled metadata
 
   # focal_length
-  clip.focal_length = tuple(round(Fraction(m["FocalLength"]) * 1000) for m in frame_data)
+  clip.focal_length = tuple(round(Fraction(m["FocalLength"])) for m in frame_data)
 
   # focal_position
   clip.focal_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)

@@ -36,23 +36,23 @@ class CanonReaderTest(unittest.TestCase):
       open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
       clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
 
-    self.assertEqual(clip.iso, 1600)
+    self.assertEqual(clip.iso, 1600)                # ISO: 1600
 
-    self.assertEqual(clip.focal_length[0], 18000)
+    self.assertEqual(clip.focal_length[0], 18)      # focal_length: 18 mm
 
-    self.assertEqual(clip.focal_position[0], 500)
+    self.assertEqual(clip.focal_position[0], 500)   # focal_position: 500 mm
 
     self.assertIsNone(clip.entrance_pupil_position)
 
-    self.assertEqual(clip.t_number[0], 4500)
+    self.assertEqual(clip.t_number[0], 4500)        # t_number: 4.5
 
     self.assertIsNone(clip.capture_fps)
 
     self.assertIsNone(clip.lens_serial_number)
 
-    self.assertEqual(clip.white_balance, 5600)
+    self.assertEqual(clip.white_balance, 5600)      # white_balance: 5600K
 
-    self.assertEqual(clip.anamorphic_squeeze, 100)
+    self.assertEqual(clip.anamorphic_squeeze, 100)  # anamorphic_squeeze: 1
 
     self.assertEqual(
       clip.active_sensor_pixel_dimensions,
