@@ -3,6 +3,7 @@ import numbers
 from fractions import Fraction
 from enum import Enum
 import dataclasses
+import re
 
 INT_MAX = 2147483647 # 2^31 - 1
 
@@ -105,6 +106,31 @@ class StringParameter(Parameter):
       "type": "string",
       "minLength": 1,
       "maxLength": 1023
+    }
+
+class UUIDURNParameter(Parameter):
+
+  _UUID_RE = re.compile("urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase characters shall be used.
+    Example: `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6`"""
+    return isinstance(value, str) and UUIDURNParameter._UUID_RE.match(value)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "string",
+      "pattern": '^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
     }
 
 class StrictlyPostiveRationalParameter(Parameter):
