@@ -47,7 +47,6 @@ class ModelTest(unittest.TestCase):
     clip.duration = 3
     clip.capture_fps = Fraction(24000, 1001)
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
-    clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.lens_serial_number = "123456789"
     clip.white_balance = 7200
     clip.anamorphic_squeeze = 120
@@ -56,17 +55,18 @@ class ModelTest(unittest.TestCase):
     clip.focal_length = (2, 4)
     clip.focal_position = (2, 4)
     clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
+    clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
 
     d = clip.to_json()
 
     self.assertEqual(d["duration"], "3")
     self.assertEqual(d["capture_fps"], "24000/1001")
     self.assertDictEqual(d["active_sensor_physical_dimensions"], {"height": 480, "width": 640})
-    self.assertDictEqual(d["active_sensor_pixel_dimensions"], {"height": 480, "width": 640})
     self.assertEqual(d["lens_serial_number"], "123456789")
     self.assertEqual(d["white_balance"], 7200)
     self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
+    self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertTupleEqual(d["t_number"], (2, 4))
     self.assertTupleEqual(d["focal_length"], (2, 4))
     self.assertTupleEqual(d["focal_position"], (2, 4))
@@ -104,18 +104,6 @@ class ModelTest(unittest.TestCase):
     clip.active_sensor_physical_dimensions = dims
 
     self.assertEqual(clip.active_sensor_physical_dimensions, dims)
-
-
-  def test_active_sensor_pixel_dimensions(self):
-    clip = camdkit.model.Clip()
-
-    self.assertIsNone(clip.active_sensor_pixel_dimensions)
-
-    dims = camdkit.model.Dimensions(4, 5)
-
-    clip.active_sensor_pixel_dimensions = dims
-
-    self.assertEqual(clip.active_sensor_pixel_dimensions, dims)
 
   def test_lens_serial_number(self):
     clip = camdkit.model.Clip()
@@ -232,3 +220,20 @@ class ModelTest(unittest.TestCase):
     clip.white_balance = value
 
     self.assertEqual(clip.white_balance, value)
+
+  def test_fdl_link(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.fdl_link)
+
+    with self.assertRaises(ValueError):
+      clip.fdl_link = "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+
+    value = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    clip.fdl_link = value
+    self.assertEqual(clip.fdl_link, value)
+
+    # test mixed case
+
+    with self.assertRaises(ValueError):
+      clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"

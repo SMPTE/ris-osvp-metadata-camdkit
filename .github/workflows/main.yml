@@ -17,7 +17,7 @@ jobs:
         run: |
           python -m unittest discover -v -s src/test/python
           mkdir -p build
-          python src/main/python/camdkit/make_documentation.py > build/index.md
+          python src/tools/python/make_documentation.py > build/index.md
 
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0

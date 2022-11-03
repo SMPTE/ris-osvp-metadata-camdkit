@@ -28,15 +28,9 @@
 import numbers
 import typing
 
-from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, StrictlyPositiveIntegerParameter, StringParameter, Sampling, IntegerDimensionsParameter, Dimensions
-
-class ActiveSensorPixelDimensions(IntegerDimensionsParameter):
-  "Height and width of the active area of the camera sensor"
-
-  canonical_name = "active_sensor_pixel_dimensions"
-  sampling = Sampling.STATIC
-  units = "pixel"
-
+from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, \
+                              StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
+                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -125,6 +119,13 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   sampling = Sampling.STATIC
   units = "0.01 unit"
 
+class FDLLink(UUIDURNParameter):
+  """Unique identifier of the FDL used by the camera."""
+
+  canonical_name = "fdl_link"
+  sampling = Sampling.STATIC
+  units = None
+
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -132,7 +133,6 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
-  active_sensor_pixel_dimensions: typing.Optional[Dimensions] = ActiveSensorPixelDimensions()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()
@@ -141,3 +141,4 @@ class Clip(ParameterContainer):
   focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
+  fdl_link: typing.Optional[str] = FDLLink()
