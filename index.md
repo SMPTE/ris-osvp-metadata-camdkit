@@ -106,6 +106,25 @@ Regular
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
+### `fdl_link`
+
+#### Description
+
+Unique identifier of the FDL used by the camera.
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase characters shall be used.
+    Example: `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+
 ### `focal_length`
 
 #### Description
@@ -260,6 +279,10 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "regex": "[0-9]{1,10}/[0-9]{1,10}"
     }
   },
+  "fdl_link": {
+    "type": "string",
+    "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
   "focal_length": {
     "type": "array",
     "items": {
@@ -305,8 +328,8 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | + | + | + | + | + | + |
-| ARRI | + | + | + | + | | + | + | + | + | + | + |
-| Venice | + | + | + | + | | + | + | + | + | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | | + | + | + | + | + | + |
+| ARRI | + | + | + | + | | | + | + | + | + | + | + |
+| Venice | + | + | + | + | | | + | + | + | + | + | + |
