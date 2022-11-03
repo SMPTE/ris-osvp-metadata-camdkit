@@ -84,7 +84,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
         height=round(pix_dims.height * pixel_pitch)
       )
 
-    clip.focal_length = tuple(int(float(m["Lens Focal Length"]) * 1000) for m in csv_data)
+    clip.focal_length = tuple(round(float(m["Lens Focal Length"])) for m in csv_data)
 
     clip.focal_position = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
 

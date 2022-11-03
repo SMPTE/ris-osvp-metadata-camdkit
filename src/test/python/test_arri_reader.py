@@ -47,7 +47,7 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.capture_fps, 24)
 
-    self.assertEqual(clip.focal_length[0], 40000)
+    self.assertEqual(clip.focal_length[0], 40)
 
     self.assertEqual(clip.focal_position[0], 4812)
 

@@ -39,7 +39,7 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 250)
 
-    self.assertEqual(clip.focal_length[0], 40000)
+    self.assertEqual(clip.focal_length[0], 40)
 
     self.assertEqual(clip.focal_position[0], 410)
 

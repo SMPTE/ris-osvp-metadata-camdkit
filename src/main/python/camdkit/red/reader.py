@@ -82,7 +82,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.anamorphic_squeeze = int(float(clip_metadata["Pixel Aspect Ratio"]) * 100)
 
-  clip.focal_length = tuple(int(m["Focal Length"]) * 1000 for m in csv_data)
+  clip.focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
 
   clip.focal_position = tuple(int(m["Focus Distance"]) for m in csv_data)
 
