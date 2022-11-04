@@ -136,6 +136,9 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.white_balance = int_or_none(find_value(clip_metadata, "WhiteBalance"))
 
+  shutter_angle = find_value(clip_metadata, "ShutterSpeedAngle")
+  clip.shutter_angle = int(shutter_angle) * 10 if shutter_angle is not None else None
+
   pixel_aspect_ratio = find_value(clip_metadata, "PixelAspectRatio")
   if pixel_aspect_ratio is not None:
     m = re.fullmatch("([0-9]+):([0-9]+)", pixel_aspect_ratio)

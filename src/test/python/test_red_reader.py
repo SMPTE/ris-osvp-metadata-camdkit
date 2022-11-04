@@ -55,6 +55,8 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.anamorphic_squeeze, 100)
 
+    self.assertEqual(clip.shutter_angle, 180000)
+
     self.assertEqual(
       clip.active_sensor_physical_dimensions,
       camdkit.model.Dimensions(width=4096 * 5, height=2160 * 5)

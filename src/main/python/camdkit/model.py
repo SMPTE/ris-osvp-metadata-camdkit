@@ -30,7 +30,7 @@ import typing
 
 from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, \
                               StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
-                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter
+                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -127,6 +127,38 @@ class FDLLink(UUIDURNParameter):
   units = None
 
 
+class ShutterAngle(Parameter):
+  """Shutter speed as a fraction of the capture frame rate. The shutter speed
+  (in units of 1/s) is equal to the value of the parameter divided by 360 times
+  the capture frame rate."""
+
+  canonical_name = "shutter_angle"
+  sampling = Sampling.STATIC
+  units = "degrees (angular)"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be an integer in the range (0..360000]."""
+
+    return isinstance(value, numbers.Integral) and 0 < value <= 360000
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return int(value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 360000
+    }
+
+
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
   """
@@ -142,3 +174,4 @@ class Clip(ParameterContainer):
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
+  shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
