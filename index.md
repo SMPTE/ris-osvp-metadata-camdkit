@@ -197,6 +197,26 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
+### `shutter_angle`
+
+#### Description
+
+Shutter speed as a fraction of the capture frame rate. The shutter speed
+  (in units of 1/s) is equal to the value of the parameter divided by 360 times
+  the capture frame rate.
+
+#### Units
+
+degrees (angular)
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be an integer in the range (0..360000].
+
 ### `t_number`
 
 #### Description
@@ -309,6 +329,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "minLength": 1,
     "maxLength": 1023
   },
+  "shutter_angle": {
+    "type": "integer",
+    "minimum": 1,
+    "maximum": 360000
+  },
   "t_number": {
     "type": "array",
     "items": {
@@ -328,8 +353,8 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | t_number | white_balance |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | | + | + | + | + | + | + |
-| ARRI | + | + | + | + | | | + | + | + | + | + | + |
-| Venice | + | + | + | + | | | + | + | + | + | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number | white_balance |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | | + | + | + | + | + | + | + |
+| ARRI | + | + | + | + | | | + | + | + | + | + | + | + |
+| Venice | + | + | + | + | | | + | + | + | + | + | + | + |
