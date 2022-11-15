@@ -5,6 +5,7 @@ import camdkit.model
 import camdkit.red.reader
 import camdkit.arri.reader
 import camdkit.venice.reader
+import camdkit.canon.reader
 
 _INTRODUCTION = """# OSVP Clip documentation
 
@@ -111,6 +112,14 @@ def generate_documentation(fp: typing.TextIO):
     clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
   _print_reader_coverage(fp, "Venice", parameter_names, clip)
+
+  # Canon reader
+
+  with open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Static.csv", "r", encoding="utf-8") as static_csv, \
+    open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
+    clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
+
+  _print_reader_coverage(fp, "Canon", parameter_names, clip)
 
 if __name__ == "__main__":
   generate_documentation(sys.stdout)
