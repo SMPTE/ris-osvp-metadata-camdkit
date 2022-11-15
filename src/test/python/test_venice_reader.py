@@ -52,8 +52,6 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.lens_serial_number, "7032.0100")
 
-    self.assertEqual(clip.white_balance, 4300)
-
     self.assertEqual(clip.anamorphic_squeeze, 100)
 
     self.assertEqual(clip.shutter_angle, 103800)

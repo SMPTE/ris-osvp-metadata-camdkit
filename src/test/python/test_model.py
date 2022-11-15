@@ -48,7 +48,6 @@ class ModelTest(unittest.TestCase):
     clip.capture_fps = Fraction(24000, 1001)
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
     clip.lens_serial_number = "123456789"
-    clip.white_balance = 7200
     clip.anamorphic_squeeze = 120
     clip.iso = 13
     clip.t_number = (2, 4)
@@ -64,7 +63,6 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["capture_fps"], "24000/1001")
     self.assertDictEqual(d["active_sensor_physical_dimensions"], {"height": 480, "width": 640})
     self.assertEqual(d["lens_serial_number"], "123456789")
-    self.assertEqual(d["white_balance"], 7200)
     self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
     self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
@@ -226,20 +224,6 @@ class ModelTest(unittest.TestCase):
     clip.set_entrance_pupil_position = value
 
     self.assertIsNone(clip.entrance_pupil_position, value)
-
-  def test_white_balance(self):
-    clip = camdkit.model.Clip()
-
-    self.assertIsNone(clip.white_balance)
-
-    with self.assertRaises(ValueError):
-      clip.white_balance = 0.5
-
-    value = 6500
-
-    clip.white_balance = value
-
-    self.assertEqual(clip.white_balance, value)
 
   def test_fdl_link(self):
     clip = camdkit.model.Clip()

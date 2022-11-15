@@ -51,8 +51,6 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.lens_serial_number, "G53599764")
 
-    self.assertEqual(clip.white_balance, 5600)
-
     self.assertEqual(clip.anamorphic_squeeze, 100)
 
     self.assertEqual(clip.shutter_angle, 180000)

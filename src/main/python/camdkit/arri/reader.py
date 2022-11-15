@@ -70,8 +70,6 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.capture_fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
 
-    clip.white_balance = int(csv_data[0]["White Balance"])
-
     clip.shutter_angle = round(float(csv_data[0]["Shutter Angle"])  * 1000)
 
     clip.anamorphic_squeeze = round(float(csv_data[0]["Lens Squeeze"]) * 100)
