@@ -358,3 +358,4 @@ The following table indicates the camera parameters supported by each of the rea
 | RED | + | + | + | + | + | | + | + | + | + | + | + | + |
 | ARRI | + | + | + | + | | | + | + | + | + | + | + | + |
 | Venice | + | + | + | + | | | + | + | + | + | + | + | + |
+| Canon | | + | | + | | | + | + | + | | + | + | + |
