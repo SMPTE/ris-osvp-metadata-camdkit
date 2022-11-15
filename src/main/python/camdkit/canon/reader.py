@@ -84,6 +84,8 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   if color_temperature != 65535:
     clip.white_balance = int(first_frame_data["ColorTemperature"])
 
+  # shutter angle
+  clip.shutter_angle = round(Fraction(first_frame_data['ExposureTime']) * 1000)
 
   # sampled metadata
 
