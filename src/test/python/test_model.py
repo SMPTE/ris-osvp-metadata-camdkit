@@ -56,6 +56,7 @@ class ModelTest(unittest.TestCase):
     clip.focal_position = (2, 4)
     clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    clip.shutter_angle = 180
 
     d = clip.to_json()
 
@@ -67,6 +68,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
     self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+    self.assertEqual(d["shutter_angle"], 180)
     self.assertTupleEqual(d["t_number"], (2, 4))
     self.assertTupleEqual(d["focal_length"], (2, 4))
     self.assertTupleEqual(d["focal_position"], (2, 4))
@@ -149,6 +151,24 @@ class ModelTest(unittest.TestCase):
     clip.capture_fps = value
 
     self.assertEqual(clip.capture_fps, value)
+
+  def test_shutter_angle(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.shutter_angle)
+
+    with self.assertRaises(ValueError):
+      clip.shutter_angle = 0
+
+    with self.assertRaises(ValueError):
+      clip.shutter_angle = 360001
+
+    value = 180
+
+    clip.shutter_angle = value
+
+    self.assertEqual(clip.shutter_angle, value)
+
 
 
   def test_t_number(self):
