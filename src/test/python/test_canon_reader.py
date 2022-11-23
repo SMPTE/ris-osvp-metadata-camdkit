@@ -56,9 +56,4 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.anamorphic_squeeze, 100)  # anamorphic_squeeze: 1
 
-    self.assertEqual(
-      clip.active_sensor_pixel_dimensions,
-      camdkit.model.Dimensions(width=5952, height=3140)
-    )
-
     self.assertIsNone(clip.active_sensor_physical_dimensions)
