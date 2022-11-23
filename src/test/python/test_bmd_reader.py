@@ -23,9 +23,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''ARRI camera reader tests'''
+'''Blackmagic RAW reader tests'''
 
-from fractions import Fraction
 import unittest
 
 import camdkit.bmd.reader
