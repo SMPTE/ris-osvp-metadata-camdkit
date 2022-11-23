@@ -31,7 +31,7 @@ import camdkit.bmd.reader
 
 def main():
   parser = argparse.ArgumentParser(description="Convert the output of the ExtractMetadata sample \
-  tool from the Backmagic RAW SDK to JSON according to the OSVP Camera Metadata Model.")
+  tool from the Blackmagic RAW SDK to JSON according to the OSVP Camera Metadata Model.")
   parser.add_argument(
     'metadata_path',
     type=str,

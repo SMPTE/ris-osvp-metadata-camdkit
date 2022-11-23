@@ -38,7 +38,7 @@ _METADATA_LINE_RE = re.compile(r"^([^:]+): (.+)$")
 
 def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   """Read Blackmagic camera metadata into a `Clip`.
-  `metadata_raw_sdk`: Output of the ExtractMetadata sample tool from the Backmagic RAW SDK
+  `metadata_raw_sdk`: Output of the ExtractMetadata sample tool from the Blackmagic RAW SDK
   """
 
   clip_data = {}
