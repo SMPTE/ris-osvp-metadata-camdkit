@@ -100,5 +100,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   # t_number
   if int(first_frame_data['ApertureMode']) == 2:
     clip.t_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
+  elif int(first_frame_data['ApertureMode']) == 1:
+    clip.f_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
 
   return clip

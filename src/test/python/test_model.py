@@ -51,7 +51,8 @@ class ModelTest(unittest.TestCase):
     clip.white_balance = 7200
     clip.anamorphic_squeeze = 120
     clip.iso = 13
-    clip.t_number = (2, 4)
+    clip.t_number = (2000, 4000)
+    clip.f_number = (1200, 2800)
     clip.focal_length = (2, 4)
     clip.focal_position = (2, 4)
     clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
@@ -69,7 +70,8 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["iso"], 13)
     self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertEqual(d["shutter_angle"], 180)
-    self.assertTupleEqual(d["t_number"], (2, 4))
+    self.assertTupleEqual(d["t_number"], (2000, 4000))
+    self.assertTupleEqual(d["f_number"], (1200, 2800))
     self.assertTupleEqual(d["focal_length"], (2, 4))
     self.assertTupleEqual(d["focal_position"], (2, 4))
     self.assertTupleEqual(d["entrance_pupil_position"], ("1/2", "13/7"))
@@ -169,7 +171,19 @@ class ModelTest(unittest.TestCase):
 
     self.assertEqual(clip.shutter_angle, value)
 
+  def test_f_number(self):
+    clip = camdkit.model.Clip()
 
+    self.assertEqual(clip.f_number, None)
+
+    with self.assertRaises(ValueError):
+      clip.f_number = [0.7]
+
+    value = (4000, 8000)
+
+    clip.f_number = value
+
+    self.assertTupleEqual(clip.f_number, value)
 
   def test_t_number(self):
     clip = camdkit.model.Clip()
