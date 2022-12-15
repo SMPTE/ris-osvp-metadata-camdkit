@@ -56,8 +56,6 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.lens_serial_number = clip_metadata["Lens Serial Number"]
 
-  clip.white_balance = int(clip_metadata["Kelvin"])
-
   pix_dims = camdkit.model.Dimensions(
     width=int(clip_metadata["Frame Width"]),
     height=int(clip_metadata["Frame Height"])

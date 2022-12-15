@@ -64,14 +64,6 @@ class ISO(StrictlyPositiveIntegerParameter):
   units = "unit"
 
 
-class WhiteBalance(StrictlyPositiveIntegerParameter):
-  """White balance of the camera."""
-
-  canonical_name = "white_balance"
-  sampling = Sampling.STATIC
-  units = "kelvin"
-
-
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
@@ -166,7 +158,6 @@ class Clip(ParameterContainer):
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
-  white_balance: typing.Optional[numbers.Integral] = WhiteBalance()
   iso: typing.Optional[numbers.Integral] = ISO()
   t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
   focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()

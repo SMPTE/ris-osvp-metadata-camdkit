@@ -52,8 +52,6 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertIsNone(clip.lens_serial_number)
 
-    self.assertEqual(clip.white_balance, 5600)      # white_balance: 5600K
-
     self.assertEqual(clip.anamorphic_squeeze, 100)  # anamorphic_squeeze: 1
 
     self.assertIsNone(clip.active_sensor_physical_dimensions)

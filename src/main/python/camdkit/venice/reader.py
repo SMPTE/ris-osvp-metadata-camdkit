@@ -134,8 +134,6 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.lens_serial_number = find_value(clip_metadata, "LensAttributes")
 
-  clip.white_balance = int_or_none(find_value(clip_metadata, "WhiteBalance"))
-
   shutter_angle = find_value(clip_metadata, "ShutterSpeedAngle")
   clip.shutter_angle = int(shutter_angle) * 10 if shutter_angle is not None else None
 
