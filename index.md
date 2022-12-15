@@ -106,6 +106,25 @@ Regular
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
+### `f_number`
+
+#### Description
+
+The linear f-number of the lens, equal to the focal length divided by the
+  diameter of the entrance pupil.
+
+#### Units
+
+0.001 unit
+
+#### Sampling
+
+Regular
+
+#### Constraints
+
+The parameter shall be a integer in the range (0..2,147,483,647].
+
 ### `fdl_link`
 
 #### Description
@@ -221,7 +240,8 @@ The parameter shall be an integer in the range (0..360000].
 
 #### Description
 
-The linear t-number of the lens
+The linear t-number of the lens, equal to the F-number of the lens divided
+  by the square root of the transmittance of the lens.
 
 #### Units
 
@@ -281,6 +301,14 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "regex": "[0-9]{1,10}/[0-9]{1,10}"
     }
   },
+  "f_number": {
+    "type": "array",
+    "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
   "fdl_link": {
     "type": "string",
     "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
@@ -330,9 +358,9 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | | + | + | + | + | + | + |
-| ARRI | + | + | + | + | | | + | + | + | + | + | + |
-| Venice | + | + | + | + | | | + | + | + | + | + | + |
-| Canon | | + | | + | | | + | + | + | | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | f_number | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | | | + | + | + | + | + | + |
+| ARRI | + | + | + | + | | | | + | + | + | + | + | + |
+| Venice | + | + | + | + | | | | + | + | + | + | + | + |
+| Canon | | + | | + | | | | + | + | + | | + | + |
