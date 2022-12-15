@@ -23,35 +23,26 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''Canon camera reader tests'''
+'''BMD CLI tool'''
 
-import unittest
+import json
+import argparse
+import camdkit.bmd.reader
 
-import camdkit.canon.reader
+def main():
+  parser = argparse.ArgumentParser(description="Convert the output of the ExtractMetadata sample \
+  tool from the Blackmagic RAW SDK to JSON according to the OSVP Camera Metadata Model.")
+  parser.add_argument(
+    'metadata_path',
+    type=str,
+    help="Path to the metadata file"
+    )
+  args = parser.parse_args()
 
-class CanonReaderTest(unittest.TestCase):
+  with open(args.metadata_path, "r", encoding="utf-8") as fp:
+    clip = camdkit.bmd.reader.to_clip(fp)
 
-  def test_reader(self):
-    with open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Static.csv", "r", encoding="utf-8") as static_csv, \
-      open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
-      clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
+  print(json.dumps(clip.to_json(), indent=2))
 
-    self.assertEqual(clip.iso, 1600)                # ISO: 1600
-
-    self.assertEqual(clip.focal_length[0], 18)      # focal_length: 18 mm
-
-    self.assertEqual(clip.focal_position[0], 500)   # focal_position: 500 mm
-
-    self.assertEqual(clip.shutter_angle, 180000)    # shutter_angle: 180 deg
-
-    self.assertIsNone(clip.entrance_pupil_position)
-
-    self.assertEqual(clip.t_number[0], 4500)        # t_number: 4.5
-
-    self.assertIsNone(clip.capture_fps)
-
-    self.assertIsNone(clip.lens_serial_number)
-
-    self.assertEqual(clip.anamorphic_squeeze, 100)  # anamorphic_squeeze: 1
-
-    self.assertIsNone(clip.active_sensor_physical_dimensions)
+if __name__ == "__main__":
+  main()

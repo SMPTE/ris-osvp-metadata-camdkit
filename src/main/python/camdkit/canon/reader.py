@@ -51,12 +51,6 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
 
   # clip metadata
 
-  # active_sensor_pixel_dimensions
-  clip.active_sensor_pixel_dimensions = camdkit.model.Dimensions(
-    width=int(clip_metadata["Width"]),
-    height=int(clip_metadata["Height"])
-  )
-
   # duration
   clip.duration = Fraction(int(clip_metadata["Duration"]), int(clip_metadata["Timescale"]))
 
