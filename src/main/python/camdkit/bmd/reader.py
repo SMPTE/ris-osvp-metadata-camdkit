@@ -106,9 +106,9 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   # clip.active_sensor_physical_dimensions is not supported
 
   # white_balance
-  white_balance_kelvin = first_frame_data.get("white_balance_kelvin")
-  if white_balance_kelvin is not None:
-    clip.white_balance = int(white_balance_kelvin)
+  # white_balance_kelvin = first_frame_data.get("white_balance_kelvin")
+  # if white_balance_kelvin is not None:
+  #   clip.white_balance = int(white_balance_kelvin)
 
   # shutter angle
   shutter_value = first_frame_data.get("shutter_value")
