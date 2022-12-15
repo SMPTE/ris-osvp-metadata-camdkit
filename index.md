@@ -235,24 +235,6 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `white_balance`
-
-#### Description
-
-White balance of the camera.
-
-#### Units
-
-kelvin
-
-#### Sampling
-
-Static
-
-#### Constraints
-
-The parameter shall be a integer in the range (0..2,147,483,647].
-
 ## JSON Schema
 
 ```{
@@ -341,11 +323,6 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "minimum": 1,
       "maximum": 2147483647
     }
-  },
-  "white_balance": {
-    "type": "integer",
-    "minimum": 1,
-    "maximum": 2147483647
   }
 }
 ```
@@ -353,9 +330,9 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number | white_balance |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | | + | + | + | + | + | + | + |
-| ARRI | + | + | + | + | | | + | + | + | + | + | + | + |
-| Venice | + | + | + | + | | | + | + | + | + | + | + | + |
-| Canon | | + | | + | | | + | + | + | | + | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | | + | + | + | + | + | + |
+| ARRI | + | + | + | + | | | + | + | + | + | + | + |
+| Venice | + | + | + | + | | | + | + | + | + | + | + |
+| Canon | | + | | + | | | + | + | + | | + | + |
