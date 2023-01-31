@@ -66,6 +66,20 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.duration = len(csv_data)/Fraction(csv_data[0]["Project FPS"])
 
+    clip.camera_make = "ARRI"
+
+    clip.camera_model = csv_data[0]["Camera Model"]
+
+    clip.camera_serial_number = csv_data[0]["Camera Serial Number"]
+
+    lens_model = csv_data[0]["Lens Model"]
+
+    if lens_model.startswith("ARRI "):
+      clip.lens_make = "ARRI"
+      clip.lens_model = lens_model[5:]
+    else:
+      clip.lens_model = lens_model
+
     clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
     clip.capture_fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
