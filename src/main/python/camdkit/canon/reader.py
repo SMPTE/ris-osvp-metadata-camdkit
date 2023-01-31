@@ -69,12 +69,6 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   if int(first_frame_data['PhotographicSensitivityMode']) == 1:
     clip.iso = Fraction(first_frame_data['PhotographicSensitivity']).numerator - 0x80000000
 
-  # lens_make not supported
-  # lens_model not supported
-  # lens_serial_number not supported
-  # camera_make not supported
-  # camera_firmware not supported
-  # camera_serial_number not supported
   # clip.active_sensor_physical_dimensions is not supported
   # clip.capture_fps is no supported
 
