@@ -102,6 +102,16 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   if iso is not None:
     clip.iso = int(iso)
 
+  clip.camera_make = clip_data.get("manufacturer")
+
+  clip.camera_model = clip_data.get("camera_type")
+
+  clip.camera_serial_number = clip_data.get("camera_id")
+
+  clip.camera_firmware = clip_data.get("firmware_version")
+
+  clip.lens_model = clip_data.get("lens_type")
+
   # clip.lens_serial_number is not supported
   # clip.active_sensor_physical_dimensions is not supported
 

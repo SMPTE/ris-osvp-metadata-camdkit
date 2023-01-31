@@ -51,6 +51,39 @@ def find_value(doc: ET.ElementTree, item_name: str) -> typing.Optional[str]:
 
   return attr
 
+def get_attribute_value(element: ET.Element, attr_name: str) -> typing.Optional[str]:
+  if element is None or attr_name is None:
+    return None
+  v = element.get(attr_name)
+  return None if v is None or v == "" else v.strip()
+
+def find_camera_info(doc: ET.ElementTree) -> typing.Tuple[str]:
+  elem = doc.find(".//nrt:Camera" , namespaces=NS_PREFIXES)
+
+  if elem is None:
+    return (None, None, None, None)
+
+  camera_make = get_attribute_value(elem, "manufacturer")
+  camera_model = get_attribute_value(elem, "modelName")
+  camera_sn = get_attribute_value(elem, "serialNo")
+
+  elem = elem.find(".//nrt:Element[@hardware='Main-Board']" , namespaces=NS_PREFIXES)
+
+  camera_firmware = get_attribute_value(elem, "software")
+
+  return (camera_make, camera_model, camera_sn, camera_firmware)
+
+def find_lens_info(doc: ET.ElementTree) -> typing.Tuple[str]:
+  elem = doc.find(".//nrt:Lens" , namespaces=NS_PREFIXES)
+
+  lens_make = get_attribute_value(elem, "software")
+  lens_model = get_attribute_value(elem, "modelName")
+
+  lens_sn = find_value(doc, "LensAttributes")
+
+  return (lens_make, lens_model, lens_sn)
+
+
 def find_fps(doc: ET.ElementTree)  -> typing.Optional[Fraction]:
   elem = doc.find(".//nrt:VideoFrame" , namespaces=NS_PREFIXES)
 
@@ -133,6 +166,12 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   clip.iso = int_or_none(find_value(clip_metadata, "ISOSensitivity"))
 
   clip.lens_serial_number = find_value(clip_metadata, "LensAttributes")
+
+  clip.camera_make, clip.camera_model, clip.camera_serial_number, clip.camera_firmware = find_camera_info(clip_metadata)
+
+  clip.lens_make, clip.lens_model, clip.lens_serial_number = find_lens_info(clip_metadata)
+
+  # lens_firmware not supported
 
   shutter_angle = find_value(clip_metadata, "ShutterSpeedAngle")
   clip.shutter_angle = int(shutter_angle) * 10 if shutter_angle is not None else None

@@ -54,7 +54,21 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.iso = int(clip_metadata['ISO'])
 
-  clip.lens_serial_number = clip_metadata["Lens Serial Number"]
+  clip.camera_make = "RED"
+
+  clip.camera_model = clip_metadata["Camera Model"].strip()
+
+  clip.camera_serial_number = clip_metadata["Camera PIN"].strip()
+
+  clip.camera_firmware = clip_metadata["Firmware Version"].strip()
+
+  clip.lens_make = clip_metadata["Lens Brand"].strip()
+
+  clip.lens_model = clip_metadata["Lens Name"].strip()
+
+  clip.lens_serial_number = clip_metadata["Lens Serial Number"].strip()
+
+  clip.lens_firmware = cooke.fixed_data_from_string(clip_metadata["Lens Cooke /i Static"]).firmware_version_number
 
   pix_dims = camdkit.model.Dimensions(
     width=int(clip_metadata["Frame Width"]),
@@ -86,7 +100,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.focal_position = tuple(int(m["Focus Distance"]) for m in csv_data)
 
-  cooke_metadata = tuple(cooke.from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
+  cooke_metadata = tuple(cooke.lens_data_from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
   clip.entrance_pupil_position = tuple(m.entrance_pupil_position for m in cooke_metadata)
 

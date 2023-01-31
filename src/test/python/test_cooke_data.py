@@ -34,11 +34,11 @@ _COOKE_METADATA = bytes(map(lambda i: int(i, 16), "64/40/40/46/68/48/70/B8/80/40
 class CookeDataTest(unittest.TestCase):
 
   def test_entrance_pupil_position(self):
-    c = camdkit.red.cooke.from_binary_string(_COOKE_METADATA)
+    c = camdkit.red.cooke.lens_data_from_binary_string(_COOKE_METADATA)
 
     self.assertEqual(c.entrance_pupil_position, 127)
 
   def test__position(self):
-    c = camdkit.red.cooke.from_binary_string(_COOKE_METADATA)
+    c = camdkit.red.cooke.lens_data_from_binary_string(_COOKE_METADATA)
 
     self.assertEqual(c.aperture_value, 560)

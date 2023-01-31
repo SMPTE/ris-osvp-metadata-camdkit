@@ -71,6 +71,55 @@ class LensSerialNumber(StringParameter):
   sampling = Sampling.STATIC
   units = None
 
+class LensMake(StringParameter):
+  """Make of the lens"""
+
+  canonical_name = "lens_make"
+  sampling = Sampling.STATIC
+  units = None
+
+class LensModel(StringParameter):
+  """Model of the lens"""
+
+  canonical_name = "lens_model"
+  sampling = Sampling.STATIC
+  units = None
+
+class LensFirmware(StringParameter):
+  """Version identifier for the firmware of the lens"""
+
+  canonical_name = "lens_firmware"
+  sampling = Sampling.STATIC
+  units = None
+
+class CameraSerialNumber(StringParameter):
+  """Unique identifier of the camera"""
+
+  canonical_name = "camera_serial_number"
+  sampling = Sampling.STATIC
+  units = None
+
+class CameraMake(StringParameter):
+  """Make of the camera"""
+
+  canonical_name = "camera_make"
+  sampling = Sampling.STATIC
+  units = None
+
+class CameraModel(StringParameter):
+  """Model of the camera"""
+
+  canonical_name = "camera_model"
+  sampling = Sampling.STATIC
+  units = None
+
+class CameraFirmware(StringParameter):
+  """Version identifier for the firmware of the camera"""
+
+  canonical_name = "camera_firmware"
+  sampling = Sampling.STATIC
+  units = None
+
 class TNumber(StrictlyPositiveIntegerParameter):
   """The linear t-number of the lens, equal to the F-number of the lens divided
   by the square root of the transmittance of the lens."""
@@ -166,7 +215,14 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
+  lens_make: typing.Optional[str] = LensMake()
+  lens_model: typing.Optional[str] = LensModel()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
+  lens_firmware: typing.Optional[str] = LensFirmware()
+  camera_make: typing.Optional[str] = CameraMake()
+  camera_model: typing.Optional[str] = CameraModel()
+  camera_firmware: typing.Optional[str] = CameraFirmware()
+  camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   iso: typing.Optional[numbers.Integral] = ISO()
   t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
   f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FNumber()

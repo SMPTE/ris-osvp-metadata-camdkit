@@ -36,6 +36,16 @@ class BMDReaderTest(unittest.TestCase):
     with open("src/test/resources/bmd/metadata.txt", "r", encoding="utf-8") as fp:
       clip = camdkit.bmd.reader.to_clip(fp)
 
+    self.assertEqual(clip.camera_make, "Blackmagic Design")
+
+    self.assertEqual(clip.camera_model, "Blackmagic URSA Mini Pro 12K")
+
+    self.assertEqual(clip.camera_serial_number, "7ef33b36-a5ba-4a04-b218-0afc7eb1f8b6")
+
+    self.assertEqual(clip.camera_firmware, "7.2.1")
+
+    self.assertEqual(clip.lens_model, "Cooke Anamorphic /i Prime Lens 50mm")
+
     self.assertEqual(clip.iso, 800)
 
     self.assertEqual(
