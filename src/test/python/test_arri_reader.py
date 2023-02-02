@@ -43,6 +43,16 @@ class ARRIReaderTest(unittest.TestCase):
       camdkit.model.Dimensions(width=316800, height=178200)
     )
 
+    self.assertEqual(clip.camera_make, "ARRI")
+
+    self.assertEqual(clip.camera_model, "Alexa LF Plus W")
+
+    self.assertEqual(clip.camera_serial_number, "2566")
+
+    self.assertEqual(clip.lens_make, "ARRI")
+
+    self.assertEqual(clip.lens_model, "SP40 T1.8")
+
     self.assertEqual(clip.lens_serial_number, "2")
 
     self.assertEqual(clip.capture_fps, 24)

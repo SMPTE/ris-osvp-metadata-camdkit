@@ -47,6 +47,13 @@ class ModelTest(unittest.TestCase):
     clip.duration = 3
     clip.capture_fps = Fraction(24000, 1001)
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
+    clip.camera_make = "Bob"
+    clip.camera_model = "Hello"
+    clip.camera_serial_number = "132456"
+    clip.camera_firmware = "7.1"
+    clip.lens_make = "ABC"
+    clip.lens_model = "FGH"
+    clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
     clip.anamorphic_squeeze = 120
     clip.iso = 13
@@ -63,7 +70,14 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["duration"], "3")
     self.assertEqual(d["capture_fps"], "24000/1001")
     self.assertDictEqual(d["active_sensor_physical_dimensions"], {"height": 480, "width": 640})
+    self.assertEqual(d["camera_make"], "Bob")
+    self.assertEqual(d["camera_model"], "Hello")
+    self.assertEqual(d["camera_serial_number"], "132456")
+    self.assertEqual(d["camera_firmware"], "7.1")
+    self.assertEqual(d["lens_make"], "ABC")
+    self.assertEqual(d["lens_model"], "FGH")
     self.assertEqual(d["lens_serial_number"], "123456789")
+    self.assertEqual(d["lens_firmware"], "1-dev.1")
     self.assertEqual(d["anamorphic_squeeze"], 120)
     self.assertEqual(d["iso"], 13)
     self.assertEqual(d["fdl_link"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")

@@ -42,6 +42,20 @@ class VenicReaderTest(unittest.TestCase):
       open("src/test/resources/venice/D001C005_210716AG.csv", "r", encoding="utf-8") as dynamic_file:
       clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
+    self.assertEqual(clip.camera_make, "Sony")
+
+    self.assertEqual(clip.camera_model, "MPC-3610")
+
+    self.assertEqual(clip.camera_serial_number, "0010201")
+
+    self.assertEqual(clip.camera_firmware, "6.10")
+
+    self.assertIsNone(clip.lens_make)
+
+    self.assertEqual(clip.lens_model, "S7i-32")
+
+    self.assertEqual(clip.lens_serial_number, "7032.0100")
+
     self.assertEqual(clip.iso, 500)
 
     self.assertEqual(clip.focal_length[0], 32)
@@ -49,8 +63,6 @@ class VenicReaderTest(unittest.TestCase):
     self.assertEqual(clip.t_number[0], 2219)
 
     self.assertEqual(clip.capture_fps, 24)
-
-    self.assertEqual(clip.lens_serial_number, "7032.0100")
 
     self.assertEqual(clip.anamorphic_squeeze, 100)
 

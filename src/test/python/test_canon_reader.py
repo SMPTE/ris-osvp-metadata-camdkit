@@ -36,6 +36,8 @@ class CanonReaderTest(unittest.TestCase):
       open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
       clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
 
+    self.assertEqual(clip.camera_make, "Canon")
+
     self.assertEqual(clip.iso, 1600)                # ISO: 1600
 
     self.assertEqual(clip.focal_length[0], 18)      # focal_length: 18 mm
