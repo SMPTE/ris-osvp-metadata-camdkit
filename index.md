@@ -52,6 +52,78 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
+### `camera_firmware`
+
+#### Description
+
+Version identifier for the firmware of the camera
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
+### `camera_make`
+
+#### Description
+
+Make of the camera
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
+### `camera_model`
+
+#### Description
+
+Model of the camera
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
+### `camera_serial_number`
+
+#### Description
+
+Unique identifier of the camera
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
 ### `capture_fps`
 
 #### Description
@@ -198,6 +270,60 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
+### `lens_firmware`
+
+#### Description
+
+Version identifier for the firmware of the lens
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
+### `lens_make`
+
+#### Description
+
+Make of the lens
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
+### `lens_model`
+
+#### Description
+
+Model of the lens
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
+
 ### `lens_serial_number`
 
 #### Description
@@ -286,6 +412,26 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "minimum": 1,
     "maximum": 2147483647
   },
+  "camera_firmware": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "camera_make": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "camera_model": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "camera_serial_number": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
   "capture_fps": {
     "type": "string",
     "regex": "[0-9]{1,10}/[0-9]{1,10}"
@@ -334,6 +480,21 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "minimum": 1,
     "maximum": 2147483647
   },
+  "lens_firmware": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "lens_make": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
+  "lens_model": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+  },
   "lens_serial_number": {
     "type": "string",
     "minLength": 1,
@@ -358,9 +519,9 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | capture_fps | duration | entrance_pupil_position | f_number | fdl_link | focal_length | focal_position | iso | lens_serial_number | shutter_angle | t_number |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | | | + | + | + | + | + | + |
-| ARRI | + | + | + | + | | | | + | + | + | + | + | + |
-| Venice | + | + | + | + | | | | + | + | + | + | + | + |
-| Canon | | + | | + | | | | + | + | + | | + | + |
+| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | camera_firmware | camera_make | camera_model | camera_serial_number | capture_fps | duration | entrance_pupil_position | f_number | fdl_link | focal_length | focal_position | iso | lens_firmware | lens_make | lens_model | lens_serial_number | shutter_angle | t_number |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | + | + | + | + | + | + | + | + | | | + | + | + | + | + | + | + | + | + |
+| ARRI | + | + | | + | + | + | + | + | | | | + | + | + | | + | + | + | + | + |
+| Venice | + | + | + | + | + | + | + | + | | | | + | + | + | | | + | + | + | + |
+| Canon | | + | | + | | | | + | | | | + | + | + | | | | | + | + |
