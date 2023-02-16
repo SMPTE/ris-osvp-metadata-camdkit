@@ -35,7 +35,7 @@ from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParamet
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
 
-  canonical_name = "active_sensor_physical_dimensions"
+  canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
   units = "micron"
 
@@ -88,7 +88,7 @@ class LensModel(StringParameter):
 class LensFirmware(StringParameter):
   """Version identifier for the firmware of the lens"""
 
-  canonical_name = "lens_firmware"
+  canonical_name = "lensFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
 
@@ -124,7 +124,7 @@ class TNumber(StrictlyPositiveIntegerParameter):
   """The linear t-number of the lens, equal to the F-number of the lens divided
   by the square root of the transmittance of the lens."""
 
-  canonical_name = "t_number"
+  canonical_name = "tNumber"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
@@ -147,7 +147,7 @@ class FocalLength(StrictlyPositiveIntegerParameter):
 class FocalPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focal_position"
+  canonical_name = "focalPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -155,7 +155,7 @@ class FocalPosition(StrictlyPositiveIntegerParameter):
 class EntrancePupilPosition(StrictlyPostiveRationalParameter):
   """Entrance pupil diameter of the lens"""
 
-  canonical_name = "entrance_pupil_position"
+  canonical_name = "entrancePupilPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -165,14 +165,14 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   however an exact number over the entire captured area due to a lens' intrinsic
   analog nature."""
 
-  canonical_name = "anamorphic_squeeze"
+  canonical_name = "anamorphicSqueeze"
   sampling = Sampling.STATIC
   units = "0.01 unit"
 
 class FDLLink(UUIDURNParameter):
   """Unique identifier of the FDL used by the camera."""
 
-  canonical_name = "fdl_link"
+  canonical_name = "fdlLink"
   sampling = Sampling.STATIC
   units = None
 
@@ -182,7 +182,7 @@ class ShutterAngle(Parameter):
   (in units of 1/s) is equal to the value of the parameter divided by 360 times
   the capture frame rate."""
 
-  canonical_name = "shutter_angle"
+  canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
   units = "degrees (angular)"
 
