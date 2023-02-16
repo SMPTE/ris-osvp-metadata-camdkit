@@ -51,7 +51,7 @@ class Duration(StrictlyPostiveRationalParameter):
 class CaptureFPS(StrictlyPostiveRationalParameter):
   """Capture frame frate of the camera"""
 
-  canonical_name = "capture_fps"
+  canonical_name = "captureRate"
   sampling = Sampling.STATIC
   units = "hertz"
 
@@ -59,7 +59,7 @@ class CaptureFPS(StrictlyPostiveRationalParameter):
 class ISO(StrictlyPositiveIntegerParameter):
   """Arithmetic ISO scale as defined in ISO 12232"""
 
-  canonical_name = "iso"
+  canonical_name = "isoSpeed"
   sampling = Sampling.STATIC
   units = "unit"
 
@@ -67,21 +67,21 @@ class ISO(StrictlyPositiveIntegerParameter):
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
-  canonical_name = "lens_serial_number"
+  canonical_name = "lensSerialNumber"
   sampling = Sampling.STATIC
   units = None
 
 class LensMake(StringParameter):
   """Make of the lens"""
 
-  canonical_name = "lens_make"
+  canonical_name = "lensMake"
   sampling = Sampling.STATIC
   units = None
 
 class LensModel(StringParameter):
   """Model of the lens"""
 
-  canonical_name = "lens_model"
+  canonical_name = "lensModel"
   sampling = Sampling.STATIC
   units = None
 
@@ -95,28 +95,28 @@ class LensFirmware(StringParameter):
 class CameraSerialNumber(StringParameter):
   """Unique identifier of the camera"""
 
-  canonical_name = "camera_serial_number"
+  canonical_name = "cameraSerialNumber"
   sampling = Sampling.STATIC
   units = None
 
 class CameraMake(StringParameter):
   """Make of the camera"""
 
-  canonical_name = "camera_make"
+  canonical_name = "cameraMake"
   sampling = Sampling.STATIC
   units = None
 
 class CameraModel(StringParameter):
   """Model of the camera"""
 
-  canonical_name = "camera_model"
+  canonical_name = "cameraModel"
   sampling = Sampling.STATIC
   units = None
 
 class CameraFirmware(StringParameter):
   """Version identifier for the firmware of the camera"""
 
-  canonical_name = "camera_firmware"
+  canonical_name = "cameraFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
 
@@ -132,14 +132,14 @@ class FNumber(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
   diameter of the entrance pupil."""
 
-  canonical_name = "f_number"
+  canonical_name = "fNumber"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
 class FocalLength(StrictlyPositiveIntegerParameter):
   """Focal length of the lens"""
 
-  canonical_name = "focal_length"
+  canonical_name = "focalLength"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
