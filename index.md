@@ -164,7 +164,7 @@ The parameter shall be a rational number whose numerator and denominator are in 
 
 #### Description
 
-Entrance pupil diameter of the lens
+Position of the entrance pupil of the lens
 
 #### Units
 
