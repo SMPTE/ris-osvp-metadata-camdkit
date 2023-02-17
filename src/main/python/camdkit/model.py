@@ -124,7 +124,7 @@ class TNumber(StrictlyPositiveIntegerParameter):
   """The linear t-number of the lens, equal to the F-number of the lens divided
   by the square root of the transmittance of the lens."""
 
-  canonical_name = "tNumber"
+  canonical_name = "aperture"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
@@ -132,7 +132,7 @@ class FNumber(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
   diameter of the entrance pupil."""
 
-  canonical_name = "fNumber"
+  canonical_name = "fStop"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
