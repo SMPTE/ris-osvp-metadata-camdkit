@@ -147,7 +147,7 @@ class FocalLength(StrictlyPositiveIntegerParameter):
 class FocalPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focal_position"
+  canonical_name = "focus_position"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -227,7 +227,7 @@ class Clip(ParameterContainer):
   t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
   f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FNumber()
   focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
-  focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
+  focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()

@@ -98,7 +98,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
 
-  clip.focal_position = tuple(int(m["Focus Distance"]) for m in csv_data)
+  clip.focus_position = tuple(int(m["Focus Distance"]) for m in csv_data)
 
   cooke_metadata = tuple(cooke.lens_data_from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
