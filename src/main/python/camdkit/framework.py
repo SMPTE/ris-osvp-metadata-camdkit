@@ -251,13 +251,14 @@ class ParameterContainer:
     return obj
 
   def from_json(self, json_dict: dict):
-    for k, v in json_dict.items():
-      if k in self._params:
-        desc = self._params[k]
+    for json_key, json_value in json_dict.items():
+      for prop, desc in self._params.items():
+        if desc.canonical_name != json_key:
+          continue
         if desc.sampling is Sampling.STATIC:
-          self._values[k] = desc.from_json(v)
+          self._values[prop] = desc.from_json(json_value)
         elif desc.sampling is Sampling.REGULAR:
-          self._values[k] = tuple(map(desc.from_json, v))
+          self._values[prop] = tuple(map(desc.from_json, json_value))
         else:
           raise ValueError
 
