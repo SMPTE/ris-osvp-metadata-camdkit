@@ -234,7 +234,7 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `focalPosition`
+### `focusPosition`
 
 #### Description
 
@@ -467,7 +467,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "maximum": 2147483647
     }
   },
-  "focalPosition": {
+  "focusPosition": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -519,7 +519,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fNumber | fdlLink | focalLength | focalPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tNumber |
+| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fNumber | fdlLink | focalLength | focusPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tNumber |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
 | RED | | | | | | | | + | | | | | | | | | | | | |
 | ARRI | | | | | | | | + | | | | | | | | | | | | |
