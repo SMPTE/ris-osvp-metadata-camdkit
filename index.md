@@ -13,7 +13,7 @@ as well as a specific set of constraints.
 
 ## Parameters
 
-### `active_sensor_physical_dimensions`
+### `activeSensorPhysicalDimensions`
 
 #### Description
 
@@ -31,7 +31,7 @@ Static
 
 The height and width shall be each be an integer in the range [0..2,147,483,647].
 
-### `anamorphic_squeeze`
+### `anamorphicSqueeze`
 
 #### Description
 
@@ -52,7 +52,7 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `camera_firmware`
+### `cameraFirmwareVersion`
 
 #### Description
 
@@ -70,7 +70,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `camera_make`
+### `cameraMake`
 
 #### Description
 
@@ -88,7 +88,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `camera_model`
+### `cameraModel`
 
 #### Description
 
@@ -106,7 +106,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `camera_serial_number`
+### `cameraSerialNumber`
 
 #### Description
 
@@ -124,7 +124,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `capture_fps`
+### `captureRate`
 
 #### Description
 
@@ -160,7 +160,7 @@ Static
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
-### `entrance_pupil_position`
+### `entrancePupilPosition`
 
 #### Description
 
@@ -178,7 +178,7 @@ Regular
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
-### `f_number`
+### `fNumber`
 
 #### Description
 
@@ -197,7 +197,7 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `fdl_link`
+### `fdlLink`
 
 #### Description
 
@@ -216,7 +216,7 @@ Static
 The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase characters shall be used.
     Example: `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
 
-### `focal_length`
+### `focalLength`
 
 #### Description
 
@@ -234,7 +234,7 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `focal_position`
+### `focalPosition`
 
 #### Description
 
@@ -252,7 +252,7 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `iso`
+### `isoSpeed`
 
 #### Description
 
@@ -270,7 +270,7 @@ Static
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `lens_firmware`
+### `lensFirmwareVersion`
 
 #### Description
 
@@ -288,7 +288,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `lens_make`
+### `lensMake`
 
 #### Description
 
@@ -306,7 +306,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `lens_model`
+### `lensModel`
 
 #### Description
 
@@ -324,7 +324,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `lens_serial_number`
+### `lensSerialNumber`
 
 #### Description
 
@@ -342,7 +342,7 @@ Static
 
 The parameter shall be a Unicode string betwee 0 and 1023 codepoints.
 
-### `shutter_angle`
+### `shutterAngle`
 
 #### Description
 
@@ -362,7 +362,7 @@ Static
 
 The parameter shall be an integer in the range (0..360000].
 
-### `t_number`
+### `tNumber`
 
 #### Description
 
@@ -387,7 +387,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {},
-  "active_sensor_physical_dimensions": {
+  "activeSensorPhysicalDimensions": {
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -407,32 +407,32 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       }
     }
   },
-  "anamorphic_squeeze": {
+  "anamorphicSqueeze": {
     "type": "integer",
     "minimum": 1,
     "maximum": 2147483647
   },
-  "camera_firmware": {
+  "cameraFirmwareVersion": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "camera_make": {
+  "cameraMake": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "camera_model": {
+  "cameraModel": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "camera_serial_number": {
+  "cameraSerialNumber": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "capture_fps": {
+  "captureRate": {
     "type": "string",
     "regex": "[0-9]{1,10}/[0-9]{1,10}"
   },
@@ -440,14 +440,14 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "type": "string",
     "regex": "[0-9]{1,10}/[0-9]{1,10}"
   },
-  "entrance_pupil_position": {
+  "entrancePupilPosition": {
     "type": "array",
     "items": {
       "type": "string",
       "regex": "[0-9]{1,10}/[0-9]{1,10}"
     }
   },
-  "f_number": {
+  "fNumber": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -455,11 +455,11 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "maximum": 2147483647
     }
   },
-  "fdl_link": {
+  "fdlLink": {
     "type": "string",
     "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
   },
-  "focal_length": {
+  "focalLength": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -467,7 +467,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "maximum": 2147483647
     }
   },
-  "focal_position": {
+  "focalPosition": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -475,37 +475,37 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "maximum": 2147483647
     }
   },
-  "iso": {
+  "isoSpeed": {
     "type": "integer",
     "minimum": 1,
     "maximum": 2147483647
   },
-  "lens_firmware": {
+  "lensFirmwareVersion": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "lens_make": {
+  "lensMake": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "lens_model": {
+  "lensModel": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "lens_serial_number": {
+  "lensSerialNumber": {
     "type": "string",
     "minLength": 1,
     "maxLength": 1023
   },
-  "shutter_angle": {
+  "shutterAngle": {
     "type": "integer",
     "minimum": 1,
     "maximum": 360000
   },
-  "t_number": {
+  "tNumber": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -519,9 +519,9 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | active_sensor_physical_dimensions | anamorphic_squeeze | camera_firmware | camera_make | camera_model | camera_serial_number | capture_fps | duration | entrance_pupil_position | f_number | fdl_link | focal_length | focal_position | iso | lens_firmware | lens_make | lens_model | lens_serial_number | shutter_angle | t_number |
+| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fNumber | fdlLink | focalLength | focalPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tNumber |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | + | + | + | + | + | + | | | + | + | + | + | + | + | + | + | + |
-| ARRI | + | + | | + | + | + | + | + | | | | + | + | + | | + | + | + | + | + |
-| Venice | + | + | + | + | + | + | + | + | | | | + | + | + | | | + | + | + | + |
-| Canon | | + | | + | | | | + | | | | + | + | + | | | | | + | + |
+| RED | | | | | | | | + | | | | | | | | | | | | |
+| ARRI | | | | | | | | + | | | | | | | | | | | | |
+| Venice | | | | | | | | + | | | | | | | | | | | | |
+| Canon | | | | | | | | + | | | | | | | | | | | | |
