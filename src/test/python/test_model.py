@@ -60,7 +60,7 @@ class ModelTest(unittest.TestCase):
     clip.t_number = (2000, 4000)
     clip.f_number = (1200, 2800)
     clip.focal_length = (2, 4)
-    clip.focal_position = (2, 4)
+    clip.focus_position = (2, 4)
     clip.entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.shutter_angle = 180
@@ -85,7 +85,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["tNumber"], (2000, 4000))
     self.assertTupleEqual(d["fNumber"], (1200, 2800))
     self.assertTupleEqual(d["focalLength"], (2, 4))
-    self.assertTupleEqual(d["focalPosition"], (2, 4))
+    self.assertTupleEqual(d["focusPosition"], (2, 4))
     self.assertTupleEqual(d["entrancePupilPosition"], ("1/2", "13/7"))
 
     d_clip = camdkit.model.Clip()
@@ -225,19 +225,19 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(clip.focal_length, value)
 
-  def test_focal_position(self):
+  def test_focus_position(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.focal_position)
+    self.assertIsNone(clip.focus_position)
 
     with self.assertRaises(ValueError):
-      clip.focal_position = [Fraction(5,7)]
+      clip.focus_position = [Fraction(5,7)]
 
     value = (100, 7)
 
-    clip.focal_position = value
+    clip.focus_position = value
 
-    self.assertTupleEqual(clip.focal_position, value)
+    self.assertTupleEqual(clip.focus_position, value)
 
   def test_entrance_pupil_position(self):
     clip = camdkit.model.Clip()
@@ -245,7 +245,7 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.entrance_pupil_position)
 
     with self.assertRaises(ValueError):
-      clip.focal_position = [0.6]
+      clip.focus_position = [0.6]
 
     value = (Fraction(5,7), 7)
 
