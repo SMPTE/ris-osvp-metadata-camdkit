@@ -153,7 +153,7 @@ class FocalPosition(StrictlyPositiveIntegerParameter):
 
 
 class EntrancePupilPosition(StrictlyPostiveRationalParameter):
-  """Entrance pupil diameter of the lens"""
+  """Position of the entrance pupil of the lens"""
 
   canonical_name = "entrancePupilPosition"
   sampling = Sampling.REGULAR
