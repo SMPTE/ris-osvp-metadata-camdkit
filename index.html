@@ -1201,7 +1201,7 @@ analog nature.</p>
 <p>Regular</p>
 <h4 id="constraints-8" tabindex="-1"><a class="anchor" href="#constraints-8" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].</p>
-<h3 id="fnumber" tabindex="-1"><a class="anchor" href="#fnumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fNumber</code></h3>
+<h3 id="fstop" tabindex="-1"><a class="anchor" href="#fstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fStop</code></h3>
 <h4 id="description-9" tabindex="-1"><a class="anchor" href="#description-9" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>The linear f-number of the lens, equal to the focal length divided by the
 diameter of the entrance pupil.</p>
@@ -1295,7 +1295,7 @@ the capture frame rate.</p>
 <p>Static</p>
 <h4 id="constraints-18" tabindex="-1"><a class="anchor" href="#constraints-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be an integer in the range (0..360000].</p>
-<h3 id="tnumber" tabindex="-1"><a class="anchor" href="#tnumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tNumber</code></h3>
+<h3 id="tstop" tabindex="-1"><a class="anchor" href="#tstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tStop</code></h3>
 <h4 id="description-19" tabindex="-1"><a class="anchor" href="#description-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>The linear t-number of the lens, equal to the F-number of the lens divided
 by the square root of the transmittance of the lens.</p>
@@ -1369,7 +1369,7 @@ by the square root of the transmittance of the lens.</p>
       "regex": "[0-9]{1,10}/[0-9]{1,10}"
     }
   },
-  "fNumber": {
+  "fStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -1427,7 +1427,7 @@ by the square root of the transmittance of the lens.</p>
     "minimum": 1,
     "maximum": 360000
   },
-  "tNumber": {
+  "tStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -1452,7 +1452,7 @@ by the square root of the transmittance of the lens.</p>
 <th>captureRate</th>
 <th>duration</th>
 <th>entrancePupilPosition</th>
-<th>fNumber</th>
+<th>fStop</th>
 <th>fdlLink</th>
 <th>focalLength</th>
 <th>focusPosition</th>
@@ -1462,7 +1462,7 @@ by the square root of the transmittance of the lens.</p>
 <th>lensModel</th>
 <th>lensSerialNumber</th>
 <th>shutterAngle</th>
-<th>tNumber</th>
+<th>tStop</th>
 </tr>
 </thead>
 <tbody>

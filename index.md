@@ -178,7 +178,7 @@ Regular
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
-### `fNumber`
+### `fStop`
 
 #### Description
 
@@ -362,7 +362,7 @@ Static
 
 The parameter shall be an integer in the range (0..360000].
 
-### `tNumber`
+### `tStop`
 
 #### Description
 
@@ -447,7 +447,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "regex": "[0-9]{1,10}/[0-9]{1,10}"
     }
   },
-  "fNumber": {
+  "fStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -505,7 +505,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "minimum": 1,
     "maximum": 360000
   },
-  "tNumber": {
+  "tStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -519,7 +519,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fNumber | fdlLink | focalLength | focusPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tNumber |
+| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fStop | fdlLink | focalLength | focusPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tStop |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
 | RED | | | | | | | | + | | | | | | | | | | | | |
 | ARRI | | | | | | | | + | | | | | | | | | | | | |
