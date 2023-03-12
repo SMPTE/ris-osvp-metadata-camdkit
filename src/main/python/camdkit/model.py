@@ -120,7 +120,7 @@ class CameraFirmware(StringParameter):
   sampling = Sampling.STATIC
   units = None
 
-class TNumber(StrictlyPositiveIntegerParameter):
+class TStop(StrictlyPositiveIntegerParameter):
   """The linear t-number of the lens, equal to the F-number of the lens divided
   by the square root of the transmittance of the lens."""
 
@@ -128,7 +128,7 @@ class TNumber(StrictlyPositiveIntegerParameter):
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
-class FNumber(StrictlyPositiveIntegerParameter):
+class FStop(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
   diameter of the entrance pupil."""
 
@@ -144,10 +144,10 @@ class FocalLength(StrictlyPositiveIntegerParameter):
   units = "millimeter"
 
 
-class FocalPosition(StrictlyPositiveIntegerParameter):
+class FocusPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focalPosition"
+  canonical_name = "focusPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -224,10 +224,10 @@ class Clip(ParameterContainer):
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   iso: typing.Optional[numbers.Integral] = ISO()
-  t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TNumber()
-  f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FNumber()
+  t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
+  f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
-  focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
+  focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
