@@ -220,7 +220,8 @@ The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase
 
 #### Description
 
-Focal length of the lens
+Nominal focal length of the lens. The number printed on the side of a prime
+  lens, e.g. 50 mm, and undefined in the case of a zoom lens.
 
 #### Units
 
