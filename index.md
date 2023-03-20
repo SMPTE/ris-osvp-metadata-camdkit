@@ -561,7 +561,7 @@ The following table indicates the camera parameters supported by each of the rea
 
 | Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fStop | fdlLink | focalLength | focusPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tStop |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | | | | | | | | + | | | | | | | | | | | | |
-| ARRI | | | | | | | | + | | | | | | | | | | | | |
-| Venice | | | | | | | | + | | | | | | | | | | | | |
-| Canon | | | | | | | | + | | | | | | | | | | | | |
+| RED | + | + | + | + | + | + | + | + | + | | | + | + | + | + | + | + | + | + | + |
+| ARRI | + | + | | + | + | + | + | + | | | | + | + | + | | + | + | + | + | + |
+| Venice | + | + | + | + | + | + | + | + | | | | + | + | + | | | + | + | + | + |
+| Canon | | + | | + | | | | + | | | | + | + | + | | | | | + | + |
