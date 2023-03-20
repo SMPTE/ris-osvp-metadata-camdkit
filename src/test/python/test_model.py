@@ -96,7 +96,7 @@ class ModelTest(unittest.TestCase):
   def test_documentation(self):
     doc = camdkit.model.Clip.make_documentation()
 
-    self.assertIn(camdkit.model.ActiveSensorPhysicalDimensions.canonical_name, doc)
+    self.assertIn(camdkit.model.ActiveSensorPhysicalDimensions.canonical_name, [e["canonical_name"] for e in doc])
 
   def test_duration_fraction(self):
     clip = camdkit.model.Clip()

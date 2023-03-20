@@ -298,12 +298,14 @@ class ParameterContainer:
 
   @classmethod
   def make_documentation(cls) -> dict:
-    doc = {}
-    for _, desc in cls._params.items():
-      doc[desc.canonical_name] = {
+    doc = []
+    for k, desc in cls._params.items():
+      doc.append({
+        "python_name": k,
+        "canonical_name": desc.canonical_name,
         "description" : desc.__doc__,
         "constraints" : desc.validate.__doc__,
         "sampling" : str(desc.sampling.value),
         "units": desc.units
-      }
+      })
     return doc
