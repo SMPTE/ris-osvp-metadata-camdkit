@@ -67,8 +67,8 @@ class ModelTest(unittest.TestCase):
 
     d = clip.to_json()
 
-    self.assertEqual(d["duration"], "3")
-    self.assertEqual(d["captureRate"], "24000/1001")
+    self.assertEqual(d["duration"], {"num": 3, "denom": 1})
+    self.assertEqual(d["captureRate"], {"num": 24000, "denom": 1001})
     self.assertDictEqual(d["activeSensorPhysicalDimensions"], {"height": 480, "width": 640})
     self.assertEqual(d["cameraMake"], "Bob")
     self.assertEqual(d["cameraModel"], "Hello")
@@ -86,7 +86,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["fStop"], (1200, 2800))
     self.assertTupleEqual(d["focalLength"], (2, 4))
     self.assertTupleEqual(d["focusPosition"], (2, 4))
-    self.assertTupleEqual(d["entrancePupilPosition"], ("1/2", "13/7"))
+    self.assertTupleEqual(d["entrancePupilPosition"], ({"num": 1, "denom": 2}, {"num": 13, "denom": 7}))
 
     d_clip = camdkit.model.Clip()
     d_clip.from_json(d)
