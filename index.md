@@ -434,18 +434,57 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "maxLength": 1023
   },
   "captureRate": {
-    "type": "string",
-    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    "type": "object",
+    "properties": {
+      "num": {
+        "type": "integer"
+      },
+      "denom": {
+        "type": "integer",
+        "min": 1
+      }
+    },
+    "required": [
+      "num",
+      "denom"
+    ],
+    "additionalProperties": false
   },
   "duration": {
-    "type": "string",
-    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    "type": "object",
+    "properties": {
+      "num": {
+        "type": "integer"
+      },
+      "denom": {
+        "type": "integer",
+        "min": 1
+      }
+    },
+    "required": [
+      "num",
+      "denom"
+    ],
+    "additionalProperties": false
   },
   "entrancePupilPosition": {
     "type": "array",
     "items": {
-      "type": "string",
-      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+      "type": "object",
+      "properties": {
+        "num": {
+          "type": "integer"
+        },
+        "denom": {
+          "type": "integer",
+          "min": 1
+        }
+      },
+      "required": [
+        "num",
+        "denom"
+      ],
+      "additionalProperties": false
     }
   },
   "fStop": {
