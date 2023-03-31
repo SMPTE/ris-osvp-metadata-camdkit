@@ -60,7 +60,7 @@ class BMDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.focal_length[0], 50)
 
-    self.assertEqual(clip.focus_position[0], 991)
+    self.assertEqual(clip.focal_position[0], 991)
 
     # self.assertEqual(clip.white_balance, 6000)
 

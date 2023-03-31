@@ -42,7 +42,7 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.focal_length[0], 18)      # focal_length: 18 mm
 
-    self.assertEqual(clip.focus_position[0], 500)   # focus_position: 500 mm
+    self.assertEqual(clip.focal_position[0], 500)   # focal_position: 500 mm
 
     self.assertEqual(clip.shutter_angle, 180000)    # shutter_angle: 180 deg
 

@@ -130,8 +130,8 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   # focal_length
   clip.focal_length = tuple(int(m["focal_length"][:-2]) for m in frame_data)
 
-  # focus_position
-  clip.focus_position = tuple(int(m["distance"][:-2]) for m in frame_data)
+  # focal_position
+  clip.focal_position = tuple(int(m["distance"][:-2]) for m in frame_data)
 
   # entrance_pupil_position not supported
 
