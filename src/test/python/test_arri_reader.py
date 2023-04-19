@@ -40,7 +40,7 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.focal_length[0], 40)
 
-    self.assertEqual(clip.focal_position[0], 4812)
+    self.assertEqual(clip.focus_position[0], 4812)
 
     self.assertEqual(clip.anamorphic_squeeze, 100)
 

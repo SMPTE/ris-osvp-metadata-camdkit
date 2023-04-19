@@ -35,30 +35,30 @@ def generate_documentation(fp: typing.TextIO):
 
   fp.write(_INTRODUCTION)
 
-  for name, info in doc.items():
-    fp.write(f"### `{name}`\n")
+  for p in doc:
+    fp.write(f"### `{p['canonical_name']}`\n")
     fp.write("\n")
     fp.write("#### Description\n")
     fp.write("\n")
-    fp.write(info["description"])
+    fp.write(p["description"])
     fp.write("\n")
     fp.write("\n")
 
     fp.write("#### Units\n")
     fp.write("\n")
-    fp.write(info["units"] if info["units"] is not None else "n/a")
+    fp.write(p["units"] if p["units"] is not None else "n/a")
     fp.write("\n")
     fp.write("\n")
 
     fp.write("#### Sampling\n")
     fp.write("\n")
-    fp.write(info["sampling"])
+    fp.write(p["sampling"])
     fp.write("\n")
     fp.write("\n")
 
     fp.write("#### Constraints\n")
     fp.write("\n")
-    fp.write(info["constraints"])
+    fp.write(p["constraints"])
     fp.write("\n")
     fp.write("\n")
 
@@ -79,17 +79,17 @@ def generate_documentation(fp: typing.TextIO):
 
   # Parameter names
 
-  parameter_names = tuple(filter(lambda x: not x.startswith("image"), doc.keys()))
+  parameter_names = tuple(e["canonical_name"] for e in doc)
   fp.write(f"| Reader      | {' | '.join(parameter_names)} |\n")
   fp.write(f"| ----------- | {'----------- |' * len(parameter_names)}\n")
 
-  def _print_reader_coverage(f, reader_name, parameter_names, clip):
-    f.write(f"| {reader_name} |")
-    for p in parameter_names:
-      if getattr(clip, p, None) is not None:
-        f.write(" + |") 
+  def _print_reader_coverage(fp, reader_name, doc, clip):
+    fp.write(f"| {reader_name} |")
+    for p in doc:
+      if getattr(clip, p["python_name"], None) is not None:
+        fp.write(" + |") 
       else:
-        f.write(" |")
+        fp.write(" |")
     fp.write("\n")
 
   # RED reader
@@ -98,12 +98,12 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/red/A001_C066_0303LZ_001.frames.csv", "r", encoding="utf-8") as type_5_file:
     clip = camdkit.red.reader.to_clip(type_3_file, type_5_file)
 
-  _print_reader_coverage(fp, "RED", parameter_names, clip)
+  _print_reader_coverage(fp, "RED", doc, clip)
 
   # ARRI reader
 
   clip = camdkit.arri.reader.to_clip("src/test/resources/arri/B001C001_180327_R1ZA.mov.csv")
-  _print_reader_coverage(fp, "ARRI", parameter_names, clip)
+  _print_reader_coverage(fp, "ARRI", doc, clip)
 
   # Venice reader
 
@@ -111,7 +111,7 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/venice/D001C005_210716AG.csv", "r", encoding="utf-8") as dynamic_file:
     clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
-  _print_reader_coverage(fp, "Venice", parameter_names, clip)
+  _print_reader_coverage(fp, "Venice", doc, clip)
 
   # Canon reader
 
@@ -119,7 +119,7 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
     clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
 
-  _print_reader_coverage(fp, "Canon", parameter_names, clip)
+  _print_reader_coverage(fp, "Canon", doc, clip)
 
 if __name__ == "__main__":
   generate_documentation(sys.stdout)

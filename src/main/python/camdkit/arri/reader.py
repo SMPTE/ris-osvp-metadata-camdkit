@@ -81,7 +81,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.focal_length = tuple(round(float(m["Lens Focal Length"])) for m in csv_data)
 
-    clip.focal_position = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
+    clip.focus_position = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
 
     clip.t_number = tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data)
 
