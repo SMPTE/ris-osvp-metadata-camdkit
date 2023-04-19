@@ -21,7 +21,7 @@ files, and converting it into a single internal model that follows the metadata
 model currently in development by the SMPTE RIS OSVP effort. The internal model
 can then be serialized into representations such as JSON.
 
-The model documentation is [auto-generated](https://sandflow.github.io/camdkit/).
+The model documentation is [auto-generated](https://smpte.github.io/ris-osvp-metadata-camdkit/).
 
 ## How to extend
 
