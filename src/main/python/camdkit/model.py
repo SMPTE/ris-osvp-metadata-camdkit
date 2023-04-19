@@ -16,7 +16,7 @@ from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParamet
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
 
-  canonical_name = "active_sensor_physical_dimensions"
+  canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
   units = "micron"
 
@@ -32,7 +32,7 @@ class Duration(StrictlyPostiveRationalParameter):
 class CaptureFPS(StrictlyPostiveRationalParameter):
   """Capture frame frate of the camera"""
 
-  canonical_name = "capture_fps"
+  canonical_name = "captureRate"
   sampling = Sampling.STATIC
   units = "hertz"
 
@@ -40,7 +40,7 @@ class CaptureFPS(StrictlyPostiveRationalParameter):
 class ISO(StrictlyPositiveIntegerParameter):
   """Arithmetic ISO scale as defined in ISO 12232"""
 
-  canonical_name = "iso"
+  canonical_name = "isoSpeed"
   sampling = Sampling.STATIC
   units = "unit"
 
@@ -48,56 +48,56 @@ class ISO(StrictlyPositiveIntegerParameter):
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
-  canonical_name = "lens_serial_number"
+  canonical_name = "lensSerialNumber"
   sampling = Sampling.STATIC
   units = None
 
 class LensMake(StringParameter):
   """Make of the lens"""
 
-  canonical_name = "lens_make"
+  canonical_name = "lensMake"
   sampling = Sampling.STATIC
   units = None
 
 class LensModel(StringParameter):
   """Model of the lens"""
 
-  canonical_name = "lens_model"
+  canonical_name = "lensModel"
   sampling = Sampling.STATIC
   units = None
 
 class LensFirmware(StringParameter):
   """Version identifier for the firmware of the lens"""
 
-  canonical_name = "lens_firmware"
+  canonical_name = "lensFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
 
 class CameraSerialNumber(StringParameter):
   """Unique identifier of the camera"""
 
-  canonical_name = "camera_serial_number"
+  canonical_name = "cameraSerialNumber"
   sampling = Sampling.STATIC
   units = None
 
 class CameraMake(StringParameter):
   """Make of the camera"""
 
-  canonical_name = "camera_make"
+  canonical_name = "cameraMake"
   sampling = Sampling.STATIC
   units = None
 
 class CameraModel(StringParameter):
   """Model of the camera"""
 
-  canonical_name = "camera_model"
+  canonical_name = "cameraModel"
   sampling = Sampling.STATIC
   units = None
 
 class CameraFirmware(StringParameter):
   """Version identifier for the firmware of the camera"""
 
-  canonical_name = "camera_firmware"
+  canonical_name = "cameraFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
 
@@ -105,7 +105,7 @@ class TNumber(StrictlyPositiveIntegerParameter):
   """The linear t-number of the lens, equal to the F-number of the lens divided
   by the square root of the transmittance of the lens."""
 
-  canonical_name = "t_number"
+  canonical_name = "tNumber"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
@@ -113,14 +113,14 @@ class FNumber(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
   diameter of the entrance pupil."""
 
-  canonical_name = "f_number"
+  canonical_name = "fNumber"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
 
 class FocalLength(StrictlyPositiveIntegerParameter):
   """Focal length of the lens"""
 
-  canonical_name = "focal_length"
+  canonical_name = "focalLength"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -128,7 +128,7 @@ class FocalLength(StrictlyPositiveIntegerParameter):
 class FocalPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focal_position"
+  canonical_name = "focalPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -136,7 +136,7 @@ class FocalPosition(StrictlyPositiveIntegerParameter):
 class EntrancePupilPosition(StrictlyPostiveRationalParameter):
   """Position of the entrance pupil of the lens"""
 
-  canonical_name = "entrance_pupil_position"
+  canonical_name = "entrancePupilPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -146,14 +146,14 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   however an exact number over the entire captured area due to a lens' intrinsic
   analog nature."""
 
-  canonical_name = "anamorphic_squeeze"
+  canonical_name = "anamorphicSqueeze"
   sampling = Sampling.STATIC
   units = "0.01 unit"
 
 class FDLLink(UUIDURNParameter):
   """Unique identifier of the FDL used by the camera."""
 
-  canonical_name = "fdl_link"
+  canonical_name = "fdlLink"
   sampling = Sampling.STATIC
   units = None
 
@@ -163,7 +163,7 @@ class ShutterAngle(Parameter):
   (in units of 1/s) is equal to the value of the parameter divided by 360 times
   the capture frame rate."""
 
-  canonical_name = "shutter_angle"
+  canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
   units = "degrees (angular)"
 
