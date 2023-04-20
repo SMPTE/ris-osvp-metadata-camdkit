@@ -152,17 +152,30 @@ class StrictlyPostiveRationalParameter(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
+    return {
+      "num": value.numerator,
+      "denom": value.denominator
+    }
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return Fraction(value)
+    return Fraction(value["num"], value["denom"])
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
-      "type": "string",
-      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+      "type": "object",
+      "properties": {
+        "num" : {
+          "type": "integer"
+        },
+        "denom" : {
+          "type": "integer",
+          "min": 1
+        }
+      },
+      "required": ["num", "denom" ],
+      "additionalProperties": False
     }
 
 class StrictlyPositiveIntegerParameter(Parameter):
@@ -288,12 +301,14 @@ class ParameterContainer:
 
   @classmethod
   def make_documentation(cls) -> dict:
-    doc = {}
-    for _, desc in cls._params.items():
-      doc[desc.canonical_name] = {
+    doc = []
+    for k, desc in cls._params.items():
+      doc.append({
+        "python_name": k,
+        "canonical_name": desc.canonical_name,
         "description" : desc.__doc__,
         "constraints" : desc.validate.__doc__,
         "sampling" : str(desc.sampling.value),
         "units": desc.units
-      }
+      })
     return doc

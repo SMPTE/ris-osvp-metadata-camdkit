@@ -118,17 +118,18 @@ class FStop(StrictlyPositiveIntegerParameter):
   units = "0.001 unit"
 
 class FocalLength(StrictlyPositiveIntegerParameter):
-  """Focal length of the lens"""
+  """Nominal focal length of the lens. The number printed on the side of a prime
+  lens, e.g. 50 mm, and undefined in the case of a zoom lens."""
 
   canonical_name = "focalLength"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
 
-class FocalPosition(StrictlyPositiveIntegerParameter):
+class FocusPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focalPosition"
+  canonical_name = "focusPosition"
   sampling = Sampling.REGULAR
   units = "millimeter"
 
@@ -208,7 +209,7 @@ class Clip(ParameterContainer):
   t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
-  focal_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocalPosition()
+  focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
   entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
