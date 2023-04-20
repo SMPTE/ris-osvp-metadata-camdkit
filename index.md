@@ -178,7 +178,7 @@ Regular
 
 The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
 
-### `fNumber`
+### `fStop`
 
 #### Description
 
@@ -220,7 +220,8 @@ The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase
 
 #### Description
 
-Focal length of the lens
+Nominal focal length of the lens. The number printed on the side of a prime
+  lens, e.g. 50 mm, and undefined in the case of a zoom lens.
 
 #### Units
 
@@ -234,7 +235,7 @@ Regular
 
 The parameter shall be a integer in the range (0..2,147,483,647].
 
-### `focalPosition`
+### `focusPosition`
 
 #### Description
 
@@ -362,7 +363,7 @@ Static
 
 The parameter shall be an integer in the range (0..360000].
 
-### `tNumber`
+### `tStop`
 
 #### Description
 
@@ -433,21 +434,60 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "maxLength": 1023
   },
   "captureRate": {
-    "type": "string",
-    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    "type": "object",
+    "properties": {
+      "num": {
+        "type": "integer"
+      },
+      "denom": {
+        "type": "integer",
+        "min": 1
+      }
+    },
+    "required": [
+      "num",
+      "denom"
+    ],
+    "additionalProperties": false
   },
   "duration": {
-    "type": "string",
-    "regex": "[0-9]{1,10}/[0-9]{1,10}"
+    "type": "object",
+    "properties": {
+      "num": {
+        "type": "integer"
+      },
+      "denom": {
+        "type": "integer",
+        "min": 1
+      }
+    },
+    "required": [
+      "num",
+      "denom"
+    ],
+    "additionalProperties": false
   },
   "entrancePupilPosition": {
     "type": "array",
     "items": {
-      "type": "string",
-      "regex": "[0-9]{1,10}/[0-9]{1,10}"
+      "type": "object",
+      "properties": {
+        "num": {
+          "type": "integer"
+        },
+        "denom": {
+          "type": "integer",
+          "min": 1
+        }
+      },
+      "required": [
+        "num",
+        "denom"
+      ],
+      "additionalProperties": false
     }
   },
-  "fNumber": {
+  "fStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -467,7 +507,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "maximum": 2147483647
     }
   },
-  "focalPosition": {
+  "focusPosition": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -505,7 +545,7 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "minimum": 1,
     "maximum": 360000
   },
-  "tNumber": {
+  "tStop": {
     "type": "array",
     "items": {
       "type": "integer",
@@ -519,9 +559,9 @@ The parameter shall be a integer in the range (0..2,147,483,647].
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fNumber | fdlLink | focalLength | focalPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tNumber |
+| Reader      | activeSensorPhysicalDimensions | anamorphicSqueeze | cameraFirmwareVersion | cameraMake | cameraModel | cameraSerialNumber | captureRate | duration | entrancePupilPosition | fStop | fdlLink | focalLength | focusPosition | isoSpeed | lensFirmwareVersion | lensMake | lensModel | lensSerialNumber | shutterAngle | tStop |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | | | | | | | | + | | | | | | | | | | | | |
-| ARRI | | | | | | | | + | | | | | | | | | | | | |
-| Venice | | | | | | | | + | | | | | | | | | | | | |
-| Canon | | | | | | | | + | | | | | | | | | | | | |
+| RED | + | + | + | + | + | + | + | + | + | | | + | + | + | + | + | + | + | + | + |
+| ARRI | + | + | | + | + | + | + | + | | | | + | + | + | | + | + | + | + | + |
+| Venice | + | + | + | + | + | + | + | + | | | | + | + | + | | | + | + | + | + |
+| Canon | | + | | + | | | | + | | | | + | + | + | | | | | + | + |
