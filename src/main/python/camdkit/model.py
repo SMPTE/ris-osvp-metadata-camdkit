@@ -74,7 +74,7 @@ class LensFirmware(StringParameter):
   units = None
 
 class CameraSerialNumber(StringParameter):
-  """Unique identifier of the camera, within the scope of camera make and model"""
+  """Unique identifier of the camera, within the scope of camera make and camera model"""
 
   canonical_name = "cameraSerialNumber"
   sampling = Sampling.STATIC
