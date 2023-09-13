@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-'''RED camera reader tests'''
+'''Cooke lens reader tests"'''
 
 import unittest
 
