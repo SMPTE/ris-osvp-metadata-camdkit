@@ -9,7 +9,7 @@
 import numbers
 import typing
 
-from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, \
+from camdkit.framework import ParameterContainer, StrictlyPositiveRationalParameter, \
                               StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
                               IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter
 
@@ -21,7 +21,7 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   units = "micron"
 
 
-class Duration(StrictlyPostiveRationalParameter):
+class Duration(StrictlyPositiveRationalParameter):
   """Duration of the clip"""
 
   canonical_name = "duration"
@@ -29,7 +29,7 @@ class Duration(StrictlyPostiveRationalParameter):
   units = "second"
 
 
-class CaptureFPS(StrictlyPostiveRationalParameter):
+class CaptureFPS(StrictlyPositiveRationalParameter):
   """Capture frame frate of the camera"""
 
   canonical_name = "captureRate"
@@ -134,7 +134,7 @@ class FocusPosition(StrictlyPositiveIntegerParameter):
   units = "millimeter"
 
 
-class EntrancePupilPosition(StrictlyPostiveRationalParameter):
+class EntrancePupilPosition(StrictlyPositiveRationalParameter):
   """Position of the entrance pupil of the lens"""
 
   canonical_name = "entrancePupilPosition"

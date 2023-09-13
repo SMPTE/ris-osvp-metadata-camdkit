@@ -136,16 +136,18 @@ class UUIDURNParameter(Parameter):
       "pattern": '^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
     }
 
-class StrictlyPostiveRationalParameter(Parameter):
+class StrictlyPositiveRationalParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647]."""
+    """The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..2,147,483,647]."""
 
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator < 0 or value.denominator < 0 or value.numerator > INT_MAX or value.denominator > INT_MAX:
+    if value.numerator < 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > INT_MAX:
       return False
 
     return True
@@ -167,11 +169,14 @@ class StrictlyPostiveRationalParameter(Parameter):
       "type": "object",
       "properties": {
         "num" : {
-          "type": "integer"
+          "type": "integer",
+          "min": 0,
+          "maximum": INT_MAX
         },
         "denom" : {
           "type": "integer",
-          "min": 1
+          "min": 1,
+          "maximum": INT_MAX
         }
       },
       "required": ["num", "denom" ],
