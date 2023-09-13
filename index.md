@@ -140,7 +140,9 @@ Static
 
 #### Constraints
 
-The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
+The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..2,147,483,647].
 
 ### `duration`
 
@@ -158,7 +160,9 @@ Static
 
 #### Constraints
 
-The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
+The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..2,147,483,647].
 
 ### `entrancePupilPosition`
 
@@ -176,7 +180,9 @@ Regular
 
 #### Constraints
 
-The parameter shall be a rational number whose numerator and denominator are in the range (0..2,147,483,647].
+The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..2,147,483,647].
 
 ### `fStop`
 
@@ -437,11 +443,14 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "type": "object",
     "properties": {
       "num": {
-        "type": "integer"
+        "type": "integer",
+        "min": 0,
+        "maximum": 2147483647
       },
       "denom": {
         "type": "integer",
-        "min": 1
+        "min": 1,
+        "maximum": 2147483647
       }
     },
     "required": [
@@ -454,11 +463,14 @@ The parameter shall be a integer in the range (0..2,147,483,647].
     "type": "object",
     "properties": {
       "num": {
-        "type": "integer"
+        "type": "integer",
+        "min": 0,
+        "maximum": 2147483647
       },
       "denom": {
         "type": "integer",
-        "min": 1
+        "min": 1,
+        "maximum": 2147483647
       }
     },
     "required": [
@@ -473,11 +485,14 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "type": "object",
       "properties": {
         "num": {
-          "type": "integer"
+          "type": "integer",
+          "min": 0,
+          "maximum": 2147483647
         },
         "denom": {
           "type": "integer",
-          "min": 1
+          "min": 1,
+          "maximum": 2147483647
         }
       },
       "required": [
