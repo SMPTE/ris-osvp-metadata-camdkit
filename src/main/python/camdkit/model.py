@@ -11,7 +11,8 @@ import typing
 
 from camdkit.framework import ParameterContainer, StrictlyPostiveRationalParameter, \
                               StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
-                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter
+                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter, \
+                              RationalParameter
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -134,8 +135,9 @@ class FocusPosition(StrictlyPositiveIntegerParameter):
   units = "millimeter"
 
 
-class EntrancePupilPosition(StrictlyPostiveRationalParameter):
-  """Position of the entrance pupil of the lens"""
+class EntrancePupilPosition(RationalParameter):
+  """Position of the entrance pupil of the lens (positive if located before the
+  lens and negative otherwise)"""
 
   canonical_name = "entrancePupilPosition"
   sampling = Sampling.REGULAR
