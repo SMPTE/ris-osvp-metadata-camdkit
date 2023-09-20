@@ -213,7 +213,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a UUID URN as specified in IETF RFC 4122. Onlyu lowercase characters shall be used.
+The parameter shall be a UUID URN as specified in IETF RFC 4122. Only lowercase characters shall be used.
     Example: `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
 
 ### `focalLength`
