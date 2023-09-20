@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-'''Blackmagic RAW reader tests'''
+'''Blackmagic camera RAW reader tests'''
 
 import unittest
 
