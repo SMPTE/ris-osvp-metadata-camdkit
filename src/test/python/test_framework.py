@@ -14,12 +14,12 @@ import camdkit.framework as framework
 class StrictlyPositiveRationalTest(unittest.TestCase):
 
   def test_limits(self):
-    self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(2147483647, 2147483647)))
+    self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(2147483647, 4294967295)))
     self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(0, 1)))
 
     self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(-1, 1)))
     self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(2147483648, 1)))
-    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(1, 2147483648)))
+    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(1, 4294967296)))
 
   def test_from_dict(self):
     r = framework.StrictlyPositiveRationalParameter.from_json({

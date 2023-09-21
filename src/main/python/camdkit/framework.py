@@ -9,6 +9,7 @@ import dataclasses
 import re
 
 INT_MAX = 2147483647 # 2^31 - 1
+UINT_MAX = 4294967295 # 2^32 - 1
 
 class Sampling(Enum):
   STATIC = "Static"
@@ -142,12 +143,12 @@ class StrictlyPositiveRationalParameter(Parameter):
   def validate(value) -> bool:
     """The parameter shall be a rational number whose numerator
     is in the range [0..2,147,483,647] and denominator in the range
-    (0..2,147,483,647]."""
+    (0..4,294,967,295]."""
 
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator < 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > INT_MAX:
+    if value.numerator < 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
       return False
 
     return True
@@ -176,7 +177,7 @@ class StrictlyPositiveRationalParameter(Parameter):
         "denom" : {
           "type": "integer",
           "min": 1,
-          "maximum": INT_MAX
+          "maximum": UINT_MAX
         }
       },
       "required": ["num", "denom" ],
