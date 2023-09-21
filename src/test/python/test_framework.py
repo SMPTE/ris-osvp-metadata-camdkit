@@ -15,12 +15,12 @@ import camdkit.framework as framework
 class RetionalTest(unittest.TestCase):
 
   def test_limits(self):
-    self.assertTrue(framework.RationalParameter.validate(Fraction(2147483647, 2147483647)))
+    self.assertTrue(framework.RationalParameter.validate(Fraction(2147483647, 4294967295)))
     self.assertTrue(framework.RationalParameter.validate(Fraction(-2147483648, 1)))
 
     self.assertFalse(framework.RationalParameter.validate(Fraction(-2147483649, 1)))
     self.assertFalse(framework.RationalParameter.validate(Fraction(2147483648, 1)))
-    self.assertFalse(framework.RationalParameter.validate(Fraction(1, 2147483648)))
+    self.assertFalse(framework.RationalParameter.validate(Fraction(1, 4294967296)))
 
   def test_from_dict(self):
     r = framework.RationalParameter.from_json({

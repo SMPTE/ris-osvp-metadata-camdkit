@@ -10,6 +10,7 @@ import re
 
 INT_MAX = 2147483647 # 2^31 - 1
 INT_MIN = -2147483648 # -2^31
+UINT_MAX = 4294967295 # 2^32 - 1.
 
 
 class Sampling(Enum):
@@ -186,12 +187,12 @@ class RationalParameter(Parameter):
   def validate(value) -> bool:
     """The parameter shall be a rational number where (i) the numerator is in the
     range [-2,147,483,648..2,147,483,647] and (ii) the denominator is in the
-    range (0..2,147,483,647]."""
+    range (0..4,294,967,295]."""
 
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator < INT_MIN or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > INT_MAX:
+    if value.numerator < INT_MIN or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
       return False
 
     return True
@@ -220,7 +221,7 @@ class RationalParameter(Parameter):
         "denom" : {
           "type": "integer",
           "minimum": 1,
-          "maximum": INT_MAX
+          "maximum": UINT_MAX
         }
       },
       "required": ["num", "denom" ],
