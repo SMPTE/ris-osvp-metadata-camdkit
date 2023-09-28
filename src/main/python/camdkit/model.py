@@ -136,8 +136,9 @@ class FocusPosition(StrictlyPositiveIntegerParameter):
 
 
 class EntrancePupilPosition(RationalParameter):
-  """Position of the entrance pupil of the lens (positive if located before the
-  lens and negative otherwise)"""
+  """Position of the entrance pupil relative to the nominal imaging plane
+  (positive if the entrance pupil is located on the side of the nominal imaging
+  plane that is towards the object, and negative otherwise)"""
 
   canonical_name = "entrancePupilPosition"
   sampling = Sampling.REGULAR
