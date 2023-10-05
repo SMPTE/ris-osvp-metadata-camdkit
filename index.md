@@ -168,7 +168,9 @@ The parameter shall be a rational number whose numerator
 
 #### Description
 
-Position of the entrance pupil of the lens
+Position of the entrance pupil relative to the nominal imaging plane
+  (positive if the entrance pupil is located on the side of the nominal imaging
+  plane that is towards the object, and negative otherwise)
 
 #### Units
 
@@ -180,9 +182,9 @@ Regular
 
 #### Constraints
 
-The parameter shall be a rational number whose numerator
-    is in the range [0..2,147,483,647] and denominator in the range
-    (0..4,294,967,295].
+The parameter shall be a rational number where (i) the numerator is in the
+    range [-2,147,483,648..2,147,483,647] and (ii) the denominator is in the
+    range (0..4,294,967,295].
 
 ### `fStop`
 
@@ -486,12 +488,12 @@ The parameter shall be a integer in the range (0..2,147,483,647].
       "properties": {
         "num": {
           "type": "integer",
-          "min": 0,
+          "minimum": -2147483648,
           "maximum": 2147483647
         },
         "denom": {
           "type": "integer",
-          "min": 1,
+          "minimum": 1,
           "maximum": 4294967295
         }
       },
