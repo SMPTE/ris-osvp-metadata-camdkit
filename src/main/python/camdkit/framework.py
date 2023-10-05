@@ -9,7 +9,9 @@ import dataclasses
 import re
 
 INT_MAX = 2147483647 # 2^31 - 1
+INT_MIN = -2147483648 # -2^31
 UINT_MAX = 4294967295 # 2^32 - 1
+
 
 class Sampling(Enum):
   STATIC = "Static"
@@ -177,6 +179,53 @@ class StrictlyPositiveRationalParameter(Parameter):
         "denom" : {
           "type": "integer",
           "min": 1,
+          "maximum": UINT_MAX
+        }
+      },
+      "required": ["num", "denom" ],
+      "additionalProperties": False
+    }
+
+class RationalParameter(Parameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a rational number where (i) the numerator is in the
+    range [-2,147,483,648..2,147,483,647] and (ii) the denominator is in the
+    range (0..4,294,967,295]."""
+
+    if not isinstance(value, numbers.Rational):
+      return False
+
+    if value.numerator < INT_MIN or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {
+      "num": value.numerator,
+      "denom": value.denominator
+    }
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Fraction(value["num"], value["denom"])
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "properties": {
+        "num" : {
+          "type": "integer",
+          "minimum": INT_MIN,
+          "maximum": INT_MAX
+        },
+        "denom" : {
+          "type": "integer",
+          "minimum": 1,
           "maximum": UINT_MAX
         }
       },
