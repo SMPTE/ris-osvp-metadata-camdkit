@@ -47,7 +47,7 @@ class ISO(StrictlyPositiveIntegerParameter):
 
 
 class LensSerialNumber(StringParameter):
-  """Unique identifier of the lens"""
+  """Unique identifier of the lens, within the scope of lens make and lens model"""
 
   canonical_name = "lensSerialNumber"
   sampling = Sampling.STATIC
@@ -75,7 +75,7 @@ class LensFirmware(StringParameter):
   units = None
 
 class CameraSerialNumber(StringParameter):
-  """Unique identifier of the camera"""
+  """Unique identifier of the camera, within the scope of camera make and camera model"""
 
   canonical_name = "cameraSerialNumber"
   sampling = Sampling.STATIC
