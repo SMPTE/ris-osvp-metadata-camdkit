@@ -26,5 +26,5 @@ class Translation(Vector3Parameter):
 class Frame(ParameterContainer):
   """A frame of dynamic metadata from a camera tracking system.
   """
-  translation: typing.Required[Vector3] = Translation()
+  translation: typing.Optional[Vector3] = Translation()
   # TODO JU rest of the model!
