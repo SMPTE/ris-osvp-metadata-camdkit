@@ -17,7 +17,7 @@ class Vector3:
   
 class TrackingParameter(Parameter):
   """All tracking parameters are dynamic."""
-  sampling = Sampling.REGULAR
+  sampling = Sampling.DYNAMIC
 
 
 class Vector3Parameter(TrackingParameter):

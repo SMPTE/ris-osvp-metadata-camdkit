@@ -16,6 +16,7 @@ UINT_MAX = 4294967295 # 2^32 - 1
 class Sampling(Enum):
   STATIC = "Static"
   REGULAR = "Regular"
+  DYNAMIC = "Dynamic"
 
 @dataclasses.dataclass
 class Dimensions:
@@ -285,18 +286,12 @@ class ParameterContainer:
       def _gen_setter(f):
         def setter(self, value):
           if value is not None:
-            if self._params[f].sampling is Sampling.STATIC:
+            if self._params[f].sampling is Sampling.STATIC or self._params[f].sampling is Sampling.DYNAMIC:
               if not self._params[f].validate(value):
                 raise ValueError
             elif self._params[f].sampling is Sampling.REGULAR:
-              try:
-                # Handle iterable REGULAR objects
-                i = iter(value)
-                if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
-                  raise ValueError
-              except TypeError as te:
-                if not self._params[f].validate(value):
-                  raise ValueError
+              if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
+                raise ValueError
             else:
               raise ValueError
           self._values[f] = value
@@ -321,12 +316,9 @@ class ParameterContainer:
       elif desc.sampling is Sampling.STATIC:
         obj[desc.canonical_name] = desc.to_json(self._values[k])
       elif desc.sampling is Sampling.REGULAR:
-        try:
-          # Handle iterable REGULAR objects
-          i = iter(value)
-          obj[desc.canonical_name] = tuple(map(desc.to_json, value))
-        except TypeError as te:
-          obj[desc.canonical_name] = desc.to_json(value)
+        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+      elif desc.sampling is Sampling.DYNAMIC:
+        obj[desc.canonical_name] = desc.to_json(value)
       else:
         raise ValueError
 
@@ -337,7 +329,7 @@ class ParameterContainer:
       for prop, desc in self._params.items():
         if desc.canonical_name != json_key:
           continue
-        if desc.sampling is Sampling.STATIC:
+        if desc.sampling is Sampling.STATIC or desc.sampling is Sampling.DYNAMIC:
           self._values[prop] = desc.from_json(json_value)
         elif desc.sampling is Sampling.REGULAR:
           self._values[prop] = tuple(map(desc.from_json, json_value))
@@ -353,7 +345,7 @@ class ParameterContainer:
     }
 
     for _, desc in cls._params.items():
-      if desc.sampling is Sampling.STATIC:
+      if desc.sampling is Sampling.STATIC or desc.sampling is Sampling.DYNAMIC:
         schema[desc.canonical_name] = desc.make_json_schema()
       elif desc.sampling is Sampling.REGULAR:
         schema[desc.canonical_name] = {

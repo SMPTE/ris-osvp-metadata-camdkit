@@ -4,10 +4,13 @@ import json
 import camdkit.model
 import camdkit.red.reader
 import camdkit.arri.reader
+import camdkit.trackerkit
+import camdkit.trackerkit.model
 import camdkit.venice.reader
 import camdkit.canon.reader
+import camdkit.trackerkit.mosys.reader
 
-_INTRODUCTION = """# OSVP Clip documentation
+_CLIP_INTRODUCTION = """# OSVP documentation
 
 ## Introduction
 
@@ -20,7 +23,16 @@ specified duration. Each parameter is either:
 Each parameter is identified by a unique name. It also has a general description
 as well as a specific set of constraints.
 
-## Parameters
+The OSVP Frame (frame) is a collection of metadata parameters that is dynamic and has a
+synchronous relationship with a video frame. In an OSVP environment this describes live
+camera position ('tracking') and lens data.
+
+## Clip Parameters
+
+"""
+_FRAME_INTRODUCTION = """
+
+## Frame Parameters 
 
 """
 
@@ -30,10 +42,9 @@ _COVERAGE = {
   "Sony" : []
 }
 
-def generate_documentation(fp: typing.TextIO):
-  doc = camdkit.model.Clip.make_documentation()
+def generate_documentation(fp: typing.TextIO, doc, prefix):
 
-  fp.write(_INTRODUCTION)
+  fp.write(prefix)
 
   for p in doc:
     fp.write(f"### `{p['canonical_name']}`\n")
@@ -62,16 +73,16 @@ def generate_documentation(fp: typing.TextIO):
     fp.write("\n")
     fp.write("\n")
 
-  fp.write("## JSON Schema\n")
+def generate_schema(fp: typing.TextIO, schema, title):
+  fp.write(f"## {title} JSON Schema\n")
   fp.write("\n")
   fp.write("```")
-  json.dump(camdkit.model.Clip.make_json_schema(), fp, indent=2)
+  json.dump(schema, fp, indent=2)
   fp.write("\n")
   fp.write("```")
   fp.write("\n")
 
-  # Reader coverage
-
+def generate_clip_reader_coverage(fp: typing.TextIO, doc):
   fp.write("## Reader coverage\n")
   fp.write("\n")
   fp.write("The following table indicates the camera parameters supported by each of the readers.\n")
@@ -83,7 +94,7 @@ def generate_documentation(fp: typing.TextIO):
   fp.write(f"| Reader      | {' | '.join(parameter_names)} |\n")
   fp.write(f"| ----------- | {'----------- |' * len(parameter_names)}\n")
 
-  def _print_reader_coverage(fp, reader_name, doc, clip):
+  def _generate_reader_coverage(fp, reader_name, doc, clip):
     fp.write(f"| {reader_name} |")
     for p in doc:
       if getattr(clip, p["python_name"], None) is not None:
@@ -98,12 +109,12 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/red/A001_C066_0303LZ_001.frames.csv", "r", encoding="utf-8") as type_5_file:
     clip = camdkit.red.reader.to_clip(type_3_file, type_5_file)
 
-  _print_reader_coverage(fp, "RED", doc, clip)
+  _generate_reader_coverage(fp, "RED", doc, clip)
 
   # ARRI reader
 
   clip = camdkit.arri.reader.to_clip("src/test/resources/arri/B001C001_180327_R1ZA.mov.csv")
-  _print_reader_coverage(fp, "ARRI", doc, clip)
+  _generate_reader_coverage(fp, "ARRI", doc, clip)
 
   # Venice reader
 
@@ -111,7 +122,7 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/venice/D001C005_210716AG.csv", "r", encoding="utf-8") as dynamic_file:
     clip = camdkit.venice.reader.to_clip(static_file, dynamic_file)
 
-  _print_reader_coverage(fp, "Venice", doc, clip)
+  _generate_reader_coverage(fp, "Venice", doc, clip)
 
   # Canon reader
 
@@ -119,7 +130,14 @@ def generate_documentation(fp: typing.TextIO):
     open("src/test/resources/canon/20221007_TNumber_CanonCameraMetadata_Frames.csv", "r", encoding="utf-8") as frame_csv:
     clip = camdkit.canon.reader.to_clip(static_csv, frame_csv)
 
-  _print_reader_coverage(fp, "Canon", doc, clip)
+  _generate_reader_coverage(fp, "Canon", doc, clip)
 
 if __name__ == "__main__":
-  generate_documentation(sys.stdout)
+  clip_doc = camdkit.model.Clip.make_documentation()
+  generate_documentation(sys.stdout, clip_doc, _CLIP_INTRODUCTION)
+  generate_clip_reader_coverage(sys.stdout, clip_doc)
+  generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(), "Clip")
+
+  frame_doc = camdkit.trackerkit.model.Frame.make_documentation()
+  generate_documentation(sys.stdout, frame_doc, _FRAME_INTRODUCTION)
+  generate_schema(sys.stdout, camdkit.trackerkit.model.Frame.make_json_schema(), "Frame")
