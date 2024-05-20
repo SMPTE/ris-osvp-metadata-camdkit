@@ -289,8 +289,14 @@ class ParameterContainer:
               if not self._params[f].validate(value):
                 raise ValueError
             elif self._params[f].sampling is Sampling.REGULAR:
-              if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
-                raise ValueError
+              try:
+                # Handle iterable REGULAR objects
+                i = iter(value)
+                if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
+                  raise ValueError
+              except TypeError as te:
+                if not self._params[f].validate(value):
+                  raise ValueError
             else:
               raise ValueError
           self._values[f] = value
@@ -315,7 +321,12 @@ class ParameterContainer:
       elif desc.sampling is Sampling.STATIC:
         obj[desc.canonical_name] = desc.to_json(self._values[k])
       elif desc.sampling is Sampling.REGULAR:
-        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+        try:
+          # Handle iterable REGULAR objects
+          i = iter(value)
+          obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+        except TypeError as te:
+          obj[desc.canonical_name] = desc.to_json(value)
       else:
         raise ValueError
 
