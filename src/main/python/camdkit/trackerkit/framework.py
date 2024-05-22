@@ -1,12 +1,11 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-
 import typing
 import numbers
 import dataclasses
 
-from camdkit.framework import Parameter, Sampling
+from camdkit.framework import Parameter, ParameterContainer, Sampling
 
 @dataclasses.dataclass
 class Vector3:
@@ -15,8 +14,9 @@ class Vector3:
   y: numbers.Real
   z: numbers.Real
   
+
 class TrackingParameter(Parameter):
-  """All tracking parameters are dynamic."""
+  """Base class for tracking parameters. All tracking parameters are dynamic."""
   sampling = Sampling.DYNAMIC
 
 
@@ -64,4 +64,14 @@ class Vector3Parameter(TrackingParameter):
         }
       }
     }
+  
+# A container that is also parsed like a Parameter sub-class for grouping parameters
+class ParameterSection(ParameterContainer):
+  sampling = Sampling.DYNAMIC
+
+  @staticmethod
+  def validate(value) -> bool:
+    """No constraints"""
+    # Nothing to validate in a ParameterSection (sub-parameters will be validated when set)
+    return True
   

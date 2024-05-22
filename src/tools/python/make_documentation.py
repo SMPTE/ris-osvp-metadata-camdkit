@@ -136,8 +136,8 @@ if __name__ == "__main__":
   clip_doc = camdkit.model.Clip.make_documentation()
   generate_documentation(sys.stdout, clip_doc, _CLIP_INTRODUCTION)
   generate_clip_reader_coverage(sys.stdout, clip_doc)
-  generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(), "Clip")
+  generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(True), "Clip")
 
   frame_doc = camdkit.trackerkit.model.Frame.make_documentation()
   generate_documentation(sys.stdout, frame_doc, _FRAME_INTRODUCTION)
-  generate_schema(sys.stdout, camdkit.trackerkit.model.Frame.make_json_schema(), "Frame")
+  generate_schema(sys.stdout, camdkit.trackerkit.model.Frame.make_json_schema(True), "Frame")

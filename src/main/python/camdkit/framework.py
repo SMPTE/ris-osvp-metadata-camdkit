@@ -268,7 +268,7 @@ class ParameterContainer:
     for f in dir(cls):
       desc = getattr(cls, f)
 
-      if not isinstance(desc, Parameter):
+      if not isinstance(desc, Parameter) and not isinstance(desc, ParameterContainer):
         continue
 
       if not hasattr(desc, "canonical_name") or not isinstance(desc.canonical_name, str):
@@ -314,11 +314,15 @@ class ParameterContainer:
       if value is None:
         obj[desc.canonical_name] = None
       elif desc.sampling is Sampling.STATIC:
-        obj[desc.canonical_name] = desc.to_json(self._values[k])
+        obj[desc.canonical_name] = desc.to_json(value)
       elif desc.sampling is Sampling.REGULAR:
         obj[desc.canonical_name] = tuple(map(desc.to_json, value))
       elif desc.sampling is Sampling.DYNAMIC:
-        obj[desc.canonical_name] = desc.to_json(value)
+        # Recurse if required
+        if isinstance(desc, ParameterContainer):
+          obj[desc.canonical_name] = value.to_json()
+        else:
+          obj[desc.canonical_name] = desc.to_json(value)
       else:
         raise ValueError
 
@@ -337,24 +341,26 @@ class ParameterContainer:
           raise ValueError
 
   @classmethod
-  def make_json_schema(cls) -> dict:
-    schema = {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "type": "object",
-      "properties": {}
-    }
+  def make_json_schema(cls, is_root=False) -> dict:
+    schema = {}
+    if is_root:
+      # TODO schema["$id"] = "https://"
+      schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    schema["type"] = "object"
+    schema["properties"] = {}
 
     for _, desc in cls._params.items():
       if desc.sampling is Sampling.STATIC or desc.sampling is Sampling.DYNAMIC:
-        schema[desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.canonical_name] = desc.make_json_schema()
       elif desc.sampling is Sampling.REGULAR:
-        schema[desc.canonical_name] = {
+        schema["properties"][desc.canonical_name] = {
           "type": "array",
           "items": desc.make_json_schema()
         }
       else:
         raise ValueError
-
+      # Add the description from the class doc
+      schema["properties"][desc.canonical_name]["description"] = desc.__doc__.replace("\n ", "")
     return schema
 
   @classmethod
@@ -367,6 +373,6 @@ class ParameterContainer:
         "description" : desc.__doc__,
         "constraints" : desc.validate.__doc__,
         "sampling" : str(desc.sampling.value),
-        "units": desc.units
+        "units": desc.units if hasattr(desc, "units") else "None"
       })
     return doc

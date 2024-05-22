@@ -6,11 +6,10 @@
 
 """Data model"""
 
-import numbers
 import typing
 
-from camdkit.framework import ParameterContainer
-from camdkit.trackerkit.framework import Vector3, Vector3Parameter
+from camdkit.framework import ParameterContainer, StringParameter, Sampling
+from camdkit.trackerkit.framework import Vector3, Vector3Parameter, ParameterSection
 
 class Translation(Vector3Parameter):
   """
@@ -22,9 +21,36 @@ class Translation(Vector3Parameter):
   canonical_name = "translation"
   units = "metres"
 
+class Rotation(Vector3Parameter):
+  """
+  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
+  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
+  Notes on Euler angles:
+  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
+  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
+  Conversion to and from quarternions is trivial with an acceptable loss of precision
+  """
+  canonical_name = "rotation"
+  units = "degrees"
+
+class Transform(ParameterSection):
+  """Transform section"""
+  canonical_name = "transform"
+
+  translation: typing.Optional[Vector3] = Translation()
+  rotation: typing.Optional[Vector3] = Rotation()
+
+
+class TestString(StringParameter):
+  """Test string"""
+  canonical_name = "test_string"
+  sampling = Sampling.STATIC
+  units = None
 
 class Frame(ParameterContainer):
-  """A frame of dynamic metadata from a camera tracking system.
   """
-  translation: typing.Optional[Vector3] = Translation()
+  A frame of dynamic metadata from e.g. a camera tracking system.
+  """
   # TODO JU rest of the model!
+  test: typing.Optional[StringParameter] = TestString()
+  transform: typing.Optional[ParameterSection] = Transform()

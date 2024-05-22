@@ -8,17 +8,20 @@
 
 import typing
 
-import camdkit.trackerkit.model
+from camdkit.trackerkit.model import Vector3, Transform, Frame
 
-def to_frame(frames_f4: typing.IO) -> camdkit.trackerkit.model.Frame:
+def to_frame(frames_f4: typing.IO) -> Frame:
   """Read Mo-Sys F4 data into a `Frame`.
   `frames_f4`: Per-frame camera tracking metadata.
   """
 
-  frame = camdkit.trackerkit.model.Frame()
+  frame = Frame()
 
   # TODO JU Parse the file!
   # For now to test:
-  frame.translation = camdkit.trackerkit.model.Vector3(0.0, 0.0, 0.0)
+  frame.test = "Hello World!"
+  frame.transform = Transform()
+  frame.transform.translation = Vector3(0.0, 0.0, 0.0)
+  frame.transform.rotation = Vector3(0.0, 0.0, 0.0)
 
   return frame
