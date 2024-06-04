@@ -8,8 +8,8 @@
 
 import typing
 
-from camdkit.framework import ParameterContainer, StringParameter, Sampling
-from camdkit.trackerkit.framework import Vector3, TranslationParameter, RotationParameter, ParameterSection
+from camdkit.framework import ParameterContainer, StringParameter, Sampling, Vector3, \
+                              TranslationParameter, RotationParameter, ParameterSection
 
 class Translation(TranslationParameter):
   """

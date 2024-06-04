@@ -24,6 +24,12 @@ class Dimensions:
   height: numbers.Real
   width: numbers.Real
 
+@dataclasses.dataclass
+class Vector3:
+  "3 doubles x,y,z to encode - for example - a location or a translation."
+  x: numbers.Real
+  y: numbers.Real
+  z: numbers.Real
 
 class Parameter:
   """Metadata parameter base class"""
@@ -258,6 +264,101 @@ class StrictlyPositiveIntegerParameter(Parameter):
       "maximum": 2147483647
     }
 
+class TrackingParameter(Parameter):
+  """Base class for tracking parameters. All tracking parameters are dynamic."""
+  sampling = Sampling.DYNAMIC
+
+class Vector3Parameter(TrackingParameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The x, y, and z shall be each be a Real number."""
+
+    if not isinstance(value, Vector3):
+      return False
+
+    if not isinstance(value.x, numbers.Real) or not isinstance(value.y, numbers.Real) or not isinstance(value.z, numbers.Real):
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Vector3(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "x",
+          "y",
+          "z"
+      ],
+      "properties": {
+        "x": {
+            "type": "float",
+        },
+        "y": {
+            "type": "float",
+        },
+        "z": {
+            "type": "float",
+        }
+      }
+    }
+
+class TranslationParameter(Vector3Parameter):
+  pass
+
+class RotationParameter(Vector3Parameter):
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {
+      "pan": value.x,
+      "tilt": value.y,
+      "roll": value.z
+    }
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    value["x"] = value["pan"]
+    value["y"] = value["tilt"]
+    value["z"] = value["roll"]
+    del value["pan"]
+    del value["tilt"]
+    del value["roll"]
+    return Vector3(**value)
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "pan",
+          "tilt",
+          "roll"
+      ],
+      "properties": {
+        "pan": {
+            "type": "float",
+        },
+        "tilt": {
+            "type": "float",
+        },
+        "roll": {
+            "type": "float",
+        }
+      }
+    }
+  
 class ParameterContainer:
   def __init__(self) -> None:
     self._values = {k: None for k in self._params}
@@ -376,3 +477,13 @@ class ParameterContainer:
         "units": desc.units if hasattr(desc, "units") else "None"
       })
     return doc
+
+# A container that is also parsed like a Parameter sub-class for grouping parameters
+class ParameterSection(ParameterContainer):
+  sampling = Sampling.DYNAMIC
+
+  @staticmethod
+  def validate(value) -> bool:
+    """No constraints"""
+    # Nothing to validate in a ParameterSection (sub-parameters will be validated when set)
+    return True
