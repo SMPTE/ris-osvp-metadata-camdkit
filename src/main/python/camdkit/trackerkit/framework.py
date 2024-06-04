@@ -65,6 +65,52 @@ class Vector3Parameter(TrackingParameter):
       }
     }
   
+class TranslationParameter(Vector3Parameter):
+  pass
+
+class RotationParameter(Vector3Parameter):
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {
+      "pan": value.x,
+      "tilt": value.y,
+      "roll": value.z
+    }
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    value["x"] = value["pan"]
+    value["y"] = value["tilt"]
+    value["z"] = value["roll"]
+    del value["pan"]
+    del value["tilt"]
+    del value["roll"]
+    return Vector3(**value)
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "pan",
+          "tilt",
+          "roll"
+      ],
+      "properties": {
+        "pan": {
+            "type": "float",
+        },
+        "tilt": {
+            "type": "float",
+        },
+        "roll": {
+            "type": "float",
+        }
+      }
+    }
+  
 # A container that is also parsed like a Parameter sub-class for grouping parameters
 class ParameterSection(ParameterContainer):
   sampling = Sampling.DYNAMIC

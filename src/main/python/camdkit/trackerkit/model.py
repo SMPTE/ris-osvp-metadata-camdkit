@@ -9,9 +9,9 @@
 import typing
 
 from camdkit.framework import ParameterContainer, StringParameter, Sampling
-from camdkit.trackerkit.framework import Vector3, Vector3Parameter, ParameterSection
+from camdkit.trackerkit.framework import Vector3, TranslationParameter, RotationParameter, ParameterSection
 
-class Translation(Vector3Parameter):
+class Translation(TranslationParameter):
   """
   X,Y,Z in metres of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
@@ -21,7 +21,7 @@ class Translation(Vector3Parameter):
   canonical_name = "translation"
   units = "metres"
 
-class Rotation(Vector3Parameter):
+class Rotation(RotationParameter):
   """
   Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
   Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]

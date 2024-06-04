@@ -14,8 +14,9 @@ from camdkit.trackerkit.model import Vector3
 class MoSysReaderTest(unittest.TestCase):
   
   def test_reader(self):
-    frame = reader.to_frame("src/test/resources/mosys/A003_C001_01 15-03-47-01.f4")
+    frames = reader.to_frames("src/test/resources/trackerkit/mosys/A003_C001_01 15-03-47-01.f4")
 
-    # TODO for now
-    self.assertEqual(frame.transform.translation, Vector3(x=0, y=0, z=0))
-    self.assertEqual(frame.transform.rotation, Vector3(x=0, y=0, z=0))
+    # Test parameters against known values across multple frames
+    self.assertEqual(frames[0].transform.translation, Vector3(x=-8.045, y=-185.355, z=119.801))
+    self.assertEqual(frames[1].transform.rotation, Vector3(x=-3.001, y=-28.062, z=3.076))
+    # TODO JU Test more parameters when supported

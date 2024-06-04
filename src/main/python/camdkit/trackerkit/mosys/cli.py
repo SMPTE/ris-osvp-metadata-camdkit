@@ -20,11 +20,10 @@ def main():
     )
 
   args = parser.parse_args()
+  frames = camdkit.trackerkit.mosys.reader.to_frames(args.frame_f4_path)
 
-  with open(args.frame_f4_path, "r", encoding="utf-8") as frame_f4:
-    frame = camdkit.trackerkit.mosys.reader.to_frame(frame_f4)
-
-  print(json.dumps(frame.to_json(), indent=2))
+  for frame in frames:
+    print(json.dumps(frame.to_json(), indent=2)) 
 
 if __name__ == "__main__":
   main()

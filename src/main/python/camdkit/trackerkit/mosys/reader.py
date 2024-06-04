@@ -4,24 +4,33 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-'''Canon camera reader'''
+'''Mo-Sys F4 data reader'''
 
-import typing
+from camdkit.trackerkit.model import Frame
+from camdkit.trackerkit.mosys.f4 import F4PacketParser
 
-from camdkit.trackerkit.model import Vector3, Transform, Frame
+Frames = list[Frame]
 
-def to_frame(frames_f4: typing.IO) -> Frame:
-  """Read Mo-Sys F4 data into a `Frame`.
-  `frames_f4`: Per-frame camera tracking metadata.
-  """
-
+def to_frame(data: bytes, offset: int = 0) -> Frame:
+  parser = F4PacketParser()
+  success = parser.initialise(data[offset:])
   frame = Frame()
+  if success:
+    frame = parser.getTrackingFrame()
+  return success, frame, parser._packet._size
 
-  # TODO JU Parse the file!
-  # For now to test:
-  frame.test = "Hello World!"
-  frame.transform = Transform()
-  frame.transform.translation = Vector3(0.0, 0.0, 0.0)
-  frame.transform.rotation = Vector3(0.0, 0.0, 0.0)
-
-  return frame
+def to_frames(filename: str) -> Frames:
+  """Read Mo-Sys F4 data into a list of `Frame`s.
+  `filename`: Filename of the f4 file.
+  """
+  frames = []
+  with open(filename, "rb") as f4_file:
+    data = f4_file.read()
+    offset = 0
+    success = True
+    while success:
+      success, frame, packet_size = to_frame(data, offset)
+      if success:
+        offset += packet_size
+        frames.append(frame)
+  return frames
