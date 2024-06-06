@@ -16,8 +16,8 @@ def to_frame(data: bytes, offset: int = 0) -> Frame:
   success = parser.initialise(data[offset:])
   frame = Frame()
   if success:
-    frame = parser.getTrackingFrame()
-  return success, frame, parser._packet._size
+    frame = parser.get_tracking_frame()
+  return success, frame, parser._packet.size
 
 def to_frames(filename: str) -> Frames:
   """Read Mo-Sys F4 data into a list of `Frame`s.

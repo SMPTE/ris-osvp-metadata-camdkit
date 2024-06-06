@@ -14,9 +14,9 @@ UINT_MAX = 4294967295 # 2^32 - 1
 
 
 class Sampling(Enum):
-  STATIC = "Static"
-  REGULAR = "Regular"
-  DYNAMIC = "Dynamic"
+  STATIC = "Static"  # Data that does not change for a Clip or across many Frames
+  REGULAR = "Regular" # Data that appears at regular intervals in a Clip
+  DYNAMIC = "Dynamic" # Data that changes every Frame
 
 @dataclasses.dataclass
 class Dimensions:
