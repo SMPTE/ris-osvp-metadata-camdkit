@@ -6,51 +6,70 @@
 
 """Data model"""
 
+import numbers
 import typing
 
-from camdkit.framework import ParameterContainer, StringParameter, Sampling, Vector3, \
-                              TranslationParameter, RotationParameter, ParameterSection
+from camdkit.framework import ParameterContainer, StringParameter, Sampling, TransformsParameter
+from camdkit.model import FStop
 
-class Translation(TranslationParameter):
-  """
-  X,Y,Z in metres of camera sensor relative to stage origin.
-  The Z axis points upwards and the coordinate system is right-handed.
-  Y points in the forward camera direction (when pan, tilt and roll are zero).
-  For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
-  """
-  canonical_name = "translation"
-  units = "metres"
-
-class Rotation(RotationParameter):
-  """
-  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
-  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
-  Notes on Euler angles:
-  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
-  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
-  Conversion to and from quarternions is trivial with an acceptable loss of precision
-  """
-  canonical_name = "rotation"
-  units = "degrees"
-
-class Transform(ParameterSection):
-  """Transform section"""
-  canonical_name = "transform"
-
-  translation: typing.Optional[Vector3] = Translation()
-  rotation: typing.Optional[Vector3] = Rotation()
-
+class Transforms(TransformsParameter):
+  """List of transforms"""
+  canonical_name = "transforms"
+  units = "metres / degrees"
 
 class TestString(StringParameter):
   """Test string"""
-  canonical_name = "test_string"
-  sampling = Sampling.STATIC
+  canonical_name = "testString"
+  sampling = Sampling.REGULAR
   units = None
 
-class Frame(ParameterContainer):
+class TrackingClip(ParameterContainer):
   """
-  A frame of dynamic metadata from e.g. a camera tracking system.
+  Dynamic metadata from e.g. a camera tracking system. Each frame of data for each
+  parameter is stored in the parameter's tuple
   """
   # TODO JU rest of the model!
-  test: typing.Optional[StringParameter] = TestString()
-  transform: typing.Optional[ParameterSection] = Transform()
+  test: typing.Optional[typing.Tuple[StringParameter]] = TestString()
+  transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
+  f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
+
+  def append(self, clip):
+    "Helper to add another clip's parameters to this clip's tuples"
+    if not isinstance(clip, TrackingClip):
+      raise ValueError
+    self.test += clip.test
+    self.transforms += clip.transforms
+    # Optional parameters:
+    if clip.f_number != None:
+      self.f_number += clip.f_number
+
+  def __getitem__(self, i):
+    "Helper to convert to a static frame for JSON output"
+    clip = TrackingClip()
+    clip.test = self.test[i]
+
+    clip.transforms = self.transforms[i]
+    # Optional parameters:
+    if self.f_number != None:
+      clip.f_number = self.f_number[i]
+    return clip
+
+  def __iter__(self):
+    self.i = 0
+    self._set_static()
+    return self
+  
+  def __next__(self):
+    self.i += 1
+    if self.transforms == None or self.i >= len(self.transforms):
+      self._set_regular()
+      raise StopIteration
+    return self[self.i]
+  
+  def _set_static(self):
+    for p in self._params.keys():
+      self._params[p].sampling = Sampling.STATIC 
+
+  def _set_regular(self):
+    for p in self._params.keys():
+      self._params[p].sampling = Sampling.REGULAR

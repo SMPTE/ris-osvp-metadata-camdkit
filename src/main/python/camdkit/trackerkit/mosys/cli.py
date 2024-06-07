@@ -8,7 +8,7 @@
 
 import json
 import argparse
-import camdkit.canon.reader
+import camdkit.framework
 import camdkit.trackerkit.mosys.reader
 
 def main():
@@ -20,10 +20,10 @@ def main():
     )
 
   args = parser.parse_args()
-  frames = camdkit.trackerkit.mosys.reader.to_frames(args.frame_f4_path)
 
-  for frame in frames:
-    print(json.dumps(frame.to_json(), indent=2)) 
-
+  # First 10 frames
+  frames = camdkit.trackerkit.mosys.reader.to_frames(args.frame_f4_path, 10)
+  print(json.dumps(frames, indent=2))
+  
 if __name__ == "__main__":
   main()

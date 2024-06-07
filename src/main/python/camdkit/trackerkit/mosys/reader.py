@@ -6,31 +6,46 @@
 
 '''Mo-Sys F4 data reader'''
 
-from camdkit.trackerkit.model import Frame
+from camdkit.trackerkit.model import TrackingClip
 from camdkit.trackerkit.mosys.f4 import F4PacketParser
 
-Frames = list[Frame]
-
-def to_frame(data: bytes, offset: int = 0) -> Frame:
+def to_frame(data: bytes) -> TrackingClip:
+  """Parse a frame of Mo-Sys F4 data into a Clip.
+  """
   parser = F4PacketParser()
-  success = parser.initialise(data[offset:])
-  frame = Frame()
+  success = parser.initialise(data)
+  frame = TrackingClip()
   if success:
     frame = parser.get_tracking_frame()
   return success, frame, parser._packet.size
 
-def to_frames(filename: str) -> Frames:
-  """Read Mo-Sys F4 data into a list of `Frame`s.
+def to_clip(filename: str, frames: int = -1) -> TrackingClip:
+  """Read Mo-Sys F4 data into a Clip.
   `filename`: Filename of the f4 file.
   """
-  frames = []
+  clip = TrackingClip()
   with open(filename, "rb") as f4_file:
     data = f4_file.read()
     offset = 0
     success = True
-    while success:
-      success, frame, packet_size = to_frame(data, offset)
+    count = 0
+    while success and (frames == -1 or (count <= frames)):
+      success, frame, packet_size = to_frame(data[offset:])
       if success:
+        if offset == 0:
+          clip = frame
+        else:
+          clip.append(frame)
         offset += packet_size
-        frames.append(frame)
+        count += 1
+  return clip
+
+def to_frames(filename: str, frames: int = -1) -> list[TrackingClip]:
+  """Read Mo-Sys F4 data into a list of `Frame`s.
+  `filename`: Filename of the f4 file.
+  """
+  clip = to_clip(filename, frames)
+  frames = []
+  for frame in clip:
+    frames.append(frame.to_json())
   return frames

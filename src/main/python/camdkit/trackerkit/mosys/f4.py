@@ -9,7 +9,9 @@
 # TODO JU uncomment the frame assignment when the model is defined
 
 import struct
-from camdkit.trackerkit.model import Vector3, Transform, Frame
+
+from camdkit.framework import Vector3, Rotator3, Transform
+from camdkit.trackerkit.model import TrackingClip
 
 class F4:
   
@@ -169,14 +171,14 @@ class F4PacketParser:
     self._initialised = True
     return True
        
-  def get_tracking_frame(self) -> Frame:
+  def get_tracking_frame(self) -> TrackingClip:
+    # Creates a TrackingClip with a single frame of data of each parameter
     # TODO JU Complete once the model is defined
-    frame = Frame()
+    frame = TrackingClip()
     if self._initialised:
-      frame.test = "Hello World!"
-      frame.transform = Transform()
-      frame.transform.translation = Vector3(0, 0, 0)
-      frame.transform.rotation = Vector3(0, 0, 0)
+      frame.test = ("Hello World!",)
+      translation = Vector3()
+      rotation = Rotator3()
       #frame.transform.name = f'Camera {self._packet.camera_id}'
       #frame.timing.packet_sequence_number = self.frame_number
       #frame.metadta.recording = (self._packet.status & (1 << 4)) != 0
@@ -187,17 +189,17 @@ class F4PacketParser:
         axis_block = self._packet.axis_block_list[i]
         match axis_block.axis_id:
           case F4.FIELD_ID_ROLL:
-            frame.transform.rotation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
+            rotation.roll = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
           case F4.FIELD_ID_TILT:
-            frame.transform.rotation.y = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
+            rotation.tilt = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
           case F4.FIELD_ID_PAN:
-            frame.transform.rotation.x = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
+            rotation.pan = self._axis_block_to_angle_linear_raw(axis_block, F4.ANGLE_FACTOR)
           case F4.FIELD_ID_X:
-            frame.transform.translation.x = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
+            translation.x = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_Y:
-            frame.transform.translation.y = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
+            translation.y = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_HEIGHT:
-            frame.transform.translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
+            translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_ENTRANCE_PUPIL:
             #frame.lens.entrance_pupil_distance = self._axis_block_to_lens_param(axis_block)
             pass
@@ -223,7 +225,7 @@ class F4PacketParser:
             #frame.lens.inv_focal_d = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_APERTURE:
-            #frame.lens.aperture = self._axis_block_to_lens_param(axis_block)
+            frame.f_number = (self._axis_block_to_lens_param(axis_block),)
             pass
           case F4.FIELD_ID_FOCUS:
             #frame.lens.encoders.focus = self._axis_block_to_lens_type(axis_block) / 65536.0
@@ -237,5 +239,7 @@ class F4PacketParser:
           case F4.FIELD_ID_TIMECODE:
             #frame.time.timecode = axis_block.to_timecode()
             pass
+      # In this case there is only one transform
+      frame.transforms = ((Transform(translation=translation, rotation=rotation),),)
     return frame
   

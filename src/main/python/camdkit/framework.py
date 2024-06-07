@@ -14,9 +14,8 @@ UINT_MAX = 4294967295 # 2^32 - 1
 
 
 class Sampling(Enum):
-  STATIC = "Static"  # Data that does not change for a Clip or across many Frames
+  STATIC = "Static"   # Data that does not change for a Clip or across many Frames
   REGULAR = "Regular" # Data that appears at regular intervals in a Clip
-  DYNAMIC = "Dynamic" # Data that changes every Frame
 
 @dataclasses.dataclass
 class Dimensions:
@@ -27,9 +26,23 @@ class Dimensions:
 @dataclasses.dataclass
 class Vector3:
   "3 doubles x,y,z to encode - for example - a location or a translation."
-  x: numbers.Real
-  y: numbers.Real
-  z: numbers.Real
+  x: typing.Optional[numbers.Real] = 0.0
+  y: typing.Optional[numbers.Real] = 0.0
+  z: typing.Optional[numbers.Real] = 0.0
+
+@dataclasses.dataclass
+class Rotator3:
+  "3 doubles pan, tilt, roll to encode - for example - a camera rotation."
+  pan: typing.Optional[numbers.Real] = 0.0
+  tilt: typing.Optional[numbers.Real] = 0.0
+  roll: typing.Optional[numbers.Real] = 0.0
+
+@dataclasses.dataclass
+class Transform:
+  "A translation, rotation and scale."
+  translation: Vector3
+  rotation: Rotator3
+  scale: typing.Optional[Vector3] = None
 
 class Parameter:
   """Metadata parameter base class"""
@@ -265,40 +278,85 @@ class StrictlyPositiveIntegerParameter(Parameter):
     }
 
 class TrackingParameter(Parameter):
-  """Base class for tracking parameters. All tracking parameters are dynamic."""
-  sampling = Sampling.DYNAMIC
+  """Base class for tracking parameters. All tracking parameters are regular."""
+  sampling = Sampling.REGULAR
 
-class Vector3Parameter(TrackingParameter):
+class TransformsParameter(TrackingParameter):
+  """
+  X,Y,Z in metres of camera sensor relative to stage origin.
+  The Z axis points upwards and the coordinate system is right-handed.
+  Y points in the forward camera direction (when pan, tilt and roll are zero).
+  For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
+  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
+  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
+  Notes on Euler angles:
+  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
+  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
+  Conversion to and from quarternions is trivial with an acceptable loss of precision
+  """
 
   @staticmethod
   def validate(value) -> bool:
-    """The x, y, and z shall be each be a Real number."""
+    """Each component of each transform shall contain Real numbers."""
 
-    if not isinstance(value, Vector3):
+    if not isinstance(value, typing.Tuple):
+      return False
+    
+    if len(value) == 0:
       return False
 
-    if not isinstance(value.x, numbers.Real) or not isinstance(value.y, numbers.Real) or not isinstance(value.z, numbers.Real):
-      return False
+    for transform in value:
+      if not isinstance(transform, Transform):
+        return False
+      if not isinstance(transform.translation, Vector3):
+        return False
+      if not isinstance(transform.rotation, Rotator3):
+        return False
+      # Scale is optional
+      if transform.scale != None and not isinstance(transform.scale, Vector3):
+        return False
+      if not isinstance(transform.translation.x, numbers.Real) \
+         or not isinstance(transform.translation.y, numbers.Real) \
+         or not isinstance(transform.translation.z, numbers.Real):
+        return False
+      if not isinstance(transform.rotation.pan, numbers.Real) \
+         or not isinstance(transform.rotation.tilt, numbers.Real) \
+         or not isinstance(transform.rotation.roll, numbers.Real):
+        return False
+      if transform.scale != None:
+        if not isinstance(transform.scale.x, numbers.Real) \
+           or not isinstance(transform.scale.y, numbers.Real) \
+           or not isinstance(transform.scale.z, numbers.Real):
+          return False
 
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
+    transforms = []
+    for transform in value:
+      # Factory ignores the optional scale
+      transforms.append(dataclasses.asdict(transform, \
+                                           dict_factory=lambda x: {k: v for (k, v) in x if v is not None}))
+    return transforms  
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return Vector3(**value)
-
+    transforms = ()
+    for v in value:
+      transforms += (Transform(**v), )
+    return transforms
+  
   @staticmethod
   def make_json_schema() -> dict:
+    # JU TODO check array syntax
     return {
-      "type": "object",
+      "type": "array",
       "additionalProperties": False,
-      "required": [
-          "x",
-          "y",
-          "z"
+      "items": [
+        "x",
+        "y",
+        "z"
       ],
       "properties": {
         "x": {
@@ -308,52 +366,6 @@ class Vector3Parameter(TrackingParameter):
             "type": "float",
         },
         "z": {
-            "type": "float",
-        }
-      }
-    }
-
-class TranslationParameter(Vector3Parameter):
-  pass
-
-class RotationParameter(Vector3Parameter):
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return {
-      "pan": value.x,
-      "tilt": value.y,
-      "roll": value.z
-    }
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    value["x"] = value["pan"]
-    value["y"] = value["tilt"]
-    value["z"] = value["roll"]
-    del value["pan"]
-    del value["tilt"]
-    del value["roll"]
-    return Vector3(**value)
-  
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "object",
-      "additionalProperties": False,
-      "required": [
-          "pan",
-          "tilt",
-          "roll"
-      ],
-      "properties": {
-        "pan": {
-            "type": "float",
-        },
-        "tilt": {
-            "type": "float",
-        },
-        "roll": {
             "type": "float",
         }
       }
@@ -387,7 +399,7 @@ class ParameterContainer:
       def _gen_setter(f):
         def setter(self, value):
           if value is not None:
-            if self._params[f].sampling is Sampling.STATIC or self._params[f].sampling is Sampling.DYNAMIC:
+            if self._params[f].sampling is Sampling.STATIC:
               if not self._params[f].validate(value):
                 raise ValueError
             elif self._params[f].sampling is Sampling.REGULAR:
@@ -412,18 +424,14 @@ class ParameterContainer:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
+      # TODO JU how to handle optional parameters?
       if value is None:
-        obj[desc.canonical_name] = None
+      # obj[desc.canonical_name] = None
+        pass
       elif desc.sampling is Sampling.STATIC:
         obj[desc.canonical_name] = desc.to_json(value)
       elif desc.sampling is Sampling.REGULAR:
         obj[desc.canonical_name] = tuple(map(desc.to_json, value))
-      elif desc.sampling is Sampling.DYNAMIC:
-        # Recurse if required
-        if isinstance(desc, ParameterContainer):
-          obj[desc.canonical_name] = value.to_json()
-        else:
-          obj[desc.canonical_name] = desc.to_json(value)
       else:
         raise ValueError
 
@@ -434,7 +442,7 @@ class ParameterContainer:
       for prop, desc in self._params.items():
         if desc.canonical_name != json_key:
           continue
-        if desc.sampling is Sampling.STATIC or desc.sampling is Sampling.DYNAMIC:
+        if desc.sampling is Sampling.STATIC:
           self._values[prop] = desc.from_json(json_value)
         elif desc.sampling is Sampling.REGULAR:
           self._values[prop] = tuple(map(desc.from_json, json_value))
@@ -451,7 +459,7 @@ class ParameterContainer:
     schema["properties"] = {}
 
     for _, desc in cls._params.items():
-      if desc.sampling is Sampling.STATIC or desc.sampling is Sampling.DYNAMIC:
+      if desc.sampling is Sampling.STATIC:
         schema["properties"][desc.canonical_name] = desc.make_json_schema()
       elif desc.sampling is Sampling.REGULAR:
         schema["properties"][desc.canonical_name] = {
@@ -477,13 +485,3 @@ class ParameterContainer:
         "units": desc.units if hasattr(desc, "units") else "None"
       })
     return doc
-
-# A container that is also parsed like a Parameter sub-class for grouping parameters
-class ParameterSection(ParameterContainer):
-  sampling = Sampling.DYNAMIC
-
-  @staticmethod
-  def validate(value) -> bool:
-    """No constraints"""
-    # Nothing to validate in a ParameterSection (sub-parameters will be validated when set)
-    return True

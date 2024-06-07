@@ -8,11 +8,10 @@
 
 import unittest
 from fractions import Fraction
-import json
 
 import camdkit.framework as framework
 
-class RetionalTest(unittest.TestCase):
+class RationalTest(unittest.TestCase):
 
   def test_limits(self):
     self.assertTrue(framework.RationalParameter.validate(Fraction(2147483647, 4294967295)))
@@ -57,3 +56,39 @@ class StrictlyPositiveRationalTest(unittest.TestCase):
     j = framework.StrictlyPositiveRationalParameter.to_json(Fraction(1,2))
 
     self.assertDictEqual(j, { "num": 1, "denom": 2 })
+    
+class TransformsTest(unittest.TestCase):
+
+  def test_to_dict(self):
+    j = framework.TransformsParameter.to_json((framework.Transform(
+      translation=framework.Vector3(1,2,3), \
+      rotation=framework.Rotator3(1,2,3)), ))
+    self.assertListEqual(j, [{
+      "translation": { "x": 1, "y": 2, "z": 3 },
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 } 
+    }])
+    j = framework.TransformsParameter.to_json((framework.Transform(
+      translation=framework.Vector3(1,2,3),
+      rotation=framework.Rotator3(1,2,3),
+      scale=framework.Vector3(1,2,3)), ))
+    self.assertListEqual(j, [{
+      "translation": { "x": 1, "y": 2, "z": 3 },
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
+      "scale": { "x": 1, "y": 2, "z": 3 }
+    }])
+  
+  def test_from_dict(self):
+    t = framework.TransformsParameter.from_json([{
+      "translation": { "x": 1, "y": 2, "z": 3 },
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 }
+    }])
+    self.assertDictEqual(t[0].translation, { "x": 1, "y": 2, "z": 3 })
+    self.assertDictEqual(t[0].rotation, { "pan": 1, "tilt": 2, "roll": 3 })
+    t = framework.TransformsParameter.from_json([{
+      "translation": { "x": 1, "y": 2, "z": 3 },
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
+      "scale": { "x": 1, "y": 2, "z": 3 }
+    }])
+    self.assertDictEqual(t[0].translation, { "x": 1, "y": 2, "z": 3 })
+    self.assertDictEqual(t[0].rotation, { "pan": 1, "tilt": 2, "roll": 3 })
+    self.assertDictEqual(t[0].scale, { "x": 1, "y": 2, "z": 3 })
