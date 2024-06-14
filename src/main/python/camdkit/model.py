@@ -117,6 +117,7 @@ class FStop(StrictlyPositiveIntegerParameter):
   canonical_name = "fStop"
   sampling = Sampling.REGULAR
   units = "0.001 unit"
+  section = "lens"
 
 class FocalLength(StrictlyPositiveIntegerParameter):
   """Nominal focal length of the lens. The number printed on the side of a prime

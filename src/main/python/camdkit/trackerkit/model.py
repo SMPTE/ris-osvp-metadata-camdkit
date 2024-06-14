@@ -33,6 +33,13 @@ class TrackingClip(ParameterContainer):
   transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
   f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
 
+  @classmethod
+  def make_json_schema(cls, is_root=False) -> dict:
+    "Override to convert to static for json schema represenation of a single frame"
+    for _, desc in cls._params.items():
+      desc.sampling = Sampling.STATIC
+    return super().make_json_schema(is_root)
+
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's tuples"
     if not isinstance(clip, TrackingClip):

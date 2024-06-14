@@ -349,24 +349,22 @@ class TransformsParameter(TrackingParameter):
   
   @staticmethod
   def make_json_schema() -> dict:
-    # JU TODO check array syntax
     return {
       "type": "array",
-      "additionalProperties": False,
-      "items": [
-        "x",
-        "y",
-        "z"
-      ],
-      "properties": {
-        "x": {
-            "type": "float",
-        },
-        "y": {
-            "type": "float",
-        },
-        "z": {
-            "type": "float",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+          "x": {
+              "type": "float",
+          },
+          "y": {
+              "type": "float",
+          },
+          "z": {
+              "type": "float",
+          }
         }
       }
     }
@@ -459,17 +457,25 @@ class ParameterContainer:
     schema["properties"] = {}
 
     for _, desc in cls._params.items():
-      if desc.sampling is Sampling.STATIC:
+      description = desc.__doc__.replace("\n ", "")
+      # Handle sections
+      if hasattr(desc, "section"):
+        if desc.section not in schema["properties"]:
+          schema["properties"][desc.section] = {}
+        # Assumes STATIC sampling
+        schema["properties"][desc.section][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.section][desc.canonical_name]["description"] = description
+      elif desc.sampling is Sampling.STATIC:
         schema["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.canonical_name]["description"] = description
       elif desc.sampling is Sampling.REGULAR:
         schema["properties"][desc.canonical_name] = {
           "type": "array",
-          "items": desc.make_json_schema()
+          "items": desc.make_json_schema(),
+          "description": description
         }
       else:
         raise ValueError
-      # Add the description from the class doc
-      schema["properties"][desc.canonical_name]["description"] = desc.__doc__.replace("\n ", "")
     return schema
 
   @classmethod
