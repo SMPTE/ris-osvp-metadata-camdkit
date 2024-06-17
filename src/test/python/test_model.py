@@ -64,7 +64,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertEqual(d["shutterAngle"], 180)
     self.assertTupleEqual(d["tStop"], (2000, 4000))
-    self.assertTupleEqual(d["fStop"], (1200, 2800))
+    self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
     self.assertTupleEqual(d["focalLength"], (2, 4))
     self.assertTupleEqual(d["focusPosition"], (2, 4))
     self.assertTupleEqual(d["entrancePupilPosition"], ({"num": 1, "denom": 2}, {"num": 13, "denom": 7}))

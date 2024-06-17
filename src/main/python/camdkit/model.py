@@ -12,7 +12,7 @@ import typing
 from camdkit.framework import ParameterContainer, StrictlyPositiveRationalParameter, \
                               StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
                               IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter, \
-                              RationalParameter
+                              RationalParameter, TransformsParameter
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -195,6 +195,12 @@ class ShutterAngle(Parameter):
     }
 
 
+class Transforms(TransformsParameter):
+  """List of transforms"""
+  canonical_name = "transforms"
+  units = "metres / degrees"
+
+
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
   """
@@ -218,3 +224,38 @@ class Clip(ParameterContainer):
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
+  # TODO JU rest of the tracking model!
+  transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
+
+  def append(self, clip):
+    "Helper to add another clip's parameters to this clip's REGULAR data tuples"
+    if not isinstance(clip, Clip):
+      raise ValueError
+    if self.transforms != None:
+      self.transforms += clip.transforms
+    if clip.f_number != None:
+      self.f_number += clip.f_number
+    # TODO for prop, desc in self._params.items():
+    #  if clip._values[prop] != None and desc.sampling == Sampling.REGULAR:
+    #    desc += clip._values[prop]
+
+  def __getitem__(self, i):
+    "Helper to convert to a single STATIC data frame for JSON output"
+    clip = Clip()
+    # TODO for k in self._params.keys():
+    if self.transforms != None:
+      clip.transforms = self.transforms[i]
+    if self.f_number != None:
+      clip.f_number = self.f_number[i]
+    return clip
+  
+  @classmethod
+  def make_static_json_schema(cls) -> dict:
+    "Override to convert to static for json schema represenation of a single frame"
+    # Remove all the existing STATIC parameters and make the REGULAR parameters STATIC
+    for prop, desc in cls._params.copy().items():
+      if desc.sampling == Sampling.STATIC:
+        del cls._params[prop]
+      desc.sampling = Sampling.STATIC
+    return super().make_json_schema()
+  

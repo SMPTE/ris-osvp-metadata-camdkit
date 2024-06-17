@@ -9,7 +9,7 @@
 import json
 import argparse
 import camdkit.framework
-import camdkit.trackerkit.mosys.reader
+import camdkit.mosys.reader
 
 def main():
   parser = argparse.ArgumentParser(description="Convert Mo-Sys F4 tracking metadata to JSON according to the OSVP Camera Metadata Model.")
@@ -22,7 +22,7 @@ def main():
   args = parser.parse_args()
 
   # First 10 frames
-  frames = camdkit.trackerkit.mosys.reader.to_frames(args.frame_f4_path, 10)
+  frames = camdkit.mosys.reader.to_frames(args.frame_f4_path, 10)
   print(json.dumps(frames, indent=2))
   
 if __name__ == "__main__":

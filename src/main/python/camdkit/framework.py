@@ -39,10 +39,12 @@ class Rotator3:
 
 @dataclasses.dataclass
 class Transform:
-  "A translation, rotation and scale."
+  "A translation, rotation and scale. 'name' and 'parent' fields enable geometry chains"
   translation: Vector3
   rotation: Rotator3
   scale: typing.Optional[Vector3] = None
+  name: typing.Optional[str] = None
+  parent: typing.Optional[str] = None
 
 class Parameter:
   """Metadata parameter base class"""
@@ -277,11 +279,7 @@ class StrictlyPositiveIntegerParameter(Parameter):
       "maximum": 2147483647
     }
 
-class TrackingParameter(Parameter):
-  """Base class for tracking parameters. All tracking parameters are regular."""
-  sampling = Sampling.REGULAR
-
-class TransformsParameter(TrackingParameter):
+class TransformsParameter(Parameter):
   """
   X,Y,Z in metres of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
@@ -294,6 +292,7 @@ class TransformsParameter(TrackingParameter):
   Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
   Conversion to and from quarternions is trivial with an acceptable loss of precision
   """
+  sampling = Sampling.REGULAR
 
   @staticmethod
   def validate(value) -> bool:
@@ -328,6 +327,11 @@ class TransformsParameter(TrackingParameter):
            or not isinstance(transform.scale.y, numbers.Real) \
            or not isinstance(transform.scale.z, numbers.Real):
           return False
+      # Name and parent are optional
+      if transform.name != None and not isinstance(transform.name, str):
+        return False
+      if transform.parent != None and not isinstance(transform.parent, str):
+        return False
 
     return True
 
@@ -335,7 +339,7 @@ class TransformsParameter(TrackingParameter):
   def to_json(value: typing.Any) -> typing.Any:
     transforms = []
     for transform in value:
-      # Factory ignores the optional scale
+      # Factory ignores the optional fields
       transforms.append(dataclasses.asdict(transform, \
                                            dict_factory=lambda x: {k: v for (k, v) in x if v is not None}))
     return transforms  
@@ -352,20 +356,58 @@ class TransformsParameter(TrackingParameter):
     return {
       "type": "array",
       "minItems": 1,
+      "uniqueItems": False,
       "items": {
         "type": "object",
         "additionalProperties": False,
         "properties": {
-          "x": {
-              "type": "float",
+          "translation": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "x": {
+                  "type": "number",
+              },
+              "y": {
+                  "type": "number",
+              },
+              "z": {
+                  "type": "number"
+              }
+            }
           },
-          "y": {
-              "type": "float",
+          "rotation": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "pan": {
+                  "type": "number",
+              },
+              "tilt": {
+                  "type": "number",
+              },
+              "roll": {
+                  "type": "number"
+              }
+            }
           },
-          "z": {
-              "type": "float",
+          "scale": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "x": {
+                  "type": "number",
+              },
+              "y": {
+                  "type": "number",
+              },
+              "z": {
+                  "type": "number"
+              }
+            }
           }
-        }
+        },
+        "required": ["translation", "rotation"]
       }
     }
   
@@ -379,7 +421,7 @@ class ParameterContainer:
     for f in dir(cls):
       desc = getattr(cls, f)
 
-      if not isinstance(desc, Parameter) and not isinstance(desc, ParameterContainer):
+      if not isinstance(desc, Parameter):
         continue
 
       if not hasattr(desc, "canonical_name") or not isinstance(desc.canonical_name, str):
@@ -422,9 +464,13 @@ class ParameterContainer:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
-      # TODO JU how to handle optional parameters?
-      if value is None:
-      # obj[desc.canonical_name] = None
+      # Handle sections
+      if hasattr(desc, "section"):
+        if desc.section not in obj:
+          obj[desc.section] = {}
+        # Assumes STATIC sampling
+        obj[desc.section][desc.canonical_name] = desc.to_json(value)
+      elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
         obj[desc.canonical_name] = desc.to_json(value)
@@ -438,6 +484,8 @@ class ParameterContainer:
   def from_json(self, json_dict: dict):
     for json_key, json_value in json_dict.items():
       for prop, desc in self._params.items():
+        if hasattr(desc, "section") and desc.section == json_key:
+          self.from_json(json_dict[json_key])
         if desc.canonical_name != json_key:
           continue
         if desc.sampling is Sampling.STATIC:
@@ -446,25 +494,29 @@ class ParameterContainer:
           self._values[prop] = tuple(map(desc.from_json, json_value))
         else:
           raise ValueError
+    return self
 
   @classmethod
-  def make_json_schema(cls, is_root=False) -> dict:
-    schema = {}
-    if is_root:
-      # TODO schema["$id"] = "https://"
-      schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["type"] = "object"
-    schema["properties"] = {}
-
+  def make_json_schema(cls) -> dict:
+    schema = {
+      # TODO "$id": "https://...",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {}
+    }
     for _, desc in cls._params.items():
       description = desc.__doc__.replace("\n ", "")
       # Handle sections
       if hasattr(desc, "section"):
         if desc.section not in schema["properties"]:
-          schema["properties"][desc.section] = {}
+          schema["properties"][desc.section] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {}
+          }
         # Assumes STATIC sampling
-        schema["properties"][desc.section][desc.canonical_name] = desc.make_json_schema()
-        schema["properties"][desc.section][desc.canonical_name]["description"] = description
+        schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
       elif desc.sampling is Sampling.STATIC:
         schema["properties"][desc.canonical_name] = desc.make_json_schema()
         schema["properties"][desc.canonical_name]["description"] = description
@@ -491,3 +543,29 @@ class ParameterContainer:
         "units": desc.units if hasattr(desc, "units") else "None"
       })
     return doc
+  
+  """
+  Iteration is useful for representing a clip as a list of frames of data,
+  extracting each REGULAR field's tuples into a separate single Clip of
+  STATIC data.
+  """
+  
+  def __iter__(self):
+    self.i = 0
+    self._set_static()
+    return self
+  
+  def __next__(self):
+    self.i += 1
+    if self.transforms == None or self.i >= len(self.transforms):
+      self._set_regular()
+      raise StopIteration
+    return self[self.i]
+  
+  def _set_static(self):
+    for p in self._params.keys():
+      self._params[p].sampling = Sampling.STATIC 
+
+  def _set_regular(self):
+    for p in self._params.keys():
+      self._params[p].sampling = Sampling.REGULAR

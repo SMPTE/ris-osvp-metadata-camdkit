@@ -5,10 +5,9 @@ import camdkit.model
 import camdkit.red.reader
 import camdkit.arri.reader
 import camdkit.trackerkit
-import camdkit.trackerkit.model
 import camdkit.venice.reader
 import camdkit.canon.reader
-import camdkit.trackerkit.mosys.reader
+import camdkit.mosys.reader
 
 _CLIP_INTRODUCTION = """# OSVP documentation
 
@@ -136,8 +135,5 @@ if __name__ == "__main__":
   clip_doc = camdkit.model.Clip.make_documentation()
   generate_documentation(sys.stdout, clip_doc, _CLIP_INTRODUCTION)
   generate_clip_reader_coverage(sys.stdout, clip_doc)
-  generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(True), "Clip")
-
-  frame_doc = camdkit.trackerkit.model.TrackingClip.make_documentation()
-  generate_documentation(sys.stdout, frame_doc, _FRAME_INTRODUCTION)
-  generate_schema(sys.stdout, camdkit.trackerkit.model.TrackingClip.make_json_schema(True), "Frame")
+  generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(), "Clip")
+  generate_schema(sys.stdout, camdkit.model.Clip.make_static_json_schema(), "Frame")

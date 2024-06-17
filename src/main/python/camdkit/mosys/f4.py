@@ -11,7 +11,7 @@
 import struct
 
 from camdkit.framework import Vector3, Rotator3, Transform
-from camdkit.trackerkit.model import TrackingClip
+from camdkit.model import Clip
 
 class F4:
   
@@ -171,12 +171,11 @@ class F4PacketParser:
     self._initialised = True
     return True
        
-  def get_tracking_frame(self) -> TrackingClip:
+  def get_tracking_frame(self) -> Clip:
     # Creates a TrackingClip with a single frame of data of each parameter
     # TODO JU Complete once the model is defined
-    frame = TrackingClip()
+    frame = Clip()
     if self._initialised:
-      frame.test = ("Hello World!",)
       translation = Vector3()
       rotation = Rotator3()
       #frame.transform.name = f'Camera {self._packet.camera_id}'
@@ -225,7 +224,9 @@ class F4PacketParser:
             #frame.lens.inv_focal_d = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_APERTURE:
-            frame.f_number = (self._axis_block_to_lens_param(axis_block),)
+            f: float = self._axis_block_to_lens_param(axis_block)
+            # Units are 0.001 e.g. F4.0 => 4000
+            frame.f_number = (round(f*1000.0),)
             pass
           case F4.FIELD_ID_FOCUS:
             #frame.lens.encoders.focus = self._axis_block_to_lens_type(axis_block) / 65536.0
@@ -239,6 +240,8 @@ class F4PacketParser:
           case F4.FIELD_ID_TIMECODE:
             #frame.time.timecode = axis_block.to_timecode()
             pass
+      # TODO for now for testing
+      frame.f_number = (4000,)
       # In this case there is only one transform
       frame.transforms = ((Transform(translation=translation, rotation=rotation),),)
     return frame

@@ -9,12 +9,12 @@
 import unittest
 
 from camdkit.framework import Vector3, Rotator3
-from camdkit.trackerkit.mosys import reader
+from camdkit.mosys import reader
 
 class MoSysReaderTest(unittest.TestCase):
   
   def test_reader(self):
-    clip = reader.to_clip("src/test/resources/trackerkit/mosys/A003_C001_01 15-03-47-01.f4", 100)
+    clip = reader.to_clip("src/test/resources/mosys/A003_C001_01 15-03-47-01.f4", 100)
 
     # Test parameters against known values across multple frames
     self.assertEqual(clip.transforms[0][0].translation, Vector3(x=-8.045, y=-185.355, z=119.801))
