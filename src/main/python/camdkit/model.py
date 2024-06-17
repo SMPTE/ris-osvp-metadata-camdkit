@@ -251,11 +251,12 @@ class Clip(ParameterContainer):
   
   @classmethod
   def make_static_json_schema(cls) -> dict:
-    "Override to convert to static for json schema represenation of a single frame"
+    "Helper to create a static json schema representation of a single frame"
     # Remove all the existing STATIC parameters and make the REGULAR parameters STATIC
     for prop, desc in cls._params.copy().items():
       if desc.sampling == Sampling.STATIC:
         del cls._params[prop]
+        continue
       desc.sampling = Sampling.STATIC
     return super().make_json_schema()
   

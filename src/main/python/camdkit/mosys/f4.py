@@ -240,8 +240,6 @@ class F4PacketParser:
           case F4.FIELD_ID_TIMECODE:
             #frame.time.timecode = axis_block.to_timecode()
             pass
-      # TODO for now for testing
-      frame.f_number = (4000,)
       # In this case there is only one transform
       frame.transforms = ((Transform(translation=translation, rotation=rotation),),)
     return frame

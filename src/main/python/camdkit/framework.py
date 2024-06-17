@@ -466,10 +466,10 @@ class ParameterContainer:
       value = self._values[k]
       # Handle sections
       if hasattr(desc, "section"):
-        if desc.section not in obj:
-          obj[desc.section] = {}
-        # Assumes STATIC sampling
-        obj[desc.section][desc.canonical_name] = desc.to_json(value)
+        if value != None:
+          if desc.section not in obj:
+            obj[desc.section] = {}
+          obj[desc.section][desc.canonical_name] = desc.to_json(value)
       elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
