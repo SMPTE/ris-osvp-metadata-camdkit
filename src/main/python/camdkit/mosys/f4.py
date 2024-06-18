@@ -178,7 +178,7 @@ class F4PacketParser:
     if self._initialised:
       translation = Vector3()
       rotation = Rotator3()
-      #frame.transform.name = f'Camera {self._packet.camera_id}'
+      frame.timing_mode = ("internal",)
       #frame.timing.packet_sequence_number = self.frame_number
       #frame.metadta.recording = (self._packet.status & (1 << 4)) != 0
       #frame.timing.synchronization.source = SynchronizationSource.genlock
@@ -241,6 +241,8 @@ class F4PacketParser:
             #frame.time.timecode = axis_block.to_timecode()
             pass
       # In this case there is only one transform
-      frame.transforms = ((Transform(translation=translation, rotation=rotation),),)
+      transform = Transform(translation=translation, rotation=rotation)
+      transform.name = f'Camera {self._packet.camera_id}'
+      frame.transforms = ((transform,),)
     return frame
   

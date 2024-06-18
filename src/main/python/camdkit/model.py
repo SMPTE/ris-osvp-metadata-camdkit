@@ -12,7 +12,7 @@ import typing
 from camdkit.framework import ParameterContainer, StrictlyPositiveRationalParameter, \
                               StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
                               IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter, \
-                              RationalParameter, TransformsParameter
+                              RationalParameter, TransformsParameter, TimingModeParameter
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -196,10 +196,29 @@ class ShutterAngle(Parameter):
 
 
 class Transforms(TransformsParameter):
-  """List of transforms"""
+  """
+  X,Y,Z in metres of camera sensor relative to stage origin.
+  The Z axis points upwards and the coordinate system is right-handed.
+  Y points in the forward camera direction (when pan, tilt and roll are zero).
+  For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
+  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
+  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
+  Notes on Euler angles:
+  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
+  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
+  Conversion to and from quarternions is trivial with an acceptable loss of precision
+  """
   canonical_name = "transforms"
   units = "metres / degrees"
 
+class TimingMode(TimingModeParameter):
+  """
+  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
+  'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
+  """
+  canonical_name = "mode"
+  section = "timing"
+  allowedValues = ["internal", "external"]
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -226,27 +245,25 @@ class Clip(ParameterContainer):
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # TODO JU rest of the tracking model!
   transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
+  # TODO this to test enumerations
+  timing_mode: typing.Optional[typing.Tuple[TimingModeParameter]] = TimingMode()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"
     if not isinstance(clip, Clip):
       raise ValueError
-    if self.transforms != None:
-      self.transforms += clip.transforms
-    if clip.f_number != None:
-      self.f_number += clip.f_number
-    # TODO for prop, desc in self._params.items():
-    #  if clip._values[prop] != None and desc.sampling == Sampling.REGULAR:
-    #    desc += clip._values[prop]
+    for prop, desc in self._params.items():
+      if clip._values[prop] != None and desc.sampling == Sampling.REGULAR:
+        self._values[prop] += clip._values[prop]
 
   def __getitem__(self, i):
     "Helper to convert to a single STATIC data frame for JSON output"
     clip = Clip()
-    # TODO for k in self._params.keys():
-    if self.transforms != None:
-      clip.transforms = self.transforms[i]
-    if self.f_number != None:
-      clip.f_number = self.f_number[i]
+    for f in dir(self):
+      desc = getattr(self, f)
+      if not isinstance(desc, tuple):
+        continue
+      setattr(clip, f, desc[i])
     return clip
   
   @classmethod

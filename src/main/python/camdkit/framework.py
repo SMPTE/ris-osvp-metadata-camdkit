@@ -278,20 +278,25 @@ class StrictlyPositiveIntegerParameter(Parameter):
       "minimum": 1,
       "maximum": 2147483647
     }
+  
+class EnumParameter(StringParameter):
+  allowedValues = []
+
+  def validate(self, value) -> bool:
+    """The parameter shall be one of the allowed values."""
+    return isinstance(value, str) and value in self.allowedValues
+
+  def make_json_schema(self) -> dict:
+    return {
+      "type": "string",
+      "enum": self.allowedValues
+    }
+
+class TimingModeParameter(EnumParameter):
+  sampling = Sampling.REGULAR
+  allowedValues = ["internal", "external"]
 
 class TransformsParameter(Parameter):
-  """
-  X,Y,Z in metres of camera sensor relative to stage origin.
-  The Z axis points upwards and the coordinate system is right-handed.
-  Y points in the forward camera direction (when pan, tilt and roll are zero).
-  For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
-  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
-  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
-  Notes on Euler angles:
-  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
-  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
-  Conversion to and from quarternions is trivial with an acceptable loss of precision
-  """
   sampling = Sampling.REGULAR
 
   @staticmethod

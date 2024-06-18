@@ -57,6 +57,18 @@ class StrictlyPositiveRationalTest(unittest.TestCase):
 
     self.assertDictEqual(j, { "num": 1, "denom": 2 })
     
+class EnumParameterTest(unittest.TestCase):
+
+  def test_allowed_values(self):
+    param = framework.TimingModeParameter()
+    self.assertTrue(param.validate("internal"))
+    self.assertTrue(param.validate("external"))
+    self.assertFalse(param.validate(""))
+    self.assertFalse(param.validate("a"))
+    self.assertFalse(param.validate(None))
+    self.assertFalse(param.validate(0))
+    
+
 class TransformsTest(unittest.TestCase):
 
   def test_to_dict(self):

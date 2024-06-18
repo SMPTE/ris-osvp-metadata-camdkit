@@ -7,8 +7,9 @@
 '''Generic camera model tests'''
 
 import unittest
-from fractions import Fraction 
+from fractions import Fraction
 
+import camdkit.framework
 import camdkit.model
 
 class ModelTest(unittest.TestCase):
@@ -250,3 +251,35 @@ class ModelTest(unittest.TestCase):
 
     with self.assertRaises(ValueError):
       clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
+
+  def test_timing_model(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.timing_mode)
+
+    with self.assertRaises(ValueError):
+      clip.timing_mode = ""
+    with self.assertRaises(ValueError):
+      clip.timing_mode = "a"
+
+    value = "external"
+    clip.timing_mode = (value,)
+    self.assertEqual(clip.timing_mode, (value,))
+
+  def test_transforms_model(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.transforms)
+
+    with self.assertRaises(TypeError):
+      clip.transforms = camdkit.framework.Transform()
+    with self.assertRaises(ValueError):
+      clip.timing_mode = "a"
+    transform = camdkit.framework.Transform(
+      translation=camdkit.framework.Vector3(1.0,2.0,3.0),
+      rotation=camdkit.framework.Rotator3(1.0,2.0,3.0),
+      scale=camdkit.framework.Vector3(1.0,2.0,3.0)
+    )
+    value = ((transform,),)
+    clip.transforms = value
+    self.assertEqual(clip.transforms, value)

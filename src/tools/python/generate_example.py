@@ -17,6 +17,7 @@ def main():
   rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
   clip.transforms = ((Transform(translation=translation, rotation=rotation),),)
   clip.f_number = (4000,)
+  clip.timing_mode = ("internal",)
   
   # Create the static single frame of JSON
   clip._set_static()
