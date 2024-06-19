@@ -68,6 +68,23 @@ class EnumParameterTest(unittest.TestCase):
     self.assertFalse(param.validate(None))
     self.assertFalse(param.validate(0))
     
+class TimestampTest(unittest.TestCase):
+
+  def test_timestamp_limits(self):
+    with self.assertRaises(TypeError):
+      framework.Timestamp()
+      framework.Timestamp(0)
+    self.assertTrue(framework.TimestampParameter.validate(framework.Timestamp(0,0)))
+    self.assertTrue(framework.TimestampParameter.validate(framework.Timestamp(1,2)))
+    self.assertTrue(framework.TimestampParameter.validate(framework.Timestamp(0,0,0)))
+    self.assertTrue(framework.TimestampParameter.validate(framework.Timestamp(1,2,3)))
+    self.assertTrue(framework.TimestampParameter.validate(framework.Timestamp(281474976710655,4294967295,4294967295)))
+    self.assertFalse(framework.TimestampParameter.validate(framework.Timestamp(-1,2,3)))
+    self.assertFalse(framework.TimestampParameter.validate(framework.Timestamp(1,-2,3)))
+    self.assertFalse(framework.TimestampParameter.validate(framework.Timestamp(1,2,-3)))
+    self.assertFalse(framework.TimestampParameter.validate(framework.Timestamp(0,281474976710655,0)))
+    self.assertFalse(framework.TimestampParameter.validate(framework.Timestamp(0,0,281474976710655)))
+
 class TimecodeTest(unittest.TestCase):
 
   def test_timecode_format(self):
@@ -84,9 +101,9 @@ class TimecodeTest(unittest.TestCase):
 
   def test_timecode_formats(self):
     with self.assertRaises(TypeError):
-      framework.TimecodeParameter.validate(framework.Timecode())
-      framework.TimecodeParameter.validate(framework.Timecode(1,2,3))
-      framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0))
+      framework.Timecode()
+      framework.Timecode(1,2,3)
+      framework.Timecode(0,0,0,0)
     self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0,0)))
     self.assertTrue(framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0,framework.TimecodeFormat.TC_24)))
     self.assertTrue(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24)))
@@ -106,10 +123,10 @@ class TimecodeTest(unittest.TestCase):
 
   def test_from_dict(self):
     r = framework.TimecodeParameter.from_json({
-      "hour": 1,
-      "minute": 2,
-      "second": 3,
-      "frame": 4,
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
       "format": framework.TimecodeFormat.TC_24
     })
     self.assertEqual(r, framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24))
@@ -117,10 +134,10 @@ class TimecodeTest(unittest.TestCase):
   def test_to_dict(self):
     j = framework.TimecodeParameter.to_json(framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24))
     self.assertDictEqual(j, {
-      "hour": 1,
-      "minute": 2,
-      "second": 3,
-      "frame": 4,
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
       "format": str(framework.TimecodeFormat.TC_24)
     })
 

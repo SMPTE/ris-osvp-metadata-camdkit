@@ -8,7 +8,7 @@
 
 import json
 from jsonschema import validate
-from camdkit.framework import Vector3, Rotator3, Transform, TimingMode, Timecode, TimecodeFormat
+from camdkit.framework import Vector3, Rotator3, Transform, TimingMode, Timestamp, Timecode, TimecodeFormat
 from camdkit.model import Clip
 
 def main():
@@ -18,8 +18,10 @@ def main():
   clip.transforms = ((Transform(translation=translation, rotation=rotation),),)
   clip.f_number = (4000,)
   clip.timing_mode = (TimingMode.INTERNAL,)
+  clip.timing_timestamp = (Timestamp(1718806554, 0),)
   clip.timing_sequence_number = (0,)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat.TC_24),)
+  clip.timing_frame_rate = (23.976,)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat.TC_24D),)
   
   # Create the static single frame of JSON
   clip._set_static()

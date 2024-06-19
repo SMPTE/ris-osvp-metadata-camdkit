@@ -252,7 +252,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
 
-  def test_timing_model(self):
+  def test_timing_mode_model(self):
     clip = camdkit.model.Clip()
 
     self.assertIsNone(clip.timing_mode)
@@ -265,6 +265,32 @@ class ModelTest(unittest.TestCase):
     value = (camdkit.framework.TimingMode.INTERNAL, camdkit.framework.TimingMode.EXTERNAL)
     clip.timing_mode = value
     self.assertEqual(clip.timing_mode, value)
+
+  def test_timing_timestamp_model(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.timing_frame_rate)
+
+    with self.assertRaises(ValueError):
+      clip.timing_frame_rate = -1.0
+
+    value = (24.0,)
+    clip.timing_frame_rate = value
+    self.assertEqual(clip.timing_frame_rate, value)
+
+  def test_timing_frame_rate_model(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.timing_timestamp)
+
+    with self.assertRaises(ValueError):
+      clip.timing_timestamp = 0
+    with self.assertRaises(TypeError):
+      clip.timing_timestamp = camdkit.framework.Timestamp(0)
+
+    value = (camdkit.framework.Timestamp(0,0), camdkit.framework.Timestamp(1718806800,0))
+    clip.timing_timestamp = value
+    self.assertEqual(clip.timing_timestamp, value)
 
   def test_timing_timecode_model(self):
     clip = camdkit.model.Clip()

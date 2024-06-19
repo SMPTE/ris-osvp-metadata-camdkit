@@ -228,6 +228,8 @@ class F4PacketParser:
             pass
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
+            frame_rate = TimecodeFormat.to_float(frame.timing_timecode[0].format)
+            frame.timing_frame_rate = (frame_rate,)
             pass
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)

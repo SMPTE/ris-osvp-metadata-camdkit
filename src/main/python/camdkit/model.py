@@ -216,12 +216,27 @@ class TimingMode(TimingModeParameter):
   canonical_name = "mode"
   section = "timing"
   
-class TimingSequenceNumber(StrictlyPositiveIntegerParameter):
+class TimingTimestamp(TimestampParameter):
+  """
+  TODO doc
+  """
+  canonical_name = "timestamp"
+  section = "timing"
+  
+class TimingSequenceNumber(NonNegativeIntegerParameter):
   """
   TODO doc
   """
   sampling = Sampling.REGULAR
   canonical_name = "sequence_number"
+  section = "timing"
+
+class TimingFrameRate(NonNegativeRealParameter):
+  """
+  TODO doc
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "frameRate"
   section = "timing"
 
 class TimingTimecode(TimecodeParameter):
@@ -255,11 +270,12 @@ class Clip(ParameterContainer):
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # TODO JU rest of the tracking model!
-  transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
-  # TODO this to test enumerations
   timing_mode: typing.Optional[typing.Tuple[TimingModeParameter]] = TimingMode()
-  timing_sequence_number: typing.Optional[typing.Tuple[TimingSequenceNumber]] = TimingSequenceNumber()
-  timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
+  timing_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
+  timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
+  timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
+  timing_timecode: typing.Optional[typing.Tuple[TimecodeParameter]] = TimingTimecode()
+  transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

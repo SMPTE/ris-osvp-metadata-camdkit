@@ -11,6 +11,7 @@ import re
 INT_MAX = 2147483647 # 2^31 - 1
 INT_MIN = -2147483648 # -2^31
 UINT_MAX = 4294967295 # 2^32 - 1
+UINT48_MAX = 281474976710655 # 2^48 - 1
 
 
 class Sampling(Enum):
@@ -46,6 +47,16 @@ class Transform:
   name: typing.Optional[str] = None
   parent: typing.Optional[str] = None
 
+@dataclasses.dataclass
+class Timestamp:
+  """
+  A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
+  optional 32-bit integer representing attoseconds elapsed since 00:00 January 1st 1970 epoch.
+  """
+  seconds: int
+  nanoseconds: int
+  attoseconds: typing.Optional[int] = 0
+
 class TimingMode(Enum):
   INTERNAL = "internal"
   EXTERNAL = "external"
@@ -67,6 +78,15 @@ class TimecodeFormat(Enum):
     if value == cls.TC_30 or value == cls.TC_30D: return 30
     raise ValueError
   
+  @classmethod
+  def to_float(cls, value):
+    if value == cls.TC_24: return 24.0
+    if value == cls.TC_24D: return 23.976
+    if value == cls.TC_25: return 25.0
+    if value == cls.TC_30: return 30
+    if value == cls.TC_30D: return 29.97
+    raise ValueError
+  
   def __str__(self):
     return self.value
   
@@ -77,10 +97,10 @@ class TimecodeFormat(Enum):
 @dataclasses.dataclass
 class Timecode:
   "Timecode is a standard for labeling individual frames of data in media systems."
-  hour: int
-  minute: int
-  second: int
-  frame: int
+  hours: int
+  minutes: int
+  seconds: int
+  frames: int
   format: TimecodeFormat
 
 class Parameter:
@@ -292,13 +312,8 @@ class RationalParameter(Parameter):
       "additionalProperties": False
     }
 
-class StrictlyPositiveIntegerParameter(Parameter):
-
-  @staticmethod
-  def validate(value) -> bool:
-    """The parameter shall be a integer in the range (0..2,147,483,647]."""
-
-    return isinstance(value, numbers.Integral) and value >= 0
+class IntegerParameter(Parameter):
+  """Base class for integer parameters"""
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -307,17 +322,72 @@ class StrictlyPositiveIntegerParameter(Parameter):
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return int(value)
+  
+class NonNegativeIntegerParameter(IntegerParameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a integer in the range (0..2,147,483,647]."""
+
+    return isinstance(value, numbers.Integral) and value >= 0
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
       "type": "integer",
       "minimum": 0,
-      "maximum": 2147483647
+      "maximum": INT_MAX
+    }
+  
+class StrictlyPositiveIntegerParameter(IntegerParameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a integer in the range (1..2,147,483,647]."""
+
+    return isinstance(value, numbers.Integral) and value > 0
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": INT_MAX
+    }
+  
+class NonNegativeRealParameter(Parameter):
+  
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a non-negative real number."""
+
+    return isinstance(value, numbers.Real) and value >= 0.0
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return float(value)
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+      "minimum": 0.0,
     }
   
 class EnumParameter(StringParameter):
   allowedValues = []
+  enum_class = None
+
+  @classmethod
+  def __init_subclass__(cls) -> None:
+    if cls.enum_class == None:
+      # Sub-class must specify the related Enum class
+      raise ValueError
+    cls.allowedValues = [e.value for e in cls.enum_class]
 
   def validate(self, value) -> bool:
     """The parameter shall be one of the allowed values."""
@@ -328,10 +398,63 @@ class EnumParameter(StringParameter):
       "type": "string",
       "enum": self.allowedValues
     }
-
+  
 class TimingModeParameter(EnumParameter):
   sampling = Sampling.REGULAR
-  allowedValues = [e.value for e in TimingMode]
+  enum_class = TimingMode
+  
+class TimestampParameter(Parameter):
+  sampling = Sampling.REGULAR
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain valid number of seconds, nanoseconds and optionally
+    attoseconds elapsed since the start of the epoch.
+    """
+    if not isinstance(value, Timestamp):
+      return False
+    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds <= UINT48_MAX):
+      return False
+    if not (isinstance(value.nanoseconds, int) and value.nanoseconds >= 0 and value.nanoseconds <= UINT_MAX):
+      return False
+    if not (isinstance(value.attoseconds, int) and value.attoseconds >= 0 and value.attoseconds <= UINT_MAX):
+      return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Timestamp(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT48_MAX
+        },
+        "nanoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        },
+        "attoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        }
+      },
+      "required": ["seconds", "nanoseconds"]
+    }
+
 
 class TimecodeParameter(Parameter):
   sampling = Sampling.REGULAR
@@ -339,21 +462,21 @@ class TimecodeParameter(Parameter):
   @staticmethod
   def validate(value) -> bool:
     """
-    The parameter shall contain a tuple of Timecodes that each have a valid format and 
-    hours, minutes, seconds and frames with appropriate min/max values.
+    The parameter shall contain a valid format and hours, minutes, seconds and frames with
+    appropriate min/max values.
     """
 
     if not isinstance(value, Timecode):
       return False
     if not isinstance(value.format, TimecodeFormat):
       return False
-    if not (isinstance(value.hour, int) and value.hour >= 0 and value.hour < 24):
+    if not (isinstance(value.hours, int) and value.hours >= 0 and value.hours < 24):
       return False
-    if not (isinstance(value.minute, int) and value.minute >= 0 and value.minute < 60):
+    if not (isinstance(value.minutes, int) and value.minutes >= 0 and value.minutes < 60):
       return False
-    if not (isinstance(value.second, int) and value.second >= 0 and value.second < 60):
+    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds < 60):
       return False
-    if not (isinstance(value.frame, int) and value.frame >= 0 and value.frame < TimecodeFormat.to_int(value.format)):
+    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < TimecodeFormat.to_int(value.format)):
       return False
     return True
 
@@ -365,7 +488,7 @@ class TimecodeParameter(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return Timecode(value["hour"], value["minute"], value["second"], value["frame"],
+    return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat.from_string(value["format"]))
 
   @staticmethod
@@ -374,22 +497,22 @@ class TimecodeParameter(Parameter):
       "type": "object",
       "additionalProperties": False,
       "properties": {
-        "hour": {
+        "hours": {
           "type": "integer",
           "minimum": 0,
           "maximum": 23
         },
-        "minute": {
+        "minutes": {
           "type": "integer",
           "minimum": 0,
           "maximum": 59
         },
-        "second": {
+        "seconds": {
           "type": "integer",
           "minimum": 0,
           "maximum": 59
         },
-        "frame": {
+        "frames": {
           "type": "integer",
           "minimum": 0,
           "maximum": 29
