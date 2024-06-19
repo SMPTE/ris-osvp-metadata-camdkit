@@ -61,13 +61,69 @@ class EnumParameterTest(unittest.TestCase):
 
   def test_allowed_values(self):
     param = framework.TimingModeParameter()
-    self.assertTrue(param.validate("internal"))
-    self.assertTrue(param.validate("external"))
+    self.assertTrue(param.validate(framework.TimingMode.INTERNAL))
+    self.assertTrue(param.validate(framework.TimingMode.EXTERNAL))
     self.assertFalse(param.validate(""))
     self.assertFalse(param.validate("a"))
     self.assertFalse(param.validate(None))
     self.assertFalse(param.validate(0))
     
+class TimecodeTest(unittest.TestCase):
+
+  def test_timecode_format(self):
+    self.assertEqual(framework.TimecodeFormat.to_int(framework.TimecodeFormat.TC_24), 24)
+    self.assertEqual(framework.TimecodeFormat.to_int(framework.TimecodeFormat.TC_24D), 24)
+    self.assertEqual(framework.TimecodeFormat.to_int(framework.TimecodeFormat.TC_25), 25)
+    self.assertEqual(framework.TimecodeFormat.to_int(framework.TimecodeFormat.TC_30), 30)
+    self.assertEqual(framework.TimecodeFormat.to_int(framework.TimecodeFormat.TC_30D), 30)
+    with self.assertRaises(TypeError):
+      framework.TimecodeFormat.to_int()
+    with self.assertRaises(ValueError):
+      framework.TimecodeFormat.to_int(0)
+      framework.TimecodeFormat.to_int(24)
+
+  def test_timecode_formats(self):
+    with self.assertRaises(TypeError):
+      framework.TimecodeParameter.validate(framework.Timecode())
+      framework.TimecodeParameter.validate(framework.Timecode(1,2,3))
+      framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0,0)))
+    self.assertTrue(framework.TimecodeParameter.validate(framework.Timecode(0,0,0,0,framework.TimecodeFormat.TC_24)))
+    self.assertTrue(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24)))
+    self.assertTrue(framework.TimecodeParameter.validate(framework.Timecode(23,59,59,23,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(-1,2,3,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(24,2,3,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,-1,3,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,60,3,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,-1,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,60,4,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,-1,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,24,framework.TimecodeFormat.TC_24)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,24,framework.TimecodeFormat.TC_24D)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,25,framework.TimecodeFormat.TC_25)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,30,framework.TimecodeFormat.TC_30)))
+    self.assertFalse(framework.TimecodeParameter.validate(framework.Timecode(1,2,3,30,framework.TimecodeFormat.TC_30D)))
+
+  def test_from_dict(self):
+    r = framework.TimecodeParameter.from_json({
+      "hour": 1,
+      "minute": 2,
+      "second": 3,
+      "frame": 4,
+      "format": framework.TimecodeFormat.TC_24
+    })
+    self.assertEqual(r, framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24))
+
+  def test_to_dict(self):
+    j = framework.TimecodeParameter.to_json(framework.Timecode(1,2,3,4,framework.TimecodeFormat.TC_24))
+    self.assertDictEqual(j, {
+      "hour": 1,
+      "minute": 2,
+      "second": 3,
+      "frame": 4,
+      "format": str(framework.TimecodeFormat.TC_24)
+    })
+
 
 class TransformsTest(unittest.TestCase):
 

@@ -10,7 +10,7 @@
 
 import struct
 
-from camdkit.framework import Vector3, Rotator3, Transform
+from camdkit.framework import Vector3, Rotator3, Transform, Timecode, TimecodeFormat
 from camdkit.model import Clip
 
 class F4:
@@ -38,13 +38,6 @@ class F4:
   ANGLE_FACTOR  = 1000
   LINEAR_FACTOR = 1000
 
-class Timecode:
-  hours = 0
-  minutes = 0
-  seconds = 0
-  frames = 0
-  frame_rate = 0.0
-
 class F4AxisBlock:
   axis_id: int = 0
   axis_status: int = 0
@@ -53,23 +46,19 @@ class F4AxisBlock:
   data_bits3: int = 0
 
   def to_timecode(self) -> Timecode:
-     timecode = Timecode()
-     match ((self._axisStatus >> 5) & 0b11):
+     match ((self.axis_status >> 5) & 0b11):
        case 0b00:
-         timecode.frame_rate = 24.0
+         format = TimecodeFormat.TC_24
        case 0b01:
-         timecode.frame_rate = 25.0
+         format = TimecodeFormat.TC_25
        case 0b10:
-         timecode.frame_rate = 30.0
-       case 0b11:
-         timecode.frame_rate = 60.0
+         format = TimecodeFormat.TC_30
 
-     if timecode.frame_rate > 0.0:
-       timecode.hours = (self.data_bits1 >> 2) % 24
-       timecode.minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)
-       timecode.seconds = ((self.data_bits2 << 2) % 64) + ((self.data_bits3 >> 6) % 4)
-       timecode.frames = self.data_bits3 % 64
-     return timecode
+     hours = (self.data_bits1 >> 2) % 24
+     minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)
+     seconds = ((self.data_bits2 << 2) % 64) + ((self.data_bits3 >> 6) % 4)
+     frames = self.data_bits3 % 64
+     return Timecode(hours,minutes,seconds,frames,format)
 
 class F4Packet:
   command_byte: int = 0
@@ -172,14 +161,14 @@ class F4PacketParser:
     return True
        
   def get_tracking_frame(self) -> Clip:
-    # Creates a TrackingClip with a single frame of data of each parameter
+    # Populates a Clip with a single frame of data of each parameter
     # TODO JU Complete once the model is defined
     frame = Clip()
     if self._initialised:
       translation = Vector3()
       rotation = Rotator3()
       frame.timing_mode = ("internal",)
-      #frame.timing.packet_sequence_number = self.frame_number
+      frame.timing_sequence_number = (self._frame_number,)
       #frame.metadta.recording = (self._packet.status & (1 << 4)) != 0
       #frame.timing.synchronization.source = SynchronizationSource.genlock
       #frame.timing.synchronization.enabled = true
@@ -238,7 +227,7 @@ class F4PacketParser:
             #frame.lens.encoders.zoom = self._axis_block_to_lens_type(axis_block) / 65536.0
             pass
           case F4.FIELD_ID_TIMECODE:
-            #frame.time.timecode = axis_block.to_timecode()
+            frame.timing_timecode = (axis_block.to_timecode(),)
             pass
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)

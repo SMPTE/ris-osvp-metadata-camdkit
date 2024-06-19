@@ -262,9 +262,43 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_mode = "a"
 
-    value = "external"
-    clip.timing_mode = (value,)
-    self.assertEqual(clip.timing_mode, (value,))
+    value = (camdkit.framework.TimingMode.INTERNAL, camdkit.framework.TimingMode.EXTERNAL)
+    clip.timing_mode = value
+    self.assertEqual(clip.timing_mode, value)
+
+  def test_timing_timecode_model(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.timing_timecode)
+
+    with self.assertRaises(ValueError):
+      clip.timing_timecode = {}
+    with self.assertRaises(ValueError):
+      clip.timing_timecode = {1,2,3,24,"24"}
+
+    value = camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24)
+    clip.timing_timecode = (value,)
+    self.assertEqual(clip.timing_timecode, (value,))
+
+  def test_timing_sequence_number(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.timing_sequence_number)
+
+    with self.assertRaises(ValueError):
+      clip.timing_sequence_number = [Fraction(5,7)]
+      
+    with self.assertRaises(ValueError):
+      clip.timing_sequence_number = -1
+
+    with self.assertRaises(ValueError):
+      clip.timing_sequence_number = (-1,)
+
+    value = (0, 1)
+
+    clip.timing_sequence_number = value
+
+    self.assertTupleEqual(clip.timing_sequence_number, value)
 
   def test_transforms_model(self):
     clip = camdkit.model.Clip()

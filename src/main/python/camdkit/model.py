@@ -9,10 +9,7 @@
 import numbers
 import typing
 
-from camdkit.framework import ParameterContainer, StrictlyPositiveRationalParameter, \
-                              StrictlyPositiveIntegerParameter, StringParameter, Sampling, \
-                              IntegerDimensionsParameter, Dimensions, UUIDURNParameter, Parameter, \
-                              RationalParameter, TransformsParameter, TimingModeParameter
+from camdkit.framework import *
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
@@ -218,7 +215,21 @@ class TimingMode(TimingModeParameter):
   """
   canonical_name = "mode"
   section = "timing"
-  allowedValues = ["internal", "external"]
+  
+class TimingSequenceNumber(StrictlyPositiveIntegerParameter):
+  """
+  TODO doc
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "sequence_number"
+  section = "timing"
+
+class TimingTimecode(TimecodeParameter):
+  """
+  TODO doc
+  """
+  canonical_name = "timecode"
+  section = "timing"
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -247,6 +258,8 @@ class Clip(ParameterContainer):
   transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
   # TODO this to test enumerations
   timing_mode: typing.Optional[typing.Tuple[TimingModeParameter]] = TimingMode()
+  timing_sequence_number: typing.Optional[typing.Tuple[TimingSequenceNumber]] = TimingSequenceNumber()
+  timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

@@ -46,6 +46,43 @@ class Transform:
   name: typing.Optional[str] = None
   parent: typing.Optional[str] = None
 
+class TimingMode(Enum):
+  INTERNAL = "internal"
+  EXTERNAL = "external"
+  
+  def __str__(self):
+    return self.value
+
+class TimecodeFormat(Enum):
+  TC_24  = "24"
+  TC_24D = "24D"
+  TC_25  = "25"
+  TC_30  = "30"
+  TC_30D = "30D"
+
+  @classmethod
+  def to_int(cls, value):
+    if value == cls.TC_24 or value == cls.TC_24D: return 24
+    if value == cls.TC_25: return 25
+    if value == cls.TC_30 or value == cls.TC_30D: return 30
+    raise ValueError
+  
+  def __str__(self):
+    return self.value
+  
+  @staticmethod
+  def from_string(value):
+    return TimecodeFormat(value)
+
+@dataclasses.dataclass
+class Timecode:
+  "Timecode is a standard for labeling individual frames of data in media systems."
+  hour: int
+  minute: int
+  second: int
+  frame: int
+  format: TimecodeFormat
+
 class Parameter:
   """Metadata parameter base class"""
 
@@ -261,7 +298,7 @@ class StrictlyPositiveIntegerParameter(Parameter):
   def validate(value) -> bool:
     """The parameter shall be a integer in the range (0..2,147,483,647]."""
 
-    return isinstance(value, numbers.Integral) and value > 0
+    return isinstance(value, numbers.Integral) and value >= 0
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -275,7 +312,7 @@ class StrictlyPositiveIntegerParameter(Parameter):
   def make_json_schema() -> dict:
     return {
       "type": "integer",
-      "minimum": 1,
+      "minimum": 0,
       "maximum": 2147483647
     }
   
@@ -284,7 +321,7 @@ class EnumParameter(StringParameter):
 
   def validate(self, value) -> bool:
     """The parameter shall be one of the allowed values."""
-    return isinstance(value, str) and value in self.allowedValues
+    return str(value) in self.allowedValues
 
   def make_json_schema(self) -> dict:
     return {
@@ -294,7 +331,75 @@ class EnumParameter(StringParameter):
 
 class TimingModeParameter(EnumParameter):
   sampling = Sampling.REGULAR
-  allowedValues = ["internal", "external"]
+  allowedValues = [e.value for e in TimingMode]
+
+class TimecodeParameter(Parameter):
+  sampling = Sampling.REGULAR
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain a tuple of Timecodes that each have a valid format and 
+    hours, minutes, seconds and frames with appropriate min/max values.
+    """
+
+    if not isinstance(value, Timecode):
+      return False
+    if not isinstance(value.format, TimecodeFormat):
+      return False
+    if not (isinstance(value.hour, int) and value.hour >= 0 and value.hour < 24):
+      return False
+    if not (isinstance(value.minute, int) and value.minute >= 0 and value.minute < 60):
+      return False
+    if not (isinstance(value.second, int) and value.second >= 0 and value.second < 60):
+      return False
+    if not (isinstance(value.frame, int) and value.frame >= 0 and value.frame < TimecodeFormat.to_int(value.format)):
+      return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = dataclasses.asdict(value)
+    d["format"] = str(d["format"])
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Timecode(value["hour"], value["minute"], value["second"], value["frame"],
+                    TimecodeFormat.from_string(value["format"]))
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "hour": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "minute": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "second": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "frame": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "format": {
+          "type": "string",
+          "enum": ["24", "24D", "25", "30", "30D"]
+        }
+      }
+    }
 
 class TransformsParameter(Parameter):
   sampling = Sampling.REGULAR
