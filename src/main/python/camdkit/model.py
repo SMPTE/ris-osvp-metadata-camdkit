@@ -192,7 +192,7 @@ class ShutterAngle(Parameter):
     }
 
 
-class Transforms(TransformsParameter):
+class Transforms(Parameter):
   """
   X,Y,Z in metres of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
@@ -205,24 +205,197 @@ class Transforms(TransformsParameter):
   Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
   Conversion to and from quarternions is trivial with an acceptable loss of precision
   """
+  sampling = Sampling.REGULAR
   canonical_name = "transforms"
   units = "metres / degrees"
 
-class TimingMode(TimingModeParameter):
+  @staticmethod
+  def validate(value) -> bool:
+    """Each component of each transform shall contain Real numbers."""
+
+    if not isinstance(value, typing.Tuple):
+      return False
+    
+    if len(value) == 0:
+      return False
+
+    for transform in value:
+      if not isinstance(transform, Transform):
+        return False
+      if not isinstance(transform.translation, Vector3):
+        return False
+      if not isinstance(transform.rotation, Rotator3):
+        return False
+      # Scale is optional
+      if transform.scale != None and not isinstance(transform.scale, Vector3):
+        return False
+      if not isinstance(transform.translation.x, numbers.Real) \
+         or not isinstance(transform.translation.y, numbers.Real) \
+         or not isinstance(transform.translation.z, numbers.Real):
+        return False
+      if not isinstance(transform.rotation.pan, numbers.Real) \
+         or not isinstance(transform.rotation.tilt, numbers.Real) \
+         or not isinstance(transform.rotation.roll, numbers.Real):
+        return False
+      if transform.scale != None:
+        if not isinstance(transform.scale.x, numbers.Real) \
+           or not isinstance(transform.scale.y, numbers.Real) \
+           or not isinstance(transform.scale.z, numbers.Real):
+          return False
+      # Name and parent are optional
+      if transform.name != None and not isinstance(transform.name, str):
+        return False
+      if transform.parent != None and not isinstance(transform.parent, str):
+        return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    transforms = []
+    for transform in value:
+      # Factory ignores the optional fields
+      transforms.append(dataclasses.asdict(transform, \
+                                           dict_factory=lambda x: {k: v for (k, v) in x if v is not None}))
+    return transforms  
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    transforms = ()
+    for v in value:
+      transforms += (Transform(**v), )
+    return transforms
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": False,
+      "items": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+          "translation": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "x": {
+                  "type": "number",
+              },
+              "y": {
+                  "type": "number",
+              },
+              "z": {
+                  "type": "number"
+              }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "pan": {
+                  "type": "number",
+              },
+              "tilt": {
+                  "type": "number",
+              },
+              "roll": {
+                  "type": "number"
+              }
+            }
+          },
+          "scale": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+              "x": {
+                  "type": "number",
+              },
+              "y": {
+                  "type": "number",
+              },
+              "z": {
+                  "type": "number"
+              }
+            }
+          }
+        },
+        "required": ["translation", "rotation"]
+      }
+    }
+  
+class TimingMode(EnumParameter):
   """
   'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
   'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
   """
+  sampling = Sampling.REGULAR
   canonical_name = "mode"
   section = "timing"
-  
-class TimingTimestamp(TimestampParameter):
+
+class TimingTimestamp(Parameter):
   """
   TODO doc
   """
+  sampling = Sampling.REGULAR
   canonical_name = "timestamp"
   section = "timing"
-  
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain valid number of seconds, nanoseconds and optionally
+    attoseconds elapsed since the start of the epoch.
+    """
+    if not isinstance(value, Timestamp):
+      return False
+    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds <= UINT48_MAX):
+      return False
+    if not (isinstance(value.nanoseconds, int) and value.nanoseconds >= 0 and value.nanoseconds <= UINT_MAX):
+      return False
+    if value.attoseconds != None:
+      if not (isinstance(value.attoseconds, int) and value.attoseconds >= 0 and value.attoseconds <= UINT_MAX):
+        return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = dataclasses.asdict(value)
+    if d["attoseconds"] == None:
+      del d["attoseconds"]
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Timestamp(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT48_MAX
+        },
+        "nanoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        },
+        "attoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        }
+      },
+      "required": ["seconds", "nanoseconds"]
+    }
+
 class TimingSequenceNumber(NonNegativeIntegerParameter):
   """
   TODO doc
@@ -239,12 +412,78 @@ class TimingFrameRate(NonNegativeRealParameter):
   canonical_name = "frameRate"
   section = "timing"
 
-class TimingTimecode(TimecodeParameter):
+class TimingTimecode(Parameter):
   """
   TODO doc
   """
+  sampling = Sampling.REGULAR
   canonical_name = "timecode"
   section = "timing"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain a valid format and hours, minutes, seconds and frames with
+    appropriate min/max values.
+    """
+
+    if not isinstance(value, Timecode):
+      return False
+    if not isinstance(value.format, TimecodeFormat):
+      return False
+    if not (isinstance(value.hours, int) and value.hours >= 0 and value.hours < 24):
+      return False
+    if not (isinstance(value.minutes, int) and value.minutes >= 0 and value.minutes < 60):
+      return False
+    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds < 60):
+      return False
+    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < TimecodeFormat.to_int(value.format)):
+      return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = dataclasses.asdict(value)
+    d["format"] = str(d["format"])
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
+                    TimecodeFormat.from_string(value["format"]))
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "hours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "frames": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "format": {
+          "type": "string",
+          "enum": ["24", "24D", "25", "30", "30D"]
+        }
+      }
+    }
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -270,12 +509,12 @@ class Clip(ParameterContainer):
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # TODO JU rest of the tracking model!
-  timing_mode: typing.Optional[typing.Tuple[TimingModeParameter]] = TimingMode()
-  timing_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
+  timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
+  timing_timestamp: typing.Optional[typing.Tuple[TimingTimestamp]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
-  timing_timecode: typing.Optional[typing.Tuple[TimecodeParameter]] = TimingTimecode()
-  transforms: typing.Optional[typing.Tuple[TransformsParameter]] = Transforms()
+  timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
+  transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

@@ -8,8 +8,8 @@
 
 import json
 from jsonschema import validate
-from camdkit.framework import Vector3, Rotator3, Transform, TimingMode, Timestamp, Timecode, TimecodeFormat
-from camdkit.model import Clip
+from camdkit.framework import Vector3, Rotator3, Transform
+from camdkit.model import TimingModeEnum, Timestamp, Timecode, TimecodeFormat, Clip
 
 def main():
   clip = Clip()
@@ -17,7 +17,7 @@ def main():
   rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
   clip.transforms = ((Transform(translation=translation, rotation=rotation),),)
   clip.f_number = (4000,)
-  clip.timing_mode = (TimingMode.INTERNAL,)
+  clip.timing_mode = (TimingModeEnum.INTERNAL,)
   clip.timing_timestamp = (Timestamp(1718806554, 0),)
   clip.timing_sequence_number = (0,)
   clip.timing_frame_rate = (23.976,)
