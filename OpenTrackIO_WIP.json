@@ -1,0 +1,207 @@
+# Example JSON packets for OpenTrackIO - camera tracking data for OSVP
+
+# Notes:
+# - This specifically only describes data that may change every frame (hence no 'vendor' etc)
+# - There are a number of weaknesses in FreeD that this seeks to address, but it is not
+#   necessarily a replacement for it.
+# - The lens distortion model is currently generic to support multiple vendors' models, but
+#   the intention is that a future version will enforce the OpenLensIO model
+# - Euler angles are used - for reasoning see metadata spreadsheet and OTP reference
+# - For detailed description of the fields, units etc see the metadata spreadsheet
+
+# Next steps:
+# - Finalise the model addressing the various questions below
+# - Implement the model in CamDKit, adding the documentation from the metadata spreadsheet
+# - Generate the JSON Schema from CamDKit and review
+
+# OPENTRACKIO
+
+# Simple packet example (without comments and valid json)
+{
+    "packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",
+    "protocol": "OpenTrackIO_JU_240621",
+	"metadata": {
+		"status": "tracking",
+		"recording": false,
+		"slate": "A101_A_4"
+	},
+	"timing": {
+		"mode": "external",
+		"sequenceNumber": 12345,
+		"frameRate": 29.97,
+		"timecode": {
+			"format": "30D",
+			"hours": 1,
+			"minutes": 9,
+			"seconds": 55,
+			"frames": 12
+		},
+		"synchronization": {
+			"source": "ptp",
+			"ptpMaster": "00:12:23:34:45:56"
+		}	
+	},
+	"transforms": [{
+		"translation": {
+			"x": 1.24500,
+			"y": 2.2300,
+			"z": 4.1200
+		},
+		"rotation": {
+			"pan": 223.3,
+			"tilt": 124.2,
+			"roll": 0.0
+		}
+	}],
+	"lens": {
+		"focalLength": 24.0,
+		"focusPosition": 2.1,
+		"fStop": 4000,
+		"entrancePupilDistance": 0.123,
+		"encoders": {
+			"focus": 0.234,
+			"iris": 0.123,
+			"zoom": 0.456
+		},
+		"distortion": {
+			"radial": [
+				0.1,
+				-0.05
+			]
+		},
+		"centerShift": {
+			"cx": 0.1,
+			"cy": 0.2
+		}
+	}
+}
+
+# Complex packet example with notes and discussion points
+{
+    "packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",  # MB Should this be a DUID?
+	"protocol": "OpenTrackIO_JU_240618",
+	"metadata": {
+		"status": "tracking",
+		"recording": false,
+		"slate": "A101_A_4",
+		"notes": "Free string",
+		"relatedPackets": [					    # Example of this may be a related performance capture packet
+			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66", 
+			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a67"
+		]
+	},
+	# Note that this describes the timing of the tracking system, not necessarily the camera...
+	"timing": {
+		"mode": "internal",
+		"timestamp": {
+			"seconds": 1203120982,				# Ref https://datatracker.ietf.org/doc/html/rfc8877
+			"nanoseconds": 1423,
+			"attoseconds": 1234					# x10^-18 seconds optional field
+		},										
+		"sequenceNumber": 12345,				
+		"frameRate": 29.97,
+		"timecode": {
+			"format": "30D",
+			"hours": 1,
+			"minutes": 9,
+			"seconds": 55,
+			"frames": 12
+		},
+		"synchronization": {
+			"enabled": true,					# MB Sync may be present, but not active
+												# JU would that not just set the locked flag false? Still not clear how this is different from 'locked'
+			"frequency": 29.97,
+			"locked": true,	
+			"source": "genlock",
+			"ptpMaster": "00:12:23:34:45:56",
+			"ptpOffset": 0.0,
+			"ptpDomain": 0,
+			"offsets": {						
+				"translation": 0.0,				
+				"rotation": 0.0,
+				"encoders": 0.0
+			}
+		}	
+	},
+	# JU Note this example shows a linked-list transform chain, but often there will just be one named "Camera"
+	"transforms": [{
+		"name": "Dolly",
+		"translation": {
+			"x": 1.24500 						# SR how to handle more than 3 axis? In a second transform sufficient?
+		}
+	}, {
+		"name": "Crane Arm",
+		"parent": "Dolly",						# JU The geometry chain can be constructed from this field
+		"translation": {
+			"x": 1.24500,
+			"y": 2.2300,
+			"z": 4.1200
+		},
+		"rotation": {
+			"pan": 223.1,
+			"tilt": 124.3,
+			"roll": 0.0
+		}
+	}, {
+		"name": "Camera",
+		"parent": "Crane Arm",
+		"translation": {
+			"x": 1.24500,
+			"y": 2.2300,
+			"z": 4.1200
+		},
+		"rotation": {
+			"pan": 223.3,
+			"tilt": 124.2,
+			"roll": 0.0
+		},
+		"perspectiveShift": {				# Does this cover all use cases until we have the mathematical representation from OpenLensIO?									
+			"Cx": 0.1,
+			"Cy": 0.2
+		},
+	}],
+	"lens": {
+		"focalLength": 24.003,
+		"fovScale": {
+			"horizontal": 1.0,
+			"vertical": 1.0
+		},
+		"focusPosition": 2.1, 				# In CamDKit units are mm - why not m?
+		"fStop": 4000,						# In CamDKit units of 0.001 are used - JU TODO find ref for why
+		"tStop": 4212,						
+		"entrancePupilPosition": 0.123,     # In CamDKit units are mm - why not m?
+		"exposureFalloff": {
+			"a1": 10.012,
+			"a2": 1.012,
+			"a3": 2.012
+		},
+		"encoders": {						# TODO SR to ask Alejandro why he recommended sending raw and normalised
+			"focus": 0.234,
+			"iris": 0.123,
+			"zoom": 0.456
+		},
+		"distortion": {
+			"radial": [
+				0.1,
+				-0.05,
+				0.001,
+				0.0001
+			],
+			"tangential": [
+				0.01,
+				-0.02
+			]
+		},
+		"centerShift": {
+			"cx": 0.1,
+			"cy": 0.2
+		},
+		"custom": [ 0.2, 0.3 ]				# Until we finalise OpenLensIO model, we should allow for
+											# custom coeffs here for e.g. undistortion, anamorphic etc
+	}
+	# Example custom data that could be added for a particular application and consumers can happily ignore
+	"virtualCamera": {
+		"pot1": 2435,
+		"button1": false
+	}
+}
