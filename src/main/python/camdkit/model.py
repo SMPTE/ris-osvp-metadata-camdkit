@@ -191,6 +191,19 @@ class ShutterAngle(Parameter):
       "maximum": 360000
     }
 
+class PacketId(UUIDURNParameter):
+  """Unique identifier of the packet in which data is being traansported."""
+
+  canonical_name = "packetId"
+  sampling = Sampling.REGULAR
+  units = None
+  
+class Protocol(StringParameter):
+  """Unique identifier of the packet in which data is being traansported."""
+
+  canonical_name = "protocol"
+  sampling = Sampling.REGULAR
+  units = None
 
 class Transforms(Parameter):
   """
@@ -335,6 +348,7 @@ class TimingMode(EnumParameter):
   sampling = Sampling.REGULAR
   canonical_name = "mode"
   section = "timing"
+  units = None
 
 class TimingSynchronization(Parameter):
   """
@@ -344,6 +358,7 @@ class TimingSynchronization(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "synchronization"
   section = "timing"
+  units = None
 
   @staticmethod
   def validate(value) -> bool:
@@ -417,6 +432,7 @@ class LensEncoders(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
   section = "lens"
+  units = None
 
   @staticmethod
   def validate(value) -> bool:
@@ -474,6 +490,7 @@ class TimingMode(EnumParameter):
   sampling = Sampling.REGULAR
   canonical_name = "mode"
   section = "timing"
+  units = None
 
 class TimingTimestamp(Parameter):
   """
@@ -482,6 +499,7 @@ class TimingTimestamp(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "timestamp"
   section = "timing"
+  units = None
 
   @staticmethod
   def validate(value) -> bool:
@@ -543,6 +561,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
   sampling = Sampling.REGULAR
   canonical_name = "sequence_number"
   section = "timing"
+  units = None
 
 class TimingFrameRate(NonNegativeRealParameter):
   """
@@ -551,6 +570,7 @@ class TimingFrameRate(NonNegativeRealParameter):
   sampling = Sampling.REGULAR
   canonical_name = "frameRate"
   section = "timing"
+  units = None
 
 class TimingTimecode(Parameter):
   """
@@ -559,6 +579,7 @@ class TimingTimecode(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "timecode"
   section = "timing"
+  units = None
 
   @staticmethod
   def validate(value) -> bool:
@@ -649,6 +670,8 @@ class Clip(ParameterContainer):
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # TODO JU rest of the tracking model! Also re-order sensibly
+  packet_id: typing.Optional[str] = PacketId()
+  protocol: typing.Optional[str] = Protocol()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_timestamp: typing.Optional[typing.Tuple[TimingTimestamp]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()

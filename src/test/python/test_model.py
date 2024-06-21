@@ -252,6 +252,40 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
 
+  def test_packet_id(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.packet_id)
+
+    with self.assertRaises(ValueError):
+      clip.packet_id = ""
+    with self.assertRaises(ValueError):
+      clip.packet_id = ("",)
+    with self.assertRaises(ValueError):
+      clip.packet_id = ("a",)
+    with self.assertRaises(ValueError):
+      clip.packet_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    with self.assertRaises(ValueError):
+      clip.packet_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+    with self.assertRaises(ValueError):
+      clip.fdl_link = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
+
+    value = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+    clip.packet_id = value
+    self.assertEqual(clip.packet_id, value)
+
+  def test_protocol(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.protocol)
+
+    with self.assertRaises(ValueError):
+      clip.protocol = ""
+
+    value = ("OpenTrackIO_0.1.0",)
+    clip.protocol = value
+    self.assertTupleEqual(clip.protocol, value)
+
   def test_timing_mode_model(self):
     clip = camdkit.model.Clip()
 
@@ -390,6 +424,7 @@ class ModelTest(unittest.TestCase):
   def test_timestamp_limits(self):
     with self.assertRaises(TypeError):
       camdkit.framework.Timestamp()
+    with self.assertRaises(TypeError):
       camdkit.framework.Timestamp(0)
     self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,0)))
     self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(1,2)))
@@ -412,12 +447,15 @@ class ModelTest(unittest.TestCase):
       camdkit.framework.TimecodeFormat.to_int()
     with self.assertRaises(ValueError):
       camdkit.framework.TimecodeFormat.to_int(0)
+    with self.assertRaises(ValueError):
       camdkit.framework.TimecodeFormat.to_int(24)
 
   def test_timecode_formats(self):
     with self.assertRaises(TypeError):
       camdkit.framework.Timecode()
+    with self.assertRaises(TypeError):
       camdkit.framework.Timecode(1,2,3)
+    with self.assertRaises(TypeError):
       camdkit.framework.Timecode(0,0,0,0)
     self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,0)))
     self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat.TC_24)))
@@ -472,8 +510,11 @@ class ModelTest(unittest.TestCase):
 
     with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(),)
+    with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(1,2,3),)
+    with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
+    with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
 
     value = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
@@ -495,3 +536,54 @@ class ModelTest(unittest.TestCase):
       "iris": 0.5,
       "zoom": 0.5,
     })
+
+  def test_synchronization(self):
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization()
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization(locked=True)
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization(locked=True, frequency=25.0)
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization(locked=True, frequency=0.0)
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization(locked=True, frequency=-1.0)
+    with self.assertRaises(TypeError):
+      camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK)
+    
+    clip = camdkit.model.Clip()
+    self.assertIsNone(clip.timing_synchronization)
+      
+    value = (camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25.0),)
+    clip.timing_synchronization = value
+    self.assertTupleEqual(clip.timing_synchronization, value)
+
+  def test_synchronization_mac(self):
+    sync = camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25.0)
+    clip = camdkit.model.Clip()
+    with self.assertRaises(ValueError):
+      sync.ptp_master = ""
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = "00:"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = "00:00:00:00:00"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = ":00:00:00:00:00:00"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = "12:12:12:12:12:12:12"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = "we:te:as:te:gd:ds"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp_master = "WE:TE:AS:TE:GD:DS"
+      clip.timing_synchronization = (sync, )
+
+    sync.ptp_master = "00:00:00:00:00:00"
+    clip.timing_synchronization = (sync, )
+    sync.ptp_master = "ab:CD:eF:23:45:67"
+    clip.timing_synchronization = (sync, )

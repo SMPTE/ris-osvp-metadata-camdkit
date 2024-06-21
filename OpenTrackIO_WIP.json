@@ -18,8 +18,8 @@
 
 # Simple packet example (without comments and valid json)
 {
-    "packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",
-    "protocol": "OpenTrackIO_JU_240621",
+	"packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",
+	"protocol": "OpenTrackIO_JU_240621",
 	"metadata": {
 		"status": "tracking",
 		"recording": false,
@@ -78,14 +78,14 @@
 
 # Complex packet example with notes and discussion points
 {
-    "packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",  # MB Should this be a DUID?
+	"packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65",  # MB Should this be a DUID?
 	"protocol": "OpenTrackIO_JU_240618",
 	"metadata": {
 		"status": "tracking",
 		"recording": false,
 		"slate": "A101_A_4",
 		"notes": "Free string",
-		"relatedPackets": [					    # Example of this may be a related performance capture packet
+		"relatedPackets": [							# Example of this may be a related performance capture packet
 			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66", 
 			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a67"
 		]
@@ -169,7 +169,7 @@
 		"focusPosition": 2.1, 				# In CamDKit units are mm - why not m?
 		"fStop": 4000,						# In CamDKit units of 0.001 are used - JU TODO find ref for why
 		"tStop": 4212,						
-		"entrancePupilPosition": 0.123,     # In CamDKit units are mm - why not m?
+		"entrancePupilPosition": 0.123,		 # In CamDKit units are mm - why not m?
 		"exposureFalloff": {
 			"a1": 10.012,
 			"a2": 1.012,

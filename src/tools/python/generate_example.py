@@ -7,13 +7,16 @@
 '''CLI tool to generate and validate example JSON'''
 
 import json
+import uuid
+
 from jsonschema import validate
 from camdkit.framework import Vector3, Rotator3, Transform
 from camdkit.model import *
 
 def main():
   clip = Clip()
-
+  clip.packet_id = (uuid.uuid1().urn,)
+  clip.protocol = ("OpenTrackIO_0.1.0",)
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
   clip.timing_timestamp = (Timestamp(1718806554, 0),)
   clip.timing_sequence_number = (0,)

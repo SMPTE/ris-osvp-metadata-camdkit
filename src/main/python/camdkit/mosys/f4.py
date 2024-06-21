@@ -6,9 +6,8 @@
 
 """ F4 helper classes ported from C++ """
 
-# TODO JU uncomment the frame assignment when the model is defined
-
 import struct
+import uuid
 
 from camdkit.framework import *
 from camdkit.model import Clip, Synchronization
@@ -168,6 +167,8 @@ class F4PacketParser:
       translation = Vector3()
       rotation = Rotator3()
       focus = iris = zoom = frequency = None
+      frame.protocol = ("OpenTrackIO_0.1.0",)
+      frame.packet_id = (uuid.uuid1().urn,)
       frame.timing_mode = ("internal",)
       frame.timing_sequence_number = (self._frame_number,)
       #frame.metadata.recording = (self._packet.status & (1 << 4)) != 0
