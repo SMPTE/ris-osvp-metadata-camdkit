@@ -455,3 +455,43 @@ class ModelTest(unittest.TestCase):
       "frames": 4,
       "format": str(camdkit.framework.TimecodeFormat.TC_24)
     })
+
+  def test_lens_encoders_limits(self):
+    clip = camdkit.model.Clip()
+    self.assertIsNone(clip.lens_encoders)
+
+    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.0),)
+    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(focus=1.0),)
+    clip.lens_encoders = (camdkit.framework.Encoders(zoom=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(iris=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5, iris=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(iris=0.5, zoom=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(zoom=0.5, focus=0.5),)
+    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
+
+    with self.assertRaises(ValueError):
+      clip.lens_encoders = (camdkit.framework.Encoders(),)
+      clip.lens_encoders = (camdkit.framework.Encoders(1,2,3),)
+      clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
+      clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
+
+    value = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
+    clip.lens_encoders = value
+    self.assertTupleEqual(clip.lens_encoders, value)
+
+  def test_lens_encoders_from_dict(self):
+    r = camdkit.model.LensEncoders.from_json({
+      "focus": 0.5,
+      "iris": 0.5,
+      "zoom": 0.5,
+    })
+    self.assertEqual(r,camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5))
+    
+  def test_lens_encoders_to_dict(self):
+    j = camdkit.model.LensEncoders.to_json(camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5))
+    self.assertDictEqual(j, {
+      "focus": 0.5,
+      "iris": 0.5,
+      "zoom": 0.5,
+    })

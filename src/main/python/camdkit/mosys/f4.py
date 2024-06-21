@@ -10,8 +10,8 @@
 
 import struct
 
-from camdkit.framework import Vector3, Rotator3, Transform, Timecode, TimecodeFormat
-from camdkit.model import Clip
+from camdkit.framework import *
+from camdkit.model import Clip, Synchronization
 
 class F4:
   
@@ -167,12 +167,10 @@ class F4PacketParser:
     if self._initialised:
       translation = Vector3()
       rotation = Rotator3()
+      focus = iris = zoom = frequency = None
       frame.timing_mode = ("internal",)
       frame.timing_sequence_number = (self._frame_number,)
-      #frame.metadta.recording = (self._packet.status & (1 << 4)) != 0
-      #frame.timing.synchronization.source = SynchronizationSource.genlock
-      #frame.timing.synchronization.enabled = true
-      #frame.timing.synchronization.locked = (self._packet.status & (1 << 5)) != 0
+      #frame.metadata.recording = (self._packet.status & (1 << 4)) != 0
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
         match axis_block.axis_id:
@@ -218,22 +216,30 @@ class F4PacketParser:
             frame.f_number = (round(f*1000.0),)
             pass
           case F4.FIELD_ID_FOCUS:
-            #frame.lens.encoders.focus = self._axis_block_to_lens_type(axis_block) / 65536.0
+            focus = self._axis_block_to_lens_type(axis_block) / 65536.0
             pass
           case F4.FIELD_ID_ZOOM:
-            #frame.lens.encoders.zoom = self._axis_block_to_lens_type(axis_block) / 65536.0
+            zoom = self._axis_block_to_lens_type(axis_block) / 65536.0
             pass
           case F4.FIELD_ID_IRIS:
-            #frame.lens.encoders.zoom = self._axis_block_to_lens_type(axis_block) / 65536.0
+            iris = self._axis_block_to_lens_type(axis_block) / 65536.0
             pass
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
             frame_rate = TimecodeFormat.to_float(frame.timing_timecode[0].format)
             frame.timing_frame_rate = (frame_rate,)
+            frequency = frame_rate
             pass
+      sync = Synchronization(
+        locked=(self._packet.status & (1 << 5)) != 0,
+        source=SynchronizationSourceEnum.GENLOCK,
+        frequency=frequency
+      )
+      frame.timing_synchronization = (sync,)
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)
       transform.name = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
+      frame.lens_encoders = (Encoders(focus, iris, zoom),)
     return frame
   

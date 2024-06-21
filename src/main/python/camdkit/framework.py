@@ -49,6 +49,13 @@ class Transform:
   parent: typing.Optional[str] = None
 
 @dataclasses.dataclass
+class Encoders:
+  "Normalised FIZ encoder values"
+  focus: typing.Optional[float] = None
+  iris: typing.Optional[float] = None
+  zoom: typing.Optional[float] = None
+
+@dataclasses.dataclass
 class Timestamp:
   """
   A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
@@ -58,14 +65,42 @@ class Timestamp:
   nanoseconds: int
   attoseconds: typing.Optional[int] = None
 
-class TimingModeEnum(Enum):
-  INTERNAL = "internal"
-  EXTERNAL = "external"
-  
+class BaseEnum(Enum):
+  "Base class for enumerations"
+
   def __str__(self):
     return self.value
 
-class TimecodeFormat(Enum):
+
+class SynchronizationSourceEnum(BaseEnum):
+  GENLOCK = "genlock"
+  VIDEO_IN = "videoIn"
+  PTP = "ptp"
+  NTP = "ntp"
+
+@dataclasses.dataclass
+class SynchronizationOffsets:
+  """
+  Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using
+  different data sources for position/rotation and lens encoding
+  """
+  translation: typing.Optional[float] = None		
+  rotation: typing.Optional[float] = None		
+  encoders: typing.Optional[float] = None
+
+  def validate(self):
+    return all([isinstance(self.translation, float), 
+                isinstance(self.rotation, float), isinstance(self.encoders, float)])
+  
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+class TimingModeEnum(BaseEnum):
+  INTERNAL = "internal"
+  EXTERNAL = "external"
+
+class TimecodeFormat(BaseEnum):
   TC_24  = "24"
   TC_24D = "24D"
   TC_25  = "25"
@@ -88,9 +123,6 @@ class TimecodeFormat(Enum):
     if value == cls.TC_30D: return 29.97
     raise ValueError
   
-  def __str__(self):
-    return self.value
-  
   @staticmethod
   def from_string(value):
     return TimecodeFormat(value)
@@ -103,6 +135,18 @@ class Timecode:
   seconds: int
   frames: int
   format: TimecodeFormat
+
+@dataclasses.dataclass
+class Synchronization:
+  "Data structure for synchronisation data"
+  frequency: float
+  locked: bool
+  source: SynchronizationSourceEnum
+  ptp_master: typing.Optional[str] = None
+  ptp_offset: typing.Optional[float] = None
+  ptp_domain: typing.Optional[int] = None
+  offsets: typing.Optional[SynchronizationOffsets] = None
+  enabled: typing.Optional[bool] = None
 
 class Parameter:
   """Metadata parameter base class"""
@@ -378,7 +422,6 @@ class NonNegativeRealParameter(Parameter):
       "type": "number",
       "minimum": 0.0,
     }
-
 
 class EnumParameter(StringParameter):
   allowedValues = []

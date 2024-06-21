@@ -326,6 +326,146 @@ class Transforms(Parameter):
       }
     }
   
+  
+class TimingMode(EnumParameter):
+  """
+  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
+  'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "mode"
+  section = "timing"
+
+class TimingSynchronization(Parameter):
+  """
+  TODO doc
+  """
+  
+  sampling = Sampling.REGULAR
+  canonical_name = "synchronization"
+  section = "timing"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain the required valid fields.
+    """
+    if not isinstance(value, Synchronization):
+      return False
+    if not (isinstance(value.frequency, float) and value.frequency > 0.0):
+      return False
+    if not isinstance(value.locked, bool):
+      return False
+    if not isinstance(value.source, SynchronizationSourceEnum):
+      return False
+    # Validate MAC address
+    if value.ptp_master != None and not (isinstance(value.ptp_master,str) and 
+                                         re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$",
+                                                  value.ptp_master.lower())):
+      return False
+    if value.ptp_offset != None and not isinstance(value.ptp_offset, float):
+      return False
+    if value.ptp_domain != None and not (isinstance(value.ptp_domain, int) and value.ptp_domain >= 0):
+      return False
+    if value.offsets != None and not value.offsets.validate():
+      return False
+    if value.enabled != None and not isinstance(value.enabled, bool):
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+    d["source"] = str(d["source"])
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Synchronization(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "frequency": { "type": "number", "minimum": 0.0 },
+        "locked": { "type": "boolean" },
+        "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
+        "ptp_master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
+        "ptp_offset": { "type": "number" },
+        "ptp_domain": { "type": "integer", "minimum": 0 },
+        "offsets": {
+          "type": "object",
+          "additionalProperties": False,
+          "properties": {
+            "translation": { "type": "number" },
+            "rotation": { "type": "number" },
+            "encoders": { "type": "number" }
+          }
+        },
+        "enabled": { "type": "boolean" }
+      },
+      "required": ["frequency", "locked", "source"]
+    }
+
+class LensEncoders(Parameter):
+  """
+  TODO doc
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "encoders"
+  section = "lens"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
+    """
+    if not isinstance(value, Encoders):
+      return False
+    if value.focus == None and value.iris == None and value.zoom == None:
+      return False
+    for test in [value.focus, value.iris, value.zoom]:
+      if test != None and not (isinstance(test, float) and test >= 0.0 and test <= 1.0):
+        return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Encoders(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "focus": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "iris": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "zoom": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      },
+      "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
+      ]
+    }
+  
 class TimingMode(EnumParameter):
   """
   'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
@@ -508,13 +648,16 @@ class Clip(ParameterContainer):
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
-  # TODO JU rest of the tracking model!
+  # TODO JU rest of the tracking model! Also re-order sensibly
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_timestamp: typing.Optional[typing.Tuple[TimingTimestamp]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
   timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
+  timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
   transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
+  lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
+
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

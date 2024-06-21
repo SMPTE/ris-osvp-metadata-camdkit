@@ -11,7 +11,7 @@ import unittest
 import camdkit.venice.reader
 from fractions import Fraction
 
-class VenicReaderTest(unittest.TestCase):
+class VeniceReaderTest(unittest.TestCase):
 
   def test_frac_stop(self):
     self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 2 3/10") * 1000), 2219)
