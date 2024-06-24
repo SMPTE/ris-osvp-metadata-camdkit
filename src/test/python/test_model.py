@@ -587,7 +587,9 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(TypeError):
       clip.lens_fov_scale = camdkit.framework.Orientations()
     with self.assertRaises(ValueError):
-      clip.lens_fov_scale = camdkit.framework.Orientations(-1.0,-1.0)
+      clip.lens_fov_scale = camdkit.framework.Orientations(1.0,1.0)
+    with self.assertRaises(ValueError):
+      clip.lens_fov_scale = (camdkit.framework.Orientations(-1.0,-1.0),)
 
     value = (camdkit.framework.Orientations(1.0,1.0),)
     clip.lens_fov_scale = value
@@ -605,6 +607,40 @@ class ModelTest(unittest.TestCase):
     self.assertDictEqual(j, {
       "horizontal": 0.5,
       "vertical": 0.5
+    })
+    
+  def test_lens_exposure_falloff(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.lens_exposure_falloff)
+
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = ""
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = camdkit.framework.ExposureFalloff(1.0,2.0,3.0)
+    with self.assertRaises(TypeError):
+      clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(),)
+
+    value = (camdkit.framework.ExposureFalloff(1.0),)
+    value = (camdkit.framework.ExposureFalloff(1.0,2.0),)
+    value = (camdkit.framework.ExposureFalloff(-1.0,1.0,-1.0),)
+    clip.lens_exposure_falloff = value
+    self.assertTupleEqual(clip.lens_exposure_falloff, value)
+    
+  def test_lens_lens_exposure_from_dict(self):
+    r = camdkit.model.LensExposureFalloff.from_json({
+      "a1": 0.5,
+      "a2": 0.5,
+      "a3": 0.5
+    })
+    self.assertEqual(r,camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
+    
+  def test_lens_fov_scales_to_dict(self):
+    j = camdkit.model.LensExposureFalloff.to_json(camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
+    self.assertDictEqual(j, {
+      "a1": 0.5,
+      "a2": 0.5,
+      "a3": 0.5
     })
 
   def test_synchronization(self):

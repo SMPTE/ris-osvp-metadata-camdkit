@@ -227,6 +227,7 @@ class MetadataRelatedPackets(ArrayParameter):
   sampling = Sampling.REGULAR
   units = None
   item_class = UUIDURNParameter
+  section = "metadata"
 
 class PacketId(UUIDURNParameter):
   """Unique identifier of the packet in which data is being traansported."""
@@ -682,14 +683,111 @@ class TimingTimecode(Parameter):
         }
       }
     }
-  
-class LensFoVScale(RealOrientationsParameter):
+
+
+class LensFoVScale(Parameter):
   """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
 
   sampling = Sampling.REGULAR
   canonical_name = "fovScale"
   section = "lens"
   units = None
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The horizontal and vertical measurements shall be each be a real non-negative number."""
+
+    if not isinstance(value, Orientations):
+      return False
+
+    if not isinstance(value.horizontal, numbers.Real) or not isinstance(value.vertical, numbers.Real):
+      return False
+
+    if value.horizontal < 0.0 or value.vertical < 0.0:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Orientations(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "horizontal",
+          "vertical"
+      ],
+      "properties": {
+        "horizontal": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "vertical": {
+            "type": "number",
+            "minimum": 0.0
+        }
+      }
+    }
+  
+class LensExposureFalloff(Parameter):
+  """Coefficients for calculating the exposure fall-off (vignetting) of a lens"""
+
+  sampling = Sampling.REGULAR
+  canonical_name = "exposureFalloff"
+  section = "lens"
+  units = None
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The coefficients shall each be real numbers."""
+
+    if not isinstance(value, ExposureFalloff):
+      return False
+ 
+    # a1 is required
+    if value.a1 == None:
+      return False
+
+    for v in [value.a1, value.a2, value.a3]:
+      if v is not None and not isinstance(v, numbers.Real):
+        return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return ExposureFalloff(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": ["a1"],
+      "properties": {
+        "a1": {
+            "type": "number"
+        },
+        "a2": {
+            "type": "number"
+        },
+        "a3": {
+            "type": "number"
+        }
+      }
+    }
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -731,6 +829,7 @@ class Clip(ParameterContainer):
   transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = LensFoVScale()
+  lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
 
 
   def append(self, clip):

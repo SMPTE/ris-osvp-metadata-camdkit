@@ -45,6 +45,7 @@ def main():
   clip.f_number = (4000,)
   clip.lens_encoders = (Encoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_fov_scale = (Orientations(1.0, 1.0),)
+  clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
 
   # Create the static single frame of JSON
   clip._set_static()

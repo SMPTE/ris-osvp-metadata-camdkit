@@ -62,6 +62,13 @@ class Encoders:
   zoom: typing.Optional[float] = None
 
 @dataclasses.dataclass
+class ExposureFalloff:
+  "Coefficients for the calculation of exposure fall-off"
+  a1: float
+  a2: typing.Optional[float] = None
+  a3: typing.Optional[float] = None
+
+@dataclasses.dataclass
 class Timestamp:
   """
   A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
@@ -217,52 +224,6 @@ class IntegerDimensionsParameter(Parameter):
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647
-        }
-      }
-    }
-
-class RealOrientationsParameter(Parameter):
-
-  @staticmethod
-  def validate(value) -> bool:
-    """The horizontal and vertical measurements shall be each be a real non-negative number."""
-
-    if not isinstance(value, Orientations):
-      return False
-
-    if not isinstance(value.horizontal, numbers.Real) or not isinstance(value.vertical, numbers.Real):
-      return False
-
-    if value.horizontal < 0.0 or value.vertical < 0.0:
-      return False
-
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Orientations(**value)
-
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "object",
-      "additionalProperties": False,
-      "required": [
-          "horizontal",
-          "vertical"
-      ],
-      "properties": {
-        "horizontal": {
-            "type": "number",
-            "minimum": 0.0
-        },
-        "vertical": {
-            "type": "number",
-            "minimum": 0.0
         }
       }
     }
