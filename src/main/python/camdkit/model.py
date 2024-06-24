@@ -190,6 +190,43 @@ class ShutterAngle(Parameter):
       "minimum": 1,
       "maximum": 360000
     }
+  
+class MetadataStatus(StringParameter):
+  """Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"""
+
+  canonical_name = "status"
+  sampling = Sampling.REGULAR
+  units = None
+  section = "metadata"
+  
+class MetadataRecording(BooleanParameter):
+  """True if the system is recording data - e.g. tracking data"""
+  
+  canonical_name = "recording"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+  
+class MetadataSlate(StringParameter):
+  """Free string that describes the recording slate - e.g. 'A101_A_4'"""
+  
+  canonical_name = "slate"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+  
+class MetadataNotes(StringParameter):
+  """Free string for notes"""
+  
+  canonical_name = "notes"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+
+class MetadataRelatedPackets(ArrayParameter):
+  """List of packet unique IDs that are related to this packet."""
+
+  canonical_name = "relatedPackets"
+  sampling = Sampling.REGULAR
+  units = None
+  item_class = UUIDURNParameter
 
 class PacketId(UUIDURNParameter):
   """Unique identifier of the packet in which data is being traansported."""
@@ -670,8 +707,13 @@ class Clip(ParameterContainer):
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # TODO JU rest of the tracking model! Also re-order sensibly
-  packet_id: typing.Optional[str] = PacketId()
-  protocol: typing.Optional[str] = Protocol()
+  packet_id: typing.Optional[typing.Tuple[str]] = PacketId()
+  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
+  metadata_status: typing.Optional[typing.Tuple[str]] = MetadataStatus()
+  metadata_recording: typing.Optional[typing.Tuple[bool]] = MetadataRecording()
+  metadata_slate: typing.Optional[typing.Tuple[str]] = MetadataSlate()
+  metadata_notes: typing.Optional[typing.Tuple[str]] = MetadataNotes()
+  metadata_related_packets: typing.Optional[typing.Tuple[tuple]] = MetadataRelatedPackets()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_timestamp: typing.Optional[typing.Tuple[TimingTimestamp]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()

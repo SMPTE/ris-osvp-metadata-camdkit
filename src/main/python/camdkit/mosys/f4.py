@@ -34,8 +34,29 @@ class F4:
   FIELD_ID_APERTURE           = 0x60
   COMMAND_BYTE                = 0xf4
   FIELD_ID_TIMECODE           = 0xF8
+  TRACKING_STATUS             = 0xF9
+
   ANGLE_FACTOR  = 1000
   LINEAR_FACTOR = 1000
+
+  TRACKING_STATUS_STRINGS = [
+    "Undefined",
+    "Tracking",
+    "Optical Good",
+    "Optical Acceptable",
+    "Optical Unreliable",
+    "Optical Unstable",
+    "Optical Lost",
+    "Lost Too Few Stars",
+    "Location Searching",
+    "Busy or Waiting",
+    "Busy Loading Map",
+    "No Map Loaded",
+    "Test Signal",
+    "Mechanical Encoders Only",
+    "I/O Error",
+    "Internal Error"
+  ]
 
 class F4AxisBlock:
   axis_id: int = 0
@@ -139,6 +160,10 @@ class F4PacketParser:
   def _axis_block_to_lens_param(self, axis_block: F4AxisBlock) -> float:
     return self._four_bytes_to_float(axis_block.axis_status, axis_block.data_bits1, axis_block.data_bits2, axis_block.data_bits3)
 
+  def _axis_block_to_status_string(self, axis_block: F4AxisBlock) -> str:
+    detail = ((axis_block.data_bits2 >> 4) & 0xF)
+    return F4.TRACKING_STATUS_STRINGS[detail]
+
   def _compute_f4_checksum(self, buffer: bytes) -> int:
       total: int = 0x40
       for i in range(0, self._packet.size - 1):
@@ -171,7 +196,7 @@ class F4PacketParser:
       frame.packet_id = (uuid.uuid1().urn,)
       frame.timing_mode = ("internal",)
       frame.timing_sequence_number = (self._frame_number,)
-      #frame.metadata.recording = (self._packet.status & (1 << 4)) != 0
+      frame.metadata_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
         match axis_block.axis_id:
@@ -231,6 +256,10 @@ class F4PacketParser:
             frame.timing_frame_rate = (frame_rate,)
             frequency = frame_rate
             pass
+          case F4.TRACKING_STATUS:
+            frame.metadata_status = (self._axis_block_to_status_string(axis_block),)
+            pass
+      
       sync = Synchronization(
         locked=(self._packet.status & (1 << 5)) != 0,
         source=SynchronizationSourceEnum.GENLOCK,

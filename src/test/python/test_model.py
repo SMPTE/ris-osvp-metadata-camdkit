@@ -286,6 +286,46 @@ class ModelTest(unittest.TestCase):
     clip.protocol = value
     self.assertTupleEqual(clip.protocol, value)
 
+  def test_metadata(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.metadata_status)
+    self.assertIsNone(clip.metadata_recording)
+    self.assertIsNone(clip.metadata_slate)
+    self.assertIsNone(clip.metadata_notes)
+    self.assertIsNone(clip.metadata_related_packets)
+
+    with self.assertRaises(ValueError):
+      clip.metadata_status = ""
+    with self.assertRaises(ValueError):
+      clip.metadata_recording = 0
+    with self.assertRaises(ValueError):
+      clip.metadata_recording = "True"
+    with self.assertRaises(ValueError):
+      clip.metadata_slate = ""
+    with self.assertRaises(ValueError):
+      clip.metadata_notes = ""
+    with self.assertRaises(ValueError):
+      clip.metadata_related_packets = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+
+    value = ("Optical Good",)
+    clip.metadata_status = value
+    self.assertTupleEqual(clip.metadata_status, value)
+    value = (True,False)
+    clip.metadata_recording = value
+    self.assertTupleEqual(clip.metadata_recording, value)
+    value = ("A104_A_4",)
+    clip.metadata_slate = value
+    self.assertTupleEqual(clip.metadata_slate, value)
+    value = ("Test notes",)
+    clip.metadata_notes = value
+    self.assertTupleEqual(clip.metadata_notes, value)
+    value = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
+    clip.metadata_related_packets = value
+    self.assertTupleEqual(clip.metadata_related_packets, value)
+
   def test_timing_mode_model(self):
     clip = camdkit.model.Clip()
 

@@ -215,6 +215,27 @@ class IntegerDimensionsParameter(Parameter):
       }
     }
 
+class BooleanParameter(Parameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a boolean."""
+    return isinstance(value, bool)
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return value
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return bool(value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "boolean"
+    }
+
 class StringParameter(Parameter):
 
   @staticmethod
@@ -236,6 +257,36 @@ class StringParameter(Parameter):
       "type": "string",
       "minLength": 1,
       "maxLength": 1023
+    }
+  
+class ArrayParameter(Parameter):
+
+  item_class = None
+
+  def validate(self, value) -> bool:
+    """The parameter shall be a tuple of items of the class itemClass. The tuple can be empty"""
+
+    if self.item_class == None:
+      return False
+    if not isinstance(value, tuple):
+      return False
+    for item in value:
+      if not isinstance(item, self.item_class) and not self.item_class.validate(item):
+        return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return list(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return str(value)
+
+  def make_json_schema(self) -> dict:
+    return {
+      "type": "array",
+      "items": self.item_class.make_json_schema()
     }
 
 class UUIDURNParameter(Parameter):
