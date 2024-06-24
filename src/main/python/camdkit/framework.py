@@ -26,6 +26,12 @@ class Dimensions:
   width: numbers.Real
 
 @dataclasses.dataclass
+class Orientations:
+  "Horizontal and vertical measurements"
+  horizontal: numbers.Real
+  vertical: numbers.Real
+
+@dataclasses.dataclass
 class Vector3:
   "3 doubles x,y,z to encode - for example - a location or a translation."
   x: typing.Optional[numbers.Real] = 0.0
@@ -211,6 +217,52 @@ class IntegerDimensionsParameter(Parameter):
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647
+        }
+      }
+    }
+
+class RealOrientationsParameter(Parameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The horizontal and vertical measurements shall be each be a real non-negative number."""
+
+    if not isinstance(value, Orientations):
+      return False
+
+    if not isinstance(value.horizontal, numbers.Real) or not isinstance(value.vertical, numbers.Real):
+      return False
+
+    if value.horizontal < 0.0 or value.vertical < 0.0:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Orientations(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "horizontal",
+          "vertical"
+      ],
+      "properties": {
+        "horizontal": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "vertical": {
+            "type": "number",
+            "minimum": 0.0
         }
       }
     }

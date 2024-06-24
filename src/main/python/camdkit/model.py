@@ -682,6 +682,14 @@ class TimingTimecode(Parameter):
         }
       }
     }
+  
+class LensFoVScale(RealOrientationsParameter):
+  """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
+
+  sampling = Sampling.REGULAR
+  canonical_name = "fovScale"
+  section = "lens"
+  units = None
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -722,6 +730,7 @@ class Clip(ParameterContainer):
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
   transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
+  lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = LensFoVScale()
 
 
   def append(self, clip):

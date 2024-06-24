@@ -577,6 +577,36 @@ class ModelTest(unittest.TestCase):
       "zoom": 0.5,
     })
 
+  def test_lens_fov_scale(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.lens_fov_scale)
+
+    with self.assertRaises(ValueError):
+      clip.lens_fov_scale = ""
+    with self.assertRaises(TypeError):
+      clip.lens_fov_scale = camdkit.framework.Orientations()
+    with self.assertRaises(ValueError):
+      clip.lens_fov_scale = camdkit.framework.Orientations(-1.0,-1.0)
+
+    value = (camdkit.framework.Orientations(1.0,1.0),)
+    clip.lens_fov_scale = value
+    self.assertTupleEqual(clip.lens_fov_scale, value)
+    
+  def test_lens_fov_scale_from_dict(self):
+    r = camdkit.model.LensFoVScale.from_json({
+      "horizontal": 0.5,
+      "vertical": 0.5
+    })
+    self.assertEqual(r,camdkit.framework.Orientations(0.5, 0.5))
+    
+  def test_lens_fov_scales_to_dict(self):
+    j = camdkit.model.LensFoVScale.to_json(camdkit.framework.Orientations(0.5, 0.5))
+    self.assertDictEqual(j, {
+      "horizontal": 0.5,
+      "vertical": 0.5
+    })
+
   def test_synchronization(self):
     with self.assertRaises(TypeError):
       camdkit.framework.Synchronization()
