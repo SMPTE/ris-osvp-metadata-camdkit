@@ -131,7 +131,7 @@ class F4PacketParser:
         val = val - (1 << bits)
     return val
   
-  def _float_from_integer(integer):
+  def _float_from_integer(self, integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
   
   def _three_bytes_to_int(self, first_byte: int, second_byte: int, third_byte: int) -> int:
@@ -192,6 +192,7 @@ class F4PacketParser:
       translation = Vector3()
       rotation = Rotator3()
       focus = iris = zoom = frequency = None
+      k1 = k2 = 0.0
       frame.protocol = ("OpenTrackIO_0.1.0",)
       frame.packet_id = (uuid.uuid1().urn,)
       frame.timing_mode = ("internal",)
@@ -216,10 +217,10 @@ class F4PacketParser:
             #frame.lens.entrance_pupil_distance = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K1:
-            #frame.lens.distortion.radial[0] = self._axis_block_to_lens_param(axis_block)
+            k1 = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K2:
-            #frame.lens.distortion.radial[1] = self._axis_block_to_lens_param(axis_block)
+            k2 = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_FOCAL_LENGTH_FX:
             #frame.lens.fov_h = self._axis_block_to_lens_param(axis_block)
@@ -271,5 +272,6 @@ class F4PacketParser:
       transform.name = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
       frame.lens_encoders = (Encoders(focus, iris, zoom),)
+      frame.lens_distortion = (Distortion([k1, k2]),)
     return frame
   

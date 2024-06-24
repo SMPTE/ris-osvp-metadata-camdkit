@@ -788,6 +788,70 @@ class LensExposureFalloff(Parameter):
         }
       }
     }
+  
+class LensDistortion(Parameter):
+  """Coefficients for calculating the distortion characteristics of a lens"""
+
+  sampling = Sampling.REGULAR
+  canonical_name = "distortion"
+  section = "lens"
+  units = None
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The radial and tangential coefficients shall each be real numbers."""
+
+    if not isinstance(value, Distortion):
+      return False
+ 
+    # At least one radial coefficient is required
+    if value.radial == None or len(value.radial) == 0:
+      return False
+
+    for k in value.radial:
+      if k is not None and not isinstance(k, numbers.Real):
+        return False
+    if value.tangential is not None:
+      for p in value.tangential:
+        if p is not None and not isinstance(p, numbers.Real):
+          return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = dataclasses.asdict(value)
+    if d["tangential"] == None:
+      del d["tangential"]
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Distortion(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": ["radial"],
+      "properties": {
+        "radial": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minLength": 1
+        },
+        "tangential": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minLength": 1
+        },
+      }
+    }
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
@@ -830,6 +894,7 @@ class Clip(ParameterContainer):
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = LensFoVScale()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
+  lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
 
 
   def append(self, clip):

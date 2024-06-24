@@ -69,6 +69,12 @@ class ExposureFalloff:
   a3: typing.Optional[float] = None
 
 @dataclasses.dataclass
+class Distortion:
+  "Coefficients for the calculation of radial and (optionally) tangential lens distortion"
+  radial: typing.Tuple[float]
+  tangential: typing.Optional[typing.Tuple[float]] = None
+
+@dataclasses.dataclass
 class Timestamp:
   """
   A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an

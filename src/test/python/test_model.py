@@ -627,7 +627,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_exposure_falloff = value
     self.assertTupleEqual(clip.lens_exposure_falloff, value)
     
-  def test_lens_lens_exposure_from_dict(self):
+  def test_lens_exposure_falloff_from_dict(self):
     r = camdkit.model.LensExposureFalloff.from_json({
       "a1": 0.5,
       "a2": 0.5,
@@ -635,12 +635,51 @@ class ModelTest(unittest.TestCase):
     })
     self.assertEqual(r,camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
     
-  def test_lens_fov_scales_to_dict(self):
+  def test_lens_exposure_falloff_to_dict(self):
     j = camdkit.model.LensExposureFalloff.to_json(camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
     self.assertDictEqual(j, {
       "a1": 0.5,
       "a2": 0.5,
       "a3": 0.5
+    })
+    
+  def test_lens_distortion(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.lens_distortion)
+
+    with self.assertRaises(ValueError):
+      clip.lens_distortion = ""
+    with self.assertRaises(ValueError):
+      clip.lens_distortion = camdkit.framework.Distortion([1.0])
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = (camdkit.framework.Distortion([]),)
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = (camdkit.framework.Distortion([],[]),)
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = (camdkit.framework.Distortion([1.0],[]),)
+
+    value = (camdkit.framework.Distortion([1.0]),)
+    value = (camdkit.framework.Distortion([1.0,2.0]),)
+    value = (camdkit.framework.Distortion([-1.0,1.0,-1.0]),)
+    value = (camdkit.framework.Distortion([1.0],[0.0]),)
+    value = (camdkit.framework.Distortion([1.0,2.0],[1.0,2.0]),)
+    value = (camdkit.framework.Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),)
+    clip.lens_distortion = value
+    self.assertTupleEqual(clip.lens_distortion, value)
+    
+  def test_lens_distortion_from_dict(self):
+    r = camdkit.model.LensDistortion.from_json({
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3]
+    })
+    self.assertEqual(r,camdkit.framework.Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    
+  def test_lens_distortion_to_dict(self):
+    j = camdkit.model.LensDistortion.to_json(camdkit.framework.Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    self.assertDictEqual(j, {
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3]
     })
 
   def test_synchronization(self):
