@@ -61,17 +61,17 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   # sampled metadata
 
   # focal_length
-  clip.focal_length = tuple(round(Fraction(m["FocalLength"])) for m in frame_data)
+  clip.lens_focal_length = tuple(round(Fraction(m["FocalLength"])) for m in frame_data)
 
   # focus_position
-  clip.focus_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
+  clip.lens_focus_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
 
   # entrance_pupil_position not supported
 
   # t_number
   if int(first_frame_data['ApertureMode']) == 2:
-    clip.t_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
+    clip.lens_t_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
   elif int(first_frame_data['ApertureMode']) == 1:
-    clip.f_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
+    clip.lens_f_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
 
   return clip

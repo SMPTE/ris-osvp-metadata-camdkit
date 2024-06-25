@@ -99,49 +99,6 @@ class CameraFirmware(StringParameter):
   sampling = Sampling.STATIC
   units = None
 
-class TStop(StrictlyPositiveIntegerParameter):
-  """The linear t-number of the lens, equal to the F-number of the lens divided
-  by the square root of the transmittance of the lens."""
-
-  canonical_name = "tStop"
-  sampling = Sampling.REGULAR
-  units = "0.001 unit"
-
-class FStop(StrictlyPositiveIntegerParameter):
-  """The linear f-number of the lens, equal to the focal length divided by the
-  diameter of the entrance pupil."""
-
-  canonical_name = "fStop"
-  sampling = Sampling.REGULAR
-  units = "0.001 unit"
-  section = "lens"
-
-class FocalLength(StrictlyPositiveIntegerParameter):
-  """Nominal focal length of the lens. The number printed on the side of a prime
-  lens, e.g. 50 mm, and undefined in the case of a zoom lens."""
-
-  canonical_name = "focalLength"
-  sampling = Sampling.REGULAR
-  units = "millimeter"
-
-
-class FocusPosition(StrictlyPositiveIntegerParameter):
-  """Focus distance/position of the lens"""
-
-  canonical_name = "focusPosition"
-  sampling = Sampling.REGULAR
-  units = "millimeter"
-
-
-class EntrancePupilPosition(RationalParameter):
-  """Position of the entrance pupil relative to the nominal imaging plane
-  (positive if the entrance pupil is located on the side of the nominal imaging
-  plane that is towards the object, and negative otherwise)"""
-
-  canonical_name = "entrancePupilPosition"
-  sampling = Sampling.REGULAR
-  units = "millimeter"
-
 class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   """Nominal ratio of height to width of the image of an axis-aligned square
   captured by the camera sensor. It can be used to de-squeeze images but is not
@@ -158,7 +115,6 @@ class FDLLink(UUIDURNParameter):
   canonical_name = "fdlLink"
   sampling = Sampling.STATIC
   units = None
-
 
 class ShutterAngle(Parameter):
   """Shutter speed as a fraction of the capture frame rate. The shutter speed
@@ -191,44 +147,6 @@ class ShutterAngle(Parameter):
       "maximum": 360000
     }
   
-class MetadataStatus(StringParameter):
-  """Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"""
-
-  canonical_name = "status"
-  sampling = Sampling.REGULAR
-  units = None
-  section = "metadata"
-  
-class MetadataRecording(BooleanParameter):
-  """True if the system is recording data - e.g. tracking data"""
-  
-  canonical_name = "recording"
-  sampling = Sampling.REGULAR
-  section = "metadata"
-  
-class MetadataSlate(StringParameter):
-  """Free string that describes the recording slate - e.g. 'A101_A_4'"""
-  
-  canonical_name = "slate"
-  sampling = Sampling.REGULAR
-  section = "metadata"
-  
-class MetadataNotes(StringParameter):
-  """Free string for notes"""
-  
-  canonical_name = "notes"
-  sampling = Sampling.REGULAR
-  section = "metadata"
-
-class MetadataRelatedPackets(ArrayParameter):
-  """List of packet unique IDs that are related to this packet."""
-
-  canonical_name = "relatedPackets"
-  sampling = Sampling.REGULAR
-  units = None
-  item_class = UUIDURNParameter
-  section = "metadata"
-
 class PacketId(UUIDURNParameter):
   """Unique identifier of the packet in which data is being traansported."""
 
@@ -242,6 +160,92 @@ class Protocol(StringParameter):
   canonical_name = "protocol"
   sampling = Sampling.REGULAR
   units = None
+
+class Status(StringParameter):
+  """Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"""
+
+  canonical_name = "status"
+  sampling = Sampling.REGULAR
+  units = None
+  section = "metadata"
+  
+class Recording(BooleanParameter):
+  """True if the system is recording data - e.g. tracking data"""
+  
+  canonical_name = "recording"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+  
+class Slate(StringParameter):
+  """Free string that describes the recording slate - e.g. 'A101_A_4'"""
+  
+  canonical_name = "slate"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+  
+class Notes(StringParameter):
+  """Free string for notes"""
+  
+  canonical_name = "notes"
+  sampling = Sampling.REGULAR
+  section = "metadata"
+
+class RelatedPackets(ArrayParameter):
+  """List of packet unique IDs that are related to this packet."""
+
+  canonical_name = "relatedPackets"
+  sampling = Sampling.REGULAR
+  units = None
+  item_class = UUIDURNParameter
+  section = "metadata"
+
+class GlobalStagePosition(Parameter):
+  """
+  Position of stage origin in global ENU and geodetic coordinates (E, N, U, lat0, lon0, h0). Note this may be dynamic
+  e.g. if the stage is inside a moving vehicle.
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "globalStage"
+  section = "metadata"
+  units = "metres"
+  
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    Each field in the GlobalPosition shall be a real number
+    """
+    if not isinstance(value, GlobalPosition):
+      return False
+    
+    for v in [value.E, value.N, value.U, value.lat0, value.lon0, value.h0]:
+      if v is None or not isinstance(v, float):
+        return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return GlobalPosition(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": ["E", "N", "U", "lat0", "lon0", "h0"],
+      "properties": {
+        "E": { "type": "number" },
+        "N": { "type": "number" },
+        "U": { "type": "number" },
+        "lat0": { "type": "number" },
+        "lon0": { "type": "number" },
+        "h0": { "type": "number" }
+      }
+    }
 
 class Transforms(Parameter):
   """
@@ -314,7 +318,12 @@ class Transforms(Parameter):
   def from_json(value: typing.Any) -> typing.Any:
     transforms = ()
     for v in value:
-      transforms += (Transform(**v), )
+      transform = Transform(**v)
+      transform.translation = Vector3(transform.translation["x"], transform.translation["y"], transform.translation["z"])
+      transform.rotation = Rotator3(transform.rotation["pan"], transform.rotation["tilt"], transform.rotation["roll"])
+      if transform.scale is not None:
+        transform.scale = Vector3(transform.scale["x"], transform.scale["y"], transform.scale["z"])
+      transforms += (transform, )
     return transforms
   
   @staticmethod
@@ -377,10 +386,10 @@ class Transforms(Parameter):
       }
     }
   
-  
 class TimingMode(EnumParameter):
   """
-  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
+  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data
+  is required in the data).
   'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
   """
   sampling = Sampling.REGULAR
@@ -435,7 +444,10 @@ class TimingSynchronization(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return Synchronization(**value)
+    sync = Synchronization(**value)
+    sync.source = SynchronizationSourceEnum(sync.source)
+    sync.offsets = SynchronizationOffsets(**value["offsets"])
+    return sync
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -465,7 +477,10 @@ class TimingSynchronization(Parameter):
 
 class LensEncoders(Parameter):
   """
-  TODO doc
+  Normalised real numbers (0-1) for focus, iris and zoom.
+  Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent
+  of encoder resolution, mininum and maximum (at an acceptable loss of precision).
+  These values are only relevant in lenses with end-stops that demark the 0 and 1 range."
   """
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
@@ -530,74 +545,32 @@ class TimingMode(EnumParameter):
   section = "timing"
   units = None
 
-class TimingTimestamp(Parameter):
+class TimingTimestamp(TimestampParameter):
   """
-  TODO doc
+  PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp
+  48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "timestamp"
   section = "timing"
   units = None
 
-  @staticmethod
-  def validate(value) -> bool:
-    """
-    The parameter shall contain valid number of seconds, nanoseconds and optionally
-    attoseconds elapsed since the start of the epoch.
-    """
-    if not isinstance(value, Timestamp):
-      return False
-    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds <= UINT48_MAX):
-      return False
-    if not (isinstance(value.nanoseconds, int) and value.nanoseconds >= 0 and value.nanoseconds <= UINT_MAX):
-      return False
-    if value.attoseconds != None:
-      if not (isinstance(value.attoseconds, int) and value.attoseconds >= 0 and value.attoseconds <= UINT_MAX):
-        return False
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    d = dataclasses.asdict(value)
-    if d["attoseconds"] == None:
-      del d["attoseconds"]
-    return d
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Timestamp(**value)
-
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "object",
-      "additionalProperties": False,
-      "properties": {
-        "seconds": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": UINT48_MAX
-        },
-        "nanoseconds": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": UINT_MAX
-        },
-        "attoseconds": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": UINT_MAX
-        }
-      },
-      "required": ["seconds", "nanoseconds"]
-    }
+class RecordedTimestamp(TimestampParameter):
+  """
+  PTP timestamp at which the data was recorded. Provided for convenience during playback of e.g. pre-recorded tracking data.
+  48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "recordedTimestamp"
+  section = "timing"
+  units = None
 
 class TimingSequenceNumber(NonNegativeIntegerParameter):
   """
   TODO doc
   """
   sampling = Sampling.REGULAR
-  canonical_name = "sequence_number"
+  canonical_name = "sequenceNumber"
   section = "timing"
   units = None
 
@@ -684,8 +657,51 @@ class TimingTimecode(Parameter):
       }
     }
 
+class TStop(StrictlyPositiveIntegerParameter):
+  """The linear t-number of the lens, equal to the F-number of the lens divided
+  by the square root of the transmittance of the lens."""
 
-class LensFoVScale(Parameter):
+  canonical_name = "tStop"
+  sampling = Sampling.REGULAR
+  units = "0.001 unit"
+  section = "lens"
+
+class FStop(StrictlyPositiveIntegerParameter):
+  """The linear f-number of the lens, equal to the focal length divided by the
+  diameter of the entrance pupil."""
+
+  canonical_name = "fStop"
+  sampling = Sampling.REGULAR
+  units = "0.001 unit"
+  section = "lens"
+
+class FocalLength(NonNegativeRealParameter):
+  """Focal length of the lens."""
+
+  canonical_name = "focalLength"
+  sampling = Sampling.REGULAR
+  units = "millimeter"
+  section = "lens"
+
+class FocusPosition(StrictlyPositiveIntegerParameter):
+  """Focus distance/position of the lens"""
+
+  canonical_name = "focusPosition"
+  sampling = Sampling.REGULAR
+  units = "millimeter"
+  section = "lens"
+
+class EntrancePupilPosition(RationalParameter):
+  """Position of the entrance pupil relative to the nominal imaging plane
+  (positive if the entrance pupil is located on the side of the nominal imaging
+  plane that is towards the object, and negative otherwise)"""
+
+  canonical_name = "entrancePupilPosition"
+  sampling = Sampling.REGULAR
+  units = "millimeter"
+  section = "lens"
+
+class FoVScale(Parameter):
   """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
 
   sampling = Sampling.REGULAR
@@ -790,7 +806,9 @@ class LensExposureFalloff(Parameter):
     }
   
 class LensDistortion(Parameter):
-  """Coefficients for calculating the distortion characteristics of a lens"""
+  """
+  Coefficients for calculating the distortion characteristics of a lens comprising radial distortion
+  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). """
 
   sampling = Sampling.REGULAR
   canonical_name = "distortion"
@@ -852,10 +870,104 @@ class LensDistortion(Parameter):
         },
       }
     }
+  
+class LensCentreShift(Parameter):
+  "Shift in x and y of the centre of distortion of the virtual camera"
+
+  sampling = Sampling.REGULAR
+  canonical_name = "centreShift"
+  section = "lens"
+  units = "Determined by distortion model"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """X and Y centre shift shall each be real numbers."""
+
+    if not isinstance(value, CentreShift):
+      return False
+ 
+    if value.cx is None or not isinstance(value.cx, numbers.Real):
+      return False
+    if value.cy is None or not isinstance(value.cx, numbers.Real):
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return CentreShift(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": ["cx", "cy"],
+      "properties": {
+        "cx": {
+          "type": "number"
+        },
+        "cy": {
+          "type": "number"
+        }
+      }
+    }
+  
+class LensPerspectiveShift(Parameter):
+  "Shift in x and y of the centre of projection of the virtual camera"
+
+  sampling = Sampling.REGULAR
+  canonical_name = "perspectiveShift"
+  section = "lens"
+  units = "millimetres"
+
+  @staticmethod
+  def validate(value) -> bool:
+    """X and Y perspective shift shall each be real numbers."""
+
+    if not isinstance(value, PerspectiveShift):
+      return False
+ 
+    if value.Cx is None or not isinstance(value.Cx, numbers.Real):
+      return False
+    if value.Cy is None or not isinstance(value.Cx, numbers.Real):
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return PerspectiveShift(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": ["Cx", "Cy"],
+      "properties": {
+        "Cx": {
+          "type": "number"
+        },
+        "Cy": {
+          "type": "number"
+        }
+      }
+    }
+
 
 class Clip(ParameterContainer):
   """Metadata for a camera clip.
   """
+  # Static parameters
   duration: typing.Optional[numbers.Rational] = Duration()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
@@ -868,33 +980,37 @@ class Clip(ParameterContainer):
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   iso: typing.Optional[numbers.Integral] = ISO()
-  t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
-  f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
-  focal_length: typing.Optional[typing.Tuple[numbers.Integral]] = FocalLength()
-  focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
-  entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
-  # TODO JU rest of the tracking model! Also re-order sensibly
+  # Regular parameters
   packet_id: typing.Optional[typing.Tuple[str]] = PacketId()
   protocol: typing.Optional[typing.Tuple[str]] = Protocol()
-  metadata_status: typing.Optional[typing.Tuple[str]] = MetadataStatus()
-  metadata_recording: typing.Optional[typing.Tuple[bool]] = MetadataRecording()
-  metadata_slate: typing.Optional[typing.Tuple[str]] = MetadataSlate()
-  metadata_notes: typing.Optional[typing.Tuple[str]] = MetadataNotes()
-  metadata_related_packets: typing.Optional[typing.Tuple[tuple]] = MetadataRelatedPackets()
+  metadata_status: typing.Optional[typing.Tuple[str]] = Status()
+  metadata_recording: typing.Optional[typing.Tuple[bool]] = Recording()
+  metadata_slate: typing.Optional[typing.Tuple[str]] = Slate()
+  metadata_notes: typing.Optional[typing.Tuple[str]] = Notes()
+  metadata_related_packets: typing.Optional[typing.Tuple[tuple]] = RelatedPackets()
+  metadata_global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
-  timing_timestamp: typing.Optional[typing.Tuple[TimingTimestamp]] = TimingTimestamp()
+  timing_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
+  timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
   timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
   transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
+  lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
+  lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
+  lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
+  lens_focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
+  lens_entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
-  lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = LensFoVScale()
+  lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = FoVScale()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
+  lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
 
 
   def append(self, clip):

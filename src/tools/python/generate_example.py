@@ -15,15 +15,19 @@ from camdkit.model import *
 
 def main():
   clip = Clip()
-  clip.packet_id = (uuid.uuid1().urn,)
+  clip.packet_id = (uuid.uuid4().urn,)
   clip.protocol = ("OpenTrackIO_0.1.0",)
+
   clip.metadata_status = ("Optical Good",)
   clip.metadata_recording = (False,)
   clip.metadata_slate = ("A101_A_4",)
   clip.metadata_notes = ("Example generated packet.",)
-  clip.metadata_related_packets = ((uuid.uuid1().urn,uuid.uuid1().urn),)
+  clip.metadata_related_packets = ((uuid.uuid4().urn,uuid.uuid4().urn),)
+  clip.metadata_global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
+
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
   clip.timing_timestamp = (Timestamp(1718806554, 0),)
+  clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),)
   clip.timing_sequence_number = (0,)
   clip.timing_frame_rate = (23.976,)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat.TC_24D),)
@@ -42,11 +46,17 @@ def main():
   rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
   clip.transforms = ((Transform(translation=translation, rotation=rotation),),)
 
-  clip.f_number = (4000,)
+  clip.lens_f_number = (4000,)
+  clip.lens_t_number = (4100,)
+  clip.lens_focal_length = (24.0,)
+  clip.lens_focus_position = (1000,)
+  clip.lens_entrance_pupil_position = (Fraction(1000,100),)
   clip.lens_encoders = (Encoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_fov_scale = (Orientations(1.0, 1.0),)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
+  clip.lens_centre_shift = (CentreShift(1.0, 2.0),)
+  clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
 
   # Create the static single frame of JSON
   clip._set_static()

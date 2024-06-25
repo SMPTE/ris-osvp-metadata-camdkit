@@ -6,6 +6,7 @@
 
 """ F4 helper classes ported from C++ """
 
+import math
 import struct
 import uuid
 
@@ -186,17 +187,14 @@ class F4PacketParser:
        
   def get_tracking_frame(self) -> Clip:
     # Populates a Clip with a single frame of data of each parameter
-    # TODO JU Complete once the model is defined
     frame = Clip()
     if self._initialised:
       translation = Vector3()
       rotation = Rotator3()
       focus = iris = zoom = frequency = None
-      k1 = k2 = 0.0
+      k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = ("OpenTrackIO_0.1.0",)
-      frame.packet_id = (uuid.uuid1().urn,)
-      frame.timing_mode = ("internal",)
-      frame.timing_sequence_number = (self._frame_number,)
+      frame.packet_id = (uuid.uuid4().urn,)
       frame.metadata_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
@@ -214,7 +212,7 @@ class F4PacketParser:
           case F4.FIELD_ID_HEIGHT:
             translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_ENTRANCE_PUPIL:
-            #frame.lens.entrance_pupil_distance = self._axis_block_to_lens_param(axis_block)
+            frame.lens_entrance_pupil_position = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K1:
             k1 = self._axis_block_to_lens_param(axis_block)
@@ -223,19 +221,21 @@ class F4PacketParser:
             k2 = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_FOCAL_LENGTH_FX:
-            #frame.lens.fov_h = self._axis_block_to_lens_param(axis_block)
+            fov_h = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_FOCAL_LENGTH_FY:
-            #frame.lens.fov_v = self._axis_block_to_lens_param(axis_block)
+            fov_v = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_CX:
-            #frame.lens.center_shift.cx = self._axis_block_to_lens_param(axis_block)
+            cx = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_CY:
-            #frame.lens.center_shift.cy = self._axis_block_to_lens_param(axis_block)
+            cy = self._axis_block_to_lens_param(axis_block)
             pass
           case F4.FIELD_ID_FOCAL_DISTANCE:
-            #frame.lens.inv_focal_d = self._axis_block_to_lens_param(axis_block)
+            inv_focal_d = self._axis_block_to_lens_param(axis_block)
+            # In mm
+            frame.lens_focus_position = (int(1000.0 / inv_focal_d),)
             pass
           case F4.FIELD_ID_APERTURE:
             f: float = self._axis_block_to_lens_param(axis_block)
@@ -261,6 +261,8 @@ class F4PacketParser:
             frame.metadata_status = (self._axis_block_to_status_string(axis_block),)
             pass
       
+      frame.timing_mode = ("internal",)
+      frame.timing_sequence_number = (self._frame_number,)
       sync = Synchronization(
         locked=(self._packet.status & (1 << 5)) != 0,
         source=SynchronizationSourceEnum.GENLOCK,
@@ -271,7 +273,12 @@ class F4PacketParser:
       transform = Transform(translation=translation, rotation=rotation)
       transform.name = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
+      # Assuming a full frame 35mm active sensor 36x24mm
+      # f = 36/[2*tand(FoV/2)]
+      fov_radians = fov_h * math.pi / 180.0
+      frame.lens_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
       frame.lens_encoders = (Encoders(focus, iris, zoom),)
       frame.lens_distortion = (Distortion([k1, k2]),)
+      frame.lens_centre_shift = (CentreShift(cx, cy),)
     return frame
   

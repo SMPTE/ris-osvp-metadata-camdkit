@@ -75,6 +75,28 @@ class Distortion:
   tangential: typing.Optional[typing.Tuple[float]] = None
 
 @dataclasses.dataclass
+class PerspectiveShift:
+  "Shift in x and y of the centre of projection of the virtual camera"
+  Cx: float
+  Cy: float
+  
+@dataclasses.dataclass
+class CentreShift:
+  "Shift in x and y of the centre of distortion of the virtual camera"
+  cx: float
+  cy: float
+
+@dataclasses.dataclass
+class GlobalPosition:
+  "Global ENU and geodetic coordinates"
+  E: float
+  N: float
+  U: float
+  lat0: float
+  lon0: float
+  h0: float
+
+@dataclasses.dataclass
 class Timestamp:
   """
   A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
@@ -300,7 +322,7 @@ class ArrayParameter(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return str(value)
+    return tuple(value)
 
   def make_json_schema(self) -> dict:
     return {
@@ -500,22 +522,85 @@ class EnumParameter(StringParameter):
   def __init_subclass__(cls) -> None:
     # Determine the Enum class from the class name
     module = importlib.import_module("camdkit.framework")
-    enum_class = getattr(module, cls.__name__ + "Enum")
-    if not issubclass(enum_class, Enum):
+    cls.enum_class = getattr(module, cls.__name__ + "Enum")
+    if not issubclass(cls.enum_class, Enum):
       # No related Enum class found
       raise TypeError
-    cls.allowedValues = [e.value for e in enum_class]
+    cls.allowedValues = [e.value for e in cls.enum_class]
 
   def validate(self, value) -> bool:
     """The parameter shall be one of the allowed values."""
     return str(value) in self.allowedValues
 
+  @classmethod
+  def from_json(cls, value: typing.Any) -> typing.Any:
+    v = cls.enum_class(value)
+    return v
+  
   def make_json_schema(self) -> dict:
     return {
       "type": "string",
       "enum": self.allowedValues
     }
 
+class TimestampParameter(Parameter):
+  """
+  PTP timestamp: 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds),
+  optional 32-bit unsigned integer (attoseconds)
+  """
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain valid number of seconds, nanoseconds and optionally
+    attoseconds elapsed since the start of the epoch.
+    """
+    if not isinstance(value, Timestamp):
+      return False
+    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds <= UINT48_MAX):
+      return False
+    if not (isinstance(value.nanoseconds, int) and value.nanoseconds >= 0 and value.nanoseconds <= UINT_MAX):
+      return False
+    if value.attoseconds != None:
+      if not (isinstance(value.attoseconds, int) and value.attoseconds >= 0 and value.attoseconds <= UINT_MAX):
+        return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    d = dataclasses.asdict(value)
+    if d["attoseconds"] == None:
+      del d["attoseconds"]
+    return d
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Timestamp(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT48_MAX
+        },
+        "nanoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        },
+        "attoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": UINT_MAX
+        }
+      },
+      "required": ["seconds", "nanoseconds"]
+    }
   
 class ParameterContainer:
   def __init__(self) -> None:
@@ -575,7 +660,10 @@ class ParameterContainer:
         if value != None:
           if desc.section not in obj:
             obj[desc.section] = {}
-          obj[desc.section][desc.canonical_name] = desc.to_json(value)
+          if desc.sampling is Sampling.STATIC:
+            obj[desc.section][desc.canonical_name] = desc.to_json(value)
+          elif desc.sampling is Sampling.REGULAR:
+            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_json, value))
       elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
