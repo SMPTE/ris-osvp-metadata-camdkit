@@ -191,7 +191,10 @@ class Notes(StringParameter):
   section = "metadata"
 
 class RelatedPackets(ArrayParameter):
-  """List of packet unique IDs that are related to this packet."""
+  """
+  List of packet unique IDs that are related to this packet. E.g. a related performance capture packet
+  or a packet of static data from the same device.
+  """
 
   canonical_name = "relatedPackets"
   sampling = Sampling.REGULAR
@@ -380,6 +383,16 @@ class Transforms(Parameter):
                   "type": "number"
               }
             }
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+          },
+          "parent": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
           }
         },
         "required": ["translation", "rotation"]
@@ -963,9 +976,20 @@ class LensPerspectiveShift(Parameter):
       }
     }
 
+class LensCustom(ArrayParameter):
+  """
+  Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model
+  e.g. undistortion, anamorphic etc
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "custom"
+  section = "lens"
+  item_class = float
+  units = None
 
 class Clip(ParameterContainer):
-  """Metadata for a camera clip.
+  """
+  Metadata for a camera clip.
   """
   # Static parameters
   duration: typing.Optional[numbers.Rational] = Duration()
@@ -1011,6 +1035,7 @@ class Clip(ParameterContainer):
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
+  lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
 
 
   def append(self, clip):

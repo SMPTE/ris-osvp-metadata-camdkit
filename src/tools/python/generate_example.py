@@ -26,7 +26,7 @@ def main():
   clip.metadata_global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
 
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
-  clip.timing_timestamp = (Timestamp(1718806554, 0),)
+  clip.timing_timestamp = (Timestamp(1718806554, 0, 0),)
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),)
   clip.timing_sequence_number = (0,)
   clip.timing_frame_rate = (23.976,)
@@ -42,9 +42,12 @@ def main():
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)
   
-  translation = Vector3(x=1.0, y=2.0, z=3.0)
-  rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
-  clip.transforms = ((Transform(translation=translation, rotation=rotation),),)
+  v = Vector3(x=1.0, y=2.0, z=3.0)
+  r = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
+  clip.transforms = ((Transform(translation=v, rotation=Rotator3(0,0,0), name="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, name="Crane Arm", parent="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, name="Camera", parent="Crane Arm")
+                      ),)
 
   clip.lens_f_number = (4000,)
   clip.lens_t_number = (4100,)
@@ -57,6 +60,7 @@ def main():
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_centre_shift = (CentreShift(1.0, 2.0),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
+  clip.lens_custom = ((1.0,2.0),)
 
   # Create the static single frame of JSON
   clip._set_static()

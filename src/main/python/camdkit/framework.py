@@ -101,6 +101,7 @@ class Timestamp:
   """
   A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
   optional 32-bit integer representing attoseconds elapsed since 00:00 January 1st 1970 epoch.
+  Reference: https://datatracker.ietf.org/doc/html/rfc8877
   """
   seconds: int
   nanoseconds: int
@@ -325,10 +326,11 @@ class ArrayParameter(Parameter):
     return tuple(value)
 
   def make_json_schema(self) -> dict:
-    return {
-      "type": "array",
-      "items": self.item_class.make_json_schema()
-    }
+    if hasattr(self.item_class, "make_json_schema"):
+      return { "type": "array", "items": self.item_class.make_json_schema() }
+    name = self.item_class.__name__
+    if name == "float": name = "number"
+    return { "type": "array", "items": { "type": name } }
 
 class UUIDURNParameter(Parameter):
 

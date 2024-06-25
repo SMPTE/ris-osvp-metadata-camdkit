@@ -856,6 +856,17 @@ class ModelTest(unittest.TestCase):
       "Cx": -1.0,
       "Cy": 1.0
     })
+  
+  def test_lens_custom(self):
+    clip = camdkit.model.Clip()
+    self.assertIsNone(clip.lens_custom)
+
+    with self.assertRaises(ValueError):
+      clip.lens_custom = ("",)
+
+    value = ((-1.0,1.0),)
+    clip.lens_custom = value
+    self.assertTupleEqual(clip.lens_custom, value)
 
   def test_synchronization(self):
     with self.assertRaises(TypeError):
