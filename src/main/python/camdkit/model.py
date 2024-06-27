@@ -8,6 +8,7 @@
 
 import numbers
 import typing
+from jsonschema import validate
 
 from camdkit.framework import *
 
@@ -17,6 +18,7 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
   units = "micron"
+  section = "camera"
 
 
 class Duration(StrictlyPositiveRationalParameter):
@@ -33,6 +35,7 @@ class CaptureFPS(StrictlyPositiveRationalParameter):
   canonical_name = "captureRate"
   sampling = Sampling.STATIC
   units = "hertz"
+  section = "camera"
 
 
 class ISO(StrictlyPositiveIntegerParameter):
@@ -41,6 +44,7 @@ class ISO(StrictlyPositiveIntegerParameter):
   canonical_name = "isoSpeed"
   sampling = Sampling.STATIC
   units = "unit"
+  section = "camera"
 
 
 class LensSerialNumber(StringParameter):
@@ -49,6 +53,7 @@ class LensSerialNumber(StringParameter):
   canonical_name = "lensSerialNumber"
   sampling = Sampling.STATIC
   units = None
+  section = "lens"
 
 class LensMake(StringParameter):
   """Make of the lens"""
@@ -56,6 +61,7 @@ class LensMake(StringParameter):
   canonical_name = "lensMake"
   sampling = Sampling.STATIC
   units = None
+  section = "lens"
 
 class LensModel(StringParameter):
   """Model of the lens"""
@@ -63,6 +69,7 @@ class LensModel(StringParameter):
   canonical_name = "lensModel"
   sampling = Sampling.STATIC
   units = None
+  section = "lens"
 
 class LensFirmware(StringParameter):
   """Version identifier for the firmware of the lens"""
@@ -70,6 +77,7 @@ class LensFirmware(StringParameter):
   canonical_name = "lensFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
+  section = "lens"
 
 class CameraSerialNumber(StringParameter):
   """Unique identifier of the camera"""
@@ -77,6 +85,7 @@ class CameraSerialNumber(StringParameter):
   canonical_name = "cameraSerialNumber"
   sampling = Sampling.STATIC
   units = None
+  section = "camera"
 
 class CameraMake(StringParameter):
   """Make of the camera"""
@@ -84,6 +93,7 @@ class CameraMake(StringParameter):
   canonical_name = "cameraMake"
   sampling = Sampling.STATIC
   units = None
+  section = "camera"
 
 class CameraModel(StringParameter):
   """Model of the camera"""
@@ -91,6 +101,7 @@ class CameraModel(StringParameter):
   canonical_name = "cameraModel"
   sampling = Sampling.STATIC
   units = None
+  section = "camera"
 
 class CameraFirmware(StringParameter):
   """Version identifier for the firmware of the camera"""
@@ -98,6 +109,39 @@ class CameraFirmware(StringParameter):
   canonical_name = "cameraFirmwareVersion"
   sampling = Sampling.STATIC
   units = None
+  section = "camera"
+
+class DeviceSerialNumber(StringParameter):
+  """Unique identifier of the device producing data"""
+
+  canonical_name = "deviceSerialNumber"
+  sampling = Sampling.STATIC
+  units = None
+  section = "device"
+
+class DeviceMake(StringParameter):
+  """Make of the device producing data"""
+
+  canonical_name = "deviceMake"
+  sampling = Sampling.STATIC
+  units = None
+  section = "device"
+
+class DeviceModel(StringParameter):
+  """Model of the device producing data"""
+
+  canonical_name = "deviceModel"
+  sampling = Sampling.STATIC
+  units = None
+  section = "device"
+
+class DeviceFirmware(StringParameter):
+  """Version identifier for the firmware of the device producing data"""
+
+  canonical_name = "deviceFirmwareVersion"
+  sampling = Sampling.STATIC
+  units = None
+  section = "device"
 
 class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   """Nominal ratio of height to width of the image of an axis-aligned square
@@ -108,6 +152,7 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   canonical_name = "anamorphicSqueeze"
   sampling = Sampling.STATIC
   units = "0.01 unit"
+  section = "camera"
 
 class FDLLink(UUIDURNParameter):
   """Unique identifier of the FDL used by the camera."""
@@ -115,6 +160,7 @@ class FDLLink(UUIDURNParameter):
   canonical_name = "fdlLink"
   sampling = Sampling.STATIC
   units = None
+  section = "camera"
 
 class ShutterAngle(Parameter):
   """Shutter speed as a fraction of the capture frame rate. The shutter speed
@@ -124,6 +170,7 @@ class ShutterAngle(Parameter):
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
   units = "degrees (angular)"
+  section = "camera"
 
   @staticmethod
   def validate(value) -> bool:
@@ -1003,6 +1050,10 @@ class Clip(ParameterContainer):
   camera_model: typing.Optional[str] = CameraModel()
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
+  device_make: typing.Optional[str] = DeviceMake()
+  device_model: typing.Optional[str] = DeviceModel()
+  device_firmware: typing.Optional[str] = DeviceFirmware()
+  device_serial_number: typing.Optional[str] = DeviceSerialNumber()
   iso: typing.Optional[numbers.Integral] = ISO()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   fdl_link: typing.Optional[str] = FDLLink()
@@ -1037,6 +1088,13 @@ class Clip(ParameterContainer):
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
 
+  def validate(self):
+    "Validate a single static data set against the schema. Return the JSON for convenience"
+    self._set_static()
+    json = self[0].to_json()
+    schema = self.make_json_schema()
+    validate(json, schema)
+    return json
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"
@@ -1052,8 +1110,11 @@ class Clip(ParameterContainer):
     for f in dir(self):
       desc = getattr(self, f)
       if not isinstance(desc, tuple):
-        continue
-      setattr(clip, f, desc[i])
+        if not f in self._values.keys() or self._values[f] is None:
+          continue
+        setattr(clip, f, desc)
+      else:
+        setattr(clip, f, desc[i])
     return clip
   
   @classmethod

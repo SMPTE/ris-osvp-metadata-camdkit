@@ -4,12 +4,11 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-'''CLI tool to generate and validate example JSON'''
+'''CLI tool to generate and validate JSON for an example dynamic data frame'''
 
 import json
 import uuid
 
-from jsonschema import validate
 from camdkit.framework import Vector3, Rotator3, Transform
 from camdkit.model import *
 
@@ -62,15 +61,14 @@ def main():
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
 
-  # Create the static single frame of JSON
-  clip._set_static()
-  json_clip = clip[0].to_json()
-
-  # Now validate this against the generated schema
-  schema = clip.make_json_schema()
-  validate(json_clip, schema)
-
-  print(json.dumps(json_clip, indent=2))
+  clip_json = clip.validate()
+	# Add additional custom data
+  clip_json["virtualCamera"] = {
+		"pot1": 2435,
+		"button1": False
+	}
+  print(json.dumps(clip_json, indent=2))
   
+
 if __name__ == "__main__":
   main()

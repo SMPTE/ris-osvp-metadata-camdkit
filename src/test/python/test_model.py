@@ -38,6 +38,10 @@ class ModelTest(unittest.TestCase):
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
+    clip.device_make = "ABCD"
+    clip.device_model = "EFGH"
+    clip.device_firmware = "1.0.1a"
+    clip.device_serial_number = "1234567890A"
     clip.anamorphic_squeeze = 120
     clip.iso = 13
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
@@ -107,20 +111,24 @@ class ModelTest(unittest.TestCase):
 
     # Static parameters
     self.assertEqual(d["duration"], {"num": 3, "denom": 1})
-    self.assertEqual(d["captureRate"], {"num": 24000, "denom": 1001})
-    self.assertDictEqual(d["activeSensorPhysicalDimensions"], {"height": 480, "width": 640})
-    self.assertEqual(d["cameraMake"], "Bob")
-    self.assertEqual(d["cameraModel"], "Hello")
-    self.assertEqual(d["cameraSerialNumber"], "132456")
-    self.assertEqual(d["cameraFirmwareVersion"], "7.1")
-    self.assertEqual(d["lensMake"], "ABC")
-    self.assertEqual(d["lensModel"], "FGH")
-    self.assertEqual(d["lensSerialNumber"], "123456789")
-    self.assertEqual(d["lensFirmwareVersion"], "1-dev.1")
-    self.assertEqual(d["anamorphicSqueeze"], 120)
-    self.assertEqual(d["isoSpeed"], 13)
-    self.assertEqual(d["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-    self.assertEqual(d["shutterAngle"], 180)
+    self.assertEqual(d["camera"]["captureRate"], {"num": 24000, "denom": 1001})
+    self.assertDictEqual(d["camera"]["activeSensorPhysicalDimensions"], {"height": 480, "width": 640})
+    self.assertEqual(d["camera"]["cameraMake"], "Bob")
+    self.assertEqual(d["camera"]["cameraModel"], "Hello")
+    self.assertEqual(d["camera"]["cameraSerialNumber"], "132456")
+    self.assertEqual(d["camera"]["cameraFirmwareVersion"], "7.1")
+    self.assertEqual(d["lens"]["lensMake"], "ABC")
+    self.assertEqual(d["lens"]["lensModel"], "FGH")
+    self.assertEqual(d["lens"]["lensSerialNumber"], "123456789")
+    self.assertEqual(d["lens"]["lensFirmwareVersion"], "1-dev.1")
+    self.assertEqual(d["device"]["deviceMake"], "ABCD")
+    self.assertEqual(d["device"]["deviceModel"], "EFGH")
+    self.assertEqual(d["device"]["deviceSerialNumber"], "1234567890A")
+    self.assertEqual(d["device"]["deviceFirmwareVersion"], "1.0.1a")
+    self.assertEqual(d["camera"]["anamorphicSqueeze"], 120)
+    self.assertEqual(d["camera"]["isoSpeed"], 13)
+    self.assertEqual(d["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+    self.assertEqual(d["camera"]["shutterAngle"], 180)
 
     # Regular parameters
 

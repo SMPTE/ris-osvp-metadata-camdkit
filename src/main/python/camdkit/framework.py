@@ -753,7 +753,7 @@ class ParameterContainer:
   
   def __next__(self):
     self.i += 1
-    if self.transforms == None or self.i >= len(self.transforms):
+    if self.packet_id == None or self.i >= len(self.packet_id):
       self._set_regular()
       raise StopIteration
     return self[self.i]
