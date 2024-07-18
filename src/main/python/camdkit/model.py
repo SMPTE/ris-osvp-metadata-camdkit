@@ -58,7 +58,7 @@ class LensSerialNumber(StringParameter):
 class LensMake(StringParameter):
   """Make of the lens"""
 
-  canonical_name = "lensMake"
+  canonical_name = "make"
   sampling = Sampling.STATIC
   units = None
   section = "lens"
@@ -66,7 +66,7 @@ class LensMake(StringParameter):
 class LensModel(StringParameter):
   """Model of the lens"""
 
-  canonical_name = "lensModel"
+  canonical_name = "model"
   sampling = Sampling.STATIC
   units = None
   section = "lens"
@@ -74,7 +74,14 @@ class LensModel(StringParameter):
 class LensFirmware(StringParameter):
   """Version identifier for the firmware of the lens"""
 
-  canonical_name = "lensFirmwareVersion"
+  canonical_name = "firmwareVersion"
+  sampling = Sampling.STATIC
+  units = None
+  section = "lens"
+  
+class LensDistortionModel(StringParameter):
+  """Free string for notes about the specific lens distortion model"""  
+  canonical_name = "distortionModel"
   sampling = Sampling.STATIC
   units = None
   section = "lens"
@@ -107,6 +114,14 @@ class CameraFirmware(StringParameter):
   """Version identifier for the firmware of the camera"""
 
   canonical_name = "cameraFirmwareVersion"
+  sampling = Sampling.STATIC
+  units = None
+  section = "camera"
+  
+class CameraId(StringParameter):
+  """Free string that identifies the camera - e.g. 'A'"""
+  
+  canonical_name = "cameraId"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -221,6 +236,7 @@ class Recording(BooleanParameter):
   
   canonical_name = "recording"
   sampling = Sampling.REGULAR
+  units = None
   section = "metadata"
   
 class Slate(StringParameter):
@@ -228,6 +244,7 @@ class Slate(StringParameter):
   
   canonical_name = "slate"
   sampling = Sampling.REGULAR
+  units = None
   section = "metadata"
   
 class Notes(StringParameter):
@@ -235,6 +252,7 @@ class Notes(StringParameter):
   
   canonical_name = "notes"
   sampling = Sampling.REGULAR
+  units = None
   section = "metadata"
 
 class RelatedPackets(ArrayParameter):
@@ -491,7 +509,7 @@ class TimingSynchronization(Parameter):
       return False
     if value.offsets != None and not value.offsets.validate():
       return False
-    if value.enabled != None and not isinstance(value.enabled, bool):
+    if value.present != None and not isinstance(value.present, bool):
       return False
 
     return True
@@ -517,10 +535,6 @@ class TimingSynchronization(Parameter):
       "properties": {
         "frequency": { "type": "number", "minimum": 0.0 },
         "locked": { "type": "boolean" },
-        "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
-        "ptp_master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
-        "ptp_offset": { "type": "number" },
-        "ptp_domain": { "type": "integer", "minimum": 0 },
         "offsets": {
           "type": "object",
           "additionalProperties": False,
@@ -530,7 +544,11 @@ class TimingSynchronization(Parameter):
             "encoders": { "type": "number" }
           }
         },
-        "enabled": { "type": "boolean" }
+        "present": { "type": "boolean" },
+        "ptp_master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
+        "ptp_offset": { "type": "number" },
+        "ptp_domain": { "type": "integer", "minimum": 0 },
+        "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
       },
       "required": ["frequency", "locked", "source"]
     }
@@ -815,7 +833,6 @@ class FoVScale(Parameter):
   
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of a lens"""
-
   sampling = Sampling.REGULAR
   canonical_name = "exposureFalloff"
   section = "lens"
@@ -868,8 +885,8 @@ class LensExposureFalloff(Parameter):
 class LensDistortion(Parameter):
   """
   Coefficients for calculating the distortion characteristics of a lens comprising radial distortion
-  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). """
-
+  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N).
+  """
   sampling = Sampling.REGULAR
   canonical_name = "distortion"
   section = "lens"
@@ -931,6 +948,16 @@ class LensDistortion(Parameter):
       }
     }
   
+class LensUndistortion(LensDistortion):
+  """
+  Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion
+  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N).
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "undistortion"
+  section = "lens"
+  units = None
+  
 class LensCentreShift(Parameter):
   "Shift in x and y of the centre of distortion of the virtual camera"
 
@@ -979,7 +1006,6 @@ class LensCentreShift(Parameter):
   
 class LensPerspectiveShift(Parameter):
   "Shift in x and y of the centre of projection of the virtual camera"
-
   sampling = Sampling.REGULAR
   canonical_name = "perspectiveShift"
   section = "lens"
@@ -1046,10 +1072,12 @@ class Clip(ParameterContainer):
   lens_model: typing.Optional[str] = LensModel()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   lens_firmware: typing.Optional[str] = LensFirmware()
+  lens_distortion_model: typing.Optional[str] = LensDistortionModel()
   camera_make: typing.Optional[str] = CameraMake()
   camera_model: typing.Optional[str] = CameraModel()
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
+  camera_id: typing.Optional[str] = CameraId()
   device_make: typing.Optional[str] = DeviceMake()
   device_model: typing.Optional[str] = DeviceModel()
   device_firmware: typing.Optional[str] = DeviceFirmware()
@@ -1084,6 +1112,7 @@ class Clip(ParameterContainer):
   lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = FoVScale()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
   lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()

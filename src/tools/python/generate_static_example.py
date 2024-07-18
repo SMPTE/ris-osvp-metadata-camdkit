@@ -16,6 +16,10 @@ def main():
   clip = Clip()
   clip.packet_id = (uuid.uuid4().urn,)
   clip.protocol = ("OpenTrackIO_0.1.0",)
+  clip.camera_id = "A"
+  clip.lens_make = "Canon"
+  clip.lens_model = "HJ14"
+  clip.lens_distortion_model = "OpenLensIO_0.1.0"
   clip.device_model = "StarTracker Max"
   clip.device_firmware = "3289"
   clip.device_make = "Mo-Sys"

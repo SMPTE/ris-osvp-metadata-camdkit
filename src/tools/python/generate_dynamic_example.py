@@ -31,7 +31,7 @@ def main():
   clip.timing_frame_rate = (23.976,)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat.TC_24D),)
   clip.timing_synchronization = (Synchronization(
-    enabled=True,
+    present=True,
     locked=True,
     frequency=23.976,
     source=SynchronizationSourceEnum.PTP,
@@ -57,13 +57,14 @@ def main():
   clip.lens_fov_scale = (Orientations(1.0, 1.0),)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
+  clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_centre_shift = (CentreShift(1.0, 2.0),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
 
   clip_json = clip.validate()
 	# Add additional custom data
-  clip_json["virtualCamera"] = {
+  clip_json["custom"] = {
 		"pot1": 2435,
 		"button1": False
 	}

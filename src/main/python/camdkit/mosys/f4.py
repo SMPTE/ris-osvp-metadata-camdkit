@@ -263,8 +263,10 @@ class F4PacketParser:
       
       frame.timing_mode = ("internal",)
       frame.timing_sequence_number = (self._frame_number,)
+      syncEnabled = (self._packet.status & (1 << 5)) != 0
       sync = Synchronization(
-        locked=(self._packet.status & (1 << 5)) != 0,
+        locked=syncEnabled,
+        present=syncEnabled,
         source=SynchronizationSourceEnum.GENLOCK,
         frequency=frequency
       )

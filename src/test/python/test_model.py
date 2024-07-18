@@ -34,10 +34,12 @@ class ModelTest(unittest.TestCase):
     clip.camera_model = "Hello"
     clip.camera_serial_number = "132456"
     clip.camera_firmware = "7.1"
+    clip.camera_id = "A"
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
+    clip.lens_distortion_model = "OpenLensIO"
     clip.device_make = "ABCD"
     clip.device_model = "EFGH"
     clip.device_firmware = "1.0.1a"
@@ -103,6 +105,8 @@ class ModelTest(unittest.TestCase):
                                   camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0))
     clip.lens_distortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
                             camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
+    clip.lens_undistortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
+                              camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
     clip.lens_centre_shift = (camdkit.framework.CentreShift(1.0, 2.0),camdkit.framework.CentreShift(1.0, 2.0))
     clip.lens_perspective_shift = (camdkit.framework.PerspectiveShift(0.1, 0.2),
                                    camdkit.framework.PerspectiveShift(0.1, 0.2))
@@ -117,10 +121,12 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["camera"]["cameraModel"], "Hello")
     self.assertEqual(d["camera"]["cameraSerialNumber"], "132456")
     self.assertEqual(d["camera"]["cameraFirmwareVersion"], "7.1")
+    self.assertEqual(d["camera"]["cameraId"], "A")
     self.assertEqual(d["lens"]["lensMake"], "ABC")
     self.assertEqual(d["lens"]["lensModel"], "FGH")
     self.assertEqual(d["lens"]["lensSerialNumber"], "123456789")
     self.assertEqual(d["lens"]["lensFirmwareVersion"], "1-dev.1")
+    self.assertEqual(d["lens"]["lensDistortionModel"], "OpenLensIO")
     self.assertEqual(d["device"]["deviceMake"], "ABCD")
     self.assertEqual(d["device"]["deviceModel"], "EFGH")
     self.assertEqual(d["device"]["deviceSerialNumber"], "1234567890A")
@@ -176,6 +182,8 @@ class ModelTest(unittest.TestCase):
                                                          { "a1":1.0,"a2":2.0,"a3":3.0 }))
     self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
+                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lens"]["centreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
     self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
 

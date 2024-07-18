@@ -184,11 +184,11 @@ class Synchronization:
   frequency: float
   locked: bool
   source: SynchronizationSourceEnum
+  offsets: typing.Optional[SynchronizationOffsets] = None
+  present: typing.Optional[bool] = None
   ptp_master: typing.Optional[str] = None
   ptp_offset: typing.Optional[float] = None
   ptp_domain: typing.Optional[int] = None
-  offsets: typing.Optional[SynchronizationOffsets] = None
-  enabled: typing.Optional[bool] = None
 
 class Parameter:
   """Metadata parameter base class"""
