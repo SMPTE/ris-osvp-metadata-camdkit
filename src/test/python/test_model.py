@@ -75,7 +75,7 @@ class ModelTest(unittest.TestCase):
     clip.timing_timecode = (camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24D),
                             camdkit.framework.Timecode(1,2,3,5,camdkit.framework.TimecodeFormat.TC_24D))
     sync = camdkit.framework.Synchronization(
-      enabled=True,
+      present=True,
       locked=True,
       frequency=23.976,
       source=camdkit.framework.SynchronizationSourceEnum.PTP,
@@ -122,11 +122,11 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["camera"]["cameraSerialNumber"], "132456")
     self.assertEqual(d["camera"]["cameraFirmwareVersion"], "7.1")
     self.assertEqual(d["camera"]["cameraId"], "A")
-    self.assertEqual(d["lens"]["lensMake"], "ABC")
-    self.assertEqual(d["lens"]["lensModel"], "FGH")
-    self.assertEqual(d["lens"]["lensSerialNumber"], "123456789")
-    self.assertEqual(d["lens"]["lensFirmwareVersion"], "1-dev.1")
-    self.assertEqual(d["lens"]["lensDistortionModel"], "OpenLensIO")
+    self.assertEqual(d["lens"]["make"], "ABC")
+    self.assertEqual(d["lens"]["model"], "FGH")
+    self.assertEqual(d["lens"]["serialNumber"], "123456789")
+    self.assertEqual(d["lens"]["firmwareVersion"], "1-dev.1")
+    self.assertEqual(d["lens"]["distortionModel"], "OpenLensIO")
     self.assertEqual(d["device"]["deviceMake"], "ABCD")
     self.assertEqual(d["device"]["deviceModel"], "EFGH")
     self.assertEqual(d["device"]["deviceSerialNumber"], "1234567890A")
@@ -163,7 +163,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["frameRate"], (23.976, 23.976))
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": "24D" },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": "24D" }))
-    sync_dict = { "enabled":True,"locked":True,"frequency":23.976,"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
+    sync_dict = { "present":True,"locked":True,"frequency":23.976,"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }

@@ -50,7 +50,7 @@ class ISO(StrictlyPositiveIntegerParameter):
 class LensSerialNumber(StringParameter):
   """Unique identifier of the lens"""
 
-  canonical_name = "lensSerialNumber"
+  canonical_name = "serialNumber"
   sampling = Sampling.STATIC
   units = None
   section = "lens"
