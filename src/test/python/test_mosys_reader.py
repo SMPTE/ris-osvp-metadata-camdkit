@@ -21,8 +21,8 @@ class MoSysReaderTest(unittest.TestCase):
     # Test parameters against known values across multple frames
     self.assertEqual(clip.protocol[0], "OpenTrackIO_0.1.0")
     self.assertEqual(len(clip.packet_id[1]), len(uuid.uuid4().urn))
-    self.assertEqual(clip.metadata_recording[2], True)
-    self.assertEqual(clip.metadata_status[3], "Optical Good")
+    self.assertEqual(clip.device_recording[2], True)
+    self.assertEqual(clip.device_status[3], "Optical Good")
     self.assertEqual(clip.timing_frame_rate[4], 25.0)
     self.assertEqual(clip.timing_mode[5], "internal")
     self.assertEqual(clip.timing_sequence_number[6], 13)

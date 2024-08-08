@@ -201,6 +201,10 @@ class Parameter:
   def to_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
 
+  @classmethod
+  def to_pretty_json(cls, value: typing.Any) -> typing.Any:
+    return cls.to_json(value)
+
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
@@ -332,14 +336,15 @@ class ArrayParameter(Parameter):
     if name == "float": name = "number"
     return { "type": "array", "items": { "type": name } }
 
-class UUIDURNParameter(Parameter):
+_UUID_RE_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
-  _UUID_RE = re.compile("urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+class UUIDURNParameter(Parameter):
+  _UUID_RE = re.compile(f"urn:uuid:{_UUID_RE_STRING}")
 
   @staticmethod
   def validate(value) -> bool:
     """The parameter shall be a UUID URN as specified in IETF RFC 4122. Only lowercase characters shall be used.
-    Example: `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6`"""
+    Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`"""
     return isinstance(value, str) and UUIDURNParameter._UUID_RE.match(value)
 
   @staticmethod
@@ -354,7 +359,7 @@ class UUIDURNParameter(Parameter):
   def make_json_schema() -> dict:
     return {
       "type": "string",
-      "pattern": '^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      "pattern": f"^urn:uuid:{_UUID_RE_STRING}$"
     }
 
 class StrictlyPositiveRationalParameter(Parameter):
@@ -653,7 +658,7 @@ class ParameterContainer:
     cls._saved_init = cls.__init__
     cls.__init__ = _auto__call__init__
 
-  def to_json(self) -> dict:
+  def to_pretty_json(self) -> dict:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
@@ -663,15 +668,33 @@ class ParameterContainer:
           if desc.section not in obj:
             obj[desc.section] = {}
           if desc.sampling is Sampling.STATIC:
-            obj[desc.section][desc.canonical_name] = desc.to_json(value)
+            obj[desc.section][desc.canonical_name] = desc.to_pretty_json(value)
           elif desc.sampling is Sampling.REGULAR:
-            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_json, value))
+            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_pretty_json, value))
       elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
-        obj[desc.canonical_name] = desc.to_json(value)
+        obj[desc.canonical_name] = desc.to_pretty_json(value)
       elif desc.sampling is Sampling.REGULAR:
-        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+        obj[desc.canonical_name] = tuple(map(desc.to_pretty_json, value))
+      else:
+        raise ValueError
+
+    return obj
+  
+  def to_json(self) -> dict:
+    obj = {}
+    for k, desc in self._params.items():
+      value = self._values[k]
+      field = desc.canonical_name
+      if hasattr(desc, "section"):
+        field = f"{desc.section}{field[0].upper()}{field[1:]}"
+      if value is None:
+        pass
+      elif desc.sampling is Sampling.STATIC:
+        obj[field] = desc.to_json(value)
+      elif desc.sampling is Sampling.REGULAR:
+        obj[field] = tuple(map(desc.to_json, value))
       else:
         raise ValueError
 
@@ -680,9 +703,14 @@ class ParameterContainer:
   def from_json(self, json_dict: dict):
     for json_key, json_value in json_dict.items():
       for prop, desc in self._params.items():
-        if hasattr(desc, "section") and desc.section == json_key:
-          self.from_json(json_dict[json_key])
-        if desc.canonical_name != json_key:
+        # Strip off and match the section
+        key = json_key
+        if hasattr(desc, "section") and desc.section != json_key:
+          section = json_key[:len(desc.section)]
+          if section != desc.section:
+            continue
+          key = f"{json_key[len(section)].lower()}{json_key[len(section)+1:]}"
+        if desc.canonical_name != key:
           continue
         if desc.sampling is Sampling.STATIC:
           self._values[prop] = desc.from_json(json_value)

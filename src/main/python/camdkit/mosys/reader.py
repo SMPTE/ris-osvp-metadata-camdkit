@@ -39,7 +39,7 @@ def to_clip(filename: str, frames: int = -1) -> Clip:
         count += 1
   return clip
 
-def to_frames(filename: str, frames: int = -1) -> list[Clip]:
+def to_frames(filename: str, frames: int = -1) -> list[dict]:
   """Read Mo-Sys F4 data into a list of `Frame`s.
   `filename`: Filename of the f4 file.
   """

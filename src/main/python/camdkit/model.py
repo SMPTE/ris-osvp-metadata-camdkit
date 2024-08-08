@@ -12,6 +12,8 @@ from jsonschema import validate
 
 from camdkit.framework import *
 
+PRETTY_FLOAT_DP = 5
+
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor"
 
@@ -20,6 +22,12 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   units = "micron"
   section = "camera"
 
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return {
+      "height": round(value.height / 1000.0, 3),
+      "width": round(value.width / 1000.0, 3)
+    }
 
 class Duration(StrictlyPositiveRationalParameter):
   """Duration of the clip"""
@@ -30,7 +38,7 @@ class Duration(StrictlyPositiveRationalParameter):
 
 
 class CaptureFPS(StrictlyPositiveRationalParameter):
-  """Capture frame frate of the camera"""
+  """Capture frame rate of the camera"""
 
   canonical_name = "captureRate"
   sampling = Sampling.STATIC
@@ -89,7 +97,7 @@ class LensDistortionModel(StringParameter):
 class CameraSerialNumber(StringParameter):
   """Unique identifier of the camera"""
 
-  canonical_name = "cameraSerialNumber"
+  canonical_name = "serialNumber"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -97,7 +105,7 @@ class CameraSerialNumber(StringParameter):
 class CameraMake(StringParameter):
   """Make of the camera"""
 
-  canonical_name = "cameraMake"
+  canonical_name = "make"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -105,7 +113,7 @@ class CameraMake(StringParameter):
 class CameraModel(StringParameter):
   """Model of the camera"""
 
-  canonical_name = "cameraModel"
+  canonical_name = "model"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -113,7 +121,7 @@ class CameraModel(StringParameter):
 class CameraFirmware(StringParameter):
   """Version identifier for the firmware of the camera"""
 
-  canonical_name = "cameraFirmwareVersion"
+  canonical_name = "firmwareVersion"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -121,7 +129,7 @@ class CameraFirmware(StringParameter):
 class CameraId(StringParameter):
   """Free string that identifies the camera - e.g. 'A'"""
   
-  canonical_name = "cameraId"
+  canonical_name = "id"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -129,7 +137,7 @@ class CameraId(StringParameter):
 class DeviceSerialNumber(StringParameter):
   """Unique identifier of the device producing data"""
 
-  canonical_name = "deviceSerialNumber"
+  canonical_name = "serialNumber"
   sampling = Sampling.STATIC
   units = None
   section = "device"
@@ -137,7 +145,7 @@ class DeviceSerialNumber(StringParameter):
 class DeviceMake(StringParameter):
   """Make of the device producing data"""
 
-  canonical_name = "deviceMake"
+  canonical_name = "make"
   sampling = Sampling.STATIC
   units = None
   section = "device"
@@ -145,7 +153,7 @@ class DeviceMake(StringParameter):
 class DeviceModel(StringParameter):
   """Model of the device producing data"""
 
-  canonical_name = "deviceModel"
+  canonical_name = "model"
   sampling = Sampling.STATIC
   units = None
   section = "device"
@@ -153,7 +161,7 @@ class DeviceModel(StringParameter):
 class DeviceFirmware(StringParameter):
   """Version identifier for the firmware of the device producing data"""
 
-  canonical_name = "deviceFirmwareVersion"
+  canonical_name = "firmwareVersion"
   sampling = Sampling.STATIC
   units = None
   section = "device"
@@ -208,9 +216,9 @@ class ShutterAngle(Parameter):
       "minimum": 1,
       "maximum": 360000
     }
-  
+
 class PacketId(UUIDURNParameter):
-  """Unique identifier of the packet in which data is being traansported."""
+  """Unique identifier of the packet in which data is being transported."""
 
   canonical_name = "packetId"
   sampling = Sampling.REGULAR
@@ -229,7 +237,7 @@ class Status(StringParameter):
   canonical_name = "status"
   sampling = Sampling.REGULAR
   units = None
-  section = "metadata"
+  section = "device"
   
 class Recording(BooleanParameter):
   """True if the system is recording data - e.g. tracking data"""
@@ -237,7 +245,7 @@ class Recording(BooleanParameter):
   canonical_name = "recording"
   sampling = Sampling.REGULAR
   units = None
-  section = "metadata"
+  section = "device"
   
 class Slate(StringParameter):
   """Free string that describes the recording slate - e.g. 'A101_A_4'"""
@@ -245,15 +253,15 @@ class Slate(StringParameter):
   canonical_name = "slate"
   sampling = Sampling.REGULAR
   units = None
-  section = "metadata"
+  section = "device"
   
 class Notes(StringParameter):
-  """Free string for notes"""
+  """Free string for notes about tracking"""
   
   canonical_name = "notes"
   sampling = Sampling.REGULAR
   units = None
-  section = "metadata"
+  section = "device"
 
 class RelatedPackets(ArrayParameter):
   """
@@ -265,7 +273,6 @@ class RelatedPackets(ArrayParameter):
   sampling = Sampling.REGULAR
   units = None
   item_class = UUIDURNParameter
-  section = "metadata"
 
 class GlobalStagePosition(Parameter):
   """
@@ -274,7 +281,6 @@ class GlobalStagePosition(Parameter):
   """
   sampling = Sampling.REGULAR
   canonical_name = "globalStage"
-  section = "metadata"
   units = "metres"
   
   @staticmethod
@@ -584,6 +590,13 @@ class LensEncoders(Parameter):
     return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
 
   @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensEncoders.to_json(value)
+    for k,v in d.items():
+      d[k] = round(v, PRETTY_FLOAT_DP)
+    return d
+  
+  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Encoders(**value)
 
@@ -629,7 +642,7 @@ class TimingTimestamp(TimestampParameter):
   48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
   """
   sampling = Sampling.REGULAR
-  canonical_name = "timestamp"
+  canonical_name = "sampleTimestamp"
   section = "timing"
   units = None
 
@@ -698,6 +711,10 @@ class TimingTimecode(Parameter):
     return d
 
   @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return f"{value.hours:>02}:{value.minutes:>02}:{value.seconds:>02}:{value.frames:>02}"
+
+  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat.from_string(value["format"]))
@@ -743,6 +760,10 @@ class TStop(StrictlyPositiveIntegerParameter):
   sampling = Sampling.REGULAR
   units = "0.001 unit"
   section = "lens"
+  
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return f"T{round(value/1000.0, 1)}"
 
 class FStop(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
@@ -753,6 +774,19 @@ class FStop(StrictlyPositiveIntegerParameter):
   units = "0.001 unit"
   section = "lens"
 
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return f"F{round(value/1000.0, 1)}"
+
+class NominalFocalLength(StrictlyPositiveIntegerParameter):
+  """Nominal focal length of the lens. The number printed on the side of a prime
+  lens, e.g. 50 mm, and undefined in the case of a zoom lens."""
+
+  canonical_name = "nominalFocalLength"
+  sampling = Sampling.STATIC
+  units = "millimeter"
+  section = "lens"
+
 class FocalLength(NonNegativeRealParameter):
   """Focal length of the lens."""
 
@@ -760,6 +794,10 @@ class FocalLength(NonNegativeRealParameter):
   sampling = Sampling.REGULAR
   units = "millimeter"
   section = "lens"
+
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return round(value, 3)
 
 class FocusPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
@@ -769,15 +807,19 @@ class FocusPosition(StrictlyPositiveIntegerParameter):
   units = "millimeter"
   section = "lens"
 
-class EntrancePupilPosition(RationalParameter):
+class EntrancePupilDistance(RationalParameter):
   """Position of the entrance pupil relative to the nominal imaging plane
   (positive if the entrance pupil is located on the side of the nominal imaging
   plane that is towards the object, and negative otherwise)"""
 
-  canonical_name = "entrancePupilPosition"
+  canonical_name = "entrancePupilDistance"
   sampling = Sampling.REGULAR
   units = "millimeter"
   section = "lens"
+
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    return round(float(value), 3)
 
 class FoVScale(Parameter):
   """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
@@ -860,6 +902,13 @@ class LensExposureFalloff(Parameter):
     return dataclasses.asdict(value)
 
   @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensExposureFalloff.to_json(value)
+    for k,v in d.items():
+      d[k] = round(d[k], PRETTY_FLOAT_DP)
+    return d
+  
+  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return ExposureFalloff(**value)
 
@@ -918,6 +967,14 @@ class LensDistortion(Parameter):
     d = dataclasses.asdict(value)
     if d["tangential"] == None:
       del d["tangential"]
+    return d
+  
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensDistortion.to_json(value)
+    d["radial"] = [round(x, PRETTY_FLOAT_DP) for x in d["radial"]]
+    if "tangential" in d:
+      d["tangential"] = [round(x, PRETTY_FLOAT_DP) for x in d["tangential"]]
     return d
 
   @staticmethod
@@ -985,6 +1042,13 @@ class LensCentreShift(Parameter):
     return dataclasses.asdict(value)
 
   @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensCentreShift.to_json(value)
+    d["cx"] = round(d["cx"], PRETTY_FLOAT_DP)
+    d["cy"] = round(d["cy"], PRETTY_FLOAT_DP)
+    return d
+  
+  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return CentreShift(**value)
 
@@ -1030,6 +1094,13 @@ class LensPerspectiveShift(Parameter):
     return dataclasses.asdict(value)
 
   @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensCentreShift.to_json(value)
+    d["Cx"] = round(d["Cx"], PRETTY_FLOAT_DP)
+    d["Cy"] = round(d["Cy"], PRETTY_FLOAT_DP)
+    return d
+  
+  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return PerspectiveShift(**value)
 
@@ -1065,57 +1136,58 @@ class Clip(ParameterContainer):
   Metadata for a camera clip.
   """
   # Static parameters
-  duration: typing.Optional[numbers.Rational] = Duration()
-  capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
-  lens_make: typing.Optional[str] = LensMake()
-  lens_model: typing.Optional[str] = LensModel()
-  lens_serial_number: typing.Optional[str] = LensSerialNumber()
-  lens_firmware: typing.Optional[str] = LensFirmware()
-  lens_distortion_model: typing.Optional[str] = LensDistortionModel()
+  anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   camera_make: typing.Optional[str] = CameraMake()
   camera_model: typing.Optional[str] = CameraModel()
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   camera_id: typing.Optional[str] = CameraId()
+  capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   device_make: typing.Optional[str] = DeviceMake()
   device_model: typing.Optional[str] = DeviceModel()
   device_firmware: typing.Optional[str] = DeviceFirmware()
   device_serial_number: typing.Optional[str] = DeviceSerialNumber()
-  iso: typing.Optional[numbers.Integral] = ISO()
-  anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
+  duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
+  iso: typing.Optional[numbers.Integral] = ISO()
+  lens_distortion_model: typing.Optional[str] = LensDistortionModel()
+  lens_firmware: typing.Optional[str] = LensFirmware()
+  lens_make: typing.Optional[str] = LensMake()
+  lens_model: typing.Optional[str] = LensModel()
+  lens_nominal_focal_length: typing.Optional[numbers.Integral] = NominalFocalLength()
+  lens_serial_number: typing.Optional[str] = LensSerialNumber()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # Regular parameters
-  packet_id: typing.Optional[typing.Tuple[str]] = PacketId()
-  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
-  metadata_status: typing.Optional[typing.Tuple[str]] = Status()
-  metadata_recording: typing.Optional[typing.Tuple[bool]] = Recording()
-  metadata_slate: typing.Optional[typing.Tuple[str]] = Slate()
-  metadata_notes: typing.Optional[typing.Tuple[str]] = Notes()
-  metadata_related_packets: typing.Optional[typing.Tuple[tuple]] = RelatedPackets()
-  metadata_global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
-  timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
-  timing_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
-  timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
-  timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
-  timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
-  timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
-  timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
-  transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
-  lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
+  device_notes: typing.Optional[typing.Tuple[str]] = Notes()
+  device_recording: typing.Optional[typing.Tuple[bool]] = Recording()
+  device_slate: typing.Optional[typing.Tuple[str]] = Slate()
+  device_status: typing.Optional[typing.Tuple[str]] = Status()
+  global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
+  lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
+  lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
+  lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
+  lens_entrance_pupil_distance: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilDistance()
+  lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
   lens_focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
-  lens_entrance_pupil_position: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilPosition()
-  lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = FoVScale()
-  lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
-  lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
-  lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
-  lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
-  lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
+  lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
+  lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
+  packet_id: typing.Optional[typing.Tuple[str]] = PacketId()
+  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
+  related_packets: typing.Optional[typing.Tuple[tuple]] = RelatedPackets()
+  timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
+  timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
+  timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
+  timing_sample_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
+  timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
+  timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
+  timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
+  transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
 
   def validate(self):
     "Validate a single static data set against the schema. Return the JSON for convenience"
@@ -1124,6 +1196,11 @@ class Clip(ParameterContainer):
     schema = self.make_json_schema()
     validate(json, schema)
     return json
+
+  def prettify(self):
+    "Return a pretty version of the json with units and sections"
+    self._set_static()
+    return self[0].to_pretty_json()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

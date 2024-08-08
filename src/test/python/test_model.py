@@ -27,47 +27,48 @@ class ModelTest(unittest.TestCase):
     clip = camdkit.model.Clip()
 
     # Static parameters
-    clip.duration = 3
+    clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=36000, height=24000)
+    clip.anamorphic_squeeze = 120
     clip.capture_fps = Fraction(24000, 1001)
-    clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=640, height=480)
+    clip.duration = 3
     clip.camera_make = "Bob"
     clip.camera_model = "Hello"
     clip.camera_serial_number = "132456"
     clip.camera_firmware = "7.1"
     clip.camera_id = "A"
+    clip.device_make = "ABCD"
+    clip.device_model = "EFGH"
+    clip.device_firmware = "1.0.1a"
+    clip.device_serial_number = "1234567890A"
+    clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    clip.iso = 13
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
     clip.lens_distortion_model = "OpenLensIO"
-    clip.device_make = "ABCD"
-    clip.device_model = "EFGH"
-    clip.device_firmware = "1.0.1a"
-    clip.device_serial_number = "1234567890A"
-    clip.anamorphic_squeeze = 120
-    clip.iso = 13
-    clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    clip.lens_nominal_focal_length = 24
     clip.shutter_angle = 180
     # Regular parameters
     clip.packet_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
     clip.protocol = ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0")
 
-    clip.metadata_status = ("Optical Good","Optical Good")
-    clip.metadata_recording = (False,True)
-    clip.metadata_slate = ("A101_A_4","A101_A_5")
-    clip.metadata_notes = ("Test serialize.","Test serialize.")
-    clip.metadata_related_packets = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                      "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
-                                     ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                                      "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
-    clip.metadata_global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
-                                  camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
+    clip.device_status = ("Optical Good","Optical Good")
+    clip.device_recording = (False,True)
+    clip.device_slate = ("A101_A_4","A101_A_5")
+    clip.device_notes = ("Test serialize.","Test serialize.")
+    clip.related_packets = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
+                            ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
+    clip.global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
+                         camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
 
     clip.timing_mode = (camdkit.framework.TimingModeEnum.INTERNAL,
                         camdkit.framework.TimingModeEnum.INTERNAL)
-    clip.timing_timestamp = (camdkit.framework.Timestamp(1718806554, 0),
-                             camdkit.framework.Timestamp(1718806555, 0))
+    clip.timing_sample_timestamp = (camdkit.framework.Timestamp(1718806554, 0),
+                                    camdkit.framework.Timestamp(1718806555, 0))
     clip.timing_recorded_timestamp = (camdkit.framework.Timestamp(1718806000, 0),
                                       camdkit.framework.Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
@@ -97,7 +98,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_f_number = (1200, 2800)
     clip.lens_focal_length = (2.0, 4.0)
     clip.lens_focus_position = (2, 4)
-    clip.lens_entrance_pupil_position = (Fraction(1, 2), Fraction(13, 7))
+    clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),
                           camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
     clip.lens_fov_scale = (camdkit.framework.Orientations(1.0, 1.0),camdkit.framework.Orientations(1.0, 1.0))
@@ -115,77 +116,78 @@ class ModelTest(unittest.TestCase):
 
     # Static parameters
     self.assertEqual(d["duration"], {"num": 3, "denom": 1})
-    self.assertEqual(d["camera"]["captureRate"], {"num": 24000, "denom": 1001})
-    self.assertDictEqual(d["camera"]["activeSensorPhysicalDimensions"], {"height": 480, "width": 640})
-    self.assertEqual(d["camera"]["cameraMake"], "Bob")
-    self.assertEqual(d["camera"]["cameraModel"], "Hello")
-    self.assertEqual(d["camera"]["cameraSerialNumber"], "132456")
-    self.assertEqual(d["camera"]["cameraFirmwareVersion"], "7.1")
-    self.assertEqual(d["camera"]["cameraId"], "A")
-    self.assertEqual(d["lens"]["make"], "ABC")
-    self.assertEqual(d["lens"]["model"], "FGH")
-    self.assertEqual(d["lens"]["serialNumber"], "123456789")
-    self.assertEqual(d["lens"]["firmwareVersion"], "1-dev.1")
-    self.assertEqual(d["lens"]["distortionModel"], "OpenLensIO")
-    self.assertEqual(d["device"]["deviceMake"], "ABCD")
-    self.assertEqual(d["device"]["deviceModel"], "EFGH")
-    self.assertEqual(d["device"]["deviceSerialNumber"], "1234567890A")
-    self.assertEqual(d["device"]["deviceFirmwareVersion"], "1.0.1a")
-    self.assertEqual(d["camera"]["anamorphicSqueeze"], 120)
-    self.assertEqual(d["camera"]["isoSpeed"], 13)
-    self.assertEqual(d["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-    self.assertEqual(d["camera"]["shutterAngle"], 180)
+    self.assertEqual(d["cameraCaptureRate"], {"num": 24000, "denom": 1001})
+    self.assertDictEqual(d["cameraActiveSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
+    self.assertEqual(d["cameraMake"], "Bob")
+    self.assertEqual(d["cameraModel"], "Hello")
+    self.assertEqual(d["cameraSerialNumber"], "132456")
+    self.assertEqual(d["cameraFirmwareVersion"], "7.1")
+    self.assertEqual(d["cameraId"], "A")
+    self.assertEqual(d["lensMake"], "ABC")
+    self.assertEqual(d["lensModel"], "FGH")
+    self.assertEqual(d["lensSerialNumber"], "123456789")
+    self.assertEqual(d["lensFirmwareVersion"], "1-dev.1")
+    self.assertEqual(d["lensDistortionModel"], "OpenLensIO")
+    self.assertEqual(d["lensNominalFocalLength"], 24)
+    self.assertEqual(d["deviceMake"], "ABCD")
+    self.assertEqual(d["deviceModel"], "EFGH")
+    self.assertEqual(d["deviceSerialNumber"], "1234567890A")
+    self.assertEqual(d["deviceFirmwareVersion"], "1.0.1a")
+    self.assertEqual(d["cameraAnamorphicSqueeze"], 120)
+    self.assertEqual(d["cameraIsoSpeed"], 13)
+    self.assertEqual(d["cameraFdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+    self.assertEqual(d["cameraShutterAngle"], 180)
 
     # Regular parameters
 
     self.assertTupleEqual(d["packetId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
     self.assertTupleEqual(d["protocol"], ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0"))
-    self.assertTupleEqual(d["metadata"]["status"], ("Optical Good","Optical Good"))
-    self.assertTupleEqual(d["metadata"]["recording"], (False,True))
-    self.assertTupleEqual(d["metadata"]["slate"], ("A101_A_4","A101_A_5"))
-    self.assertTupleEqual(d["metadata"]["notes"], ("Test serialize.","Test serialize."))
-    self.assertTupleEqual(d["metadata"]["relatedPackets"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
-                                                            ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                                                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
-    self.assertTupleEqual(d["metadata"]["globalStage"], ({ "E":100.0, "N":200.0, "U":300.0,
-                                                           "lat0":100.0, "lon0":200.0, "h0":300.0 },
-                                                         { "E":100.0, "N":200.0, "U":300.0,
-                                                           "lat0":100.0, "lon0":200.0, "h0":300.0 }))
+    self.assertTupleEqual(d["relatedPackets"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
+                                                ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
+    self.assertTupleEqual(d["globalStage"], ({ "E":100.0, "N":200.0, "U":300.0,
+                                               "lat0":100.0, "lon0":200.0, "h0":300.0 },
+                                             { "E":100.0, "N":200.0, "U":300.0,
+                                               "lat0":100.0, "lon0":200.0, "h0":300.0 }))
+    self.assertTupleEqual(d["deviceStatus"], ("Optical Good","Optical Good"))
+    self.assertTupleEqual(d["deviceRecording"], (False,True))
+    self.assertTupleEqual(d["deviceSlate"], ("A101_A_4","A101_A_5"))
+    self.assertTupleEqual(d["deviceNotes"], ("Test serialize.","Test serialize."))
 
-    self.assertTupleEqual(d["timing"]["mode"], ("internal", "internal"))
-    self.assertTupleEqual(d["timing"]["timestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
+    self.assertTupleEqual(d["timingMode"], ("internal", "internal"))
+    self.assertTupleEqual(d["timingSampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
                                                      { "seconds": 1718806555, "nanoseconds": 0 } ))
-    self.assertTupleEqual(d["timing"]["recordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
+    self.assertTupleEqual(d["timingRecordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
                                                              { "seconds": 1718806001, "nanoseconds": 0 }))
-    self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
-    self.assertTupleEqual(d["timing"]["frameRate"], (23.976, 23.976))
-    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": "24D" },
+    self.assertTupleEqual(d["timingSequenceNumber"], (0, 1))
+    self.assertTupleEqual(d["timingFrameRate"], (23.976, 23.976))
+    self.assertTupleEqual(d["timingTimecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": "24D" },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": "24D" }))
     sync_dict = { "present":True,"locked":True,"frequency":23.976,"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
-    self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
+    self.assertTupleEqual(d["timingSynchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
     self.assertTupleEqual(d["transforms"], ([transform_dict, transform_dict], [transform_dict, transform_dict]))
 
-    self.assertTupleEqual(d["lens"]["tStop"], (2000, 4000))
-    self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
-    self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
-    self.assertTupleEqual(d["lens"]["focusPosition"], (2, 4))
-    self.assertTupleEqual(d["lens"]["entrancePupilPosition"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
-    self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
+    self.assertTupleEqual(d["lensTStop"], (2000, 4000))
+    self.assertTupleEqual(d["lensFStop"], (1200, 2800))
+    self.assertTupleEqual(d["lensFocalLength"], (2.0, 4.0))
+    self.assertTupleEqual(d["lensFocusPosition"], (2, 4))
+    self.assertTupleEqual(d["lensEntrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
+    self.assertTupleEqual(d["lensEncoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
                                                   { "focus":0.1, "iris":0.2, "zoom":0.3 }))
-    self.assertTupleEqual(d["lens"]["fovScale"], ({ "horizontal":1.0, "vertical":1.0 },
+    self.assertTupleEqual(d["lensFovScale"], ({ "horizontal":1.0, "vertical":1.0 },
                                                   { "horizontal":1.0, "vertical":1.0 }))
-    self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
+    self.assertTupleEqual(d["lensExposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                          { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
+    self.assertTupleEqual(d["lensDistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
+    self.assertTupleEqual(d["lensUndistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                       { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["centreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
+    self.assertTupleEqual(d["lensCentreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
+    self.assertTupleEqual(d["lensPerspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
 
     d_clip = camdkit.model.Clip()
     d_clip.from_json(d)
@@ -316,7 +318,23 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.lens_focal_length)
 
     with self.assertRaises(ValueError):
-      clip.lens_focal_length = [Fraction(5,7)]
+      clip.lens_focal_length = 0
+    with self.assertRaises(ValueError):
+      clip.lens_focal_length = -1.0
+
+    value = (24.1, 24.2)
+
+    clip.lens_focal_length = value
+
+    self.assertTupleEqual(clip.lens_focal_length, value)
+
+  def test_nominal_focal_length(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.lens_nominal_focal_length)
+
+    with self.assertRaises(ValueError):
+      clip.lens_nominal_focal_length = [Fraction(5,7)]
 
     value = (100, 7)
 
@@ -338,19 +356,19 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(clip.lens_focus_position, value)
 
-  def test_entrance_pupil_position(self):
+  def test_entrance_pupil_distance(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.lens_entrance_pupil_position)
+    self.assertIsNone(clip.lens_entrance_pupil_distance)
 
     with self.assertRaises(ValueError):
-      clip.lens_focus_position = [0.6]
+      clip.lens_entrance_pupil_distance = 0.6
 
     value = (Fraction(5,7), 7)
 
-    clip.set_lens_entrance_pupil_position = value
+    clip.lens_entrance_pupil_distance = value
 
-    self.assertIsNone(clip.lens_entrance_pupil_position, value)
+    self.assertTupleEqual(clip.lens_entrance_pupil_distance, value)
 
   def test_fdl_link(self):
     clip = camdkit.model.Clip()
@@ -403,57 +421,57 @@ class ModelTest(unittest.TestCase):
     clip.protocol = value
     self.assertTupleEqual(clip.protocol, value)
 
-  def test_metadata(self):
+  def test_device_data(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.metadata_status)
-    self.assertIsNone(clip.metadata_recording)
-    self.assertIsNone(clip.metadata_slate)
-    self.assertIsNone(clip.metadata_notes)
-    self.assertIsNone(clip.metadata_related_packets)
-    self.assertIsNone(clip.metadata_global_stage)
+    self.assertIsNone(clip.device_status)
+    self.assertIsNone(clip.device_recording)
+    self.assertIsNone(clip.device_slate)
+    self.assertIsNone(clip.device_notes)
+    self.assertIsNone(clip.related_packets)
+    self.assertIsNone(clip.global_stage)
 
     with self.assertRaises(ValueError):
-      clip.metadata_status = ""
+      clip.device_status = ""
     with self.assertRaises(ValueError):
-      clip.metadata_recording = 0
+      clip.device_recording = 0
     with self.assertRaises(ValueError):
-      clip.metadata_recording = "True"
+      clip.device_recording = "True"
     with self.assertRaises(ValueError):
-      clip.metadata_slate = ""
+      clip.device_slate = ""
     with self.assertRaises(ValueError):
-      clip.metadata_notes = ""
+      clip.device_notes = ""
     with self.assertRaises(ValueError):
-      clip.metadata_related_packets = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+      clip.related_packets = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     with self.assertRaises(ValueError):
-      clip.metadata_global_stage = camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
+      clip.global_stage = camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
     with self.assertRaises(TypeError):
-      clip.metadata_global_stage = (camdkit.framework.GlobalPosition(),)
+      clip.global_stage = (camdkit.framework.GlobalPosition(),)
     with self.assertRaises(TypeError):
-      clip.metadata_global_stage = (camdkit.framework.GlobalPosition(100.0),)
+      clip.global_stage = (camdkit.framework.GlobalPosition(100.0),)
     with self.assertRaises(TypeError):
-      clip.metadata_global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0),)
+      clip.global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0),)
 
     value = ("Optical Good",)
-    clip.metadata_status = value
-    self.assertTupleEqual(clip.metadata_status, value)
+    clip.device_status = value
+    self.assertTupleEqual(clip.device_status, value)
     value = (True,False)
-    clip.metadata_recording = value
-    self.assertTupleEqual(clip.metadata_recording, value)
+    clip.device_recording = value
+    self.assertTupleEqual(clip.device_recording, value)
     value = ("A104_A_4",)
-    clip.metadata_slate = value
-    self.assertTupleEqual(clip.metadata_slate, value)
+    clip.device_slate = value
+    self.assertTupleEqual(clip.device_slate, value)
     value = ("Test notes",)
-    clip.metadata_notes = value
-    self.assertTupleEqual(clip.metadata_notes, value)
+    clip.device_notes = value
+    self.assertTupleEqual(clip.device_notes, value)
     value = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
-    clip.metadata_related_packets = value
-    self.assertTupleEqual(clip.metadata_related_packets, value)
+    clip.related_packets = value
+    self.assertTupleEqual(clip.related_packets, value)
     value = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
-    clip.metadata_global_stage = value
-    self.assertTupleEqual(clip.metadata_global_stage, value)
+    clip.global_stage = value
+    self.assertTupleEqual(clip.global_stage, value)
 
   def test_timing_mode_model(self):
     clip = camdkit.model.Clip()
@@ -469,7 +487,7 @@ class ModelTest(unittest.TestCase):
     clip.timing_mode = value
     self.assertEqual(clip.timing_mode, value)
 
-  def test_timing_timestamp_model(self):
+  def test_timing_frame_rate_model(self):
     clip = camdkit.model.Clip()
 
     self.assertIsNone(clip.timing_frame_rate)
@@ -481,19 +499,19 @@ class ModelTest(unittest.TestCase):
     clip.timing_frame_rate = value
     self.assertEqual(clip.timing_frame_rate, value)
 
-  def test_timing_frame_rate_model(self):
+  def test_timing_sample_timestamp_model(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.timing_timestamp)
+    self.assertIsNone(clip.timing_sample_timestamp)
 
     with self.assertRaises(ValueError):
-      clip.timing_timestamp = 0
+      clip.timing_sample_timestamp = 0
     with self.assertRaises(TypeError):
-      clip.timing_timestamp = camdkit.framework.Timestamp(0)
+      clip.timing_sample_timestamp = camdkit.framework.Timestamp(0)
 
     value = (camdkit.framework.Timestamp(0,0), camdkit.framework.Timestamp(1718806800,0))
-    clip.timing_timestamp = value
-    self.assertEqual(clip.timing_timestamp, value)
+    clip.timing_sample_timestamp = value
+    self.assertEqual(clip.timing_sample_timestamp, value)
 
   def test_timing_timecode_model(self):
     clip = camdkit.model.Clip()

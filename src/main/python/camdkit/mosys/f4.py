@@ -195,7 +195,7 @@ class F4PacketParser:
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = ("OpenTrackIO_0.1.0",)
       frame.packet_id = (uuid.uuid4().urn,)
-      frame.metadata_recording = ((self._packet.status & (1 << 4)) != 0,)
+      frame.device_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
         match axis_block.axis_id:
@@ -212,7 +212,7 @@ class F4PacketParser:
           case F4.FIELD_ID_HEIGHT:
             translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_ENTRANCE_PUPIL:
-            frame.lens_entrance_pupil_position = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
+            frame.lens_entrance_pupil_distance = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K1:
             k1 = self._axis_block_to_lens_param(axis_block)
@@ -240,7 +240,7 @@ class F4PacketParser:
           case F4.FIELD_ID_APERTURE:
             f: float = self._axis_block_to_lens_param(axis_block)
             # Units are 0.001 e.g. F4.0 => 4000
-            frame.f_number = (round(f*1000.0),)
+            frame.lens_f_number = (round(f*1000.0),)
             pass
           case F4.FIELD_ID_FOCUS:
             focus = self._axis_block_to_lens_type(axis_block) / 65536.0
@@ -258,7 +258,7 @@ class F4PacketParser:
             frequency = frame_rate
             pass
           case F4.TRACKING_STATUS:
-            frame.metadata_status = (self._axis_block_to_status_string(axis_block),)
+            frame.device_status = (self._axis_block_to_status_string(axis_block),)
             pass
       
       frame.timing_mode = ("internal",)
