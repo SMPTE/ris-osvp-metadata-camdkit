@@ -626,6 +626,69 @@ class LensEncoders(Parameter):
       ]
     }
   
+class LensRawEncoders(Parameter):
+  """
+  Raw encoder values for focus, iris and zoom.
+  These values are dependent on encoder resolution and before any homing / ranging has taken place.
+  """
+  sampling = Sampling.REGULAR
+  canonical_name = "rawEncoders"
+  section = "lens"
+  units = None
+
+  @staticmethod
+  def validate(value) -> bool:
+    """
+    The parameter shall contain at least one integer value for the FIZ encoders.
+    """
+    if not isinstance(value, RawEncoders):
+      return False
+    if value.focus == None and value.iris == None and value.zoom == None:
+      return False
+    for test in [value.focus, value.iris, value.zoom]:
+      if test != None and not (isinstance(test, int) and test >= 0):
+        return False
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+
+  @staticmethod
+  def to_pretty_json(value: typing.Any) -> typing.Any:
+    d = LensRawEncoders.to_json(value)
+    for k,v in d.items():
+      d[k] = round(v, PRETTY_FLOAT_DP)
+    return d
+  
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return RawEncoders(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "focus": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "iris": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "zoom": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
+      ]
+    }
+  
+  
 class TimingMode(EnumParameter):
   """
   'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
@@ -1168,6 +1231,7 @@ class Clip(ParameterContainer):
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
+  lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_entrance_pupil_distance: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilDistance()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()

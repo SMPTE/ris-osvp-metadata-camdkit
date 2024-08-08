@@ -62,6 +62,13 @@ class Encoders:
   zoom: typing.Optional[float] = None
 
 @dataclasses.dataclass
+class RawEncoders:
+  "Normalised FIZ encoder values"
+  focus: typing.Optional[int] = None
+  iris: typing.Optional[int] = None
+  zoom: typing.Optional[int] = None
+
+@dataclasses.dataclass
 class ExposureFalloff:
   "Coefficients for the calculation of exposure fall-off"
   a1: float

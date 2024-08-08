@@ -101,6 +101,8 @@ class ModelTest(unittest.TestCase):
     clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),
                           camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3),
+                              camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3))
     clip.lens_fov_scale = (camdkit.framework.Orientations(1.0, 1.0),camdkit.framework.Orientations(1.0, 1.0))
     clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0),
                                   camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0))
@@ -158,13 +160,13 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["timingMode"], ("internal", "internal"))
     self.assertTupleEqual(d["timingSampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
-                                                     { "seconds": 1718806555, "nanoseconds": 0 } ))
+                                                       { "seconds": 1718806555, "nanoseconds": 0 } ))
     self.assertTupleEqual(d["timingRecordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
-                                                             { "seconds": 1718806001, "nanoseconds": 0 }))
+                                                         { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timingSequenceNumber"], (0, 1))
     self.assertTupleEqual(d["timingFrameRate"], (23.976, 23.976))
     self.assertTupleEqual(d["timingTimecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": "24D" },
-                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": "24D" }))
+                                                { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": "24D" }))
     sync_dict = { "present":True,"locked":True,"frequency":23.976,"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
     self.assertTupleEqual(d["timingSynchronization"], (sync_dict, sync_dict))
@@ -177,15 +179,17 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lensFocusPosition"], (2, 4))
     self.assertTupleEqual(d["lensEntrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
     self.assertTupleEqual(d["lensEncoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
-                                                  { "focus":0.1, "iris":0.2, "zoom":0.3 }))
+                                              { "focus":0.1, "iris":0.2, "zoom":0.3 }))
+    self.assertTupleEqual(d["lensRawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
+                                                 { "focus":1, "iris":2, "zoom":3 }))
     self.assertTupleEqual(d["lensFovScale"], ({ "horizontal":1.0, "vertical":1.0 },
-                                                  { "horizontal":1.0, "vertical":1.0 }))
+                                              { "horizontal":1.0, "vertical":1.0 }))
     self.assertTupleEqual(d["lensExposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
-                                                         { "a1":1.0,"a2":2.0,"a3":3.0 }))
+                                                     { "a1":1.0,"a2":2.0,"a3":3.0 }))
     self.assertTupleEqual(d["lensDistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+                                                { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lensUndistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+                                                  { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lensCentreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
     self.assertTupleEqual(d["lensPerspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
 
@@ -684,6 +688,7 @@ class ModelTest(unittest.TestCase):
   def test_lens_encoders_limits(self):
     clip = camdkit.model.Clip()
     self.assertIsNone(clip.lens_encoders)
+    self.assertIsNone(clip.lens_raw_encoders)
 
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.0),)
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5),)
@@ -695,6 +700,16 @@ class ModelTest(unittest.TestCase):
     clip.lens_encoders = (camdkit.framework.Encoders(zoom=0.5, focus=0.5),)
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
 
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=0),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(zoom=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(iris=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5, iris=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(iris=5, zoom=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(zoom=5, focus=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5, iris=5, zoom=5),)
+    
+
     with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(),)
     with self.assertRaises(ValueError):
@@ -704,17 +719,34 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
 
-    value = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
+    with self.assertRaises(ValueError):
+      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(),)
+    with self.assertRaises(ValueError):
+      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(-1,0,0),)
+    with self.assertRaises(ValueError):
+      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(-1,0,0),)
+
+    value = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),)
     clip.lens_encoders = value
     self.assertTupleEqual(clip.lens_encoders, value)
+    
+    value = (camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3),)
+    clip.lens_raw_encoders = value
+    self.assertTupleEqual(clip.lens_raw_encoders, value)
 
   def test_lens_encoders_from_dict(self):
     r = camdkit.model.LensEncoders.from_json({
-      "focus": 0.5,
-      "iris": 0.5,
-      "zoom": 0.5,
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3,
     })
-    self.assertEqual(r,camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5))
+    self.assertEqual(r,camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
+    r = camdkit.model.LensRawEncoders.from_json({
+      "focus": 1,
+      "iris": 2,
+      "zoom": 3,
+    })
+    self.assertEqual(r,camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3))
     
   def test_lens_encoders_to_dict(self):
     j = camdkit.model.LensEncoders.to_json(camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5))
@@ -722,6 +754,12 @@ class ModelTest(unittest.TestCase):
       "focus": 0.5,
       "iris": 0.5,
       "zoom": 0.5,
+    })
+    j = camdkit.model.LensRawEncoders.to_json(camdkit.framework.RawEncoders(focus=5, iris=5, zoom=5))
+    self.assertDictEqual(j, {
+      "focus": 5,
+      "iris": 5,
+      "zoom": 5,
     })
 
   def test_lens_fov_scale(self):
