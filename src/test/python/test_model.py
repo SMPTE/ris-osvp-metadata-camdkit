@@ -28,6 +28,7 @@ class ModelTest(unittest.TestCase):
 
     # Static parameters
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=36000, height=24000)
+    clip.active_sensor_resolution = camdkit.model.Dimensions(width=3840, height=2160)
     clip.anamorphic_squeeze = 120
     clip.capture_fps = Fraction(24000, 1001)
     clip.duration = 3
@@ -120,6 +121,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["duration"], {"num": 3, "denom": 1})
     self.assertEqual(d["cameraCaptureRate"], {"num": 24000, "denom": 1001})
     self.assertDictEqual(d["cameraActiveSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
+    self.assertDictEqual(d["cameraActiveSensorResolution"], {"height": 2160, "width": 3840})
     self.assertEqual(d["cameraMake"], "Bob")
     self.assertEqual(d["cameraModel"], "Hello")
     self.assertEqual(d["cameraSerialNumber"], "132456")
@@ -225,6 +227,17 @@ class ModelTest(unittest.TestCase):
     clip.active_sensor_physical_dimensions = dims
 
     self.assertEqual(clip.active_sensor_physical_dimensions, dims)
+
+  def test_active_sensor_resolution(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.active_sensor_resolution)
+
+    dims = camdkit.model.Dimensions(4, 5)
+
+    clip.active_sensor_resolution = dims
+
+    self.assertEqual(clip.active_sensor_resolution, dims)
 
   def test_lens_serial_number(self):
     clip = camdkit.model.Clip()

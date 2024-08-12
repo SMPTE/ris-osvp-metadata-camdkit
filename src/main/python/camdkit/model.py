@@ -28,6 +28,14 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
       "height": round(value.height / 1000.0, 3),
       "width": round(value.width / 1000.0, 3)
     }
+  
+class ActiveSensorResolution(IntegerDimensionsParameter):
+  "Photosite resolution of the active area of the camera sensor"
+
+  canonical_name = "activeSensorResolution"
+  sampling = Sampling.STATIC
+  units = "pixels"
+  section = "camera"
 
 class Duration(StrictlyPositiveRationalParameter):
   """Duration of the clip"""
@@ -1200,6 +1208,7 @@ class Clip(ParameterContainer):
   """
   # Static parameters
   active_sensor_physical_dimensions: typing.Optional[Dimensions] = ActiveSensorPhysicalDimensions()
+  active_sensor_resolution: typing.Optional[Dimensions] = ActiveSensorResolution()
   anamorphic_squeeze: typing.Optional[numbers.Rational] = AnamorphicSqueeze()
   camera_make: typing.Optional[str] = CameraMake()
   camera_model: typing.Optional[str] = CameraModel()

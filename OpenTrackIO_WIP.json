@@ -136,6 +136,10 @@ RAW
     "height": 24000,
     "width": 36000
   },
+  "cameraActiveSensorResolution": {
+    "height": 2160,
+    "width": 3840
+  },
   "cameraAnamorphicSqueeze": 1,
   "cameraId": "A",
   "deviceFirmwareVersion": "3289",
@@ -156,6 +160,10 @@ PRETTY
     "activeSensorPhysicalDimensions": {
       "height": 24.0,
       "width": 36.0
+    },
+    "activeSensorResolution": {
+      "height": 2160,
+      "width": 3840
     },
     "anamorphicSqueeze": 1,
     "id": "A"

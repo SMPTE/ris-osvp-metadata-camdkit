@@ -26,6 +26,7 @@ def main():
   clip.device_make = "Mo-Sys"
   clip.device_serial_number = "1234567890A"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
+  clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
 
   clip_json = clip.validate()
