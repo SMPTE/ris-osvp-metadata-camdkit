@@ -136,4 +136,5 @@ if __name__ == "__main__":
   generate_documentation(sys.stdout, clip_doc, _CLIP_INTRODUCTION)
   generate_clip_reader_coverage(sys.stdout, clip_doc)
   generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(), "Clip")
-  generate_schema(sys.stdout, camdkit.model.Clip.make_static_json_schema(), "Frame")
+  generate_schema(sys.stdout, camdkit.model.Clip.make_opentrackio_static_schema(), "OpenTrackIO Static")
+  generate_schema(sys.stdout, camdkit.model.Clip.make_opentrackio_dynamic_schema(), "OpenTrackIO Dynamic")

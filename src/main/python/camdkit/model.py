@@ -1297,8 +1297,8 @@ class Clip(ParameterContainer):
     return clip
   
   @classmethod
-  def make_static_json_schema(cls) -> dict:
-    "Helper to create a static json schema representation of a single frame"
+  def make_opentrackio_dynamic_schema(cls) -> dict:
+    "Helper to create a schema for a single dynamic frame of OpenTrackIO"
     # Remove all the existing STATIC parameters and make the REGULAR parameters STATIC
     for prop, desc in cls._params.copy().items():
       if desc.sampling == Sampling.STATIC:
@@ -1307,3 +1307,12 @@ class Clip(ParameterContainer):
       desc.sampling = Sampling.STATIC
     return super().make_json_schema()
   
+  @classmethod
+  def make_opentrackio_static_schema(cls) -> dict:
+    "Helper to create a schema for a single static frame of OpenTrackIO"
+    # Remove all the existing REGULAR parameters
+    for prop, desc in cls._params.copy().items():
+      if desc.sampling == Sampling.REGULAR:
+        del cls._params[prop]
+        continue
+    return super().make_json_schema()

@@ -738,21 +738,14 @@ class ParameterContainer:
     for _, desc in cls._params.items():
       description = desc.__doc__.replace("\n ", "")
       # Handle sections
+      key = desc.canonical_name
       if hasattr(desc, "section"):
-        if desc.section not in schema["properties"]:
-          schema["properties"][desc.section] = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {}
-          }
-        # Assumes STATIC sampling
-        schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
-        schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
-      elif desc.sampling is Sampling.STATIC:
-        schema["properties"][desc.canonical_name] = desc.make_json_schema()
-        schema["properties"][desc.canonical_name]["description"] = description
+        key = f"{desc.section}{key[0].upper()}{key[1:]}"
+      if desc.sampling is Sampling.STATIC:
+        schema["properties"][key] = desc.make_json_schema()
+        schema["properties"][key]["description"] = description
       elif desc.sampling is Sampling.REGULAR:
-        schema["properties"][desc.canonical_name] = {
+        schema["properties"][key] = {
           "type": "array",
           "items": desc.make_json_schema(),
           "description": description
