@@ -14,7 +14,8 @@ from camdkit.model import *
 
 def main():
   clip = Clip()
-  clip.packet_id = (uuid.uuid4().urn,)
+  clip.sample_id = (uuid.uuid4().urn,)
+  clip.sample_type = ("static",)
   clip.protocol = ("OpenTrackIO_0.1.0",)
   clip.camera_id = "A"
   clip.lens_make = "Canon"

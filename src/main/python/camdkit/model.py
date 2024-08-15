@@ -15,7 +15,7 @@ from camdkit.framework import *
 PRETTY_FLOAT_DP = 5
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
-  "Height and width of the active area of the camera sensor"
+  "Height and width of the active area of the camera sensor in microns"
 
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
@@ -30,7 +30,7 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
     }
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
-  "Photosite resolution of the active area of the camera sensor"
+  "Photosite resolution of the active area of the camera sensor in pixels"
 
   canonical_name = "activeSensorResolution"
   sampling = Sampling.STATIC
@@ -506,7 +506,7 @@ class TimingSynchronization(Parameter):
     """
     if not isinstance(value, Synchronization):
       return False
-    if not (isinstance(value.frequency, float) and value.frequency > 0.0):
+    if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
       return False
     if not isinstance(value.locked, bool):
       return False
@@ -532,6 +532,7 @@ class TimingSynchronization(Parameter):
   def to_json(value: typing.Any) -> typing.Any:
     d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
     d["source"] = str(d["source"])
+    d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
     return d
 
   @staticmethod
@@ -539,6 +540,7 @@ class TimingSynchronization(Parameter):
     sync = Synchronization(**value)
     sync.source = SynchronizationSourceEnum(sync.source)
     sync.offsets = SynchronizationOffsets(**value["offsets"])
+    sync.frequency = Fraction(value["frequency"]["num"], value["frequency"]["denom"])
     return sync
 
   @staticmethod
@@ -547,7 +549,23 @@ class TimingSynchronization(Parameter):
       "type": "object",
       "additionalProperties": False,
       "properties": {
-        "frequency": { "type": "number", "minimum": 0.0 },
+        "frequency": {
+          "type": "object",
+          "additionalProperties": False,
+          "required": [ "num", "denom" ],
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": UINT_MAX
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": UINT_MAX
+            }
+          }
+        },
         "locked": { "type": "boolean" },
         "offsets": {
           "type": "object",
@@ -736,7 +754,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
   section = "timing"
   units = None
 
-class TimingFrameRate(NonNegativeRealParameter):
+class TimingFrameRate(StrictlyPositiveRationalParameter):
   """
   TODO doc
   """
@@ -771,30 +789,39 @@ class TimingTimecode(Parameter):
       return False
     if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds < 60):
       return False
-    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < TimecodeFormat.to_int(value.format)):
+    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < value.format.to_int()):
       return False
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     d = dataclasses.asdict(value)
-    d["format"] = str(d["format"])
+    d["format"] = {
+      "frameRate": {
+        "num": d["format"].frame_rate.numerator,
+        "denom": d["format"].frame_rate.denominator
+      },
+      "dropFrame": d["format"].drop_frame
+    }
     return d
 
   @staticmethod
   def to_pretty_json(value: typing.Any) -> typing.Any:
-    return f"{value.hours:>02}:{value.minutes:>02}:{value.seconds:>02}:{value.frames:>02}"
+    return str(value)
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
-                    TimecodeFormat.from_string(value["format"]))
+                    TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
+                                                          value["format"]["frameRate"]["denom"]),
+                                   in_drop_frame=value["format"]["dropFrame"]))
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
       "type": "object",
       "additionalProperties": False,
+      "required": [ "hours", "minutes", "seconds", "frames", "format" ],
       "properties": {
         "hours": {
           "type": "integer",
@@ -817,8 +844,31 @@ class TimingTimecode(Parameter):
           "maximum": 29
         },
         "format": {
-          "type": "string",
-          "enum": ["24", "24D", "25", "30", "30D"]
+          "type": "object",
+          "required": [ "frameRate", "dropFrame" ],
+          "additionalProperties": False,
+          "properties": {
+            "frameRate": {
+              "type": "object",
+              "additionalProperties": False,
+              "required": [ "num", "denom" ],
+              "properties": {
+                "num": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": UINT_MAX
+                },
+                "denom": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": UINT_MAX
+                }
+              }
+            },
+            "dropFrame": {
+              "type": "boolean"
+            }
+          }
         }
       }
     }

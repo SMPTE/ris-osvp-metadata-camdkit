@@ -4,7 +4,6 @@ import json
 import camdkit.model
 import camdkit.red.reader
 import camdkit.arri.reader
-import camdkit.trackerkit
 import camdkit.venice.reader
 import camdkit.canon.reader
 import camdkit.mosys.reader

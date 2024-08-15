@@ -34,16 +34,16 @@ class Orientations:
 @dataclasses.dataclass
 class Vector3:
   "3 doubles x,y,z to encode - for example - a location or a translation."
-  x: typing.Optional[numbers.Real] = 0.0
-  y: typing.Optional[numbers.Real] = 0.0
-  z: typing.Optional[numbers.Real] = 0.0
+  x: typing.Optional[numbers.Real]
+  y: typing.Optional[numbers.Real]
+  z: typing.Optional[numbers.Real]
 
 @dataclasses.dataclass
 class Rotator3:
   "3 doubles pan, tilt, roll to encode - for example - a camera rotation."
-  pan: typing.Optional[numbers.Real] = 0.0
-  tilt: typing.Optional[numbers.Real] = 0.0
-  roll: typing.Optional[numbers.Real] = 0.0
+  pan: typing.Optional[numbers.Real]
+  tilt: typing.Optional[numbers.Real]
+  roll: typing.Optional[numbers.Real]
 
 @dataclasses.dataclass
 class Transform:
@@ -149,32 +149,32 @@ class TimingModeEnum(BaseEnum):
   INTERNAL = "internal"
   EXTERNAL = "external"
 
-class TimecodeFormat(BaseEnum):
-  TC_24  = "24"
-  TC_24D = "24D"
-  TC_25  = "25"
-  TC_30  = "30"
-  TC_30D = "30D"
+class TimecodeFormat():
+  "The timecode format is defined as a rational frame rate and drop frame flag"
+  frame_rate: numbers.Rational
+  drop_frame: bool = False
 
-  @classmethod
-  def to_int(cls, value):
-    if value == cls.TC_24 or value == cls.TC_24D: return 24
-    if value == cls.TC_25: return 25
-    if value == cls.TC_30 or value == cls.TC_30D: return 30
-    raise ValueError
+  def __init__(self, in_frame_rate: numbers.Rational, in_drop_frame: bool = False):
+    # Constructor for convenience
+    if in_frame_rate <= 0:
+      raise ValueError
+    self.frame_rate = in_frame_rate
+    self.drop_frame = in_drop_frame
+
+  def to_int(self):
+    return self.frame_rate.__ceil__()
   
-  @classmethod
-  def to_float(cls, value):
-    if value == cls.TC_24: return 24.0
-    if value == cls.TC_24D: return 23.976
-    if value == cls.TC_25: return 25.0
-    if value == cls.TC_30: return 30
-    if value == cls.TC_30D: return 29.97
-    raise ValueError
+  def __str__(self):
+    return f"{str(self.frame_rate)}{'D' if self.drop_frame else ''}"
   
-  @staticmethod
-  def from_string(value):
-    return TimecodeFormat(value)
+  def __eq__(self, other):
+      if isinstance(other, self.__class__):
+          return self.__dict__ == other.__dict__
+      else:
+          return False
+
+  def __ne__(self, other):
+      return not self.__eq__(other)
 
 @dataclasses.dataclass
 class Timecode:
@@ -185,10 +185,13 @@ class Timecode:
   frames: int
   format: TimecodeFormat
 
+  def __str__(self):
+    return f"{self.hours:>02}:{self.minutes:>02}:{self.seconds:>02}:{self.frames:>02}"
+
 @dataclasses.dataclass
 class Synchronization:
   "Data structure for synchronisation data"
-  frequency: float
+  frequency: numbers.Rational
   locked: bool
   source: SynchronizationSourceEnum
   offsets: typing.Optional[SynchronizationOffsets] = None
@@ -403,12 +406,12 @@ class StrictlyPositiveRationalParameter(Parameter):
       "properties": {
         "num" : {
           "type": "integer",
-          "min": 0,
+          "minimum": 0,
           "maximum": INT_MAX
         },
         "denom" : {
           "type": "integer",
-          "min": 1,
+          "minimum": 1,
           "maximum": UINT_MAX
         }
       },
@@ -635,6 +638,9 @@ class ParameterContainer:
       if not hasattr(desc, "sampling") or not isinstance(desc.sampling, Sampling):
         raise TypeError("A Parameter must have a sampling parameter")
 
+      if not hasattr(desc, "units") or not (desc.units is None or isinstance(desc.units, str)):
+        raise TypeError("A Parameter must have a units parameter")
+      
       cls._params[f] = desc
 
       def _gen_getter(f):

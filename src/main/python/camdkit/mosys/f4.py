@@ -69,11 +69,11 @@ class F4AxisBlock:
   def to_timecode(self) -> Timecode:
      match ((self.axis_status >> 5) & 0b11):
        case 0b00:
-         format = TimecodeFormat.TC_24
+         format = TimecodeFormat(24)
        case 0b01:
-         format = TimecodeFormat.TC_25
+         format = TimecodeFormat(25)
        case 0b10:
-         format = TimecodeFormat.TC_30
+         format = TimecodeFormat(30)
 
      hours = (self.data_bits1 >> 2) % 24
      minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)
@@ -189,8 +189,8 @@ class F4PacketParser:
     # Populates a Clip with a single frame of data of each parameter
     frame = Clip()
     if self._initialised:
-      translation = Vector3()
-      rotation = Rotator3()
+      translation = Vector3(0,0,0)
+      rotation = Rotator3(0,0,0)
       focus = iris = zoom = frequency = None
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = ("OpenTrackIO_0.1.0",)
@@ -253,7 +253,7 @@ class F4PacketParser:
             pass
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
-            frame_rate = TimecodeFormat.to_float(frame.timing_timecode[0].format)
+            frame_rate = frame.timing_timecode[0].format.frame_rate
             frame.timing_frame_rate = (frame_rate,)
             frequency = frame_rate
             pass

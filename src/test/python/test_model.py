@@ -24,6 +24,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.duration, 3)
 
   def test_serialize(self):
+    self.maxDiff = None # Make sure we log large diffs here
     clip = camdkit.model.Clip()
 
     # Static parameters
@@ -73,13 +74,13 @@ class ModelTest(unittest.TestCase):
     clip.timing_recorded_timestamp = (camdkit.framework.Timestamp(1718806000, 0),
                                       camdkit.framework.Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
-    clip.timing_frame_rate = (23.976,23.976)
-    clip.timing_timecode = (camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24D),
-                            camdkit.framework.Timecode(1,2,3,5,camdkit.framework.TimecodeFormat.TC_24D))
+    clip.timing_frame_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
+    clip.timing_timecode = (camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24)),
+                            camdkit.framework.Timecode(1,2,3,5,camdkit.framework.TimecodeFormat(24)))
     sync = camdkit.framework.Synchronization(
       present=True,
       locked=True,
-      frequency=23.976,
+      frequency=Fraction(24000, 1001),
       source=camdkit.framework.SynchronizationSourceEnum.PTP,
       ptp_offset=0.0,
       ptp_domain=1,
@@ -166,10 +167,10 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timingRecordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
                                                          { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timingSequenceNumber"], (0, 1))
-    self.assertTupleEqual(d["timingFrameRate"], (23.976, 23.976))
-    self.assertTupleEqual(d["timingTimecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": "24D" },
-                                                { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": "24D" }))
-    sync_dict = { "present":True,"locked":True,"frequency":23.976,"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
+    self.assertTupleEqual(d["timingFrameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
+    self.assertTupleEqual(d["timingTimecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } },
+                                                { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } }))
+    sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
     self.assertTupleEqual(d["timingSynchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
@@ -512,7 +513,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_frame_rate = -1.0
 
-    value = (24.0,)
+    value = (Fraction(24000, 1001),)
     clip.timing_frame_rate = value
     self.assertEqual(clip.timing_frame_rate, value)
 
@@ -540,7 +541,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_timecode = {1,2,3,24,"24"}
 
-    value = camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24)
+    value = camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))
     clip.timing_timecode = (value,)
     self.assertEqual(clip.timing_timecode, (value,))
 
@@ -642,17 +643,15 @@ class ModelTest(unittest.TestCase):
     self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,0,281474976710655)))
 
   def test_timecode_format(self):
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat.TC_24), 24)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat.TC_24D), 24)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat.TC_25), 25)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat.TC_30), 30)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat.TC_30D), 30)
+    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(24)), 24)
+    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(24, True)), 24)
+    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(25)), 25)
+    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(30)), 30)
+    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(30, True)), 30)
     with self.assertRaises(TypeError):
-      camdkit.framework.TimecodeFormat.to_int()
+      camdkit.framework.TimecodeFormat()
     with self.assertRaises(ValueError):
-      camdkit.framework.TimecodeFormat.to_int(0)
-    with self.assertRaises(ValueError):
-      camdkit.framework.TimecodeFormat.to_int(24)
+      camdkit.framework.TimecodeFormat(0).to_int()
 
   def test_timecode_formats(self):
     with self.assertRaises(TypeError):
@@ -661,22 +660,23 @@ class ModelTest(unittest.TestCase):
       camdkit.framework.Timecode(1,2,3)
     with self.assertRaises(TypeError):
       camdkit.framework.Timecode(0,0,0,0)
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,0)))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(23,59,59,23,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(-1,2,3,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(24,2,3,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,-1,3,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,60,3,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,-1,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,60,4,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,-1,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat.TC_24)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat.TC_24D)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,25,camdkit.framework.TimecodeFormat.TC_25)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat.TC_30)))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat.TC_30D)))
+    with self.assertRaises(ValueError):
+      camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat(0))
+    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat(24))))
+    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(23,59,59,23,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(-1,2,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(24,2,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,-1,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,60,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,-1,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,60,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,-1,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat(24))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat(24, True))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,25,camdkit.framework.TimecodeFormat(25))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat(30))))
+    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat(30, True))))
 
   def test_timecode_from_dict(self):
     r = camdkit.model.TimingTimecode.from_json({
@@ -684,18 +684,30 @@ class ModelTest(unittest.TestCase):
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": camdkit.framework.TimecodeFormat.TC_24
+      "format": {
+        "frameRate": {
+          "num": 24,
+          "denom": 1
+        },
+        "dropFrame": False
+      }
     })
-    self.assertEqual(r, camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24))
+    self.assertEqual(str(r), str(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))))
 
   def test_timecode_to_dict(self):
-    j = camdkit.model.TimingTimecode.to_json(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat.TC_24))
+    j = camdkit.model.TimingTimecode.to_json(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24)))
     self.assertDictEqual(j, {
       "hours": 1,
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": str(camdkit.framework.TimecodeFormat.TC_24)
+      "format": {
+        "frameRate": {
+          "num": 24,
+          "denom": 1
+        },
+        "dropFrame": False
+      }
     })
 
   def test_lens_encoders_limits(self):
@@ -970,12 +982,12 @@ class ModelTest(unittest.TestCase):
     clip = camdkit.model.Clip()
     self.assertIsNone(clip.timing_synchronization)
       
-    value = (camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25.0),)
+    value = (camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25),)
     clip.timing_synchronization = value
     self.assertTupleEqual(clip.timing_synchronization, value)
 
   def test_synchronization_mac(self):
-    sync = camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25.0)
+    sync = camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25)
     clip = camdkit.model.Clip()
     with self.assertRaises(ValueError):
       sync.ptp_master = ""

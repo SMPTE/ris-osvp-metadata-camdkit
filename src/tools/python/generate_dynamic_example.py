@@ -14,7 +14,8 @@ from camdkit.model import *
 
 def main():
   clip = Clip()
-  clip.packet_id = (uuid.uuid4().urn,)
+  clip.sample_id = (uuid.uuid4().urn,)
+  clip.sample_type = ("static",)
   clip.protocol = ("OpenTrackIO_0.1.0",)
   clip.related_packets = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
@@ -28,12 +29,12 @@ def main():
   clip.timing_sample_timestamp = (Timestamp(1718806554, 0, 0),)
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),)
   clip.timing_sequence_number = (0,)
-  clip.timing_frame_rate = (23.976,)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat.TC_24D),)
+  clip.timing_frame_rate = (Fraction(24000, 1001),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
   clip.timing_synchronization = (Synchronization(
     present=True,
     locked=True,
-    frequency=23.976,
+    frequency=Fraction(24000, 1001),
     source=SynchronizationSourceEnum.PTP,
     ptp_offset=0.0,
     ptp_domain=1,
