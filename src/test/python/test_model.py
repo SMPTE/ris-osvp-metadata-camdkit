@@ -52,7 +52,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_nominal_focal_length = 24
     clip.shutter_angle = 180
     # Regular parameters
-    clip.packet_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
     clip.protocol = ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0")
 
@@ -60,7 +60,7 @@ class ModelTest(unittest.TestCase):
     clip.device_recording = (False,True)
     clip.device_slate = ("A101_A_4","A101_A_5")
     clip.device_notes = ("Test serialize.","Test serialize.")
-    clip.related_packets = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    clip.related_samples = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
                             ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
@@ -145,10 +145,10 @@ class ModelTest(unittest.TestCase):
 
     # Regular parameters
 
-    self.assertTupleEqual(d["packetId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
     self.assertTupleEqual(d["protocol"], ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0"))
-    self.assertTupleEqual(d["relatedPackets"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
                                                 ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
@@ -405,27 +405,43 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
 
-  def test_packet_id(self):
+  def test_sample_id(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.packet_id)
+    self.assertIsNone(clip.sample_id)
 
     with self.assertRaises(ValueError):
-      clip.packet_id = ""
+      clip.sample_id = ""
     with self.assertRaises(ValueError):
-      clip.packet_id = ("",)
+      clip.sample_id = ("",)
     with self.assertRaises(ValueError):
-      clip.packet_id = ("a",)
+      clip.sample_id = ("a",)
     with self.assertRaises(ValueError):
-      clip.packet_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      clip.sample_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     with self.assertRaises(ValueError):
-      clip.packet_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+      clip.sample_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
     with self.assertRaises(ValueError):
-      clip.fdl_link = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
+      clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
 
     value = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
-    clip.packet_id = value
-    self.assertEqual(clip.packet_id, value)
+    clip.sample_id = value
+    self.assertEqual(clip.sample_id, value)
+
+  def test_sample_type(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.sample_type)
+
+    with self.assertRaises(ValueError):
+      clip.sample_type = ""
+    with self.assertRaises(ValueError):
+      clip.sample_type = ("",)
+    with self.assertRaises(ValueError):
+      clip.sample_type = ("a",)
+
+    value = ("static",)
+    clip.sample_type = value
+    self.assertEqual(clip.sample_type, value)
 
   def test_protocol(self):
     clip = camdkit.model.Clip()
@@ -446,7 +462,7 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.device_recording)
     self.assertIsNone(clip.device_slate)
     self.assertIsNone(clip.device_notes)
-    self.assertIsNone(clip.related_packets)
+    self.assertIsNone(clip.related_samples)
     self.assertIsNone(clip.global_stage)
 
     with self.assertRaises(ValueError):
@@ -460,7 +476,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.device_notes = ""
     with self.assertRaises(ValueError):
-      clip.related_packets = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+      clip.related_samples = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     with self.assertRaises(ValueError):
       clip.global_stage = camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
@@ -485,8 +501,8 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.device_notes, value)
     value = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
-    clip.related_packets = value
-    self.assertTupleEqual(clip.related_packets, value)
+    clip.related_samples = value
+    self.assertTupleEqual(clip.related_samples, value)
     value = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
     clip.global_stage = value
     self.assertTupleEqual(clip.global_stage, value)

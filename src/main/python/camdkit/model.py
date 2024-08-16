@@ -225,15 +225,22 @@ class ShutterAngle(Parameter):
       "maximum": 360000
     }
 
-class PacketId(UUIDURNParameter):
-  """Unique identifier of the packet in which data is being transported."""
+class SampleId(UUIDURNParameter):
+  """Unique identifier of the sample in which data is being transported."""
 
-  canonical_name = "packetId"
+  canonical_name = "sampleId"
   sampling = Sampling.REGULAR
   units = None
-  
+
+class SampleType(EnumParameter):
+  """ Either 'static' or 'dynamic' sample type."""
+
+  canonical_name = "sampleType"
+  sampling = Sampling.REGULAR
+  units = None
+
 class Protocol(StringParameter):
-  """Unique identifier of the packet in which data is being traansported."""
+  """Free string that describes the version of the protocol that this sample employs."""
 
   canonical_name = "protocol"
   sampling = Sampling.REGULAR
@@ -271,13 +278,13 @@ class Notes(StringParameter):
   units = None
   section = "device"
 
-class RelatedPackets(ArrayParameter):
+class RelatedSamples(ArrayParameter):
   """
-  List of packet unique IDs that are related to this packet. E.g. a related performance capture packet
-  or a packet of static data from the same device.
+  List of sample unique IDs that are related to this sample. E.g. a related performance capture sample
+  or a sample of static data from the same device. The existence of the related sample should not be relied upon.
   """
 
-  canonical_name = "relatedPackets"
+  canonical_name = "relatedSamples"
   sampling = Sampling.REGULAR
   units = None
   item_class = UUIDURNParameter
@@ -331,6 +338,8 @@ class GlobalStagePosition(Parameter):
 
 class Transforms(Parameter):
   """
+  A list of transforms.
+  Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array.
   X,Y,Z in metres of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are zero).
@@ -1300,9 +1309,10 @@ class Clip(ParameterContainer):
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
-  packet_id: typing.Optional[typing.Tuple[str]] = PacketId()
   protocol: typing.Optional[typing.Tuple[str]] = Protocol()
-  related_packets: typing.Optional[typing.Tuple[tuple]] = RelatedPackets()
+  related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
+  sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
+  sample_type: typing.Optional[typing.Tuple[str]] = SampleType()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()

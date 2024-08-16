@@ -120,6 +120,9 @@ class BaseEnum(Enum):
   def __str__(self):
     return self.value
 
+class SampleTypeEnum(BaseEnum):
+  STATIC = "static"
+  DYNAMIC = "dynamic"
 
 class SynchronizationSourceEnum(BaseEnum):
   GENLOCK = "genlock"
@@ -787,7 +790,7 @@ class ParameterContainer:
   
   def __next__(self):
     self.i += 1
-    if self.packet_id == None or self.i >= len(self.packet_id):
+    if self.sample_id == None or self.i >= len(self.sample_id):
       self._set_regular()
       raise StopIteration
     return self[self.i]
