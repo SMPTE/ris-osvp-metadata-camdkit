@@ -1,0 +1,67 @@
+{
+  "device": {
+    "recording": true,
+    "status": "Optical Good"
+  },
+  "lens": {
+    "centreShift": {
+      "cx": -7.78359,
+      "cy": 6.89614
+    },
+    "distortion": {
+      "radial": [
+        0.15681,
+        -0.08816
+      ]
+    },
+    "encoders": {
+      "focus": 0.76433,
+      "zoom": 0.00142
+    },
+    "entrancePupilDistance": 149.905,
+    "focalLength": 22.349,
+    "focusPosition": 2313
+  },
+  "protocol": "OpenTrackIO_0.1.0",
+  "sampleId": "urn:uuid:095c9928-138a-4b25-bbac-06a8b13685d2",
+  "sampleType": "dynamic",
+  "timing": {
+    "frameRate": {
+      "num": 25,
+      "denom": 1
+    },
+    "mode": "internal",
+    "sequenceNumber": 7,
+    "synchronization": {
+      "frequency": {
+        "num": 25,
+        "denom": 1
+      },
+      "locked": true,
+      "source": "genlock",
+      "present": true
+    },
+    "timecode": {
+        "format": "23.98",					
+        "hours": 15,							
+        "minutes": 3,
+        "seconds": 47,
+        "frames": 2
+    }
+  },
+  "transforms": [
+    {
+      "translation": {
+        "x": -8.045,
+        "y": -185.355,
+        "z": 119.801
+      },
+      "rotation": {
+        "pan": -3.031,
+        "tilt": -28.072,
+        "roll": 3.096
+      },
+      "name": "Camera 0"
+    }
+  ]
+}

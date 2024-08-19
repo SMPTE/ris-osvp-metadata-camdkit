@@ -1,0 +1,121 @@
+{
+    "packetId": "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a65", 
+	"protocol": "OpenTrackIO_0.1.0",
+        "sampleType": "dynamic",        			
+	"metadata": {
+		"status": "tracking",
+		"recording": false,
+		"slate": "A101_A_4",
+		"notes": "Free string",					
+		"relatedPackets": [					    
+			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66", 
+			"urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a67"
+		]
+	},
+	"timing": {
+		"mode": "internal", 									
+		"timestamp": 1203120982.1423,										
+		"sequenceNumber": 12345,						
+		"frameRate": 29.976,					
+		"timecode": {							
+			"format": "23.98",					
+			"hours": 1,							
+			"minutes": 9,
+			"seconds": 55,
+			"frames": 12
+		},
+		"synchronization": {
+			"enabled": true,					
+			"frequency": 23.976,				
+			"locked": true,						
+			"source": "genlock",				
+			"ptpMaster": "00:12:23:34:45:56",	
+			"ptpOffset": 0.0,         			
+			"ptpDomain": 0,
+			"offsets": {						
+				"translation": 0.0,				
+				"rotation": 0.0,
+				"encoders": 0.0
+			}
+		}	
+	},
+	"transforms": [{
+		"name": "Dolly",
+		"translation": {
+			"x": 1.24500 						
+												
+		}
+	}, {
+		"name": "Crane Arm",
+		"parent": "Dolly",						
+		"translation": {
+			"x": 1.24500,
+			"y": 2.2300,
+			"z": 4.1200
+		},
+		"rotation": {
+			"pan": 223.1,
+			"tilt": 124.3,
+			"roll": 0.0
+		}
+	}, {
+		"name": "Camera",
+		"parent": "Crane Arm",
+		"translation": {
+			"x": 1.2450,
+			"y": 2.2300,
+			"z": 4.1200
+		},
+		"rotation": {
+			"pan": 223.3,
+			"tilt": 124.2,
+			"roll": 0.0
+		},
+		"perspectiveShift": {												
+			"Cx": 0.1,
+			"Cy": 0.2
+		}
+             }   
+	],
+	"lens": {
+		"focalLength": 24.003,
+		"fovScale": 1, 													
+		"sensorWidth": 23.76,				
+		"aspectRatio": [4, 3], 			    
+		"inverseFocalDistance": 0.1, 		
+		"aperture": 4.0,
+		"fStop": false,						
+		"entrancePupilDistance": 0.123,     
+		"exposureFalloff": {
+			"a1": 10.012,
+			"a2": 1.012,
+			"a3": 2.012
+		},
+		"encoders": {						
+			"focus": 0.234,					
+			"iris": 0.123,
+			"zoom": 0.456
+		},
+		"distortion": {
+			"radial": [
+				0.1,
+				-0.05,
+				0.001,
+				0.0001
+			],
+			"tangential": [
+				0.01,
+				-0.02
+			]
+		},
+		"centerShift": {
+			"cx": 0.1,
+			"cy": 0.2
+		},
+		"custom": [ 0.2, 0.3 ]																	
+	},
+	"virtualCamera": {
+		"pot1": 2435,
+		"button1": false
+	}
+}

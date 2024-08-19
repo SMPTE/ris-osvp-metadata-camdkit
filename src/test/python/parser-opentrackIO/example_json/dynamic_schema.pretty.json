@@ -1,0 +1,642 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "device": {
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Free string for notes about tracking"
+        },
+        "recording": {
+          "type": "boolean",
+          "description": "True if the system is recording data - e.g. tracking data"
+        },
+        "slate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Free string that describes the recording slate - e.g. 'A101_A_4'"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"
+        }
+    },
+    "global": {
+        "stage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "E",
+            "N",
+            "U",
+            "lat0",
+            "lon0",
+            "h0"
+          ],
+          "properties": {
+            "E": {
+              "type": "number"
+            },
+            "N": {
+              "type": "number"
+            },
+            "U": {
+              "type": "number"
+            },
+            "lat0": {
+              "type": "number"
+            },
+            "lon0": {
+              "type": "number"
+            },
+            "h0": {
+              "type": "number"
+            }
+          },
+          "description": " Position of stage origin in global ENU and geodetic coordinates (E, N, U, lat0, lon0, h0). Note this may be dynamic e.g. if the stage is inside a moving vehicle. "
+        }
+    },
+    "lens": {
+        "centreShift": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cx",
+            "cy"
+          ],
+          "properties": {
+            "cx": {
+              "type": "number"
+            },
+            "cy": {
+              "type": "number"
+            }
+          },
+          "description": "Shift in x and y of the centre of distortion of the virtual camera"
+        },
+        "custom": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": " Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model e.g. undistortion, anamorphic etc "
+        },
+        "distortion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "radial"
+          ],
+          "properties": {
+            "radial": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minLength": 1
+            },
+            "tangential": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minLength": 1
+            }
+          },
+          "description": " Coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
+        },
+        "encoders": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "focus": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "iris": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "zoom": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "focus"
+              ]
+            },
+            {
+              "required": [
+                "iris"
+              ]
+            },
+            {
+              "required": [
+                "zoom"
+              ]
+            }
+          ],
+          "description": " Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent of encoder resolution, mininum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that demark the 0 and 1 range.\" "
+        },
+        "entrancePupilDistance": {
+          "type": "object",
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "num",
+            "denom"
+          ],
+          "additionalProperties": false,
+          "description": "Position of the entrance pupil relative to the nominal imaging plane (positive if the entrance pupil is located on the side of the nominal imaging plane that is towards the object, and negative otherwise)"
+        },
+        "exposureFalloff": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "a1"
+          ],
+          "properties": {
+            "a1": {
+              "type": "number"
+            },
+            "a2": {
+              "type": "number"
+            },
+            "a3": {
+              "type": "number"
+            }
+          },
+          "description": "Coefficients for calculating the exposure fall-off (vignetting) of a lens"
+        },
+        "fStop": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "The linear f-number of the lens, equal to the focal length divided by the diameter of the entrance pupil."
+        },
+        "focalLength": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Focal length of the lens."
+        },
+        "focusPosition": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "Focus distance/position of the lens"
+        },
+        "fovScale": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "horizontal",
+            "vertical"
+          ],
+          "properties": {
+            "horizontal": {
+              "type": "number",
+              "minimum": 0.0
+            },
+            "vertical": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          },
+          "description": "Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"
+        },
+        "perspectiveShift": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Cx",
+            "Cy"
+          ],
+          "properties": {
+            "Cx": {
+              "type": "number"
+            },
+            "Cy": {
+              "type": "number"
+            }
+          },
+          "description": "Shift in x and y of the centre of projection of the virtual camera"
+        },
+        "rawEncoders": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "focus": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "iris": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "zoom": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "focus"
+              ]
+            },
+            {
+              "required": [
+                "iris"
+              ]
+            },
+            {
+              "required": [
+                "zoom"
+              ]
+            }
+          ],
+          "description": " Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any homing / ranging has taken place. "
+        },
+        "tStop": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "The linear t-number of the lens, equal to the F-number of the lens divided by the square root of the transmittance of the lens."
+        },
+        "undistortion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "radial"
+          ],
+          "properties": {
+            "radial": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minLength": 1
+            },
+            "tangential": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minLength": 1
+            }
+          },
+          "description": " Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
+        }
+    },
+    "sample": {
+        "protocol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Free string that describes the version of the packet protocol that this sample employs."
+        },
+        "relatedSamples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          },
+          "description": " List of sample unique IDs that are related to this sample. E.g. a related performance capture sample or a sample of static data from the same device. The existence of the related sample should not be relied upon. "
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "Unique identifier of the sample in which data is being transported."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "static",
+            "dynamic"
+          ],
+          "description": " Either 'static' or 'dynamic' sample type."
+        }
+    },
+    "timing": {
+        "frameRate": {
+          "type": "object",
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "num",
+            "denom"
+          ],
+          "additionalProperties": false,
+          "description": " TODO doc "
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "internal",
+            "external"
+          ],
+          "description": " 'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data). 'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided. "
+        },
+        "recordedTimestamp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 281474976710655
+            },
+            "nanoseconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "attoseconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "seconds",
+            "nanoseconds"
+          ],
+          "description": " PTP timestamp at which the data was recorded. Provided for convenience during playback of e.g. pre-recorded tracking data. 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) "
+        },
+        "sampleTimestamp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 281474976710655
+            },
+            "nanoseconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "attoseconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "seconds",
+            "nanoseconds"
+          ],
+          "description": " PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) "
+        },
+        "sequenceNumber": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647,
+          "description": " TODO doc "
+        },
+        "synchronization": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "frequency": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "num",
+                "denom"
+              ],
+              "properties": {
+                "num": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "denom": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                }
+              }
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "offsets": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "translation": {
+                  "type": "number"
+                },
+                "rotation": {
+                  "type": "number"
+                },
+                "encoders": {
+                  "type": "number"
+                }
+              }
+            },
+            "present": {
+              "type": "boolean"
+            },
+            "ptp_master": {
+              "type": "string",
+              "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+            },
+            "ptp_offset": {
+              "type": "number"
+            },
+            "ptp_domain": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "genlock",
+                "videoIn",
+                "ptp",
+                "ntp"
+              ]
+            }
+          },
+          "required": [
+            "frequency",
+            "locked",
+            "source"
+          ],
+          "description": " TODO doc "
+        },
+        "timecode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hours",
+            "minutes",
+            "seconds",
+            "frames",
+            "format"
+          ],
+          "properties": {
+            "hours": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 23
+            },
+            "minutes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 59
+            },
+            "seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 59
+            },
+            "frames": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "format": {
+              "type": "object",
+              "required": [
+                "frameRate",
+                "dropFrame"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "frameRate": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "num",
+                    "denom"
+                  ],
+                  "properties": {
+                    "num": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4294967295
+                    },
+                    "denom": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4294967295
+                    }
+                  }
+                },
+                "dropFrame": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "description": " TODO doc "
+        }
+    },
+    "transforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "translation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "pan": {
+                "type": "number"
+              },
+              "tilt": {
+                "type": "number"
+              },
+              "roll": {
+                "type": "number"
+              }
+            }
+          },
+          "scale": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+          },
+          "parent": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+          }
+        },
+        "required": [
+          "translation",
+          "rotation"
+        ]
+      },
+      "description": " A list of transforms. Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in metres of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision "
+    }
+  }
+}
