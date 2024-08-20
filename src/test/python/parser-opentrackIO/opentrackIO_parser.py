@@ -3,8 +3,8 @@
 # opentrack_parser.py
 # Reference code for decoding opentrack messages
 # Steve Rosenbluth, RiS OSVP committee
-# test run: python3 opentrack_parser.py --schema=dynamic_schema.pretty.json --file=open_tracking_example-1.json
-# test run: python3 opentrack_parser.py --file=mosys_dynamic-output-example-2.json
+# test run: python3 opentrackIO_parser.py --schema=example_json/dynamic_schema.pretty.json --file=example_json/open_tracking_example-1.json
+# test run: python3 opentrackIO_parser.py --file=example_json/mosys_dynamic-output-example-2.json
 
 import json
 import argparse
