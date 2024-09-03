@@ -732,9 +732,13 @@ class ParameterContainer:
         # Assumes STATIC sampling
         schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
         schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
+        if desc.units:
+          schema["properties"][desc.section]["properties"][desc.canonical_name]["units"] = desc.units
       elif desc.sampling is Sampling.STATIC:
         schema["properties"][desc.canonical_name] = desc.make_json_schema()
         schema["properties"][desc.canonical_name]["description"] = description
+        if desc.units:
+          schema["properties"][desc.canonical_name]["units"] = desc.units
       elif desc.sampling is Sampling.REGULAR:
         schema["properties"][desc.canonical_name] = {
           "type": "array",
