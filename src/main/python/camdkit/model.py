@@ -12,8 +12,6 @@ from jsonschema import validate
 
 from camdkit.framework import *
 
-PRETTY_FLOAT_DP = 5
-
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor in microns"
 
@@ -21,13 +19,6 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   sampling = Sampling.STATIC
   units = "micron"
   section = "camera"
-
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return {
-      "height": round(value.height / 1000.0, 3),
-      "width": round(value.width / 1000.0, 3)
-    }
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
   "Photosite resolution of the active area of the camera sensor in pixels"
@@ -625,13 +616,6 @@ class LensEncoders(Parameter):
     return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
 
   @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensEncoders.to_json(value)
-    for k,v in d.items():
-      d[k] = round(v, PRETTY_FLOAT_DP)
-    return d
-  
-  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Encoders(**value)
 
@@ -688,13 +672,6 @@ class LensRawEncoders(Parameter):
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
-
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensRawEncoders.to_json(value)
-    for k,v in d.items():
-      d[k] = round(v, PRETTY_FLOAT_DP)
-    return d
   
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -815,10 +792,6 @@ class TimingTimecode(Parameter):
     return d
 
   @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return str(value)
-
-  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
@@ -890,10 +863,6 @@ class TStop(StrictlyPositiveIntegerParameter):
   sampling = Sampling.REGULAR
   units = "0.001 unit"
   section = "lens"
-  
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return f"T{round(value/1000.0, 1)}"
 
 class FStop(StrictlyPositiveIntegerParameter):
   """The linear f-number of the lens, equal to the focal length divided by the
@@ -903,10 +872,6 @@ class FStop(StrictlyPositiveIntegerParameter):
   sampling = Sampling.REGULAR
   units = "0.001 unit"
   section = "lens"
-
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return f"F{round(value/1000.0, 1)}"
 
 class NominalFocalLength(StrictlyPositiveIntegerParameter):
   """Nominal focal length of the lens. The number printed on the side of a prime
@@ -925,10 +890,6 @@ class FocalLength(NonNegativeRealParameter):
   units = "millimeter"
   section = "lens"
 
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return round(value, 3)
-
 class FocusPosition(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
@@ -946,10 +907,6 @@ class EntrancePupilDistance(RationalParameter):
   sampling = Sampling.REGULAR
   units = "millimeter"
   section = "lens"
-
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    return round(float(value), 3)
 
 class FoVScale(Parameter):
   """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
@@ -1032,13 +989,6 @@ class LensExposureFalloff(Parameter):
     return dataclasses.asdict(value)
 
   @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensExposureFalloff.to_json(value)
-    for k,v in d.items():
-      d[k] = round(d[k], PRETTY_FLOAT_DP)
-    return d
-  
-  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return ExposureFalloff(**value)
 
@@ -1097,14 +1047,6 @@ class LensDistortion(Parameter):
     d = dataclasses.asdict(value)
     if d["tangential"] == None:
       del d["tangential"]
-    return d
-  
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensDistortion.to_json(value)
-    d["radial"] = [round(x, PRETTY_FLOAT_DP) for x in d["radial"]]
-    if "tangential" in d:
-      d["tangential"] = [round(x, PRETTY_FLOAT_DP) for x in d["tangential"]]
     return d
 
   @staticmethod
@@ -1172,13 +1114,6 @@ class LensCentreShift(Parameter):
     return dataclasses.asdict(value)
 
   @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensCentreShift.to_json(value)
-    d["cx"] = round(d["cx"], PRETTY_FLOAT_DP)
-    d["cy"] = round(d["cy"], PRETTY_FLOAT_DP)
-    return d
-  
-  @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return CentreShift(**value)
 
@@ -1223,13 +1158,6 @@ class LensPerspectiveShift(Parameter):
   def to_json(value: typing.Any) -> typing.Any:
     return dataclasses.asdict(value)
 
-  @staticmethod
-  def to_pretty_json(value: typing.Any) -> typing.Any:
-    d = LensCentreShift.to_json(value)
-    d["Cx"] = round(d["Cx"], PRETTY_FLOAT_DP)
-    d["Cy"] = round(d["Cy"], PRETTY_FLOAT_DP)
-    return d
-  
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return PerspectiveShift(**value)
@@ -1329,11 +1257,6 @@ class Clip(ParameterContainer):
     schema = self.make_json_schema()
     validate(json, schema)
     return json
-
-  def prettify(self):
-    "Return a pretty version of the json with units and sections"
-    self._set_static()
-    return self[0].to_pretty_json()
 
   def append(self, clip):
     "Helper to add another clip's parameters to this clip's REGULAR data tuples"

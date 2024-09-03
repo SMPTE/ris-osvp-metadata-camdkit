@@ -214,10 +214,6 @@ class Parameter:
   def to_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
 
-  @classmethod
-  def to_pretty_json(cls, value: typing.Any) -> typing.Any:
-    return cls.to_json(value)
-
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     raise NotImplementedError
@@ -674,7 +670,7 @@ class ParameterContainer:
     cls._saved_init = cls.__init__
     cls.__init__ = _auto__call__init__
 
-  def to_pretty_json(self) -> dict:
+  def to_json(self) -> dict:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
@@ -684,49 +680,28 @@ class ParameterContainer:
           if desc.section not in obj:
             obj[desc.section] = {}
           if desc.sampling is Sampling.STATIC:
-            obj[desc.section][desc.canonical_name] = desc.to_pretty_json(value)
+            obj[desc.section][desc.canonical_name] = desc.to_json(value)
           elif desc.sampling is Sampling.REGULAR:
-            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_pretty_json, value))
+            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_json, value))
       elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
-        obj[desc.canonical_name] = desc.to_pretty_json(value)
+        obj[desc.canonical_name] = desc.to_json(value)
       elif desc.sampling is Sampling.REGULAR:
-        obj[desc.canonical_name] = tuple(map(desc.to_pretty_json, value))
-      else:
-        raise ValueError
-
-    return obj
-  
-  def to_json(self) -> dict:
-    obj = {}
-    for k, desc in self._params.items():
-      value = self._values[k]
-      field = desc.canonical_name
-      if hasattr(desc, "section"):
-        field = f"{desc.section}{field[0].upper()}{field[1:]}"
-      if value is None:
-        pass
-      elif desc.sampling is Sampling.STATIC:
-        obj[field] = desc.to_json(value)
-      elif desc.sampling is Sampling.REGULAR:
-        obj[field] = tuple(map(desc.to_json, value))
+        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
       else:
         raise ValueError
 
     return obj
 
-  def from_json(self, json_dict: dict):
+  def from_json(self, json_dict: dict, section: str=""):
     for json_key, json_value in json_dict.items():
       for prop, desc in self._params.items():
-        # Strip off and match the section
-        key = json_key
-        if hasattr(desc, "section") and desc.section != json_key:
-          section = json_key[:len(desc.section)]
-          if section != desc.section:
-            continue
-          key = f"{json_key[len(section)].lower()}{json_key[len(section)+1:]}"
-        if desc.canonical_name != key:
+        if hasattr(desc, "section") and desc.section == json_key:
+          self.from_json(json_dict[json_key], desc.section)
+        if desc.canonical_name != json_key:
+          continue
+        if hasattr(desc, "section") and desc.section != section:
           continue
         if desc.sampling is Sampling.STATIC:
           self._values[prop] = desc.from_json(json_value)
@@ -747,14 +722,21 @@ class ParameterContainer:
     for _, desc in cls._params.items():
       description = desc.__doc__.replace("\n ", "")
       # Handle sections
-      key = desc.canonical_name
       if hasattr(desc, "section"):
-        key = f"{desc.section}{key[0].upper()}{key[1:]}"
-      if desc.sampling is Sampling.STATIC:
-        schema["properties"][key] = desc.make_json_schema()
-        schema["properties"][key]["description"] = description
+        if desc.section not in schema["properties"]:
+          schema["properties"][desc.section] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {}
+          }
+        # Assumes STATIC sampling
+        schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
+      elif desc.sampling is Sampling.STATIC:
+        schema["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.canonical_name]["description"] = description
       elif desc.sampling is Sampling.REGULAR:
-        schema["properties"][key] = {
+        schema["properties"][desc.canonical_name] = {
           "type": "array",
           "items": desc.make_json_schema(),
           "description": description

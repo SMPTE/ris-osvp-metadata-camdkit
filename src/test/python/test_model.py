@@ -120,28 +120,28 @@ class ModelTest(unittest.TestCase):
 
     # Static parameters
     self.assertEqual(d["duration"], {"num": 3, "denom": 1})
-    self.assertEqual(d["cameraCaptureRate"], {"num": 24000, "denom": 1001})
-    self.assertDictEqual(d["cameraActiveSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
-    self.assertDictEqual(d["cameraActiveSensorResolution"], {"height": 2160, "width": 3840})
-    self.assertEqual(d["cameraMake"], "Bob")
-    self.assertEqual(d["cameraModel"], "Hello")
-    self.assertEqual(d["cameraSerialNumber"], "132456")
-    self.assertEqual(d["cameraFirmwareVersion"], "7.1")
-    self.assertEqual(d["cameraId"], "A")
-    self.assertEqual(d["lensMake"], "ABC")
-    self.assertEqual(d["lensModel"], "FGH")
-    self.assertEqual(d["lensSerialNumber"], "123456789")
-    self.assertEqual(d["lensFirmwareVersion"], "1-dev.1")
-    self.assertEqual(d["lensDistortionModel"], "OpenLensIO")
-    self.assertEqual(d["lensNominalFocalLength"], 24)
-    self.assertEqual(d["deviceMake"], "ABCD")
-    self.assertEqual(d["deviceModel"], "EFGH")
-    self.assertEqual(d["deviceSerialNumber"], "1234567890A")
-    self.assertEqual(d["deviceFirmwareVersion"], "1.0.1a")
-    self.assertEqual(d["cameraAnamorphicSqueeze"], 120)
-    self.assertEqual(d["cameraIsoSpeed"], 13)
-    self.assertEqual(d["cameraFdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-    self.assertEqual(d["cameraShutterAngle"], 180)
+    self.assertEqual(d["camera"]["captureRate"], {"num": 24000, "denom": 1001})
+    self.assertDictEqual(d["camera"]["activeSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
+    self.assertDictEqual(d["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
+    self.assertEqual(d["camera"]["make"], "Bob")
+    self.assertEqual(d["camera"]["model"], "Hello")
+    self.assertEqual(d["camera"]["serialNumber"], "132456")
+    self.assertEqual(d["camera"]["firmwareVersion"], "7.1")
+    self.assertEqual(d["camera"]["id"], "A")
+    self.assertEqual(d["lens"]["make"], "ABC")
+    self.assertEqual(d["lens"]["model"], "FGH")
+    self.assertEqual(d["lens"]["serialNumber"], "123456789")
+    self.assertEqual(d["lens"]["firmwareVersion"], "1-dev.1")
+    self.assertEqual(d["lens"]["distortionModel"], "OpenLensIO")
+    self.assertEqual(d["lens"]["nominalFocalLength"], 24)
+    self.assertEqual(d["device"]["make"], "ABCD")
+    self.assertEqual(d["device"]["model"], "EFGH")
+    self.assertEqual(d["device"]["serialNumber"], "1234567890A")
+    self.assertEqual(d["device"]["firmwareVersion"], "1.0.1a")
+    self.assertEqual(d["camera"]["anamorphicSqueeze"], 120)
+    self.assertEqual(d["camera"]["isoSpeed"], 13)
+    self.assertEqual(d["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+    self.assertEqual(d["camera"]["shutterAngle"], 180)
 
     # Regular parameters
 
@@ -156,45 +156,45 @@ class ModelTest(unittest.TestCase):
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 },
                                              { "E":100.0, "N":200.0, "U":300.0,
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 }))
-    self.assertTupleEqual(d["deviceStatus"], ("Optical Good","Optical Good"))
-    self.assertTupleEqual(d["deviceRecording"], (False,True))
-    self.assertTupleEqual(d["deviceSlate"], ("A101_A_4","A101_A_5"))
-    self.assertTupleEqual(d["deviceNotes"], ("Test serialize.","Test serialize."))
+    self.assertTupleEqual(d["device"]["status"], ("Optical Good","Optical Good"))
+    self.assertTupleEqual(d["device"]["recording"], (False,True))
+    self.assertTupleEqual(d["device"]["slate"], ("A101_A_4","A101_A_5"))
+    self.assertTupleEqual(d["device"]["notes"], ("Test serialize.","Test serialize."))
 
-    self.assertTupleEqual(d["timingMode"], ("internal", "internal"))
-    self.assertTupleEqual(d["timingSampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
+    self.assertTupleEqual(d["timing"]["mode"], ("internal", "internal"))
+    self.assertTupleEqual(d["timing"]["sampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
                                                        { "seconds": 1718806555, "nanoseconds": 0 } ))
-    self.assertTupleEqual(d["timingRecordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
+    self.assertTupleEqual(d["timing"]["recordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
                                                          { "seconds": 1718806001, "nanoseconds": 0 }))
-    self.assertTupleEqual(d["timingSequenceNumber"], (0, 1))
-    self.assertTupleEqual(d["timingFrameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
-    self.assertTupleEqual(d["timingTimecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } },
+    self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
+    self.assertTupleEqual(d["timing"]["frameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
+    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } },
                                                 { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
-    self.assertTupleEqual(d["timingSynchronization"], (sync_dict, sync_dict))
+    self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
     self.assertTupleEqual(d["transforms"], ([transform_dict, transform_dict], [transform_dict, transform_dict]))
 
-    self.assertTupleEqual(d["lensTStop"], (2000, 4000))
-    self.assertTupleEqual(d["lensFStop"], (1200, 2800))
-    self.assertTupleEqual(d["lensFocalLength"], (2.0, 4.0))
-    self.assertTupleEqual(d["lensFocusPosition"], (2, 4))
-    self.assertTupleEqual(d["lensEntrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
-    self.assertTupleEqual(d["lensEncoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
+    self.assertTupleEqual(d["lens"]["tStop"], (2000, 4000))
+    self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
+    self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
+    self.assertTupleEqual(d["lens"]["focusPosition"], (2, 4))
+    self.assertTupleEqual(d["lens"]["entrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
+    self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
                                               { "focus":0.1, "iris":0.2, "zoom":0.3 }))
-    self.assertTupleEqual(d["lensRawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
+    self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
                                                  { "focus":1, "iris":2, "zoom":3 }))
-    self.assertTupleEqual(d["lensFovScale"], ({ "horizontal":1.0, "vertical":1.0 },
+    self.assertTupleEqual(d["lens"]["fovScale"], ({ "horizontal":1.0, "vertical":1.0 },
                                               { "horizontal":1.0, "vertical":1.0 }))
-    self.assertTupleEqual(d["lensExposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
+    self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                      { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lensDistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
+    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                 { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lensUndistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
+    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                   { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lensCentreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
-    self.assertTupleEqual(d["lensPerspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
+    self.assertTupleEqual(d["lens"]["centreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
+    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
 
     d_clip = camdkit.model.Clip()
     d_clip.from_json(d)
