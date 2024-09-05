@@ -99,20 +99,21 @@ class ModelTest(unittest.TestCase):
     clip.lens_t_number = (2000, 4000)
     clip.lens_f_number = (1200, 2800)
     clip.lens_focal_length = (2.0, 4.0)
-    clip.lens_focus_position = (2, 4)
+    clip.lens_focus_distance = (2, 4)
     clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
     clip.lens_encoders = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),
                           camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
     clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3),
                               camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3))
-    clip.lens_fov_scale = (camdkit.framework.Orientations(1.0, 1.0),camdkit.framework.Orientations(1.0, 1.0))
+    clip.lens_distortion_scale = (1.0, 1.0)
+    clip.lens_distortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0),
                                   camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0))
     clip.lens_distortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
                             camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
     clip.lens_undistortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
                               camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_centre_shift = (camdkit.framework.CentreShift(1.0, 2.0),camdkit.framework.CentreShift(1.0, 2.0))
+    clip.lens_distortion_shift = (camdkit.framework.DistortionShift(1.0, 2.0),camdkit.framework.DistortionShift(1.0, 2.0))
     clip.lens_perspective_shift = (camdkit.framework.PerspectiveShift(0.1, 0.2),
                                    camdkit.framework.PerspectiveShift(0.1, 0.2))
 
@@ -163,13 +164,13 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["timing"]["mode"], ("internal", "internal"))
     self.assertTupleEqual(d["timing"]["sampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
-                                                       { "seconds": 1718806555, "nanoseconds": 0 } ))
+                                                           { "seconds": 1718806555, "nanoseconds": 0 } ))
     self.assertTupleEqual(d["timing"]["recordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
-                                                         { "seconds": 1718806001, "nanoseconds": 0 }))
+                                                             { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
     self.assertTupleEqual(d["timing"]["frameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } },
-                                                { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } }))
+                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
                   "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
@@ -179,22 +180,22 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["tStop"], (2000, 4000))
     self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
     self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
-    self.assertTupleEqual(d["lens"]["focusPosition"], (2, 4))
+    self.assertTupleEqual(d["lens"]["focusDistance"], (2, 4))
     self.assertTupleEqual(d["lens"]["entrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
     self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
-                                              { "focus":0.1, "iris":0.2, "zoom":0.3 }))
+                                                  { "focus":0.1, "iris":0.2, "zoom":0.3 }))
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
-                                                 { "focus":1, "iris":2, "zoom":3 }))
-    self.assertTupleEqual(d["lens"]["fovScale"], ({ "horizontal":1.0, "vertical":1.0 },
-                                              { "horizontal":1.0, "vertical":1.0 }))
+                                                     { "focus":1, "iris":2, "zoom":3 }))
+    self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
+    self.assertTupleEqual(d["lens"]["distortionScale"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                      { "a1":1.0,"a2":2.0,"a3":3.0 }))
     self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                  { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["centreShift"], ({ "cx":1.0,"cy":2.0 }, { "cx":1.0,"cy":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Cx":0.1,"Cy":0.2 }, { "Cx":0.1,"Cy":0.2 }))
+                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "Cx":1.0,"Cy":2.0 }, { "Cx":1.0,"Cy":2.0 }))
+    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Px":0.1,"Py":0.2 }, { "Px":0.1,"Py":0.2 }))
 
     d_clip = camdkit.model.Clip()
     d_clip.from_json(d)
@@ -363,16 +364,16 @@ class ModelTest(unittest.TestCase):
   def test_focus_position(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.lens_focus_position)
+    self.assertIsNone(clip.lens_focus_distance)
 
     with self.assertRaises(ValueError):
-      clip.lens_focus_position = [Fraction(5,7)]
+      clip.lens_focus_distance = [Fraction(5,7)]
 
     value = (100, 7)
 
-    clip.lens_focus_position = value
+    clip.lens_focus_distance = value
 
-    self.assertTupleEqual(clip.lens_focus_position, value)
+    self.assertTupleEqual(clip.lens_focus_distance, value)
 
   def test_entrance_pupil_distance(self):
     clip = camdkit.model.Clip()
@@ -803,37 +804,33 @@ class ModelTest(unittest.TestCase):
       "zoom": 5,
     })
 
-  def test_lens_fov_scale(self):
+  def test_lens_distortion_overscan(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.lens_fov_scale)
+    self.assertIsNone(clip.lens_distortion_overscan)
 
     with self.assertRaises(ValueError):
-      clip.lens_fov_scale = ""
-    with self.assertRaises(TypeError):
-      clip.lens_fov_scale = camdkit.framework.Orientations()
+      clip.lens_distortion_overscan = ""
     with self.assertRaises(ValueError):
-      clip.lens_fov_scale = camdkit.framework.Orientations(1.0,1.0)
-    with self.assertRaises(ValueError):
-      clip.lens_fov_scale = (camdkit.framework.Orientations(-1.0,-1.0),)
+      clip.lens_distortion_overscan = (-1.0,)
 
-    value = (camdkit.framework.Orientations(1.0,1.0),)
-    clip.lens_fov_scale = value
-    self.assertTupleEqual(clip.lens_fov_scale, value)
-    
-  def test_lens_fov_scale_from_dict(self):
-    r = camdkit.model.FoVScale.from_json({
-      "horizontal": 0.5,
-      "vertical": 0.5
-    })
-    self.assertEqual(r,camdkit.framework.Orientations(0.5, 0.5))
-    
-  def test_lens_fov_scales_to_dict(self):
-    j = camdkit.model.FoVScale.to_json(camdkit.framework.Orientations(0.5, 0.5))
-    self.assertDictEqual(j, {
-      "horizontal": 0.5,
-      "vertical": 0.5
-    })
+    value = (1.0,)
+    clip.lens_distortion_overscan = value
+    self.assertTupleEqual(clip.lens_distortion_overscan, value)
+
+  def test_lens_distortion_scale(self):
+    clip = camdkit.model.Clip()
+
+    self.assertIsNone(clip.lens_distortion_scale)
+
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_scale = ""
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_scale = (-1.0,)
+
+    value = (1.0,)
+    clip.lens_distortion_scale = value
+    self.assertTupleEqual(clip.lens_distortion_scale, value)
     
   def test_lens_exposure_falloff(self):
     clip = camdkit.model.Clip()
@@ -908,35 +905,35 @@ class ModelTest(unittest.TestCase):
       "tangential": [0.1,0.2,0.3]
     })
     
-  def test_lens_centre_shift(self):
+  def test_lens_distortion_shift(self):
     clip = camdkit.model.Clip()
-    self.assertIsNone(clip.lens_centre_shift)
+    self.assertIsNone(clip.lens_distortion_shift)
 
     with self.assertRaises(ValueError):
-      clip.lens_centre_shift = ""
+      clip.lens_distortion_shift = ""
     with self.assertRaises(TypeError):
-      clip.lens_centre_shift = (camdkit.framework.CentreShift(),)
+      clip.lens_distortion_shift = (camdkit.framework.DistortionShift(),)
     with self.assertRaises(TypeError):
-      clip.lens_centre_shift = (camdkit.framework.CentreShift(1.0),)
+      clip.lens_distortion_shift = (camdkit.framework.DistortionShift(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_centre_shift = camdkit.framework.CentreShift(1.0)
+      clip.lens_distortion_shift = camdkit.framework.DistortionShift(1.0)
 
-    value = (camdkit.framework.CentreShift(-1.0,1.0),)
-    clip.lens_centre_shift = value
-    self.assertTupleEqual(clip.lens_centre_shift, value)
+    value = (camdkit.framework.DistortionShift(-1.0,1.0),)
+    clip.lens_distortion_shift = value
+    self.assertTupleEqual(clip.lens_distortion_shift, value)
     
-  def test_lens_centre_shift_from_dict(self):
-    r = camdkit.model.LensCentreShift.from_json({
-      "cx": -1.0,
-      "cy": 1.0
+  def test_lens_distortion_shift_from_dict(self):
+    r = camdkit.model.LensDistortionShift.from_json({
+      "Cx": -1.0,
+      "Cy": 1.0
     })
-    self.assertEqual(r,camdkit.framework.CentreShift(-1.0,1.0))
+    self.assertEqual(r,camdkit.framework.DistortionShift(-1.0,1.0))
     
-  def test_lens_centre_shift_to_dict(self):
-    j = camdkit.model.LensCentreShift.to_json(camdkit.framework.CentreShift(-1.0,1.0))
+  def test_lens_distortion_shift_to_dict(self):
+    j = camdkit.model.LensDistortionShift.to_json(camdkit.framework.DistortionShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "cx": -1.0,
-      "cy": 1.0
+      "Cx": -1.0,
+      "Cy": 1.0
     })
     
   def test_lens_perspective_shift(self):
@@ -958,16 +955,16 @@ class ModelTest(unittest.TestCase):
     
   def test_lens_perspective_shift_from_dict(self):
     r = camdkit.model.LensPerspectiveShift.from_json({
-      "Cx": -1.0,
-      "Cy": 1.0
+      "Px": -1.0,
+      "Py": 1.0
     })
     self.assertEqual(r,camdkit.framework.PerspectiveShift(-1.0,1.0))
     
   def test_lens_perspective_shift_to_dict(self):
     j = camdkit.model.LensPerspectiveShift.to_json(camdkit.framework.PerspectiveShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "Cx": -1.0,
-      "Cy": 1.0
+      "Px": -1.0,
+      "Py": 1.0
     })
   
   def test_lens_custom(self):

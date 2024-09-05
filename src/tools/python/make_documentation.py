@@ -8,7 +8,7 @@ import camdkit.venice.reader
 import camdkit.canon.reader
 import camdkit.mosys.reader
 
-_CLIP_INTRODUCTION = """# OSVP documentation
+_CLIP_INTRODUCTION = """# OSVP Clip Documentation
 
 ## Introduction
 
@@ -26,11 +26,6 @@ synchronous relationship with a video frame. In an OSVP environment this describ
 camera position ('tracking') and lens data.
 
 ## Clip Parameters
-
-"""
-_FRAME_INTRODUCTION = """
-
-## Frame Parameters 
 
 """
 
@@ -135,5 +130,3 @@ if __name__ == "__main__":
   generate_documentation(sys.stdout, clip_doc, _CLIP_INTRODUCTION)
   generate_clip_reader_coverage(sys.stdout, clip_doc)
   generate_schema(sys.stdout, camdkit.model.Clip.make_json_schema(), "Clip")
-  generate_schema(sys.stdout, camdkit.model.Clip.make_opentrackio_static_schema(), "OpenTrackIO Static")
-  generate_schema(sys.stdout, camdkit.model.Clip.make_opentrackio_dynamic_schema(), "OpenTrackIO Dynamic")

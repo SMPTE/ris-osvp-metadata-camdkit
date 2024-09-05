@@ -890,10 +890,10 @@ class FocalLength(NonNegativeRealParameter):
   units = "millimeter"
   section = "lens"
 
-class FocusPosition(StrictlyPositiveIntegerParameter):
+class FocusDistance(StrictlyPositiveIntegerParameter):
   """Focus distance/position of the lens"""
 
-  canonical_name = "focusPosition"
+  canonical_name = "focusDistance"
   sampling = Sampling.REGULAR
   units = "millimeter"
   section = "lens"
@@ -908,57 +908,21 @@ class EntrancePupilDistance(RationalParameter):
   units = "millimeter"
   section = "lens"
 
-class FoVScale(Parameter):
-  """Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"""
+class DistortionOverscan(NonNegativeRealParameter):
+  """Overscan factor on lens distortion"""
 
   sampling = Sampling.REGULAR
-  canonical_name = "fovScale"
+  canonical_name = "distortionOverscan"
   section = "lens"
   units = None
 
-  @staticmethod
-  def validate(value) -> bool:
-    """The horizontal and vertical measurements shall be each be a real non-negative number."""
+class DistortionScale(NonNegativeRealParameter):
+  """Scaling factor on field-of-view for tweaking lens calibrations"""
 
-    if not isinstance(value, Orientations):
-      return False
-
-    if not isinstance(value.horizontal, numbers.Real) or not isinstance(value.vertical, numbers.Real):
-      return False
-
-    if value.horizontal < 0.0 or value.vertical < 0.0:
-      return False
-
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Orientations(**value)
-
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "object",
-      "additionalProperties": False,
-      "required": [
-          "horizontal",
-          "vertical"
-      ],
-      "properties": {
-        "horizontal": {
-            "type": "number",
-            "minimum": 0.0
-        },
-        "vertical": {
-            "type": "number",
-            "minimum": 0.0
-        }
-      }
-    }
+  sampling = Sampling.REGULAR
+  canonical_name = "distortionScale"
+  section = "lens"
+  units = None
   
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of a lens"""
@@ -1087,24 +1051,24 @@ class LensUndistortion(LensDistortion):
   section = "lens"
   units = None
   
-class LensCentreShift(Parameter):
+class LensDistortionShift(Parameter):
   "Shift in x and y of the centre of distortion of the virtual camera"
 
   sampling = Sampling.REGULAR
-  canonical_name = "centreShift"
+  canonical_name = "distortionShift"
   section = "lens"
-  units = "Determined by distortion model"
+  units = "millimeters"
 
   @staticmethod
   def validate(value) -> bool:
     """X and Y centre shift shall each be real numbers."""
 
-    if not isinstance(value, CentreShift):
+    if not isinstance(value, DistortionShift):
       return False
  
-    if value.cx is None or not isinstance(value.cx, numbers.Real):
+    if value.Cx is None or not isinstance(value.Cx, numbers.Real):
       return False
-    if value.cy is None or not isinstance(value.cx, numbers.Real):
+    if value.Cy is None or not isinstance(value.Cx, numbers.Real):
       return False
 
     return True
@@ -1115,26 +1079,26 @@ class LensCentreShift(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return CentreShift(**value)
+    return DistortionShift(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["cx", "cy"],
+      "required": ["Cx", "Cy"],
       "properties": {
-        "cx": {
+        "Cx": {
           "type": "number"
         },
-        "cy": {
+        "Cy": {
           "type": "number"
         }
       }
     }
   
 class LensPerspectiveShift(Parameter):
-  "Shift in x and y of the centre of projection of the virtual camera"
+  "Shift in x and y of the centre of perspective projection of the virtual camera"
   sampling = Sampling.REGULAR
   canonical_name = "perspectiveShift"
   section = "lens"
@@ -1147,9 +1111,9 @@ class LensPerspectiveShift(Parameter):
     if not isinstance(value, PerspectiveShift):
       return False
  
-    if value.Cx is None or not isinstance(value.Cx, numbers.Real):
+    if value.Px is None or not isinstance(value.Px, numbers.Real):
       return False
-    if value.Cy is None or not isinstance(value.Cx, numbers.Real):
+    if value.Py is None or not isinstance(value.Px, numbers.Real):
       return False
 
     return True
@@ -1167,12 +1131,12 @@ class LensPerspectiveShift(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["Cx", "Cy"],
+      "required": ["Px", "Py"],
       "properties": {
-        "Cx": {
+        "Px": {
           "type": "number"
         },
-        "Cy": {
+        "Py": {
           "type": "number"
         }
       }
@@ -1223,18 +1187,19 @@ class Clip(ParameterContainer):
   device_slate: typing.Optional[typing.Tuple[str]] = Slate()
   device_status: typing.Optional[typing.Tuple[str]] = Status()
   global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
-  lens_centre_shift: typing.Optional[typing.Tuple[CentreShift]] = LensCentreShift()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_distortion_overscan: typing.Optional[typing.Tuple[Orientations]] = DistortionOverscan()
+  lens_distortion_scale: typing.Optional[typing.Tuple[Orientations]] = DistortionScale()
+  lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
-  lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_entrance_pupil_distance: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilDistance()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
-  lens_focus_position: typing.Optional[typing.Tuple[numbers.Integral]] = FocusPosition()
-  lens_fov_scale: typing.Optional[typing.Tuple[Orientations]] = FoVScale()
+  lens_focus_distance: typing.Optional[typing.Tuple[numbers.Integral]] = FocusDistance()
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
+  lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
   protocol: typing.Optional[typing.Tuple[str]] = Protocol()
@@ -1252,10 +1217,10 @@ class Clip(ParameterContainer):
 
   def validate(self):
     "Validate a single static data set against the schema. Return the JSON for convenience"
-    self._set_static()
     json = self[0].to_json()
     schema = self.make_json_schema()
     validate(json, schema)
+    self._reset_sampling()
     return json
 
   def append(self, clip):
@@ -1266,19 +1231,29 @@ class Clip(ParameterContainer):
       if clip._values[prop] != None and desc.sampling == Sampling.REGULAR:
         self._values[prop] += clip._values[prop]
 
+  _changed_sampling = []
+
   def __getitem__(self, i):
-    "Helper to convert to a single STATIC data frame for JSON output"
+    "Helper to convert the frame at the given index to a single data frame for JSON output"
     clip = Clip()
     for f in dir(self):
       desc = getattr(self, f)
-      if not isinstance(desc, tuple):
-        if not f in self._values.keys() or self._values[f] is None:
-          continue
-        setattr(clip, f, desc)
-      else:
-        setattr(clip, f, desc[i])
+      if f in self._values and desc:
+        if self._params[f].sampling == Sampling.REGULAR:
+          # Temporarily set it static so it passes validation
+          self._params[f].sampling = Sampling.STATIC
+          setattr(clip, f, desc[i])
+          self._changed_sampling.append(f)
+        else:
+          setattr(clip, f, desc)
     return clip
   
+  def _reset_sampling(self):
+    "Used in conjunction with __getitem__ to reset the Clip's sampling back to default"
+    for f in self._changed_sampling:
+      self._params[f].sampling = Sampling.REGULAR
+    self._changed_sampling = []
+
   @classmethod
   def make_opentrackio_dynamic_schema(cls) -> dict:
     "Helper to create a schema for a single dynamic frame of OpenTrackIO"
