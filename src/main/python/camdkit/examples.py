@@ -10,22 +10,15 @@ from camdkit.framework import *
 from camdkit.model import Clip
 
 def get_recommended_static_example():
-  clip = Clip()
-  clip.sample_id = (uuid.uuid4().urn,)
-  clip.sample_type = ("static",)
-  clip.protocol = ("OpenTrackIO_0.1.0",)
+  clip = _get_recommended_dynamic_clip()
   clip.camera_id = "A"
   clip.lens_make = "Canon"
   clip.lens_model = "HJ14"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
-
-  return clip.validate()
+  return clip.to_json(0)
 
 def get_complete_static_example():
-  clip = Clip()
-  clip.sample_id = (uuid.uuid4().urn,)
-  clip.sample_type = ("static",)
-  clip.protocol = ("OpenTrackIO_0.1.0",)
+  clip = _get_complete_dynamic_clip()
   clip.camera_id = "A"
   clip.lens_make = "Canon"
   clip.lens_model = "HJ14"
@@ -37,13 +30,26 @@ def get_complete_static_example():
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
   clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
-
-  return clip.validate()
+  return clip.to_json(0)
 
 def get_recommended_dynamic_example():
+  clip = _get_recommended_dynamic_clip()
+  return clip.to_json(0)
+
+def get_complete_dynamic_example():
+  clip = _get_complete_dynamic_clip()
+  clip_json = clip.to_json(0)
+
+	# Add additional custom data
+  clip_json["custom"] = {
+		"pot1": 2435,
+		"button1": False
+	}
+  return clip_json
+
+def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.sample_type = ("dynamic",)
   clip.protocol = ("OpenTrackIO_0.1.0",)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
 
@@ -66,13 +72,11 @@ def get_recommended_dynamic_example():
   clip.lens_encoders = (Encoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
+  return clip
 
-  return clip.validate()
-
-def get_complete_dynamic_example():
+def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.sample_type = ("dynamic",)
   clip.protocol = ("OpenTrackIO_0.1.0",)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
@@ -120,12 +124,4 @@ def get_complete_dynamic_example():
   clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
-
-  clip_json = clip.validate()
-
-	# Add additional custom data
-  clip_json["custom"] = {
-		"pot1": 2435,
-		"button1": False
-	}
-  return clip_json
+  return clip

@@ -195,7 +195,6 @@ class F4PacketParser:
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = ("OpenTrackIO_0.1.0",)
       frame.sample_id = (uuid.uuid4().urn,)
-      frame.sample_type = ("dynamic",)
       frame.device_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]

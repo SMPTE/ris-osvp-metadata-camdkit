@@ -670,25 +670,37 @@ class ParameterContainer:
     cls._saved_init = cls.__init__
     cls.__init__ = _auto__call__init__
 
-  def to_json(self) -> dict:
+  def to_json(self, index=None) -> dict:
     obj = {}
     for k, desc in self._params.items():
       value = self._values[k]
       # Handle sections
       if hasattr(desc, "section"):
         if value != None:
-          if desc.section not in obj:
-            obj[desc.section] = {}
           if desc.sampling is Sampling.STATIC:
-            obj[desc.section][desc.canonical_name] = desc.to_json(value)
+            if "static" not in obj:
+              obj["static"] = {}
+            if desc.section not in obj["static"]:
+              obj["static"][desc.section] = {}
+            obj["static"][desc.section][desc.canonical_name] = desc.to_json(value)
           elif desc.sampling is Sampling.REGULAR:
-            obj[desc.section][desc.canonical_name] = tuple(map(desc.to_json, value))
+            if desc.section not in obj:
+              obj[desc.section] = {}
+            if index != None:
+              obj[desc.section][desc.canonical_name] = desc.to_json(value[index])
+            else:
+              obj[desc.section][desc.canonical_name] = tuple(map(desc.to_json, value))
       elif value is None:
         pass
       elif desc.sampling is Sampling.STATIC:
-        obj[desc.canonical_name] = desc.to_json(value)
+        if "static" not in obj:
+          obj["static"] = {}
+        obj["static"][desc.canonical_name] = desc.to_json(value)
       elif desc.sampling is Sampling.REGULAR:
-        obj[desc.canonical_name] = tuple(map(desc.to_json, value))
+        if index != None:
+          obj[desc.canonical_name] = desc.to_json(value[index])
+        else:
+          obj[desc.canonical_name] = tuple(map(desc.to_json, value))
       else:
         raise ValueError
 
@@ -696,6 +708,8 @@ class ParameterContainer:
 
   def from_json(self, json_dict: dict, section: str=""):
     for json_key, json_value in json_dict.items():
+      if json_key == "static":
+        self.from_json(json_dict["static"], section)
       for prop, desc in self._params.items():
         if hasattr(desc, "section") and desc.section == json_key:
           self.from_json(json_dict[json_key], desc.section)
@@ -759,6 +773,7 @@ class ParameterContainer:
         "description" : desc.__doc__,
         "constraints" : desc.validate.__doc__,
         "sampling" : str(desc.sampling.value),
+        "section": desc.section if hasattr(desc, "section") else "None",
         "units": desc.units if hasattr(desc, "units") else "None"
       })
     return doc

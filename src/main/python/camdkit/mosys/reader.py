@@ -39,12 +39,12 @@ def to_clip(filename: str, frames: int = -1) -> Clip:
         count += 1
   return clip
 
-def to_frames(filename: str, frames: int = -1) -> list[dict]:
+def to_frames(filename: str, frame_count: int) -> list[dict]:
   """Read Mo-Sys F4 data into a list of `Frame`s.
   `filename`: Filename of the f4 file.
   """
-  clip = to_clip(filename, frames)
+  clip = to_clip(filename, frame_count)
   frames = []
-  for frame in clip:
-    frames.append(frame.to_json())
+  for i in range(0, frame_count):
+    frames.append(clip.to_json(i))
   return frames

@@ -48,7 +48,6 @@ class ModelTest(unittest.TestCase):
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
-    clip.lens_distortion_model = "OpenLensIO"
     clip.lens_nominal_focal_length = 24
     clip.shutter_angle = 180
     # Regular parameters
@@ -120,29 +119,28 @@ class ModelTest(unittest.TestCase):
     d = clip.to_json()
 
     # Static parameters
-    self.assertEqual(d["duration"], {"num": 3, "denom": 1})
-    self.assertEqual(d["camera"]["captureRate"], {"num": 24000, "denom": 1001})
-    self.assertDictEqual(d["camera"]["activeSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
-    self.assertDictEqual(d["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
-    self.assertEqual(d["camera"]["make"], "Bob")
-    self.assertEqual(d["camera"]["model"], "Hello")
-    self.assertEqual(d["camera"]["serialNumber"], "132456")
-    self.assertEqual(d["camera"]["firmwareVersion"], "7.1")
-    self.assertEqual(d["camera"]["id"], "A")
-    self.assertEqual(d["lens"]["make"], "ABC")
-    self.assertEqual(d["lens"]["model"], "FGH")
-    self.assertEqual(d["lens"]["serialNumber"], "123456789")
-    self.assertEqual(d["lens"]["firmwareVersion"], "1-dev.1")
-    self.assertEqual(d["lens"]["distortionModel"], "OpenLensIO")
-    self.assertEqual(d["lens"]["nominalFocalLength"], 24)
-    self.assertEqual(d["device"]["make"], "ABCD")
-    self.assertEqual(d["device"]["model"], "EFGH")
-    self.assertEqual(d["device"]["serialNumber"], "1234567890A")
-    self.assertEqual(d["device"]["firmwareVersion"], "1.0.1a")
-    self.assertEqual(d["camera"]["anamorphicSqueeze"], 120)
-    self.assertEqual(d["camera"]["isoSpeed"], 13)
-    self.assertEqual(d["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-    self.assertEqual(d["camera"]["shutterAngle"], 180)
+    self.assertEqual(d["static"]["duration"], {"num": 3, "denom": 1})
+    self.assertEqual(d["static"]["camera"]["captureRate"], {"num": 24000, "denom": 1001})
+    self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
+    self.assertDictEqual(d["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
+    self.assertEqual(d["static"]["camera"]["make"], "Bob")
+    self.assertEqual(d["static"]["camera"]["model"], "Hello")
+    self.assertEqual(d["static"]["camera"]["serialNumber"], "132456")
+    self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
+    self.assertEqual(d["static"]["camera"]["id"], "A")
+    self.assertEqual(d["static"]["lens"]["make"], "ABC")
+    self.assertEqual(d["static"]["lens"]["model"], "FGH")
+    self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
+    self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
+    self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
+    self.assertEqual(d["static"]["device"]["make"], "ABCD")
+    self.assertEqual(d["static"]["device"]["model"], "EFGH")
+    self.assertEqual(d["static"]["device"]["serialNumber"], "1234567890A")
+    self.assertEqual(d["static"]["device"]["firmwareVersion"], "1.0.1a")
+    self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], 120)
+    self.assertEqual(d["static"]["camera"]["isoSpeed"], 13)
+    self.assertEqual(d["static"]["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+    self.assertEqual(d["static"]["camera"]["shutterAngle"], 180)
 
     # Regular parameters
 
@@ -427,22 +425,6 @@ class ModelTest(unittest.TestCase):
     value = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
     clip.sample_id = value
     self.assertEqual(clip.sample_id, value)
-
-  def test_sample_type(self):
-    clip = camdkit.model.Clip()
-
-    self.assertIsNone(clip.sample_type)
-
-    with self.assertRaises(ValueError):
-      clip.sample_type = ""
-    with self.assertRaises(ValueError):
-      clip.sample_type = ("",)
-    with self.assertRaises(ValueError):
-      clip.sample_type = ("a",)
-
-    value = ("static",)
-    clip.sample_type = value
-    self.assertEqual(clip.sample_type, value)
 
   def test_protocol(self):
     clip = camdkit.model.Clip()

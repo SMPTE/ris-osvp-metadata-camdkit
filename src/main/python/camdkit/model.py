@@ -85,13 +85,6 @@ class LensFirmware(StringParameter):
   sampling = Sampling.STATIC
   units = None
   section = "lens"
-  
-class LensDistortionModel(StringParameter):
-  """Free string for notes about the specific lens distortion model"""  
-  canonical_name = "distortionModel"
-  sampling = Sampling.STATIC
-  units = None
-  section = "lens"
 
 class CameraSerialNumber(StringParameter):
   """Unique identifier of the camera"""
@@ -220,13 +213,6 @@ class SampleId(UUIDURNParameter):
   """Unique identifier of the sample in which data is being transported."""
 
   canonical_name = "sampleId"
-  sampling = Sampling.REGULAR
-  units = None
-
-class SampleType(EnumParameter):
-  """ Either 'static' or 'dynamic' sample type."""
-
-  canonical_name = "sampleType"
   sampling = Sampling.REGULAR
   units = None
 
@@ -1174,7 +1160,6 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
-  lens_distortion_model: typing.Optional[str] = LensDistortionModel()
   lens_firmware: typing.Optional[str] = LensFirmware()
   lens_make: typing.Optional[str] = LensMake()
   lens_model: typing.Optional[str] = LensModel()
@@ -1205,7 +1190,6 @@ class Clip(ParameterContainer):
   protocol: typing.Optional[typing.Tuple[str]] = Protocol()
   related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
-  sample_type: typing.Optional[typing.Tuple[str]] = SampleType()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
@@ -1253,24 +1237,4 @@ class Clip(ParameterContainer):
     for f in self._changed_sampling:
       self._params[f].sampling = Sampling.REGULAR
     self._changed_sampling = []
-
-  @classmethod
-  def make_opentrackio_dynamic_schema(cls) -> dict:
-    "Helper to create a schema for a single dynamic frame of OpenTrackIO"
-    # Remove all the existing STATIC parameters and make the REGULAR parameters STATIC
-    for prop, desc in cls._params.copy().items():
-      if desc.sampling == Sampling.STATIC:
-        del cls._params[prop]
-        continue
-      desc.sampling = Sampling.STATIC
-    return super().make_json_schema()
   
-  @classmethod
-  def make_opentrackio_static_schema(cls) -> dict:
-    "Helper to create a schema for a single static frame of OpenTrackIO"
-    # Remove all the existing REGULAR parameters
-    for prop, desc in cls._params.copy().items():
-      if desc.sampling == Sampling.REGULAR:
-        del cls._params[prop]
-        continue
-    return super().make_json_schema()
