@@ -14,11 +14,11 @@ import os
 # Pass in either a JSON message or a test filename
 class OTProtocol:
     def __init__(self, msg_str=None, filepath=None):
-        # msg_str = string containing a single json message
-        # filepath: file containing a message, for testing
+        # msg_str = string containing a single json "sample"
+        # filepath: file containing a JSON "sample", for testing
         self.filepath = filepath
         self.schemapath = None
-        self.trans_scale = 1.0
+        self.trans_mult = 1.0                               # user-preferred units multiplier
         self.time_units = "timecode"
         self.curtime = 0
         self.cam_trans = {"X":0,"Y":0,"Z":0}
@@ -26,6 +26,7 @@ class OTProtocol:
         self.sd = None          # the parsed schema dictionary
         self.valid_formats = ["timecode","seconds","milliseconds"]
         self.verbose = False
+        self.focus_dist_factor = 1.0
 
         parser = argparse.ArgumentParser(description='OpenTrackingProtocol parser')
         parser.add_argument('-f', '--file', help='The JSON input file.', default=None)
@@ -50,28 +51,31 @@ class OTProtocol:
         text = ''
         if (self.schemapath != None):        
             with open(self.schemapath, 'r') as fd:
-                print("Reading OTP schema file: {0}".format(self.schemapath))
+                print("Reading OTIO schema file: {0}".format(self.schemapath))
                 lines = fd.readlines()
                 for line in lines:
                     text = text + line
         self.sd = json.loads(text)
         # FIXME: except: json.decoder.JSONDecodeError
         if not self.sd:
-            print("Parse(): Failed to parse OTP schema file.")
+            print("Parse(): Failed to parse OTIO schema file.")
         else:                                   # we have a OTP message
             print("Parsed the schema JSON successfully.")
             if self.verbose:
                 print("Contents of the parsed JSON schema dict:\n")
                 print(self.sd)
-            print("\n")
-        
+                print("\n")
+            #print("camera is: {}".format(self.sd["properties"]["camera"]))
+            #print("finding: {}".format(self.sd["properties"]["lens"]["properties"]["focalLength"]["units"]))
+#            .properties.focalLength.units))
+            
 
     def Parse(self):        # walk through the text and create task objects based on items listed 
         protocol = None
         text = ''
         if (self.filepath != None):        
             with open(self.filepath, 'r') as fd:
-                print("Reading OTP protocol file: {0}".format(self.filepath))
+                print("Reading OTIO sample file: {0}".format(self.filepath))
                 lines = fd.readlines()
                 for line in lines:
                     text = text + line
@@ -96,11 +100,11 @@ class OTProtocol:
             if ("Camera" in tr["name"]):
                 #print(tr)
                 if (dimension == 'X'):
-                    return tr["translation"]["x"] * self.trans_scale
+                    return tr["translation"]["x"] * self.trans_mult
                 elif (dimension == 'Y'):
-                    return tr["translation"]["y"] * self.trans_scale
+                    return tr["translation"]["y"] * self.trans_mult
                 elif (dimension == 'Z'):
-                    return tr["translation"]["z"] * self.trans_scale
+                    return tr["translation"]["z"] * self.trans_mult
                 break
 
     def Get_cam_translations(self,object_name=None):
@@ -122,16 +126,41 @@ class OTProtocol:
         elif self.time_units == "milliseconds":
             return self.curtime * 1000.0
 
+    # Set user-preferred units for translations. Pass in units as: "m", "cm", "mm"
     def Set_trans_units(self,unit_str):
-        #TODO: read the schema first, to get native protocol units
-        print("Setting preferred translation units to: {0}.".format(unit_str))
-        if unit_str == "cm":
-            self.trans_scale = 100.0          # convert schemas meters to cm
+        schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["translation"]["units"]
+        if self.verbose:
+            print("Schema says camera translation units are {}".format(schema_units))
+        print("Setting preferred translation units to: {0}".format(unit_str))
+        if unit_str == "m":
+            if schema_units == "meters":
+               self.trans_mult = 1.0          # convert schema meters to meters
+        elif unit_str == "cm":
+            if schema_units == "meters":
+               self.trans_mult = 100.0          # convert schema meters to cm
+        elif unit_str == "mm":
+            if schema_units == "meters":
+               self.trans_mult = 1000.0          # convert schema meters to mm
 
     def Set_time_units(self,units_str):
-        print("Setting preferred time format to: {0}.".format(units_str))
+        print("Setting preferred time format to: {0}".format(units_str))
         if (units_str in self.valid_formats):
             self.time_units = units_str
+
+    def Set_focus_distance_units(self,unit_str):
+        schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
+        if self.verbose:
+            print("Schema says focus distance units are {}".format(schema_units))
+        print("Setting preferred focus distance units to: {}".format(unit_str))
+        if unit_str == "m":
+            if schema_units == "millimeter":
+                self.focus_dist_factor = .001
+        elif unit_str == "cm":
+            if schema_units == "millimeter":
+                self.focus_dist_factor = 0.1
+        elif unit_str == "mm":
+            if schema_units == "millimeter":        
+                self.focus_dist_factor = 1.0
 
     def Get_protocol(self):
         if (self.pd["protocol"]):               # getattr ?
@@ -140,38 +169,45 @@ class OTProtocol:
             return None
 
     def Get_slate(self):
-        if "metadata" in self.pd.keys():
-            if self.pd["metadata"]["slate"]:            # getattr ?
-                return str(self.pd["metadata"]["slate"])
+        if "device" in self.pd.keys():
+            if self.pd["device"]["slate"]:            # getattr ?
+                return str(self.pd["device"]["slate"])
             else:
                 return None
         else:
             return None
 
-    def Get_packet_type(self):
-        if "sampleType" in self.pd.keys():
-            if (self.pd["sampleType"] == "dynamic") or (self.pd["sampleType"] == "static"):
-                return str(self.pd["sampleType"])
-            else:
-                return None
+    def Get_static_data(self):
+        print('Get_static_data: This is a placeholder.')       # FIXME: fetch some static data
+
+    def Get_focal_length(self):
+        if "lens" in self.pd.keys():
+            return self.pd["lens"]["focalLength"]
+        else:
+            return None
+
+    def Get_focus_distance(self):
+         return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_factor
 
 
 ################
 #Sample app below:
 
-tmsg = OTProtocol(None,"open_tracking_sample.json")
-tmsg.Set_trans_units("cm")              # end-user preferred units
-tmsg.Set_time_units("timecode")          # float seconds
+tsample = OTProtocol(None,None)
+tsample.Set_trans_units("cm")              # end-user preferred units
+tsample.Set_time_units("timecode")         # end-user preferred units
+tsample.Set_focus_distance_units("cm")     # end-user preferred units
 
-if (tmsg.Get_packet_type() == "dynamic"):
-    msgtype = tmsg.Get_packet_type()
-    protocol= tmsg.Get_protocol()
-    slate = tmsg.Get_slate()
-    print("Detected protocol: {0}.\nOn slate {1}".format(protocol,slate))
-    timecode = tmsg.Get_time()
-    posX = tmsg.Get_trans('X')
-    posY = tmsg.Get_trans('Y')
-    posZ =tmsg.Get_trans('Z')
-    print("At {0} the camera position is ({1},{2},{3})".format(timecode, posX, posY, posZ))
-else:
-    print("Expected dynamic packet type, quitting...")
+protocol= tsample.Get_protocol()
+slate = tsample.Get_slate()
+print("Detected protocol: {0}\nOn slate {1}".format(protocol,slate))
+timecode = tsample.Get_time()
+posX = tsample.Get_trans('X')
+posY = tsample.Get_trans('Y')
+posZ =tsample.Get_trans('Z')
+print("At {0} the camera position is ({1},{2},{3}) cm".format(timecode, posX, posY, posZ))
+fl = tsample.Get_focal_length()
+units = tsample.sd["properties"]["lens"]["properties"]["focalLength"]["units"]
+print("Focal length is: {} {}".format(fl,units))
+fd = tsample.Get_focus_distance()
+print("Focus distance is {} cm".format(fd))
