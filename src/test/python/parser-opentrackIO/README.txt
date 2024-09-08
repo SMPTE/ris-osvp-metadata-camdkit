@@ -2,7 +2,7 @@ opentrackIO_parser.py
 
 This is python reference code for parsing an OpentrackIO packet.
 User API is in the methods of the class: OTProtocol
-This cade works with Python 3.11
+This code works with Python 3.11
 
 
 Example output:
