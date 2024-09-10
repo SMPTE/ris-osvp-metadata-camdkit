@@ -2,7 +2,156 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "activeSensorPhysicalDimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "height",
+            "width"
+          ],
+          "properties": {
+            "height": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          "description": "Height and width of the active area of the camera sensor in microns",
+          "units": "micron"
+        },
+        "activeSensorResolution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "height",
+            "width"
+          ],
+          "properties": {
+            "height": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          "description": "Photosite resolution of the active area of the camera sensor in pixels",
+          "units": "pixels"
+        },
+        "anamorphicSqueeze": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "Nominal ratio of height to width of the image of an axis-aligned square captured by the camera sensor. It can be used to de-squeeze images but is not however an exact number over the entire captured area due to a lens' intrinsic analog nature.",
+          "units": "0.01 unit"
+        },
+        "firmwareVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Version identifier for the firmware of the camera"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Free string that identifies the camera - e.g. 'A'"
+        },
+        "make": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Make of the camera"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Model of the camera"
+        },
+        "serialNumber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Unique identifier of the camera"
+        },
+        "captureRate": {
+          "type": "object",
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "num",
+            "denom"
+          ],
+          "additionalProperties": false,
+          "description": "Capture frame rate of the camera",
+          "units": "hertz"
+        },
+        "fdlLink": {
+          "type": "string",
+          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "Unique identifier of the FDL used by the camera."
+        },
+        "isoSpeed": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "Arithmetic ISO scale as defined in ISO 12232",
+          "units": "unit"
+        },
+        "shutterAngle": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 360000,
+          "description": "Shutter speed as a fraction of the capture frame rate. The shutter speed (in units of 1/s) is equal to the value of the parameter divided by 360 times the capture frame rate.",
+          "units": "degrees (angular)"
+        }
+      }
+    },
     "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "firmwareVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Version identifier for the firmware of the device producing data"
+        },
+        "make": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Make of the device producing data"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Model of the device producing data"
+        },
         "notes": {
           "type": "string",
           "minLength": 1,
@@ -12,6 +161,12 @@
         "recording": {
           "type": "boolean",
           "description": "True if the system is recording data - e.g. tracking data"
+        },
+        "serialNumber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Unique identifier of the device producing data"
         },
         "slate": {
           "type": "string",
@@ -25,60 +180,70 @@
           "maxLength": 1023,
           "description": "Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"
         }
+      }
     },
-    "global": {
-        "stage": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "E",
-            "N",
-            "U",
-            "lat0",
-            "lon0",
-            "h0"
-          ],
-          "properties": {
-            "E": {
-              "type": "number"
-            },
-            "N": {
-              "type": "number"
-            },
-            "U": {
-              "type": "number"
-            },
-            "lat0": {
-              "type": "number"
-            },
-            "lon0": {
-              "type": "number"
-            },
-            "h0": {
-              "type": "number"
-            }
-          },
-          "description": " Position of stage origin in global ENU and geodetic coordinates (E, N, U, lat0, lon0, h0). Note this may be dynamic e.g. if the stage is inside a moving vehicle. "
+    "duration": {
+      "type": "object",
+      "properties": {
+        "num": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "denom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
         }
+      },
+      "required": [
+        "num",
+        "denom"
+      ],
+      "additionalProperties": false,
+      "description": "Duration of the clip",
+      "units": "second"
+    },
+    "globalStage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "E",
+          "N",
+          "U",
+          "lat0",
+          "lon0",
+          "h0"
+        ],
+        "properties": {
+          "E": {
+            "type": "number"
+          },
+          "N": {
+            "type": "number"
+          },
+          "U": {
+            "type": "number"
+          },
+          "lat0": {
+            "type": "number"
+          },
+          "lon0": {
+            "type": "number"
+          },
+          "h0": {
+            "type": "number"
+          }
+        }
+      },
+      "description": " Position of stage origin in global ENU and geodetic coordinates (E, N, U, lat0, lon0, h0). Note this may be dynamic e.g. if the stage is inside a moving vehicle. "
     },
     "lens": {
-        "centreShift": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "cx",
-            "cy"
-          ],
-          "properties": {
-            "cx": {
-              "type": "number"
-            },
-            "cy": {
-              "type": "number"
-            }
-          },
-          "description": "Shift in x and y of the centre of distortion of the virtual camera"
-        },
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
         "custom": {
           "type": "array",
           "items": {
@@ -109,6 +274,34 @@
             }
           },
           "description": " Coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
+        },
+        "distortionOverscan": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Overscan factor on lens distortion"
+        },
+        "distortionScale": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Scaling factor on field-of-view for tweaking lens calibrations"
+        },
+        "distortionShift": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Cx",
+            "Cy"
+          ],
+          "properties": {
+            "Cx": {
+              "type": "number"
+            },
+            "Cy": {
+              "type": "number"
+            }
+          },
+          "description": "Shift in x and y of the centre of distortion of the virtual camera",
+          "units": "millimeters"
         },
         "encoders": {
           "type": "object",
@@ -168,7 +361,8 @@
             "denom"
           ],
           "additionalProperties": false,
-          "description": "Position of the entrance pupil relative to the nominal imaging plane (positive if the entrance pupil is located on the side of the nominal imaging plane that is towards the object, and negative otherwise)"
+          "description": "Position of the entrance pupil relative to the nominal imaging plane (positive if the entrance pupil is located on the side of the nominal imaging plane that is towards the object, and negative otherwise)",
+          "units": "millimeter"
         },
         "exposureFalloff": {
           "type": "object",
@@ -193,54 +387,64 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 2147483647,
-          "description": "The linear f-number of the lens, equal to the focal length divided by the diameter of the entrance pupil."
+          "description": "The linear f-number of the lens, equal to the focal length divided by the diameter of the entrance pupil.",
+          "units": "0.001 unit"
+        },
+        "firmwareVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Version identifier for the firmware of the lens"
         },
         "focalLength": {
           "type": "number",
           "minimum": 0.0,
-          "description": "Focal length of the lens."
+          "description": "Focal length of the lens.",
+          "units": "millimeter"
         },
-        "focusPosition": {
+        "focusDistance": {
           "type": "integer",
           "minimum": 1,
           "maximum": 2147483647,
-          "description": "Focus distance/position of the lens"
+          "description": "Focus distance/position of the lens",
+          "units": "millimeter"
         },
-        "fovScale": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "horizontal",
-            "vertical"
-          ],
-          "properties": {
-            "horizontal": {
-              "type": "number",
-              "minimum": 0.0
-            },
-            "vertical": {
-              "type": "number",
-              "minimum": 0.0
-            }
-          },
-          "description": "Scaling factor on horizontal and vertical field-of-view for tweaking lens calibrations"
+        "make": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Make of the lens"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Model of the lens"
+        },
+        "nominalFocalLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647,
+          "description": "Nominal focal length of the lens. The number printed on the side of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.",
+          "units": "millimeter"
         },
         "perspectiveShift": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "Cx",
-            "Cy"
+            "Px",
+            "Py"
           ],
           "properties": {
-            "Cx": {
+            "Px": {
               "type": "number"
             },
-            "Cy": {
+            "Py": {
               "type": "number"
             }
           },
-          "description": "Shift in x and y of the centre of projection of the virtual camera"
+          "description": "Shift in x and y of the centre of perspective projection of the virtual camera",
+          "units": "millimetres"
         },
         "rawEncoders": {
           "type": "object",
@@ -278,11 +482,18 @@
           ],
           "description": " Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any homing / ranging has taken place. "
         },
+        "serialNumber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1023,
+          "description": "Unique identifier of the lens"
+        },
         "tStop": {
           "type": "integer",
           "minimum": 1,
           "maximum": 2147483647,
-          "description": "The linear t-number of the lens, equal to the F-number of the lens divided by the square root of the transmittance of the lens."
+          "description": "The linear t-number of the lens, equal to the F-number of the lens divided by the square root of the transmittance of the lens.",
+          "units": "0.001 unit"
         },
         "undistortion": {
           "type": "object",
@@ -308,37 +519,40 @@
           },
           "description": " Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
         }
+      }
     },
-    "sample": {
-        "protocol": {
+    "protocol": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1023
+      },
+      "description": "Free string that describes the version of the protocol that this sample employs."
+    },
+    "relatedSamples": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
           "type": "string",
-          "minLength": 1,
-          "maxLength": 1023,
-          "description": "Free string that describes the version of the packet protocol that this sample employs."
-        },
-        "relatedSamples": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-          },
-          "description": " List of sample unique IDs that are related to this sample. E.g. a related performance capture sample or a sample of static data from the same device. The existence of the related sample should not be relied upon. "
-        },
-        "id": {
-          "type": "string",
-          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-          "description": "Unique identifier of the sample in which data is being transported."
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "static",
-            "dynamic"
-          ],
-          "description": " Either 'static' or 'dynamic' sample type."
+          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
         }
+      },
+      "description": " List of sample unique IDs that are related to this sample. E.g. a related performance capture sample or a sample of static data from the same device. The existence of the related sample should not be relied upon. "
+    },
+    "sampleId": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "description": "Unique identifier of the sample in which data is being transported."
     },
     "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
         "frameRate": {
           "type": "object",
           "properties": {
@@ -566,75 +780,81 @@
           },
           "description": " TODO doc "
         }
+      }
     },
     "transforms": {
       "type": "array",
-      "minItems": 1,
-      "uniqueItems": false,
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "translation": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "x": {
-                "type": "number"
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": false,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "translation": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "z": {
+                  "type": "number"
+                }
               },
-              "y": {
-                "type": "number"
+              "units": "meters"
+            },
+            "rotation": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "pan": {
+                  "type": "number"
+                },
+                "tilt": {
+                  "type": "number"
+                },
+                "roll": {
+                  "type": "number"
+                }
               },
-              "z": {
-                "type": "number"
+              "units": "degrees"
+            },
+            "scale": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "z": {
+                  "type": "number"
+                }
               }
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1023
+            },
+            "parent": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1023
             }
           },
-          "rotation": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "pan": {
-                "type": "number"
-              },
-              "tilt": {
-                "type": "number"
-              },
-              "roll": {
-                "type": "number"
-              }
-            }
-          },
-          "scale": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "x": {
-                "type": "number"
-              },
-              "y": {
-                "type": "number"
-              },
-              "z": {
-                "type": "number"
-              }
-            }
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          },
-          "parent": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          }
-        },
-        "required": [
-          "translation",
-          "rotation"
-        ]
+          "required": [
+            "translation",
+            "rotation"
+          ]
+        }
       },
       "description": " A list of transforms. Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in metres of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision "
     }
