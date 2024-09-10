@@ -91,7 +91,11 @@ class OTProtocol:
             text = self.sample_str
         #print(text)
         #print('\n')    
-        self.pd = json.loads(text)
+        try:
+            self.pd = json.loads(text)
+        except:
+            print("Error: failed to parse JSON file! Either path incorrect or JSON invalid.")
+            exit(-1)
         if not self.pd:
             print("Parse(): Failed to parse OTIO message file.")
         else:                                   # we have a OTP message
@@ -100,6 +104,18 @@ class OTProtocol:
                 print("Contents of the parsed JSON dict:\n")
                 print(self.pd)
                 print("\n")
+
+    # Returns the multiplicative conversion factor from meters to user-specified units
+    # Valid unit specifier strings: "m", "cm", "mm", "in"
+    def Conversion_factor_from_meters(self,unit_str):
+        if unit_str == "m":
+            return 1.0
+        elif unit_str == "cm":
+            return 100.0
+        elif unit_str == "mm":
+            return 1000.0
+        elif unit_str == "in":
+            return (1000/25.4)
 
     def Get_camera_trans(self, dimension,object_name=None):
         for tr in self.pd["transforms"]:
@@ -158,18 +174,8 @@ class OTProtocol:
         if self.verbose:
             print("Schema says camera translation units are {}".format(schema_units))
         print("Setting preferred translation units to: {0}".format(unit_str))
-        if unit_str == "m":
-            if schema_units == "meters":
-               self.trans_mult = 1.0
-        elif unit_str == "cm":
-            if schema_units == "meters":
-               self.trans_mult = 100.0
-        elif unit_str == "mm":
-            if schema_units == "meters":
-               self.trans_mult = 1000.0
-        elif unit_str == "in":
-            if schema_units == "meters":
-               self.trans_mult = 1000/25.4
+        if schema_units == "meters":
+            self.trans_mult = self.Conversion_factor_from_meters(unit_str)
 
     # User preference for time format
     # Valid args: "timecode"
