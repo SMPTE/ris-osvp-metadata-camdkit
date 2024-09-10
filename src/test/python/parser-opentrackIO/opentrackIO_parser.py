@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 #
-# opentrack_parser.py
+# opentrackIO_parser.py
+#
 # Reference code for decoding opentrack messages
-# Steve Rosenbluth, RiS OSVP committee
-# test run: python3 opentrackIO_parser.py --schema=example_json/dynamic_schema.pretty.json --file=example_json/open_tracking_example-1.json
-# test run: python3 opentrackIO_parser.py --file=example_json/mosys_dynamic-output-example-2.json
+# Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
+#
+# License: this code is open-source under the FreeBSD License
+#
+# example: python3 src/test/python/parser-opentrackIO/opentrackIO_parser.py --file=complete_dynamic_example_20240907.json --schema=opentrackio_schema_modified_20240907.json
+# exemple: python3 src/test/python/parser-opentrackIO/opentrackIO_parser.py --file=complete_static_example_20240907.json --schema=opentrackio_schema_modified_20240907.json
 
 import json
 import argparse
@@ -16,17 +20,18 @@ class OTProtocol:
     def __init__(self, msg_str=None, filepath=None):
         # msg_str = string containing a single json "sample"
         # filepath: file containing a JSON "sample", for testing
+        self.sample_str = msg_str
         self.filepath = filepath
         self.schemapath = None
         self.trans_mult = 1.0                               # user-preferred units multiplier
-        self.time_units = "timecode"
         self.curtime = 0
         self.cam_trans = {"X":0,"Y":0,"Z":0}
         self.pd = None          # the parsed procotol dictionary
         self.sd = None          # the parsed schema dictionary
-        self.valid_formats = ["timecode","seconds","milliseconds"]
+        self.sample_time_format = "seconds"
+        self.sample_time_formats = ["seconds","milliseconds","microseconds","nanoseconds"]
         self.verbose = False
-        self.focus_dist_factor = 1.0
+        self.focus_dist_mult = 1.0
 
         parser = argparse.ArgumentParser(description='OpenTrackingProtocol parser')
         parser.add_argument('-f', '--file', help='The JSON input file.', default=None)
@@ -49,14 +54,17 @@ class OTProtocol:
 
     def Import_schema(self):
         text = ''
-        if (self.schemapath != None):        
-            with open(self.schemapath, 'r') as fd:
-                print("Reading OTIO schema file: {0}".format(self.schemapath))
-                lines = fd.readlines()
-                for line in lines:
-                    text = text + line
-        self.sd = json.loads(text)
-        # FIXME: except: json.decoder.JSONDecodeError
+        try:
+            if (self.schemapath != None):        
+                with open(self.schemapath, 'r') as fd:
+                    print("Reading OTIO schema file: {0}".format(self.schemapath))
+                    lines = fd.readlines()
+                    for line in lines:
+                        text = text + line
+            self.sd = json.loads(text)
+        except json.decoder.JSONDecodeError:
+            print("Got JSONDecodeError decoding the sample!")
+            self.sd = None
         if not self.sd:
             print("Parse(): Failed to parse OTIO schema file.")
         else:                                   # we have a OTP message
@@ -67,10 +75,9 @@ class OTProtocol:
                 print("\n")
             #print("camera is: {}".format(self.sd["properties"]["camera"]))
             #print("finding: {}".format(self.sd["properties"]["lens"]["properties"]["focalLength"]["units"]))
-#            .properties.focalLength.units))
-            
 
-    def Parse(self):        # walk through the text and create task objects based on items listed 
+    # ingest the text and store the JSON items in a dictionary
+    def Parse(self):        
         protocol = None
         text = ''
         if (self.filepath != None):        
@@ -79,26 +86,24 @@ class OTProtocol:
                 lines = fd.readlines()
                 for line in lines:
                     text = text + line
-        elif msg_str != None:
-            print("Parsing JSON string from buffer...")
-            text = msg_str
+        elif self.sample_str != None:        
+            print("Parsing JSON string from sample buffer...")
+            text = self.sample_str
         #print(text)
         #print('\n')    
         self.pd = json.loads(text)
         if not self.pd:
-            print("Parse(): Failed to parse OTP message file.")
+            print("Parse(): Failed to parse OTIO message file.")
         else:                                   # we have a OTP message
-            print("Parsed the sample JSON successfully.")
+            print("Parsed the sample OTIO JSON successfully.")
             if self.verbose:
                 print("Contents of the parsed JSON dict:\n")
                 print(self.pd)
                 print("\n")
 
-    def Get_trans(self, dimension,object_name=None):
+    def Get_camera_trans(self, dimension,object_name=None):
         for tr in self.pd["transforms"]:
-            #if (tr["name"]) == "Camera":
             if ("Camera" in tr["name"]):
-                #print(tr)
                 if (dimension == 'X'):
                     return tr["translation"]["x"] * self.trans_mult
                 elif (dimension == 'Y'):
@@ -107,26 +112,47 @@ class OTProtocol:
                     return tr["translation"]["z"] * self.trans_mult
                 break
 
-    def Get_cam_translations(self,object_name=None):
+    def Get_camera_translations(self,object_name=None):
         return (self.Get_trans('X'), self.Get_trans('Y'), self.Get_trans('Z'))
 
-    def Get_time(self):
-        if self.time_units == "timecode":
-            if ("timing" in self.pd) and (self.pd["timing"]["timecode"]):
-                hh = '{:02}'.format(int(self.pd["timing"]["timecode"]["hours"]))
-                mm = '{:02}'.format(int(self.pd["timing"]["timecode"]["minutes"]))                
-                ss = '{:02}'.format(int(self.pd["timing"]["timecode"]["seconds"]))
-                ff = '{:02}'.format(int(self.pd["timing"]["timecode"]["frames"]))
-                #return str(self.pd["timing"]["timecode"]["hours"])+':'+str(self.pd["timing"]["timecode"]["minutes"])+':'+str(self.pd["timing"]["timecode"]["seconds"])+':'+str(self.pd["timing"]["timecode"]["frames"])
-                return hh + ':' + mm + ':' + ss + ':' + ff
-            else:
-                return None
-        elif self.time_units == "seconds":
-            return self.curtime
-        elif self.time_units == "milliseconds":
-            return self.curtime * 1000.0
+    def Get_timecode(self):
+        if ("timing" in self.pd) and (self.pd["timing"]["timecode"]):
+            hh = '{:02}'.format(int(self.pd["timing"]["timecode"]["hours"]))
+            mm = '{:02}'.format(int(self.pd["timing"]["timecode"]["minutes"]))                
+            ss = '{:02}'.format(int(self.pd["timing"]["timecode"]["seconds"]))
+            ff = '{:02}'.format(int(self.pd["timing"]["timecode"]["frames"]))
+            return hh + ':' + mm + ':' + ss + ':' + ff
+        else:
+            return None
 
-    # Set user-preferred units for translations. Pass in units as: "m", "cm", "mm"
+    # Get the PTP sample time
+    def Get_sample_time(self):
+        if ("timing" in self.pd) and (self.pd["timing"]["sampleTimestamp"]):
+            sec = float(self.pd["timing"]["sampleTimestamp"]["seconds"])
+            nsec = float(self.pd["timing"]["sampleTimestamp"]["nanoseconds"])
+            asec = float(self.pd["timing"]["sampleTimestamp"]["attoseconds"])
+            ctime = sec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
+        if self.sample_time_format == "seconds":
+            return ctime
+        elif self.sample_time_format == "milliseconds":
+            return ctime * 1000.0
+        elif self.sample_time_format == "microseconds":
+            return ctime * 10000.0
+        elif self.sample_time_format == "nanoseconds":
+            return ctime * 100000.0
+        # can't convert to timecode becuase it is PTP and has no epoch?
+
+    # Frame rate which this timecode represents
+    def Get_timecode_framerate(self):
+        if ("timing" in self.pd) and (self.pd["timing"]["timecode"]["format"]["frameRate"]):
+            numerator = float(self.pd["timing"]["timecode"]["format"]["frameRate"]["num"])  
+            denominator = float(self.pd["timing"]["timecode"]["format"]["frameRate"]["denom"]) 
+            return float(numerator / denominator)
+        else:
+            return None
+
+    # Set user-preferred units for translations. 
+    # Valid args: "m", "cm", "mm", "in"
     def Set_trans_units(self,unit_str):
         schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["translation"]["units"]
         if self.verbose:
@@ -134,19 +160,26 @@ class OTProtocol:
         print("Setting preferred translation units to: {0}".format(unit_str))
         if unit_str == "m":
             if schema_units == "meters":
-               self.trans_mult = 1.0          # convert schema meters to meters
+               self.trans_mult = 1.0
         elif unit_str == "cm":
             if schema_units == "meters":
-               self.trans_mult = 100.0          # convert schema meters to cm
+               self.trans_mult = 100.0
         elif unit_str == "mm":
             if schema_units == "meters":
-               self.trans_mult = 1000.0          # convert schema meters to mm
+               self.trans_mult = 1000.0
+        elif unit_str == "in":
+            if schema_units == "meters":
+               self.trans_mult = 1000/25.4
 
-    def Set_time_units(self,units_str):
-        print("Setting preferred time format to: {0}".format(units_str))
-        if (units_str in self.valid_formats):
-            self.time_units = units_str
+    # User preference for time format
+    # Valid args: "timecode"
+    def Set_sample_time_format(self,format_str):
+        print("Setting preferred sample time format to: {0}".format(format_str))
+        if (format_str in self.sample_time_formats):
+            self.sample_time_format = format_str
 
+    # Esablish a user-preference for units of focus distance.
+    # Valid: "m","cm","mm","in"
     def Set_focus_distance_units(self,unit_str):
         schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
         if self.verbose:
@@ -154,31 +187,68 @@ class OTProtocol:
         print("Setting preferred focus distance units to: {}".format(unit_str))
         if unit_str == "m":
             if schema_units == "millimeter":
-                self.focus_dist_factor = .001
+                self.focus_dist_mult = .001
         elif unit_str == "cm":
             if schema_units == "millimeter":
-                self.focus_dist_factor = 0.1
+                self.focus_dist_mult = 0.1
         elif unit_str == "mm":
             if schema_units == "millimeter":        
-                self.focus_dist_factor = 1.0
+                self.focus_dist_mult = 1.0
+        elif unit_str == "in":
+            if schema_units == "millimeter":        
+                self.focus_dist_mult = 1/25.4
 
     def Get_protocol(self):
-        if (self.pd["protocol"]):               # getattr ?
+        if (self.pd["protocol"]):
             return str(self.pd["protocol"])
         else:
             return None
 
     def Get_slate(self):
         if "device" in self.pd.keys():
-            if self.pd["device"]["slate"]:            # getattr ?
+            if self.pd["device"]["slate"]:
                 return str(self.pd["device"]["slate"])
             else:
                 return None
         else:
             return None
 
-    def Get_static_data(self):
-        print('Get_static_data: This is a placeholder.')       # FIXME: fetch some static data
+    # If present in this sample, the 'static' block has the active sensor dimensions
+    def Get_sensor_dim_height(self):
+        if "static" in self.pd: 
+            if self.pd["static"]["camera"]["activeSensorResolution"]:
+                height = int(self.pd["static"]["camera"]["activeSensorResolution"]["height"])
+                return height
+        return None
+
+    # If present in this sample, the 'static' block has the active sensor dimensions
+    def Get_sensor_dim_width(self):
+        if "static" in self.pd: 
+            if self.pd["static"]["camera"]["activeSensorResolution"]:
+                width = int(self.pd["static"]["camera"]["activeSensorResolution"]["width"])
+                return width
+            else:
+                return None
+        return None
+
+    # Find units in the schema for active sensor dimensions
+    def Get_sensor_dim_units(self):
+        if "static" in self.pd: 
+            if self.sd["properties"]["camera"]["properties"]["activeSensorPhysicalDimensions"]:
+                return str(self.sd["properties"]["camera"]["properties"]["activeSensorPhysicalDimensions"]["units"])
+            else:
+                return None
+        else:
+            return None
+
+    # If present in this sample, the 'static' block would have the active sensor dimensions
+    def Get_tracking_device_serial_number(self):
+        if "static" in self.pd: 
+            if self.pd["static"]["device"]["serialNumber"]:
+                return str(self.pd["static"]["device"]["serialNumber"])
+            else:
+                return None
+        return None
 
     def Get_focal_length(self):
         if "lens" in self.pd.keys():
@@ -187,27 +257,46 @@ class OTProtocol:
             return None
 
     def Get_focus_distance(self):
-         return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_factor
+         return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
 
 
 ################
-#Sample app below:
+# Sample parsing below:
 
 tsample = OTProtocol(None,None)
 tsample.Set_trans_units("cm")              # end-user preferred units
-tsample.Set_time_units("timecode")         # end-user preferred units
+tsample.Set_sample_time_format("sec")        # end-user preferred units.
 tsample.Set_focus_distance_units("cm")     # end-user preferred units
+print()
 
 protocol= tsample.Get_protocol()
 slate = tsample.Get_slate()
-print("Detected protocol: {0}\nOn slate {1}".format(protocol,slate))
-timecode = tsample.Get_time()
-posX = tsample.Get_trans('X')
-posY = tsample.Get_trans('Y')
-posZ =tsample.Get_trans('Z')
-print("At {0} the camera position is ({1},{2},{3}) cm".format(timecode, posX, posY, posZ))
+print("Detected protocol: {}".format(protocol))
+print("On slate: {}".format(slate))
+timecode = tsample.Get_timecode()
+print("Current sample timecode: {}".format(timecode))
+framerate = tsample.Get_timecode_framerate()
+print("At a frame rate of: {:.5}".format(framerate))
+sample_time =  tsample.Get_sample_time()
+print("Sample PTP time is: {} sec".format(sample_time))
+snum = tsample.Get_tracking_device_serial_number()
+if snum:
+    print("Tracking device serial number: {}".format(snum))
+else:
+    print("Unknown tracking device, wait for static sample to come in...")
+posX = tsample.Get_camera_trans('X')
+posY = tsample.Get_camera_trans('Y')
+posZ =tsample.Get_camera_trans('Z')
+print("Camera position is: ({1},{2},{3}) cm".format(timecode, posX, posY, posZ))
 fl = tsample.Get_focal_length()
-units = tsample.sd["properties"]["lens"]["properties"]["focalLength"]["units"]
-print("Focal length is: {} {}".format(fl,units))
+height = tsample.Get_sensor_dim_height()
+if height:
+    width = tsample.Get_sensor_dim_width()
+    units = tsample.Get_sensor_dim_units()
+    print("Active camera sensor height: {}, width: {} {}".format(height,width,units))
+else:
+    print("Unknown camera sensor, wait for static sample to come in...")
+fl_units = tsample.sd["properties"]["lens"]["properties"]["focalLength"]["units"]
+print("Focal length is: {} {}".format(fl,fl_units))
 fd = tsample.Get_focus_distance()
-print("Focus distance is {} cm".format(fd))
+print("Focus distance is: {} cm".format(fd))
