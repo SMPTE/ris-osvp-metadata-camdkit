@@ -463,17 +463,7 @@ class Transforms(Parameter):
         "required": ["translation", "rotation"]
       }
     }
-  
-class TimingMode(EnumParameter):
-  """
-  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data
-  is required in the data).
-  'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
-  """
-  sampling = Sampling.REGULAR
-  canonical_name = "mode"
-  section = "timing"
-  units = None
+
 
 class TimingSynchronization(Parameter):
   """
