@@ -87,7 +87,7 @@
     },
     "sampleTimestamp": {
       "seconds": 1718806554,
-      "nanoseconds": 9,
+      "nanoseconds": 500000000,
       "attoseconds": 0
     },
     "sequenceNumber": 0,

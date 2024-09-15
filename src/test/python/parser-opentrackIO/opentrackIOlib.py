@@ -1,14 +1,9 @@
-#!/usr/bin/env python3
-#
 # opentrackIO_parser.py
 #
-# Reference code for decoding opentrack messages
+# Reference code for decoding opentrackIO messages
 # Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
 #
 # License: this code is open-source under the FreeBSD License
-#
-# example: python3 src/test/python/parser-opentrackIO/opentrackIO_parser.py --file=complete_dynamic_example_20240907.json --schema=opentrackio_schema_modified_20240907.json
-# exemple: python3 src/test/python/parser-opentrackIO/opentrackIO_parser.py --file=complete_static_example_20240907.json --schema=opentrackio_schema_modified_20240907.json
 
 import json
 import argparse
@@ -29,7 +24,7 @@ class OTProtocol:
         self.pd = None          # the parsed procotol dictionary
         self.sd = None          # the parsed schema dictionary
         self.sample_time_format = "seconds"
-        self.sample_time_formats = ["seconds","milliseconds","microseconds","nanoseconds"]
+        self.sample_time_formats = ["seconds","timecode","string"]
         self.verbose = False
         self.focus_dist_mult = 1.0
 
@@ -142,21 +137,38 @@ class OTProtocol:
             return None
 
     # Get the PTP sample time
-    def Get_sample_time(self):
+    def Get_sample_time(self,part=None):
         if ("timing" in self.pd) and (self.pd["timing"]["sampleTimestamp"]):
-            sec = float(self.pd["timing"]["sampleTimestamp"]["seconds"])
-            nsec = float(self.pd["timing"]["sampleTimestamp"]["nanoseconds"])
-            asec = float(self.pd["timing"]["sampleTimestamp"]["attoseconds"])
-            ctime = sec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
-        if self.sample_time_format == "seconds":
-            return ctime
-        elif self.sample_time_format == "milliseconds":
-            return ctime * 1000.0
-        elif self.sample_time_format == "microseconds":
-            return ctime * 10000.0
-        elif self.sample_time_format == "nanoseconds":
-            return ctime * 100000.0
-        # can't convert to timecode becuase it is PTP and has no epoch?
+            ssec = int(self.pd["timing"]["sampleTimestamp"]["seconds"])
+            nsec = int(self.pd["timing"]["sampleTimestamp"]["nanoseconds"])
+            asec = int(self.pd["timing"]["sampleTimestamp"]["attoseconds"])
+            #ctime = ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
+            # Constants
+            epoch = 1970                        # PTP is since this epoch
+            spm = 60                            # seconds per minute. I know, but consistency is important
+            sph = 3600                          # seconds per hour
+            spd = 86400                         # sec per day
+            spy = 31536000                      # sec per year
+            # separate into years, days, hours, min, sec
+            ydelta = int(ssec / spy)            # years since epoch
+            yr = epoch + ydelta                 # current year
+            sty = ssec - (ydelta * spy)         # seconds elapsed this year
+            day = int(sty / spd)                # current day of year
+            std = sty - (day * spd)             # seconds elapsed today (since midnight)
+            hr = int(std / sph)                 # hours elapsed today
+            mn = int((std - (hr * sph)) / spm)  # remainder minutes
+            st = int(std - (hr * sph) - (mn * spm))  # remainder seconds
+        if not part:
+            if self.sample_time_format == "seconds":
+                return ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
+            elif self.sample_time_format == "timecode":             # since midnight
+                # FIXME: is this using the sample framerate?
+                frm = int((nsec * 0.000000001) * self.Get_timecode_framerate())
+                return '{:02}'.format(hr) + ":" + '{:02}'.format(mn) + ":" + '{:02}'.format(st) + ":" + '{:02}'.format(frm)
+            elif self.sample_time_format == "string":
+                return "year:{} day:{} hour:{} min:{} sec:{} nsec:{}".format(yr,day,hr,mn,st,nsec)
+        else:
+          pass  # FIXME: get year, day, hour, etc  
 
     # Frame rate which this timecode represents
     def Get_timecode_framerate(self):
@@ -250,7 +262,7 @@ class OTProtocol:
     # If present in this sample, the 'static' block would have the active sensor dimensions
     def Get_tracking_device_serial_number(self):
         if "static" in self.pd: 
-            if self.pd["static"]["device"]["serialNumber"]:
+            if self.pd["static"]["device"]["serialNumber"]:  # FIXME: helper function to do every level, Joseph write it?
                 return str(self.pd["static"]["device"]["serialNumber"])
             else:
                 return None
@@ -265,44 +277,3 @@ class OTProtocol:
     def Get_focus_distance(self):
          return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
 
-
-################
-# Sample parsing below:
-
-tsample = OTProtocol(None,None)
-tsample.Set_trans_units("cm")              # end-user preferred units
-tsample.Set_sample_time_format("sec")        # end-user preferred units.
-tsample.Set_focus_distance_units("cm")     # end-user preferred units
-print()
-
-protocol= tsample.Get_protocol()
-slate = tsample.Get_slate()
-print("Detected protocol: {}".format(protocol))
-print("On slate: {}".format(slate))
-timecode = tsample.Get_timecode()
-print("Current sample timecode: {}".format(timecode))
-framerate = tsample.Get_timecode_framerate()
-print("At a frame rate of: {:.5}".format(framerate))
-sample_time =  tsample.Get_sample_time()
-print("Sample PTP time is: {} sec".format(sample_time))
-snum = tsample.Get_tracking_device_serial_number()
-if snum:
-    print("Tracking device serial number: {}".format(snum))
-else:
-    print("Unknown tracking device, wait for static sample to come in...")
-posX = tsample.Get_camera_trans('X')
-posY = tsample.Get_camera_trans('Y')
-posZ =tsample.Get_camera_trans('Z')
-print("Camera position is: ({1},{2},{3}) cm".format(timecode, posX, posY, posZ))
-fl = tsample.Get_focal_length()
-height = tsample.Get_sensor_dim_height()
-if height:
-    width = tsample.Get_sensor_dim_width()
-    units = tsample.Get_sensor_dim_units()
-    print("Active camera sensor height: {}, width: {} {}".format(height,width,units))
-else:
-    print("Unknown camera sensor, wait for static sample to come in...")
-fl_units = tsample.sd["properties"]["lens"]["properties"]["focalLength"]["units"]
-print("Focal length is: {} {}".format(fl,fl_units))
-fd = tsample.Get_focus_distance()
-print("Focus distance is: {} cm".format(fd))
