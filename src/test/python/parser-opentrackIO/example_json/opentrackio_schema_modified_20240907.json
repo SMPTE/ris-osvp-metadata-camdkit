@@ -126,7 +126,7 @@
           "minimum": 1,
           "maximum": 360000,
           "description": "Shutter speed as a fraction of the capture frame rate. The shutter speed (in units of 1/s) is equal to the value of the parameter divided by 360 times the capture frame rate.",
-          "units": "degrees (angular)"
+          "units": "degree"
         }
       }
     },
@@ -301,7 +301,7 @@
             }
           },
           "description": "Shift in x and y of the centre of distortion of the virtual camera",
-          "units": "millimeters"
+          "units": "millimeter"
         },
         "encoders": {
           "type": "object",
@@ -632,6 +632,7 @@
             "seconds",
             "nanoseconds"
           ],
+          "units": "second",          
           "description": " PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) "
         },
         "sequenceNumber": {
@@ -806,7 +807,7 @@
                   "type": "number"
                 }
               },
-              "units": "meters"
+              "units": "meter"
             },
             "rotation": {
               "type": "object",
@@ -822,7 +823,7 @@
                   "type": "number"
                 }
               },
-              "units": "degrees"
+              "units": "degree"
             },
             "scale": {
               "type": "object",

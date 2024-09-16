@@ -6,99 +6,72 @@
 # License: this code is open-source under the FreeBSD License
 
 import json
-import argparse
+#import argparse
 import os
+import math
 
 # Class to decode and interpret the protocol
-# Pass in either a JSON message or a test filename
+# msg_text: string containing a single json "sample"
+# schema_text: string containing a json schema for the protocol
+# verbose: Whether to print extra status during processing
 class OTProtocol:
-    def __init__(self, msg_str=None, filepath=None):
-        # msg_str = string containing a single json "sample"
-        # filepath: file containing a JSON "sample", for testing
-        self.sample_str = msg_str
-        self.filepath = filepath
-        self.schemapath = None
+    def __init__(self, msg_text=None, schema_text=None, verbose=False):
+        self.sample_str = msg_text              # the Sample raw JSON
+        self.schema_str = schema_text           # the Sample raw JSON
+        self.verbose = verbose
+        self.schema_text = None             # the Schema raw JSON
         self.trans_mult = 1.0                               # user-preferred units multiplier
-        self.curtime = 0
-        self.cam_trans = {"X":0,"Y":0,"Z":0}
+        self.rot_mult = 1.0
         self.pd = None          # the parsed procotol dictionary
         self.sd = None          # the parsed schema dictionary
-        self.sample_time_format = "seconds"
-        self.sample_time_formats = ["seconds","timecode","string"]
-        self.verbose = False
+        self.sample_time_format = "sec"
+        self.sample_time_formats = ["sec","timecode","string"]
         self.focus_dist_mult = 1.0
 
-        parser = argparse.ArgumentParser(description='OpenTrackingProtocol parser')
-        parser.add_argument('-f', '--file', help='The JSON input file.', default=None)
-        parser.add_argument('-s', '--schema', help='The schema (JSON) input file.', default=None)
-        parser.add_argument('-t', '--test', help='If present, will only verify json',action='store_true')
-        parser.add_argument('-v', '--verbose', help='Make script more verbose',action='store_true')
-        args = parser.parse_args()
-        if (args.schema):
-            if os.path.exists(args.schema):
-                self.schemapath = args.schema
-        if self.schemapath:
-            self.Import_schema()
-        if (args.file):
-            if os.path.exists(args.file):
-                self.filepath = args.file
-        if (args.verbose):
-            self.verbose = True
-
-        self.Parse()                # parse the actual JSON of the protocol
-
+    # Read the schema which governs the interpretation of the protocol
     def Import_schema(self):
-        text = ''
-        try:
-            if (self.schemapath != None):        
-                with open(self.schemapath, 'r') as fd:
-                    print("Reading OTIO schema file: {0}".format(self.schemapath))
-                    lines = fd.readlines()
-                    for line in lines:
-                        text = text + line
-            self.sd = json.loads(text)
-        except json.decoder.JSONDecodeError:
-            print("Got JSONDecodeError decoding the sample!")
-            self.sd = None
-        if not self.sd:
-            print("Parse(): Failed to parse OTIO schema file.")
-        else:                                   # we have a OTP message
-            print("Parsed the schema JSON successfully.")
-            if self.verbose:
-                print("Contents of the parsed JSON schema dict:\n")
-                print(self.sd)
-                print("\n")
-            #print("camera is: {}".format(self.sd["properties"]["camera"]))
-            #print("finding: {}".format(self.sd["properties"]["lens"]["properties"]["focalLength"]["units"]))
+        if self.schema_str:
+            try:
+                self.sd = json.loads(self.schema_str)
+            except json.decoder.JSONDecodeError:
+                print("Got JSONDecodeError while decoding the sample!")
+                self.sd = None
+            if not self.sd:
+                print("Parse(): Failed to parse OTIO schema file.")
+            else:                                   # we have a valid schema
+                print("Parsed the schema JSON successfully.")
+                if self.verbose:
+                    print("Contents of the parsed JSON schema dict:\n")
+                    print(self.sd)
+                    print("\n")
+        else:
+            print("ERROR: no schema provided!")
+            return -1
 
-    # ingest the text and store the JSON items in a dictionary
+    # Ingest the text and store the JSON items in a dictionary
     def Parse(self):        
         protocol = None
-        text = ''
-        if (self.filepath != None):        
-            with open(self.filepath, 'r') as fd:
-                print("Reading OTIO sample file: {0}".format(self.filepath))
-                lines = fd.readlines()
-                for line in lines:
-                    text = text + line
-        elif self.sample_str != None:        
+        if self.sample_str != None:        
             print("Parsing JSON string from sample buffer...")
-            text = self.sample_str
-        #print(text)
-        #print('\n')    
-        try:
-            self.pd = json.loads(text)
-        except:
-            print("Error: failed to parse JSON file! Either path incorrect or JSON invalid.")
-            exit(-1)
-        if not self.pd:
-            print("Parse(): Failed to parse OTIO message file.")
-        else:                                   # we have a OTP message
-            print("Parsed the sample OTIO JSON successfully.")
-            if self.verbose:
-                print("Contents of the parsed JSON dict:\n")
-                print(self.pd)
-                print("\n")
+            #text = self.sample_str
+            #print(text)
+            #print('\n')    
+            try:
+                self.pd = json.loads(self.sample_str)
+            except:
+                print("Error: failed to parse JSON file! Either path incorrect or JSON invalid.")
+                exit(-1)
+            if not self.pd:
+                print("Parse(): Failed to parse OTIO message file.")
+            else:                                   # we have a OTP message
+                print("Parsed the sample JSON successfully.")
+                if self.verbose:
+                    print("Contents of the parsed JSON dict:\n")
+                    print(self.pd)
+                    print("\n")
+        else:
+            print("ERROR: no json text provided!")
+            return -1
 
     # Returns the multiplicative conversion factor from meters to user-specified units
     # Valid unit specifier strings: "m", "cm", "mm", "in"
@@ -115,12 +88,25 @@ class OTProtocol:
     def Get_camera_trans(self, dimension,object_name=None):
         for tr in self.pd["transforms"]:
             if ("Camera" in tr["name"]):
-                if (dimension == 'X'):
+                if self.verbose:
+                    print("found camera, dim = {}, mult factor: {}".format(dimension,self.trans_mult))
+                if (dimension == 'x'):
                     return tr["translation"]["x"] * self.trans_mult
-                elif (dimension == 'Y'):
+                elif (dimension == 'y'):
                     return tr["translation"]["y"] * self.trans_mult
-                elif (dimension == 'Z'):
+                elif (dimension == 'z'):
                     return tr["translation"]["z"] * self.trans_mult
+                break
+
+    def Get_camera_rot(self, dimension,object_name=None):
+        for tr in self.pd["transforms"]:
+            if ("Camera" in tr["name"]):
+                if (dimension == 'p'):
+                    return tr["rotation"]["pan"] * self.rot_mult
+                elif (dimension == 't'):
+                    return tr["rotation"]["tilt"] * self.rot_mult
+                elif (dimension == 'r'):
+                    return tr["rotation"]["roll"] * self.rot_mult
                 break
 
     def Get_camera_translations(self,object_name=None):
@@ -151,15 +137,15 @@ class OTProtocol:
             spy = 31536000                      # sec per year
             # separate into years, days, hours, min, sec
             ydelta = int(ssec / spy)            # years since epoch
-            yr = epoch + ydelta                 # current year
-            sty = ssec - (ydelta * spy)         # seconds elapsed this year
+            yr = int(epoch + ydelta)            # current year
+            sty = int(ssec - (ydelta * spy))    # seconds elapsed this year
             day = int(sty / spd)                # current day of year
-            std = sty - (day * spd)             # seconds elapsed today (since midnight)
+            std = int(sty - (day * spd))        # seconds elapsed today (since midnight)
             hr = int(std / sph)                 # hours elapsed today
             mn = int((std - (hr * sph)) / spm)  # remainder minutes
             st = int(std - (hr * sph) - (mn * spm))  # remainder seconds
         if not part:
-            if self.sample_time_format == "seconds":
+            if self.sample_time_format == "sec":
                 return ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
             elif self.sample_time_format == "timecode":             # since midnight
                 # FIXME: is this using the sample framerate?
@@ -168,7 +154,18 @@ class OTProtocol:
             elif self.sample_time_format == "string":
                 return "year:{} day:{} hour:{} min:{} sec:{} nsec:{}".format(yr,day,hr,mn,st,nsec)
         else:
-          pass  # FIXME: get year, day, hour, etc  
+            if part == 'yy':
+                return yr
+            elif part == 'dd':
+                return day
+            elif part == 'hh':
+                return hr
+            elif part == 'mm':
+                return mn
+            elif part == 'ss':
+                return st
+            elif part == 'ns':
+                return nsec
 
     # Frame rate which this timecode represents
     def Get_timecode_framerate(self):
@@ -184,15 +181,31 @@ class OTProtocol:
     def Set_trans_units(self,unit_str):
         schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["translation"]["units"]
         if self.verbose:
-            print("Schema says camera translation units are {}".format(schema_units))
-        print("Setting preferred translation units to: {0}".format(unit_str))
-        if schema_units == "meters":
+            print("Schema says camera translation units are: {}".format(schema_units))
+            print("Setting preferred translation units to: {0}".format(unit_str))
+        if schema_units == "meter":
             self.trans_mult = self.Conversion_factor_from_meters(unit_str)
+    
+    # Set user-preferred units for rotations. 
+    # Valid args: "deg", "rad" 
+    def Set_rotation_units(self,unit_str):
+        schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["rotation"]["units"]
+        if self.verbose:
+            print("Schema says camera rotation units are: {}".format(schema_units))
+            print("Setting preferred camera rotation units to: {0}".format(unit_str))
+        if schema_units == "degree":
+            if unit_str == "deg":
+                self.rot_mult = 1.0
+            if unit_str == "rad":
+                self.rot_mult = math.pi/180
 
     # User preference for time format
     # Valid args: "timecode"
     def Set_sample_time_format(self,format_str):
-        print("Setting preferred sample time format to: {0}".format(format_str))
+        if self.verbose:
+            schema_units = self.sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"]
+            print("Schema says sample time units are: {}".format(schema_units))
+            print("Setting preferred sample time format to: {0}".format(format_str))
         if (format_str in self.sample_time_formats):
             self.sample_time_format = format_str
 
@@ -201,21 +214,19 @@ class OTProtocol:
     def Set_focus_distance_units(self,unit_str):
         schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
         if self.verbose:
-            print("Schema says focus distance units are {}".format(schema_units))
-        print("Setting preferred focus distance units to: {}".format(unit_str))
-        if unit_str == "m":
-            if schema_units == "millimeter":
+            print("Schema says focus distance units are: {}".format(schema_units))
+            print("Setting preferred focus distance units to: {}".format(unit_str))
+        if schema_units == "millimeter":
+            if unit_str == "m":
                 self.focus_dist_mult = .001
-        elif unit_str == "cm":
-            if schema_units == "millimeter":
+            elif unit_str == "cm":
                 self.focus_dist_mult = 0.1
-        elif unit_str == "mm":
-            if schema_units == "millimeter":        
+            elif unit_str == "mm":
                 self.focus_dist_mult = 1.0
-        elif unit_str == "in":
-            if schema_units == "millimeter":        
+            elif unit_str == "in":
                 self.focus_dist_mult = 1/25.4
 
+    # The protocol to which this sample conforms
     def Get_protocol(self):
         if (self.pd["protocol"]):
             return str(self.pd["protocol"])
