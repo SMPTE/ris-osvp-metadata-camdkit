@@ -578,7 +578,7 @@ class LensEncoders(Parameter):
     """
     The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
     """
-    if not isinstance(value, Encoders):
+    if not isinstance(value, FizEncoders):
       return False
     if value.focus == None and value.iris == None and value.zoom == None:
       return False
@@ -593,7 +593,7 @@ class LensEncoders(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return Encoders(**value)
+    return FizEncoders(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -636,7 +636,7 @@ class LensRawEncoders(Parameter):
     """
     The parameter shall contain at least one integer value for the FIZ encoders.
     """
-    if not isinstance(value, RawEncoders):
+    if not isinstance(value, RawFizEncoders):
       return False
     if value.focus == None and value.iris == None and value.zoom == None:
       return False
@@ -651,7 +651,7 @@ class LensRawEncoders(Parameter):
   
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return RawEncoders(**value)
+    return RawFizEncoders(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
