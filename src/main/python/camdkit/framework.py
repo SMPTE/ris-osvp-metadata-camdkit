@@ -382,7 +382,7 @@ class StrictlyPositiveRationalParameter(Parameter):
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator < 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
+    if value.numerator <= 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
       return False
 
     return True
