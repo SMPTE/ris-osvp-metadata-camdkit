@@ -55,15 +55,15 @@ class Transform:
   parent: typing.Optional[str] = None
 
 @dataclasses.dataclass
-class Encoders:
+class FizEncoders:
   "Normalised FIZ encoder values"
-  focus: typing.Optional[float] = None
-  iris: typing.Optional[float] = None
-  zoom: typing.Optional[float] = None
+  focus: typing.Optional[numbers.Real] = None
+  iris: typing.Optional[numbers.Real] = None
+  zoom: typing.Optional[numbers.Real] = None
 
 @dataclasses.dataclass
-class RawEncoders:
-  "Normalised FIZ encoder values"
+class RawFizEncoders:
+  "Unnormalised FIZ encoder values"
   focus: typing.Optional[int] = None
   iris: typing.Optional[int] = None
   zoom: typing.Optional[int] = None

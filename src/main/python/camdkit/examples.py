@@ -69,7 +69,7 @@ def _get_recommended_dynamic_clip():
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
   clip.lens_entrance_pupil_distance = (Fraction(1000,100),)
-  clip.lens_encoders = (Encoders(focus=0.1, iris=0.2, zoom=0.3),)
+  clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
   return clip
@@ -115,7 +115,7 @@ def _get_complete_dynamic_clip():
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
   clip.lens_entrance_pupil_distance = (Fraction(1000,100),)
-  clip.lens_encoders = (Encoders(focus=0.1, iris=0.2, zoom=0.3),)
+  clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion_overscan = (1.0,)
   clip.lens_distortion_scale = (1.0,)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
