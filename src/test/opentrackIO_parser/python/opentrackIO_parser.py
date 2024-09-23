@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 #
-# opentrackIO_decoder.py
+# opentrackIO_parser.py
 #
-# Reference code for decoding opentrackIO messages
+# Reference code for parsing/decoding opentrackIO samples
 # Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
 #
 # License: this code is open-source under the FreeBSD License
 #
-# example: python3 src/test/python/parser-opentrackIO/opentrackIO_parser.py --file=example_json/complete_static_example_20240907.json --schema=example_json/opentrackio_schema_modified_20240907.json
+# example: python3 opentrackIO_parser.py --file=../example_json/complete_static_example_20240907.json --schema=../example_json/opentrackio_schema_modified_20240907.json
 
 import os
 import argparse

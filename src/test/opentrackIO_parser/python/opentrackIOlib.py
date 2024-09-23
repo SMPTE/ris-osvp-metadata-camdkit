@@ -1,4 +1,4 @@
-# opentrackIO_parser.py
+# opentrackIOlib.py
 #
 # Reference code for decoding opentrackIO messages
 # Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
@@ -6,11 +6,10 @@
 # License: this code is open-source under the FreeBSD License
 
 import json
-#import argparse
 import os
 import math
 
-# Class to decode and interpret the protocol
+# Class to decode and interpret the OTIO protocol
 # msg_text: string containing a single json "sample"
 # schema_text: string containing a json schema for the protocol
 # verbose: Whether to print extra status during processing
@@ -37,7 +36,7 @@ class OTProtocol:
                 print("Got JSONDecodeError while decoding the sample!")
                 self.sd = None
             if not self.sd:
-                print("Parse(): Failed to parse OTIO schema file.")
+                print("Import_schema(): Failed to parse OTIO schema file.")
             else:                                   # we have a valid schema
                 print("Parsed the schema JSON successfully.")
                 if self.verbose:
@@ -59,10 +58,10 @@ class OTProtocol:
             try:
                 self.pd = json.loads(self.sample_str)
             except:
-                print("Error: failed to parse JSON file! Either path incorrect or JSON invalid.")
+                print("Parse(): Error. Failed to parse JSON file! Either path incorrect or JSON invalid.")
                 exit(-1)
             if not self.pd:
-                print("Parse(): Failed to parse OTIO message file.")
+                print("Parse(): Failed to parse OTIO sample file.")
             else:                                   # we have a OTP message
                 print("Parsed the sample JSON successfully.")
                 if self.verbose:
@@ -70,7 +69,7 @@ class OTProtocol:
                     print(self.pd)
                     print("\n")
         else:
-            print("ERROR: no json text provided!")
+            print("Parse(): Error. No json text provided!")
             return -1
 
     # Returns the multiplicative conversion factor from meters to user-specified units
@@ -85,7 +84,7 @@ class OTProtocol:
         elif unit_str == "in":
             return (1000/25.4)
 
-    def Get_camera_trans(self, dimension,object_name=None):
+    def Get_camera_trans(self, dimension):
         for tr in self.pd["transforms"]:
             if ("Camera" in tr["name"]):
                 if self.verbose:
@@ -98,7 +97,7 @@ class OTProtocol:
                     return tr["translation"]["z"] * self.trans_mult
                 break
 
-    def Get_camera_rot(self, dimension,object_name=None):
+    def Get_camera_rot(self, dimension):
         for tr in self.pd["transforms"]:
             if ("Camera" in tr["name"]):
                 if (dimension == 'p'):
@@ -109,9 +108,11 @@ class OTProtocol:
                     return tr["rotation"]["roll"] * self.rot_mult
                 break
 
-    def Get_camera_translations(self,object_name=None):
+    # Return order: x,y,z
+    def Get_camera_translations(self):
         return (self.Get_trans('X'), self.Get_trans('Y'), self.Get_trans('Z'))
 
+    # Return house timecode
     def Get_timecode(self):
         if ("timing" in self.pd) and (self.pd["timing"]["timecode"]):
             hh = '{:02}'.format(int(self.pd["timing"]["timecode"]["hours"]))
@@ -131,7 +132,7 @@ class OTProtocol:
             #ctime = ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
             # Constants
             epoch = 1970                        # PTP is since this epoch
-            spm = 60                            # seconds per minute. I know, but consistency is important
+            spm = 60                            # seconds per minute. Common knowledge, but consistency is important
             sph = 3600                          # seconds per hour
             spd = 86400                         # sec per day
             spy = 31536000                      # sec per year
@@ -200,7 +201,7 @@ class OTProtocol:
                 self.rot_mult = math.pi/180
 
     # User preference for time format
-    # Valid args: "timecode"
+    # Valid args: "sec", "timecode", "string"
     def Set_sample_time_format(self,format_str):
         if self.verbose:
             schema_units = self.sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"]
@@ -209,7 +210,7 @@ class OTProtocol:
         if (format_str in self.sample_time_formats):
             self.sample_time_format = format_str
 
-    # Esablish a user-preference for units of focus distance.
+    # Establish a user-preference for units of focus distance by storing a conversion factor.
     # Valid: "m","cm","mm","in"
     def Set_focus_distance_units(self,unit_str):
         schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
@@ -286,5 +287,7 @@ class OTProtocol:
             return None
 
     def Get_focus_distance(self):
-         return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
-
+        if "lens" in self.pd.keys():
+            return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
+        else:
+            return None
