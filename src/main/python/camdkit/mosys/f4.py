@@ -279,7 +279,7 @@ class F4PacketParser:
       # f = 36/[2*tand(FoV/2)]
       fov_radians = fov_h * math.pi / 180.0
       frame.lens_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
-      frame.lens_encoders = (Encoders(focus, iris, zoom),)
+      frame.lens_encoders = (FizEncoders(focus, iris, zoom),)
       frame.lens_distortion = (Distortion([k1, k2]),)
       frame.lens_perspective_shift = (PerspectiveShift(cx, cy),)
     return frame

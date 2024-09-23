@@ -10,7 +10,7 @@ import unittest
 import uuid
 
 from camdkit.framework import Vector3, Rotator3, Synchronization, SynchronizationSourceEnum, \
-                              Timecode, TimecodeFormat, Encoders, Distortion, PerspectiveShift
+                              Timecode, TimecodeFormat, FizEncoders, Distortion, PerspectiveShift
 from camdkit.mosys import reader
 
 class MoSysReaderTest(unittest.TestCase):
@@ -30,7 +30,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(str(clip.timing_timecode[8]), str(Timecode(15,3,47,10,TimecodeFormat(25))))
     self.assertEqual(clip.transforms[9][0].translation, Vector3(x=-8.121, y=-185.368, z=119.806))
     self.assertEqual(clip.transforms[10][0].rotation, Rotator3(pan=-2.969, tilt=-28.03, roll=3.1))
-    self.assertEqual(clip.lens_encoders[11], Encoders(focus=0.7643280029296875, zoom=0.0014190673828125))
+    self.assertEqual(clip.lens_encoders[11], FizEncoders(focus=0.7643280029296875, zoom=0.0014190673828125))
     self.assertEqual(clip.lens_distortion[12], Distortion([0.15680991113185883, -0.0881580114364624]))
     self.assertEqual(clip.lens_perspective_shift[13], PerspectiveShift(-7.783590793609619, 6.896144866943359))
     self.assertAlmostEqual(clip.lens_focal_length[14], 22.35, 2)

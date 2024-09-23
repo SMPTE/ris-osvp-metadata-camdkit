@@ -100,10 +100,10 @@ class ModelTest(unittest.TestCase):
     clip.lens_focal_length = (2.0, 4.0)
     clip.lens_focus_distance = (2, 4)
     clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),
-                          camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3),
-                              camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3))
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
+                          camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3),
+                              camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3))
     clip.lens_distortion_scale = (1.0, 1.0)
     clip.lens_distortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0),
@@ -714,47 +714,47 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.lens_encoders)
     self.assertIsNone(clip.lens_raw_encoders)
 
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.0),)
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=1.0),)
-    clip.lens_encoders = (camdkit.framework.Encoders(zoom=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(iris=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5, iris=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(iris=0.5, zoom=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(zoom=0.5, focus=0.5),)
-    clip.lens_encoders = (camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.0),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=1.0),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(zoom=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(iris=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5, iris=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(iris=0.5, zoom=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(zoom=0.5, focus=0.5),)
+    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5, iris=0.5, zoom=0.5),)
 
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=0),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(zoom=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(iris=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5, iris=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(iris=5, zoom=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(zoom=5, focus=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawEncoders(focus=5, iris=5, zoom=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=0),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(zoom=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(iris=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5, iris=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(iris=5, zoom=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(zoom=5, focus=5),)
+    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5, iris=5, zoom=5),)
     
 
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.Encoders(),)
+      clip.lens_encoders = (camdkit.framework.FizEncoders(),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.Encoders(1,2,3),)
+      clip.lens_encoders = (camdkit.framework.FizEncoders(1, 2, 3),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
+      clip.lens_encoders = (camdkit.framework.FizEncoders(-1, 0, 0),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.Encoders(-1,0,0),)
+      clip.lens_encoders = (camdkit.framework.FizEncoders(-1, 0, 0),)
 
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(),)
+      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(),)
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(-1,0,0),)
+      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(-1, 0, 0),)
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawEncoders(-1,0,0),)
+      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(-1, 0, 0),)
 
-    value = (camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3),)
+    value = (camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
     clip.lens_encoders = value
     self.assertTupleEqual(clip.lens_encoders, value)
     
-    value = (camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3),)
+    value = (camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3),)
     clip.lens_raw_encoders = value
     self.assertTupleEqual(clip.lens_raw_encoders, value)
 
@@ -764,22 +764,22 @@ class ModelTest(unittest.TestCase):
       "iris": 0.2,
       "zoom": 0.3,
     })
-    self.assertEqual(r,camdkit.framework.Encoders(focus=0.1, iris=0.2, zoom=0.3))
+    self.assertEqual(r, camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
     r = camdkit.model.LensRawEncoders.from_json({
       "focus": 1,
       "iris": 2,
       "zoom": 3,
     })
-    self.assertEqual(r,camdkit.framework.RawEncoders(focus=1, iris=2, zoom=3))
+    self.assertEqual(r, camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3))
     
   def test_lens_encoders_to_dict(self):
-    j = camdkit.model.LensEncoders.to_json(camdkit.framework.Encoders(focus=0.5, iris=0.5, zoom=0.5))
+    j = camdkit.model.LensEncoders.to_json(camdkit.framework.FizEncoders(focus=0.5, iris=0.5, zoom=0.5))
     self.assertDictEqual(j, {
       "focus": 0.5,
       "iris": 0.5,
       "zoom": 0.5,
     })
-    j = camdkit.model.LensRawEncoders.to_json(camdkit.framework.RawEncoders(focus=5, iris=5, zoom=5))
+    j = camdkit.model.LensRawEncoders.to_json(camdkit.framework.RawFizEncoders(focus=5, iris=5, zoom=5))
     self.assertDictEqual(j, {
       "focus": 5,
       "iris": 5,

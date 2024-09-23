@@ -37,12 +37,13 @@ class RationalTest(unittest.TestCase):
 class StrictlyPositiveRationalTest(unittest.TestCase):
 
   def test_limits(self):
-    self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(2147483647, 4294967295)))
-    self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(0, 1)))
+    self.assertTrue(framework.StrictlyPositiveRationalParameter.validate(Fraction(framework.INT_MAX,
+                                                                                  framework.UINT_MAX)))
+    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(0, 1)))
 
     self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(-1, 1)))
-    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(2147483648, 1)))
-    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(1, 4294967296)))
+    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(framework.INT_MAX+1, 1)))
+    self.assertFalse(framework.StrictlyPositiveRationalParameter.validate(Fraction(1, framework.UINT_MAX+1)))
 
   def test_from_dict(self):
     r = framework.StrictlyPositiveRationalParameter.from_json({
