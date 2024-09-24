@@ -7,25 +7,26 @@
 import uuid
 
 from camdkit.framework import *
-from camdkit.model import Clip
+from camdkit.model import Clip, VERSION_STRING
 
 def get_recommended_static_example():
   clip = _get_recommended_dynamic_clip()
   clip.camera_id = "A"
-  clip.lens_make = "Canon"
-  clip.lens_model = "HJ14"
+  clip.lens_make = "LensMaker"
+  clip.lens_model = "Model15"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
   return clip.to_json(0)
 
 def get_complete_static_example():
   clip = _get_complete_dynamic_clip()
   clip.camera_id = "A"
-  clip.lens_make = "Canon"
-  clip.lens_model = "HJ14"
+  clip.lens_make = "LensMaker"
+  clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
-  clip.device_model = "StarTracker Max"
-  clip.device_firmware = "3289"
-  clip.device_make = "Mo-Sys"
+  clip.lens_serial_number = "1234567890A"
+  clip.device_model = "Tracker"
+  clip.device_firmware = "1.2.3"
+  clip.device_make = "TrackerMaker"
   clip.device_serial_number = "1234567890A"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
   clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
@@ -50,7 +51,7 @@ def get_complete_dynamic_example():
 def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.protocol = ("OpenTrackIO_0.1.0",)
+  clip.protocol_version = (VERSION_STRING,)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
 
   clip.device_status = ("Optical Good",)
@@ -77,7 +78,7 @@ def _get_recommended_dynamic_clip():
 def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.protocol = ("OpenTrackIO_0.1.0",)
+  clip.protocol_version = (VERSION_STRING,)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
 

@@ -42,6 +42,7 @@ def main():
   template = env.get_template("OpenTrackIO.html")
   html = template.render(template_data)
 
+  print("Generating index.html")
   f = open(os.path.join(docs_path, "index.html"), "w")
   f.write(html)
   f.close()

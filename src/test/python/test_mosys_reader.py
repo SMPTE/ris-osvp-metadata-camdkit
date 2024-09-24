@@ -11,6 +11,7 @@ import uuid
 
 from camdkit.framework import Vector3, Rotator3, Synchronization, SynchronizationSourceEnum, \
                               Timecode, TimecodeFormat, FizEncoders, Distortion, PerspectiveShift
+from camdkit.model import VERSION_STRING
 from camdkit.mosys import reader
 
 class MoSysReaderTest(unittest.TestCase):
@@ -19,7 +20,7 @@ class MoSysReaderTest(unittest.TestCase):
     clip = reader.to_clip("src/test/resources/mosys/A003_C001_01 15-03-47-01.f4", 20)
 
     # Test parameters against known values across multple frames
-    self.assertEqual(clip.protocol[0], "OpenTrackIO_0.1.0")
+    self.assertEqual(clip.protocol_version[0], VERSION_STRING)
     self.assertEqual(len(clip.sample_id[1]), len(uuid.uuid4().urn))
     self.assertEqual(clip.device_recording[2], True)
     self.assertEqual(clip.device_status[3], "Optical Good")

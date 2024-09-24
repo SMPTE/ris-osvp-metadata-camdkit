@@ -53,7 +53,7 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
-    clip.protocol = ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0")
+    clip.protocol_version = (camdkit.model.VERSION_STRING, camdkit.model.VERSION_STRING)
 
     clip.device_status = ("Optical Good","Optical Good")
     clip.device_recording = (False,True)
@@ -146,7 +146,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
-    self.assertTupleEqual(d["protocol"], ("OpenTrackIO_0.1.0","OpenTrackIO_0.1.0"))
+    self.assertTupleEqual(d["protocolVersion"], (camdkit.model.VERSION_STRING, camdkit.model.VERSION_STRING))
     self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
                                                 ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
@@ -426,17 +426,17 @@ class ModelTest(unittest.TestCase):
     clip.sample_id = value
     self.assertEqual(clip.sample_id, value)
 
-  def test_protocol(self):
+  def test_protocol_version(self):
     clip = camdkit.model.Clip()
 
-    self.assertIsNone(clip.protocol)
+    self.assertIsNone(clip.protocol_version)
 
     with self.assertRaises(ValueError):
-      clip.protocol = ""
+      clip.protocol_version = ""
 
-    value = ("OpenTrackIO_0.1.0",)
-    clip.protocol = value
-    self.assertTupleEqual(clip.protocol, value)
+    value = (camdkit.model.VERSION_STRING,)
+    clip.protocol_version = value
+    self.assertTupleEqual(clip.protocol_version, value)
 
   def test_device_data(self):
     clip = camdkit.model.Clip()

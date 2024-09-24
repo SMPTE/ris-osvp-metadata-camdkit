@@ -12,6 +12,8 @@ from jsonschema import validate
 
 from camdkit.framework import *
 
+VERSION_STRING = "1.0.0"
+
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor in microns"
 
@@ -184,7 +186,7 @@ class ShutterAngle(Parameter):
 
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
-  units = "degrees (angular)"
+  units = "degree (angular)"
   section = "camera"
 
   @staticmethod
@@ -216,10 +218,10 @@ class SampleId(UUIDURNParameter):
   sampling = Sampling.REGULAR
   units = None
 
-class Protocol(StringParameter):
-  """Free string that describes the version of the protocol that this sample employs."""
+class ProtocolVersion(StringParameter):
+  """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
 
-  canonical_name = "protocol"
+  canonical_name = "protocolVersion"
   sampling = Sampling.REGULAR
   units = None
 
@@ -273,7 +275,7 @@ class GlobalStagePosition(Parameter):
   """
   sampling = Sampling.REGULAR
   canonical_name = "globalStage"
-  units = "metres"
+  units = "meter"
   
   @staticmethod
   def validate(value) -> bool:
@@ -317,7 +319,7 @@ class Transforms(Parameter):
   """
   A list of transforms.
   Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array.
-  X,Y,Z in metres of camera sensor relative to stage origin.
+  X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are zero).
   For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
@@ -330,7 +332,7 @@ class Transforms(Parameter):
   """
   sampling = Sampling.REGULAR
   canonical_name = "transforms"
-  units = "metres / degrees"
+  units = "meter / degree"
 
   @staticmethod
   def validate(value) -> bool:
@@ -417,7 +419,8 @@ class Transforms(Parameter):
               "z": {
                   "type": "number"
               }
-            }
+            },
+            "units": "meter"
           },
           "rotation": {
             "type": "object",
@@ -432,7 +435,8 @@ class Transforms(Parameter):
               "roll": {
                   "type": "number"
               }
-            }
+            },
+            "units": "degree"
           },
           "scale": {
             "type": "object",
@@ -1078,7 +1082,7 @@ class LensPerspectiveShift(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "perspectiveShift"
   section = "lens"
-  units = "millimetres"
+  units = "millimeter"
 
   @staticmethod
   def validate(value) -> bool:
@@ -1177,7 +1181,7 @@ class Clip(ParameterContainer):
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
-  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
+  protocol_version: typing.Optional[typing.Tuple[str]] = ProtocolVersion()
   related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
   timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
