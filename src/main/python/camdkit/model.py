@@ -27,7 +27,7 @@ class ActiveSensorResolution(IntegerDimensionsParameter):
 
   canonical_name = "activeSensorResolution"
   sampling = Sampling.STATIC
-  units = "pixels"
+  units = "pixel"
   section = "camera"
 
 class Duration(StrictlyPositiveRationalParameter):
@@ -1062,7 +1062,7 @@ class LensDistortionShift(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "distortionShift"
   section = "lens"
-  units = "millimeters"
+  units = "millimeter"
 
   @staticmethod
   def validate(value) -> bool:

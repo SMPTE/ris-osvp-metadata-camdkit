@@ -51,14 +51,15 @@
     <h1>OpenTrackIO Documentation</h1>
     <h2>Overview</h2>
     <p>OpenTrackIO is a free and open protocol designed by the RIS OSVP SMPTE group that seeks to improve interoperability in Virtual Production encoding, tracking and robotic systems.</p>
-    <p>This documentation is designed for those producing and consuming tracking data.</p>
-    <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), camera and lens.</p>
-    <p>All the fields described should be considered optional by the consumer (although for high-quality tracking see the recommended set in the samples below).</p>
-    <p>OpenTrackIO employs the OpenLensIO mathematical model for the practical application of lens distortion in Virtual Production.</p>
+    <p>This documentation is designed for those producing and consuming tracking data. There may be multiple CONSUMERS of a single PRODUCER'S data.</p>
+    <p>TODO insert diagram Producer >> Multiple Consumers</p>
+    <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens.</p>
+    <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples below).</p>
+    <p>OpenTrackIO employs the OpenLensIO mathematical lens model for the practical application of spherical lens distortion in Virtual Production.</p>
+    <p>TODO: Diagram of example camera and lens tracking system. Tracker, lens encoders etc</p>
     
     <h2>OpenTrackIO Sample</h2>
     <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
-    <p>TODO: Diagram of basic tracking system</p>
     <button class="collapsible">Recommended minimum VP example</button>
     <div class="content"><pre><code>{{examples.recommended_dynamic_example}}</code></pre></div>
 
