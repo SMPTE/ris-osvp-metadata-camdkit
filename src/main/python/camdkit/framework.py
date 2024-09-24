@@ -110,6 +110,7 @@ class Timestamp:
   optional 32-bit integer representing attoseconds elapsed since 00:00 January 1st 1970 epoch.
   Reference: https://datatracker.ietf.org/doc/html/rfc8877
   """
+
   seconds: int
   nanoseconds: int
   attoseconds: typing.Optional[int] = None
@@ -121,10 +122,14 @@ class BaseEnum(Enum):
     return self.value
 
 class SampleTypeEnum(BaseEnum):
+  "Enumeration for sample types"
+
   STATIC = "static"
   DYNAMIC = "dynamic"
 
 class SynchronizationSourceEnum(BaseEnum):
+  "Enumeration for synchronization sources"
+
   GENLOCK = "genlock"
   VIDEO_IN = "videoIn"
   PTP = "ptp"
@@ -132,10 +137,8 @@ class SynchronizationSourceEnum(BaseEnum):
 
 @dataclasses.dataclass
 class SynchronizationOffsets:
-  """
-  Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using
-  different data sources for position/rotation and lens encoding
-  """
+  "Data structure for synchronization offsets"
+
   translation: typing.Optional[float] = None		
   rotation: typing.Optional[float] = None		
   encoders: typing.Optional[float] = None
@@ -148,12 +151,31 @@ class SynchronizationOffsets:
   def to_json(value: typing.Any) -> typing.Any:
     return dataclasses.asdict(value)
 
+@dataclasses.dataclass
+class SynchronizationPTP:
+  "Data structure for PTP synchronization"
+
+  domain: typing.Optional[int] = None
+  master: typing.Optional[str] = None
+  offset: typing.Optional[float] = None
+  
+  def validate(self):
+    return all([isinstance(self.master, str), 
+                isinstance(self.offset, float), isinstance(self.domain, int)])
+  
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
 class TimingModeEnum(BaseEnum):
+  "Enumeration for sample timing modes"
+
   INTERNAL = "internal"
   EXTERNAL = "external"
 
 class TimecodeFormat():
   "The timecode format is defined as a rational frame rate and drop frame flag"
+
   frame_rate: numbers.Rational
   drop_frame: bool = False
 
@@ -182,6 +204,7 @@ class TimecodeFormat():
 @dataclasses.dataclass
 class Timecode:
   "Timecode is a standard for labeling individual frames of data in media systems."
+  
   hours: int
   minutes: int
   seconds: int
@@ -193,15 +216,14 @@ class Timecode:
 
 @dataclasses.dataclass
 class Synchronization:
-  "Data structure for synchronisation data"
+  "Data structure for synchronization data"
+
   frequency: numbers.Rational
   locked: bool
   source: SynchronizationSourceEnum
   offsets: typing.Optional[SynchronizationOffsets] = None
   present: typing.Optional[bool] = None
-  ptp_master: typing.Optional[str] = None
-  ptp_offset: typing.Optional[float] = None
-  ptp_domain: typing.Optional[int] = None
+  ptp: typing.Optional[SynchronizationPTP] = None
 
 class Parameter:
   """Metadata parameter base class"""

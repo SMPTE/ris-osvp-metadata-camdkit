@@ -471,7 +471,21 @@ class Transforms(Parameter):
 
 class TimingSynchronization(Parameter):
   """
-  TODO doc
+  The synchronization object describe how the device is synchonized for this sample.
+
+  frequency: The frequency of the samples (in a variable rate system this should is estimated from the last sample delta time)
+  locked: Is the device locked to the synchronization source
+  offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding
+  present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example)
+  ptp: If the synchronization source is a PTP master, then this object contains:
+  - "master": The MAC address of the PTP master
+  - "offset": The timing offset in seconds from the sample timestamp to the PTP timestamp
+  - "domain": The PTP domain number
+  source: The source of synchronization must be defined as one of the following:
+  - "genlock": The device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples
+  - "videoIn": The device has an external video signal that is triggering the capture of tracking samples
+  - "ptp": The device is locked to a PTP master
+  - "ntp": The device is locked to an NTP server
   """
   
   sampling = Sampling.REGULAR
@@ -492,19 +506,20 @@ class TimingSynchronization(Parameter):
       return False
     if not isinstance(value.source, SynchronizationSourceEnum):
       return False
-    # Validate MAC address
-    if value.ptp_master != None and not (isinstance(value.ptp_master,str) and 
-                                         re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$",
-                                                  value.ptp_master.lower())):
-      return False
-    if value.ptp_offset != None and not isinstance(value.ptp_offset, float):
-      return False
-    if value.ptp_domain != None and not (isinstance(value.ptp_domain, int) and value.ptp_domain >= 0):
-      return False
-    if value.offsets != None and not value.offsets.validate():
-      return False
-    if value.present != None and not isinstance(value.present, bool):
-      return False
+    if value.ptp != None:
+      # Validate MAC address
+      if value.ptp.master != None and not (isinstance(value.ptp.master,str) and 
+                                           re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$",
+                                           value.ptp.master.lower())):
+        return False
+      if value.ptp.offset != None and not isinstance(value.ptp.offset, float):
+        return False
+      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) and value.ptp.domain >= 0):
+        return False
+      if value.offsets != None and not value.offsets.validate():
+        return False
+      if value.present != None and not isinstance(value.present, bool):
+        return False
 
     return True
 
@@ -520,6 +535,7 @@ class TimingSynchronization(Parameter):
     sync = Synchronization(**value)
     sync.source = SynchronizationSourceEnum(sync.source)
     sync.offsets = SynchronizationOffsets(**value["offsets"])
+    sync.ptp = SynchronizationPTP(**value["ptp"])
     sync.frequency = Fraction(value["frequency"]["num"], value["frequency"]["denom"])
     return sync
 
@@ -528,6 +544,7 @@ class TimingSynchronization(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
+      "description": Synchronization.__doc__,
       "properties": {
         "frequency": {
           "type": "object",
@@ -557,9 +574,15 @@ class TimingSynchronization(Parameter):
           }
         },
         "present": { "type": "boolean" },
-        "ptp_master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
-        "ptp_offset": { "type": "number" },
-        "ptp_domain": { "type": "integer", "minimum": 0 },
+        "ptp": {
+          "type": "object",
+          "additionalProperties": False,
+          "properties": {
+            "master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
+            "offset": { "type": "number" },
+            "domain": { "type": "integer", "minimum": 0 }
+          }
+        },
         "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
       },
       "required": ["frequency", "locked", "source"]
@@ -713,7 +736,7 @@ class RecordedTimestamp(TimestampParameter):
 
 class TimingSequenceNumber(NonNegativeIntegerParameter):
   """
-  TODO doc
+  An integer that increments with each sample to help maintain the sample sequence in a packet-switched network for example.
   """
   sampling = Sampling.REGULAR
   canonical_name = "sequenceNumber"
@@ -722,7 +745,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
 
 class TimingFrameRate(StrictlyPositiveRationalParameter):
   """
-  TODO doc
+  The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001.
   """
   sampling = Sampling.REGULAR
   canonical_name = "frameRate"
@@ -731,7 +754,9 @@ class TimingFrameRate(StrictlyPositiveRationalParameter):
 
 class TimingTimecode(Parameter):
   """
-  TODO doc
+  The SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.
+   - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
+   - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
   """
   sampling = Sampling.REGULAR
   canonical_name = "timecode"

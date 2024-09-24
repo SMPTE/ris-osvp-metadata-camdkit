@@ -9,13 +9,13 @@
 import unittest
 from fractions import Fraction
 
-import camdkit.framework
-import camdkit.model
+from camdkit.framework import *
+from camdkit.model import *
 
 class ModelTest(unittest.TestCase):
 
   def test_duration(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.duration)
 
@@ -25,11 +25,11 @@ class ModelTest(unittest.TestCase):
 
   def test_serialize(self):
     self.maxDiff = None # Make sure we log large diffs here
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     # Static parameters
-    clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(width=36000, height=24000)
-    clip.active_sensor_resolution = camdkit.model.Dimensions(width=3840, height=2160)
+    clip.active_sensor_physical_dimensions = Dimensions(width=36000, height=24000)
+    clip.active_sensor_resolution = Dimensions(width=3840, height=2160)
     clip.anamorphic_squeeze = 120
     clip.capture_fps = Fraction(24000, 1001)
     clip.duration = 3
@@ -53,7 +53,7 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
-    clip.protocol_version = (camdkit.model.VERSION_STRING, camdkit.model.VERSION_STRING)
+    clip.protocol_version = (VERSION_STRING, VERSION_STRING)
 
     clip.device_status = ("Optical Good","Optical Good")
     clip.device_recording = (False,True)
@@ -63,58 +63,56 @@ class ModelTest(unittest.TestCase):
                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
                             ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
-    clip.global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
-                         camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
+    clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
+                         GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
 
-    clip.timing_mode = (camdkit.framework.TimingModeEnum.INTERNAL,
-                        camdkit.framework.TimingModeEnum.INTERNAL)
-    clip.timing_sample_timestamp = (camdkit.framework.Timestamp(1718806554, 0),
-                                    camdkit.framework.Timestamp(1718806555, 0))
-    clip.timing_recorded_timestamp = (camdkit.framework.Timestamp(1718806000, 0),
-                                      camdkit.framework.Timestamp(1718806001, 0))
+    clip.timing_mode = (TimingModeEnum.INTERNAL,
+                        TimingModeEnum.INTERNAL)
+    clip.timing_sample_timestamp = (Timestamp(1718806554, 0),
+                                    Timestamp(1718806555, 0))
+    clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),
+                                      Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
     clip.timing_frame_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
-    clip.timing_timecode = (camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24)),
-                            camdkit.framework.Timecode(1,2,3,5,camdkit.framework.TimecodeFormat(24)))
-    sync = camdkit.framework.Synchronization(
-      present=True,
-      locked=True,
+    clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(24)),
+                            Timecode(1,2,3,5,TimecodeFormat(24)))
+    sync = Synchronization(
       frequency=Fraction(24000, 1001),
-      source=camdkit.framework.SynchronizationSourceEnum.PTP,
-      ptp_offset=0.0,
-      ptp_domain=1,
-      ptp_master="00:11:22:33:44:55",
-      offsets=camdkit.framework.SynchronizationOffsets(1.0,2.0,3.0)
+      locked=True,
+      offsets=SynchronizationOffsets(1.0,2.0,3.0),
+      present=True,
+      ptp=SynchronizationPTP(1,"00:11:22:33:44:55",0.0),
+      source=SynchronizationSourceEnum.PTP
     )
     clip.timing_synchronization = (sync,sync)
     
-    translation = camdkit.framework.Vector3(x=1.0, y=2.0, z=3.0)
-    rotation = camdkit.framework.Rotator3(pan=1.0, tilt=2.0, roll=3.0)
-    clip.transforms = ((camdkit.framework.Transform(translation=translation, rotation=rotation),
-                        camdkit.framework.Transform(translation=translation, rotation=rotation)),
-                       (camdkit.framework.Transform(translation=translation, rotation=rotation),
-                        camdkit.framework.Transform(translation=translation, rotation=rotation)))
+    translation = Vector3(x=1.0, y=2.0, z=3.0)
+    rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
+    clip.transforms = ((Transform(translation=translation, rotation=rotation),
+                        Transform(translation=translation, rotation=rotation)),
+                       (Transform(translation=translation, rotation=rotation),
+                        Transform(translation=translation, rotation=rotation)))
 
     clip.lens_t_number = (2000, 4000)
     clip.lens_f_number = (1200, 2800)
     clip.lens_focal_length = (2.0, 4.0)
     clip.lens_focus_distance = (2, 4)
     clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
-                          camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3),
-                              camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3))
+    clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
+                          FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
+    clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
+                              RawFizEncoders(focus=1, iris=2, zoom=3))
     clip.lens_distortion_scale = (1.0, 1.0)
     clip.lens_distortion_overscan = (1.0, 1.0)
-    clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0),
-                                  camdkit.framework.ExposureFalloff(1.0, 2.0, 3.0))
-    clip.lens_distortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                            camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_undistortion = (camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                              camdkit.framework.Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_distortion_shift = (camdkit.framework.DistortionShift(1.0, 2.0),camdkit.framework.DistortionShift(1.0, 2.0))
-    clip.lens_perspective_shift = (camdkit.framework.PerspectiveShift(0.1, 0.2),
-                                   camdkit.framework.PerspectiveShift(0.1, 0.2))
+    clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
+                                  ExposureFalloff(1.0, 2.0, 3.0))
+    clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
+                            Distortion([1.0,2.0,3.0], [1.0,2.0]))
+    clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0]))
+    clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),DistortionShift(1.0, 2.0))
+    clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),
+                                   PerspectiveShift(0.1, 0.2))
 
     d = clip.to_json()
 
@@ -146,7 +144,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
-    self.assertTupleEqual(d["protocolVersion"], (camdkit.model.VERSION_STRING, camdkit.model.VERSION_STRING))
+    self.assertTupleEqual(d["protocolVersion"], (VERSION_STRING, VERSION_STRING))
     self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
                                                 ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
@@ -169,8 +167,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["frameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False } }))
-    sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp","ptp_offset":0.0,"ptp_domain":1,
-                  "ptp_master": "00:11:22:33:44:55","offsets": { "translation":1.0,"rotation":2.0,"encoders":3.0 } }
+    sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
+                  "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
+                  "offsets": {"translation":1.0,"rotation":2.0,"encoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
     self.assertTupleEqual(d["transforms"], ([transform_dict, transform_dict], [transform_dict, transform_dict]))
@@ -195,18 +194,18 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["distortionShift"], ({ "Cx":1.0,"Cy":2.0 }, { "Cx":1.0,"Cy":2.0 }))
     self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Px":0.1,"Py":0.2 }, { "Px":0.1,"Py":0.2 }))
 
-    d_clip = camdkit.model.Clip()
+    d_clip = Clip()
     d_clip.from_json(d)
     self.assertDictEqual(d_clip._values, clip._values)
 
 
   def test_documentation(self):
-    doc = camdkit.model.Clip.make_documentation()
+    doc = Clip.make_documentation()
 
-    self.assertIn(camdkit.model.ActiveSensorPhysicalDimensions.canonical_name, [e["canonical_name"] for e in doc])
+    self.assertIn(ActiveSensorPhysicalDimensions.canonical_name, [e["canonical_name"] for e in doc])
 
   def test_duration_fraction(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.duration)
 
@@ -218,29 +217,29 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.duration, Fraction(6, 7))
 
   def test_active_sensor_physical_dimensions(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.active_sensor_physical_dimensions)
 
-    dims = camdkit.model.Dimensions(4, 5)
+    dims = Dimensions(4, 5)
 
     clip.active_sensor_physical_dimensions = dims
 
     self.assertEqual(clip.active_sensor_physical_dimensions, dims)
 
   def test_active_sensor_resolution(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.active_sensor_resolution)
 
-    dims = camdkit.model.Dimensions(4, 5)
+    dims = Dimensions(4, 5)
 
     clip.active_sensor_resolution = dims
 
     self.assertEqual(clip.active_sensor_resolution, dims)
 
   def test_lens_serial_number(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_serial_number)
 
@@ -254,7 +253,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.lens_serial_number, value)
 
   def test_iso(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.iso)
 
@@ -268,7 +267,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.iso, value)
 
   def test_fps(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.capture_fps)
 
@@ -285,7 +284,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.capture_fps, value)
 
   def test_shutter_angle(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.shutter_angle)
 
@@ -302,7 +301,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.shutter_angle, value)
 
   def test_f_number(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertEqual(clip.lens_f_number, None)
 
@@ -316,7 +315,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_f_number, value)
 
   def test_t_number(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertEqual(clip.lens_t_number, None)
 
@@ -330,7 +329,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_t_number, value)
 
   def test_focal_length(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_focal_length)
 
@@ -346,7 +345,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_focal_length, value)
 
   def test_nominal_focal_length(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_nominal_focal_length)
 
@@ -360,7 +359,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_focal_length, value)
 
   def test_focus_position(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_focus_distance)
 
@@ -374,7 +373,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_focus_distance, value)
 
   def test_entrance_pupil_distance(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_entrance_pupil_distance)
 
@@ -388,7 +387,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_entrance_pupil_distance, value)
 
   def test_fdl_link(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.fdl_link)
 
@@ -405,7 +404,7 @@ class ModelTest(unittest.TestCase):
       clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6"
 
   def test_sample_id(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.sample_id)
 
@@ -427,19 +426,19 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.sample_id, value)
 
   def test_protocol_version(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.protocol_version)
 
     with self.assertRaises(ValueError):
       clip.protocol_version = ""
 
-    value = (camdkit.model.VERSION_STRING,)
+    value = (VERSION_STRING,)
     clip.protocol_version = value
     self.assertTupleEqual(clip.protocol_version, value)
 
   def test_device_data(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.device_status)
     self.assertIsNone(clip.device_recording)
@@ -462,13 +461,13 @@ class ModelTest(unittest.TestCase):
       clip.related_samples = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     with self.assertRaises(ValueError):
-      clip.global_stage = camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
+      clip.global_stage = GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
     with self.assertRaises(TypeError):
-      clip.global_stage = (camdkit.framework.GlobalPosition(),)
+      clip.global_stage = (GlobalPosition(),)
     with self.assertRaises(TypeError):
-      clip.global_stage = (camdkit.framework.GlobalPosition(100.0),)
+      clip.global_stage = (GlobalPosition(100.0),)
     with self.assertRaises(TypeError):
-      clip.global_stage = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0),)
+      clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0),)
 
     value = ("Optical Good",)
     clip.device_status = value
@@ -486,12 +485,12 @@ class ModelTest(unittest.TestCase):
               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
     clip.related_samples = value
     self.assertTupleEqual(clip.related_samples, value)
-    value = (camdkit.framework.GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
+    value = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
     clip.global_stage = value
     self.assertTupleEqual(clip.global_stage, value)
 
   def test_timing_mode_model(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.timing_mode)
 
@@ -500,12 +499,12 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_mode = "a"
 
-    value = (camdkit.framework.TimingModeEnum.INTERNAL, camdkit.framework.TimingModeEnum.EXTERNAL)
+    value = (TimingModeEnum.INTERNAL, TimingModeEnum.EXTERNAL)
     clip.timing_mode = value
     self.assertEqual(clip.timing_mode, value)
 
   def test_timing_frame_rate_model(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.timing_frame_rate)
 
@@ -517,21 +516,21 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(clip.timing_frame_rate, value)
 
   def test_timing_sample_timestamp_model(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.timing_sample_timestamp)
 
     with self.assertRaises(ValueError):
       clip.timing_sample_timestamp = 0
     with self.assertRaises(TypeError):
-      clip.timing_sample_timestamp = camdkit.framework.Timestamp(0)
+      clip.timing_sample_timestamp = Timestamp(0)
 
-    value = (camdkit.framework.Timestamp(0,0), camdkit.framework.Timestamp(1718806800,0))
+    value = (Timestamp(0,0), Timestamp(1718806800,0))
     clip.timing_sample_timestamp = value
     self.assertEqual(clip.timing_sample_timestamp, value)
 
   def test_timing_timecode_model(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.timing_timecode)
 
@@ -540,12 +539,12 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_timecode = {1,2,3,24,"24"}
 
-    value = camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))
+    value = Timecode(1,2,3,4,TimecodeFormat(24))
     clip.timing_timecode = (value,)
     self.assertEqual(clip.timing_timecode, (value,))
 
   def test_timing_sequence_number(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.timing_sequence_number)
 
@@ -565,35 +564,35 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.timing_sequence_number, value)
 
   def test_transforms_model(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.transforms)
 
     with self.assertRaises(TypeError):
-      clip.transforms = camdkit.framework.Transform()
+      clip.transforms = Transform()
     with self.assertRaises(ValueError):
       clip.timing_mode = "a"
-    transform = camdkit.framework.Transform(
-      translation=camdkit.framework.Vector3(1.0,2.0,3.0),
-      rotation=camdkit.framework.Rotator3(1.0,2.0,3.0),
-      scale=camdkit.framework.Vector3(1.0,2.0,3.0)
+    transform = Transform(
+      translation=Vector3(1.0,2.0,3.0),
+      rotation=Rotator3(1.0,2.0,3.0),
+      scale=Vector3(1.0,2.0,3.0)
     )
     value = ((transform,),)
     clip.transforms = value
     self.assertEqual(clip.transforms, value)
 
   def test_transforms_to_dict(self):
-    j = camdkit.model.Transforms.to_json((camdkit.framework.Transform(
-      translation=camdkit.framework.Vector3(1,2,3), \
-      rotation=camdkit.framework.Rotator3(1,2,3)), ))
+    j = Transforms.to_json((Transform(
+      translation=Vector3(1,2,3), \
+      rotation=Rotator3(1,2,3)), ))
     self.assertListEqual(j, [{
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 } 
     }])
-    j = camdkit.model.Transforms.to_json((camdkit.framework.Transform(
-      translation=camdkit.framework.Vector3(1,2,3),
-      rotation=camdkit.framework.Rotator3(1,2,3),
-      scale=camdkit.framework.Vector3(1,2,3)), ))
+    j = Transforms.to_json((Transform(
+      translation=Vector3(1,2,3),
+      rotation=Rotator3(1,2,3),
+      scale=Vector3(1,2,3)), ))
     self.assertListEqual(j, [{
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
@@ -601,25 +600,25 @@ class ModelTest(unittest.TestCase):
     }])
   
   def test_transforms_from_dict(self):
-    t = camdkit.model.Transforms.from_json([{
+    t = Transforms.from_json([{
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 }
     }])
-    self.assertEqual(t[0].translation, camdkit.framework.Vector3(1,2,3))
-    self.assertEqual(t[0].rotation, camdkit.framework.Rotator3(1,2,3))
-    t = camdkit.model.Transforms.from_json([{
+    self.assertEqual(t[0].translation, Vector3(1,2,3))
+    self.assertEqual(t[0].rotation, Rotator3(1,2,3))
+    t = Transforms.from_json([{
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
       "scale": { "x": 1, "y": 2, "z": 3 }
     }])
-    self.assertEqual(t[0].translation, camdkit.framework.Vector3(1,2,3))
-    self.assertEqual(t[0].rotation, camdkit.framework.Rotator3(1,2,3))
-    self.assertEqual(t[0].scale, camdkit.framework.Vector3(1,2,3))
+    self.assertEqual(t[0].translation, Vector3(1,2,3))
+    self.assertEqual(t[0].rotation, Rotator3(1,2,3))
+    self.assertEqual(t[0].scale, Vector3(1,2,3))
 
   def test_timing_mode_enum(self):
-    param = camdkit.model.TimingMode()
-    self.assertTrue(param.validate(camdkit.framework.TimingModeEnum.INTERNAL))
-    self.assertTrue(param.validate(camdkit.framework.TimingModeEnum.EXTERNAL))
+    param = TimingMode()
+    self.assertTrue(param.validate(TimingModeEnum.INTERNAL))
+    self.assertTrue(param.validate(TimingModeEnum.EXTERNAL))
     self.assertFalse(param.validate(""))
     self.assertFalse(param.validate("a"))
     self.assertFalse(param.validate(None))
@@ -627,58 +626,58 @@ class ModelTest(unittest.TestCase):
 
   def test_timestamp_limits(self):
     with self.assertRaises(TypeError):
-      camdkit.framework.Timestamp()
+      Timestamp()
     with self.assertRaises(TypeError):
-      camdkit.framework.Timestamp(0)
-    self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,0)))
-    self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(1,2)))
-    self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,0,0)))
-    self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(1,2,3)))
-    self.assertTrue(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(281474976710655,4294967295,4294967295)))
-    self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(-1,2,3)))
-    self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(1,-2,3)))
-    self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(1,2,-3)))
-    self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,281474976710655,0)))
-    self.assertFalse(camdkit.model.TimingTimestamp.validate(camdkit.framework.Timestamp(0,0,281474976710655)))
+      Timestamp(0)
+    self.assertTrue(TimingTimestamp.validate(Timestamp(0,0)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(1,2)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(0,0,0)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(1,2,3)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295,4294967295)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2,3)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2,3)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(1,2,-3)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655,0)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(0,0,281474976710655)))
 
   def test_timecode_format(self):
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(24)), 24)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(24, True)), 24)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(25)), 25)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(30)), 30)
-    self.assertEqual(camdkit.framework.TimecodeFormat.to_int(camdkit.framework.TimecodeFormat(30, True)), 30)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, True)), 24)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(25)), 25)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30)), 30)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, True)), 30)
     with self.assertRaises(TypeError):
-      camdkit.framework.TimecodeFormat()
+      TimecodeFormat()
     with self.assertRaises(ValueError):
-      camdkit.framework.TimecodeFormat(0).to_int()
+      TimecodeFormat(0).to_int()
 
   def test_timecode_formats(self):
     with self.assertRaises(TypeError):
-      camdkit.framework.Timecode()
+      Timecode()
     with self.assertRaises(TypeError):
-      camdkit.framework.Timecode(1,2,3)
+      Timecode(1,2,3)
     with self.assertRaises(TypeError):
-      camdkit.framework.Timecode(0,0,0,0)
+      Timecode(0,0,0,0)
     with self.assertRaises(ValueError):
-      camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat(0))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(0,0,0,0,camdkit.framework.TimecodeFormat(24))))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertTrue(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(23,59,59,23,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(-1,2,3,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(24,2,3,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,-1,3,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,60,3,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,-1,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,60,4,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,-1,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat(24))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,24,camdkit.framework.TimecodeFormat(24, True))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,25,camdkit.framework.TimecodeFormat(25))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat(30))))
-    self.assertFalse(camdkit.model.TimingTimecode.validate(camdkit.framework.Timecode(1,2,3,30,camdkit.framework.TimecodeFormat(30, True))))
+      Timecode(0,0,0,0,TimecodeFormat(0))
+    self.assertTrue(TimingTimecode.validate(Timecode(0,0,0,0,TimecodeFormat(24))))
+    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,4,TimecodeFormat(24))))
+    self.assertTrue(TimingTimecode.validate(Timecode(23,59,59,23,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(-1,2,3,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(24,2,3,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,-1,3,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,60,3,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,-1,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,60,4,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,-1,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, True))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, True))))
 
   def test_timecode_from_dict(self):
-    r = camdkit.model.TimingTimecode.from_json({
+    r = TimingTimecode.from_json({
       "hours": 1,
       "minutes": 2,
       "seconds": 3,
@@ -691,10 +690,10 @@ class ModelTest(unittest.TestCase):
         "dropFrame": False
       }
     })
-    self.assertEqual(str(r), str(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24))))
+    self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(24))))
 
   def test_timecode_to_dict(self):
-    j = camdkit.model.TimingTimecode.to_json(camdkit.framework.Timecode(1,2,3,4,camdkit.framework.TimecodeFormat(24)))
+    j = TimingTimecode.to_json(Timecode(1,2,3,4,TimecodeFormat(24)))
     self.assertDictEqual(j, {
       "hours": 1,
       "minutes": 2,
@@ -710,76 +709,76 @@ class ModelTest(unittest.TestCase):
     })
 
   def test_lens_encoders_limits(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
     self.assertIsNone(clip.lens_encoders)
     self.assertIsNone(clip.lens_raw_encoders)
 
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.0),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=1.0),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(zoom=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(iris=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5, iris=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(iris=0.5, zoom=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(zoom=0.5, focus=0.5),)
-    clip.lens_encoders = (camdkit.framework.FizEncoders(focus=0.5, iris=0.5, zoom=0.5),)
+    clip.lens_encoders = (FizEncoders(focus=0.0),)
+    clip.lens_encoders = (FizEncoders(focus=0.5),)
+    clip.lens_encoders = (FizEncoders(focus=1.0),)
+    clip.lens_encoders = (FizEncoders(zoom=0.5),)
+    clip.lens_encoders = (FizEncoders(iris=0.5),)
+    clip.lens_encoders = (FizEncoders(focus=0.5, iris=0.5),)
+    clip.lens_encoders = (FizEncoders(iris=0.5, zoom=0.5),)
+    clip.lens_encoders = (FizEncoders(zoom=0.5, focus=0.5),)
+    clip.lens_encoders = (FizEncoders(focus=0.5, iris=0.5, zoom=0.5),)
 
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=0),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(zoom=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(iris=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5, iris=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(iris=5, zoom=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(zoom=5, focus=5),)
-    clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(focus=5, iris=5, zoom=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(focus=0),)
+    clip.lens_raw_encoders = (RawFizEncoders(focus=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(zoom=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(iris=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(focus=5, iris=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(iris=5, zoom=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(zoom=5, focus=5),)
+    clip.lens_raw_encoders = (RawFizEncoders(focus=5, iris=5, zoom=5),)
     
 
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.FizEncoders(),)
+      clip.lens_encoders = (FizEncoders(),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.FizEncoders(1, 2, 3),)
+      clip.lens_encoders = (FizEncoders(1, 2, 3),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.FizEncoders(-1, 0, 0),)
+      clip.lens_encoders = (FizEncoders(-1, 0, 0),)
     with self.assertRaises(ValueError):
-      clip.lens_encoders = (camdkit.framework.FizEncoders(-1, 0, 0),)
+      clip.lens_encoders = (FizEncoders(-1, 0, 0),)
 
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(),)
+      clip.lens_raw_encoders = (RawFizEncoders(),)
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(-1, 0, 0),)
+      clip.lens_raw_encoders = (RawFizEncoders(-1, 0, 0),)
     with self.assertRaises(ValueError):
-      clip.lens_raw_encoders = (camdkit.framework.RawFizEncoders(-1, 0, 0),)
+      clip.lens_raw_encoders = (RawFizEncoders(-1, 0, 0),)
 
-    value = (camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
+    value = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
     clip.lens_encoders = value
     self.assertTupleEqual(clip.lens_encoders, value)
     
-    value = (camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3),)
+    value = (RawFizEncoders(focus=1, iris=2, zoom=3),)
     clip.lens_raw_encoders = value
     self.assertTupleEqual(clip.lens_raw_encoders, value)
 
   def test_lens_encoders_from_dict(self):
-    r = camdkit.model.LensEncoders.from_json({
+    r = LensEncoders.from_json({
       "focus": 0.1,
       "iris": 0.2,
       "zoom": 0.3,
     })
-    self.assertEqual(r, camdkit.framework.FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
-    r = camdkit.model.LensRawEncoders.from_json({
+    self.assertEqual(r, FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
+    r = LensRawEncoders.from_json({
       "focus": 1,
       "iris": 2,
       "zoom": 3,
     })
-    self.assertEqual(r, camdkit.framework.RawFizEncoders(focus=1, iris=2, zoom=3))
+    self.assertEqual(r, RawFizEncoders(focus=1, iris=2, zoom=3))
     
   def test_lens_encoders_to_dict(self):
-    j = camdkit.model.LensEncoders.to_json(camdkit.framework.FizEncoders(focus=0.5, iris=0.5, zoom=0.5))
+    j = LensEncoders.to_json(FizEncoders(focus=0.5, iris=0.5, zoom=0.5))
     self.assertDictEqual(j, {
       "focus": 0.5,
       "iris": 0.5,
       "zoom": 0.5,
     })
-    j = camdkit.model.LensRawEncoders.to_json(camdkit.framework.RawFizEncoders(focus=5, iris=5, zoom=5))
+    j = LensRawEncoders.to_json(RawFizEncoders(focus=5, iris=5, zoom=5))
     self.assertDictEqual(j, {
       "focus": 5,
       "iris": 5,
@@ -787,7 +786,7 @@ class ModelTest(unittest.TestCase):
     })
 
   def test_lens_distortion_overscan(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_distortion_overscan)
 
@@ -801,7 +800,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_distortion_overscan, value)
 
   def test_lens_distortion_scale(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_distortion_scale)
 
@@ -815,33 +814,33 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_distortion_scale, value)
     
   def test_lens_exposure_falloff(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_exposure_falloff)
 
     with self.assertRaises(ValueError):
       clip.lens_exposure_falloff = ""
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = camdkit.framework.ExposureFalloff(1.0,2.0,3.0)
+      clip.lens_exposure_falloff = ExposureFalloff(1.0,2.0,3.0)
     with self.assertRaises(TypeError):
-      clip.lens_exposure_falloff = (camdkit.framework.ExposureFalloff(),)
+      clip.lens_exposure_falloff = (ExposureFalloff(),)
 
-    value = (camdkit.framework.ExposureFalloff(1.0),)
-    value = (camdkit.framework.ExposureFalloff(1.0,2.0),)
-    value = (camdkit.framework.ExposureFalloff(-1.0,1.0,-1.0),)
+    value = (ExposureFalloff(1.0),)
+    value = (ExposureFalloff(1.0,2.0),)
+    value = (ExposureFalloff(-1.0,1.0,-1.0),)
     clip.lens_exposure_falloff = value
     self.assertTupleEqual(clip.lens_exposure_falloff, value)
     
   def test_lens_exposure_falloff_from_dict(self):
-    r = camdkit.model.LensExposureFalloff.from_json({
+    r = LensExposureFalloff.from_json({
       "a1": 0.5,
       "a2": 0.5,
       "a3": 0.5
     })
-    self.assertEqual(r,camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
+    self.assertEqual(r,ExposureFalloff(0.5, 0.5, 0.5))
     
   def test_lens_exposure_falloff_to_dict(self):
-    j = camdkit.model.LensExposureFalloff.to_json(camdkit.framework.ExposureFalloff(0.5, 0.5, 0.5))
+    j = LensExposureFalloff.to_json(ExposureFalloff(0.5, 0.5, 0.5))
     self.assertDictEqual(j, {
       "a1": 0.5,
       "a2": 0.5,
@@ -849,108 +848,108 @@ class ModelTest(unittest.TestCase):
     })
     
   def test_lens_distortion(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
 
     self.assertIsNone(clip.lens_distortion)
 
     with self.assertRaises(ValueError):
       clip.lens_distortion = ""
     with self.assertRaises(ValueError):
-      clip.lens_distortion = camdkit.framework.Distortion([1.0])
+      clip.lens_distortion = Distortion([1.0])
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (camdkit.framework.Distortion([]),)
+      clip.lens_exposure_falloff = (Distortion([]),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (camdkit.framework.Distortion([],[]),)
+      clip.lens_exposure_falloff = (Distortion([],[]),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (camdkit.framework.Distortion([1.0],[]),)
+      clip.lens_exposure_falloff = (Distortion([1.0],[]),)
 
-    value = (camdkit.framework.Distortion([1.0]),)
-    value = (camdkit.framework.Distortion([1.0,2.0]),)
-    value = (camdkit.framework.Distortion([-1.0,1.0,-1.0]),)
-    value = (camdkit.framework.Distortion([1.0],[0.0]),)
-    value = (camdkit.framework.Distortion([1.0,2.0],[1.0,2.0]),)
-    value = (camdkit.framework.Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),)
+    value = (Distortion([1.0]),)
+    value = (Distortion([1.0,2.0]),)
+    value = (Distortion([-1.0,1.0,-1.0]),)
+    value = (Distortion([1.0],[0.0]),)
+    value = (Distortion([1.0,2.0],[1.0,2.0]),)
+    value = (Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),)
     clip.lens_distortion = value
     self.assertTupleEqual(clip.lens_distortion, value)
     
   def test_lens_distortion_from_dict(self):
-    r = camdkit.model.LensDistortion.from_json({
+    r = LensDistortion.from_json({
       "radial": [0.1,0.2,0.3],
       "tangential": [0.1,0.2,0.3]
     })
-    self.assertEqual(r,camdkit.framework.Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    self.assertEqual(r,Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
     
   def test_lens_distortion_to_dict(self):
-    j = camdkit.model.LensDistortion.to_json(camdkit.framework.Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
     self.assertDictEqual(j, {
       "radial": [0.1,0.2,0.3],
       "tangential": [0.1,0.2,0.3]
     })
     
   def test_lens_distortion_shift(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
     self.assertIsNone(clip.lens_distortion_shift)
 
     with self.assertRaises(ValueError):
       clip.lens_distortion_shift = ""
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (camdkit.framework.DistortionShift(),)
+      clip.lens_distortion_shift = (DistortionShift(),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (camdkit.framework.DistortionShift(1.0),)
+      clip.lens_distortion_shift = (DistortionShift(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = camdkit.framework.DistortionShift(1.0)
+      clip.lens_distortion_shift = DistortionShift(1.0)
 
-    value = (camdkit.framework.DistortionShift(-1.0,1.0),)
+    value = (DistortionShift(-1.0,1.0),)
     clip.lens_distortion_shift = value
     self.assertTupleEqual(clip.lens_distortion_shift, value)
     
   def test_lens_distortion_shift_from_dict(self):
-    r = camdkit.model.LensDistortionShift.from_json({
+    r = LensDistortionShift.from_json({
       "Cx": -1.0,
       "Cy": 1.0
     })
-    self.assertEqual(r,camdkit.framework.DistortionShift(-1.0,1.0))
+    self.assertEqual(r,DistortionShift(-1.0,1.0))
     
   def test_lens_distortion_shift_to_dict(self):
-    j = camdkit.model.LensDistortionShift.to_json(camdkit.framework.DistortionShift(-1.0,1.0))
+    j = LensDistortionShift.to_json(DistortionShift(-1.0,1.0))
     self.assertDictEqual(j, {
       "Cx": -1.0,
       "Cy": 1.0
     })
     
   def test_lens_perspective_shift(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
     self.assertIsNone(clip.lens_perspective_shift)
 
     with self.assertRaises(ValueError):
       clip.lens_perspective_shift = ""
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (camdkit.framework.PerspectiveShift(),)
+      clip.lens_perspective_shift = (PerspectiveShift(),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (camdkit.framework.PerspectiveShift(1.0),)
+      clip.lens_perspective_shift = (PerspectiveShift(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = camdkit.framework.PerspectiveShift(1.0)
+      clip.lens_perspective_shift = PerspectiveShift(1.0)
 
-    value = (camdkit.framework.PerspectiveShift(-1.0,1.0),)
+    value = (PerspectiveShift(-1.0,1.0),)
     clip.lens_perspective_shift = value
     self.assertTupleEqual(clip.lens_perspective_shift, value)
     
   def test_lens_perspective_shift_from_dict(self):
-    r = camdkit.model.LensPerspectiveShift.from_json({
+    r = LensPerspectiveShift.from_json({
       "Px": -1.0,
       "Py": 1.0
     })
-    self.assertEqual(r,camdkit.framework.PerspectiveShift(-1.0,1.0))
+    self.assertEqual(r,PerspectiveShift(-1.0,1.0))
     
   def test_lens_perspective_shift_to_dict(self):
-    j = camdkit.model.LensPerspectiveShift.to_json(camdkit.framework.PerspectiveShift(-1.0,1.0))
+    j = LensPerspectiveShift.to_json(PerspectiveShift(-1.0,1.0))
     self.assertDictEqual(j, {
       "Px": -1.0,
       "Py": 1.0
     })
   
   def test_lens_custom(self):
-    clip = camdkit.model.Clip()
+    clip = Clip()
     self.assertIsNone(clip.lens_custom)
 
     with self.assertRaises(ValueError):
@@ -962,51 +961,52 @@ class ModelTest(unittest.TestCase):
 
   def test_synchronization(self):
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization()
+      Synchronization()
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization(locked=True)
+      Synchronization(locked=True)
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization(locked=True, frequency=25.0)
+      Synchronization(locked=True, frequency=25.0)
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization(locked=True, frequency=0.0)
+      Synchronization(locked=True, frequency=0.0)
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization(locked=True, frequency=-1.0)
+      Synchronization(locked=True, frequency=-1.0)
     with self.assertRaises(TypeError):
-      camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK)
+      Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK)
     
-    clip = camdkit.model.Clip()
+    clip = Clip()
     self.assertIsNone(clip.timing_synchronization)
       
-    value = (camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25),)
+    value = (Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK, frequency=25),)
     clip.timing_synchronization = value
     self.assertTupleEqual(clip.timing_synchronization, value)
 
   def test_synchronization_mac(self):
-    sync = camdkit.framework.Synchronization(locked=True, source=camdkit.framework.SynchronizationSourceEnum.GENLOCK, frequency=25)
-    clip = camdkit.model.Clip()
+    sync = Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK, frequency=25)
+    clip = Clip()
+    sync.ptp = SynchronizationPTP()
     with self.assertRaises(ValueError):
-      sync.ptp_master = ""
+      sync.ptp.master = ""
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = "00:"
+      sync.ptp.master = "00:"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = "00:00:00:00:00"
+      sync.ptp.master = "00:00:00:00:00"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = ":00:00:00:00:00:00"
+      sync.ptp.master = ":00:00:00:00:00:00"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = "12:12:12:12:12:12:12"
+      sync.ptp.master = "12:12:12:12:12:12:12"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = "we:te:as:te:gd:ds"
+      sync.ptp.master = "we:te:as:te:gd:ds"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp_master = "WE:TE:AS:TE:GD:DS"
+      sync.ptp.master = "WE:TE:AS:TE:GD:DS"
       clip.timing_synchronization = (sync, )
 
-    sync.ptp_master = "00:00:00:00:00:00"
+    sync.ptp.master = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
-    sync.ptp_master = "ab:CD:eF:23:45:67"
+    sync.ptp.master = "ab:CD:eF:23:45:67"
     clip.timing_synchronization = (sync, )

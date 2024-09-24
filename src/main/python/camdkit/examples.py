@@ -64,7 +64,7 @@ def _get_recommended_dynamic_clip():
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
-  r = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
+  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
   clip.transforms = ((Transform(translation=v, rotation=Rotator3(0,0,0), name="Camera"),),)
   clip.lens_f_number = (4000,)
   clip.lens_focal_length = (24.305,)
@@ -88,8 +88,8 @@ def _get_complete_dynamic_clip():
   clip.device_notes = ("Example generated sample.",)
 
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
-  clip.timing_sample_timestamp = (Timestamp(1718806554, 0, 0),)
-  clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),)
+  clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000, 0),)
+  clip.timing_recorded_timestamp = (Timestamp(1718806000, 500000000),)
   clip.timing_sequence_number = (0,)
   clip.timing_frame_rate = (Fraction(24000, 1001),)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
@@ -98,9 +98,11 @@ def _get_complete_dynamic_clip():
     locked=True,
     frequency=Fraction(24000, 1001),
     source=SynchronizationSourceEnum.PTP,
-    ptp_offset=0.0,
-    ptp_domain=1,
-    ptp_master="00:11:22:33:44:55",
+    ptp=SynchronizationPTP(
+      offset=0.0,
+      domain=1,
+      master="00:11:22:33:44:55"
+    ),
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)
   
