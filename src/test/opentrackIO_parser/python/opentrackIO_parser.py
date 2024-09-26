@@ -52,7 +52,7 @@ sample = OTProtocol(sample_text,schematext,verbose) # a "Sample" is a de-seriali
 sample.Parse()                # parse the actual JSON of the protocol
 sample.Import_schema()        # read the schema which governs the interpretation of the protocol
 
-sample.Set_trans_units("cm")              # end-user preferred units
+sample.Set_translation_units("cm")              # end-user preferred units
 sample.Set_sample_time_format("sec")
 sample.Set_focus_distance_units("cm")
 sample.Set_rotation_units("deg")
@@ -85,26 +85,26 @@ if snum:
     print("Tracking device serial number: {}".format(snum))
 else:
     print("Unknown tracking device, wait for static sample to come in...")
-posX = sample.Get_camera_trans('x')
-posY = sample.Get_camera_trans('y')
-posZ =sample.Get_camera_trans('z')
+posX = sample.Get_camera_translation('x')
+posY = sample.Get_camera_translation('y')
+posZ =sample.Get_camera_translation('z')
 print("Camera position is: ({},{},{}) cm".format(posX, posY, posZ))
-rotX = sample.Get_camera_rot('p')
-rotY = sample.Get_camera_rot('t')
-rotZ = sample.Get_camera_rot('r')
+rotX = sample.Get_camera_rotation('p')
+rotY = sample.Get_camera_rotation('t')
+rotZ = sample.Get_camera_rotation('r')
 print("Camera rotation is: ({},{},{}) deg".format(rotX, rotY, rotZ))
 sample.Set_rotation_units("rad")
-rotX = sample.Get_camera_rot('p')
-rotY = sample.Get_camera_rot('t')
-rotZ = sample.Get_camera_rot('r')
+rotX = sample.Get_camera_rotation('p')
+rotY = sample.Get_camera_rotation('t')
+rotZ = sample.Get_camera_rotation('r')
 print("Camera rotation is: ({:.5},{:.5},{:.5}) radians".format(rotX, rotY, rotZ))
 print()
 
 fl = sample.Get_focal_length()
-height = sample.Get_sensor_dim_height()
+height = sample.Get_sensor_dimension_height()
 if height:
-    width = sample.Get_sensor_dim_width()
-    units = sample.Get_sensor_dim_units()
+    width = sample.Get_sensor_dimension_width()
+    units = sample.Get_sensor_dimension_units()
     print("Active camera sensor height: {}, width: {} {}".format(height,width,units))
 else:
     print("Unknown camera sensor, wait for static sample to come in...")
