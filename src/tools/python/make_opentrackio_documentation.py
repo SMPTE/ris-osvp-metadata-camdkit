@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-import json, os
+import json, os, shutil
 from inspect import getmembers, isfunction
 
 import camdkit.examples
@@ -13,6 +13,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 current_path = os.path.dirname(__file__)
 templates_path = os.path.join(current_path, "templates")
+resources_path = os.path.join(current_path,"..","..","main","resources")
 docs_path = os.path.join(current_path,"..","..","..","docs")
 examples_path = os.path.join(docs_path,"examples")
 
@@ -46,6 +47,9 @@ def main():
   f = open(os.path.join(docs_path, "index.html"), "w")
   f.write(html)
   f.close()
+  print("Publishing static web resources")
+  for folder in ["css", "img"]:
+    shutil.copytree(os.path.join(resources_path, folder), os.path.join(docs_path, folder), dirs_exist_ok=True)
 
 if __name__ == "__main__":
   main()

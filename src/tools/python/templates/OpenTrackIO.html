@@ -3,102 +3,75 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenTrackIO</title>
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .collapsible {
-        background-color: #777;
-        color: white;
-        cursor: pointer;
-        padding: 18px;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 15px;
-    }
-    
-    .active, .collapsible:hover {
-        background-color: #555;
-    }
-    
-    .content {
-        padding: 0 18px;
-        display: none;
-        overflow: hidden;
-        background-color: #f1f1f1;
-    }
-    th, td {
-        border: 1px solid rgb(160 160 160);
-        padding: 8px 10px;
-    }
-    th {
-        text-align: center;
-    }
-    tr:nth-of-type(even) {
-        background-color: #eee;
-    }
-    table {
-        border-collapse: collapse;
-        border: 2px solid rgb(140 140 140);
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-    }
-
-</style>
-</head>
+<link rel="stylesheet" href="css/style.css">
+ </head>
 <body>
-    <h1>OpenTrackIO Documentation</h1>
-    <h2>Overview</h2>
-    <p>OpenTrackIO is a free and open protocol designed by the RIS OSVP SMPTE group that seeks to improve interoperability in Virtual Production encoding, tracking and robotic systems.</p>
-    <p>This documentation is designed for those producing and consuming tracking data. There may be multiple CONSUMERS of a single PRODUCER'S data.</p>
-    <p>TODO insert diagram Producer >> Multiple Consumers</p>
-    <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens.</p>
-    <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples below).</p>
-    <p>OpenTrackIO employs the OpenLensIO mathematical lens model for the practical application of spherical lens distortion in Virtual Production.</p>
-    <p>TODO: Diagram of example camera and lens tracking system. Tracker, lens encoders etc</p>
-    
-    <h2>OpenTrackIO Sample</h2>
-    <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
-    <button class="collapsible">Recommended minimum VP example</button>
-    <div class="content"><pre><code>{{examples.recommended_dynamic_example}}</code></pre></div>
-
-    <h2>Providing additional static data</h2>
-    <p>It is recommended that a static metadata object is added to a sample approximately every 2 seconds. This additional metadata describes the context of the samples in the stream, with data that may change - for example - every take, but will not change every frame.</p>
-    <button class="collapsible">Recommended minimum VP example with static data</button>
-    <div class="content"><pre><code>{{examples.recommended_static_example}}</code></pre></div>
-
-    <h2>Complete sample</h2>
-    <p>OpenTrackIO defines many more options and fields and these should be parsed where appropriate by the consumer. Custom fields can also be added as shown (although these will require specific producer / consumer negotiation)</p>
-    <button class="collapsible">Complete example sample with static data</button>
-    <div class="content"><pre><code>{{examples.complete_static_example}}</code></pre></div>
-    
-    <h2>Transport Recommendations</h2>
-    <p>TODO: CBOR, RTP, PTP, SMPTE 2110-41</p>
-    <p>TODO: Diagram of wrapping</p>
-
-    <h2>Multi-Camera / Device Considerations</h2>
-    <p>TODO</p>
-
-    <h2>Description of All Fields</h2>
-    <button class="collapsible">Description of fields</button>
-    <div class="content">
-        <table>
-            <tr><th>Parameter</th><th>Section</th><th>Sampling</th><th>Description</th><th>Units</th><th>Constraints</th></tr>
-            {% for field in fields %}
-            <tr><td>{{field.canonical_name}}</td><td>{{field.section}}</td><td>{{field.sampling}}</td><td>{{field.description}}</td><td>{{field.units}}</td><td>{{field.constraints}}</td></tr>
-            {% endfor %}
-        </table>
+    <div class="header">
+        <div class="headerInner">
+            <img src="img/logo_white.svg" class="headerLogo" />
+            <h1>OpenTrackIO Documentation</h1>
+        </div>
+        
     </div>
+    <div class="wrapper">
+        <div class="inner">
+            <h2>Overview</h2>
+            <p>OpenTrackIO is a free and open protocol designed by the RIS OSVP SMPTE group that seeks to improve interoperability in Virtual Production encoding, tracking and robotic systems.</p>
+            <p>This documentation is designed for those producing and consuming tracking data. There may be multiple CONSUMERS of a single PRODUCER'S data.</p>
+            <p>TODO insert diagram Producer >> Multiple Consumers</p>
+            <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens.</p>
+            <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples below).</p>
+            <p>OpenTrackIO employs the OpenLensIO mathematical lens model for the practical application of spherical lens distortion in Virtual Production.</p>
+            <p>TODO: Diagram of example camera and lens tracking system. Tracker, lens encoders etc</p>
+            
+            <h2>OpenTrackIO Sample</h2>
+            <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
+            <button class="collapsible">Recommended minimum VP example</button>
+            <div class="content"><pre><code>{{examples.recommended_dynamic_example}}</code></pre></div>
 
-    <h2>OpenLensIO</h2>
-    <p>TODO: link white paper</p>
+            <h2>Providing additional static data</h2>
+            <p>It is recommended that a static metadata object is added to a sample approximately every 2 seconds. This additional metadata describes the context of the samples in the stream, with data that may change - for example - every take, but will not change every frame.</p>
+            <button class="collapsible">Recommended minimum VP example with static data</button>
+            <div class="content"><pre><code>{{examples.recommended_static_example}}</code></pre></div>
 
-    <h2>JSON Schema</h2>
-    <p>This JSON Schema can be used to validate OpenTrackIO samples</p>
-    <button class="collapsible">OpenTrackIO schema</button>
-    <div class="content"><pre><code>{{schema}}</code></pre></div>
-    
+            <h2>Complete sample</h2>
+            <p>OpenTrackIO defines many more options and fields and these should be parsed where appropriate by the consumer. Custom fields can also be added as shown (although these will require specific producer / consumer negotiation)</p>
+            <button class="collapsible">Complete example sample with static data</button>
+            <div class="content"><pre><code>{{examples.complete_static_example}}</code></pre></div>
+            
+            <h2>Transport Recommendations</h2>
+            <p>TODO: CBOR, RTP, PTP, SMPTE 2110-41</p>
+            <p>TODO: Diagram of wrapping</p>
+
+            <h2>Multi-Camera / Device Considerations</h2>
+            <p>TODO</p>
+
+            <h2>Description of All Fields</h2>
+            <button class="collapsible">Description of fields</button>
+            <div class="content">
+                <table>
+                    <tr><th>Parameter</th><th>Section</th><th>Sampling</th><th>Description</th><th>Units</th><th>Constraints</th></tr>
+                    {% for field in fields %}
+                    <tr><td>{{field.canonical_name}}</td><td>{{field.section}}</td><td>{{field.sampling}}</td><td>{{field.description}}</td><td>{{field.units}}</td><td>{{field.constraints}}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <h2>OpenLensIO</h2>
+            <p>TODO: link white paper</p>
+
+            <h2>JSON Schema</h2>
+            <p>This JSON Schema can be used to validate OpenTrackIO samples</p>
+            <button class="collapsible">OpenTrackIO schema</button>
+            <div class="content"><pre><code>{{schema}}</code></pre></div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="inner">
+            <p><strong>Authored by SMPTE RIS OSVP</strong></p>
+            <p>Contributors: <a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</p>
+        </div>
+    </div>
     
 <script>
     var coll = document.getElementsByClassName("collapsible");
