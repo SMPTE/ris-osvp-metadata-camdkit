@@ -64,8 +64,8 @@ def _get_recommended_dynamic_clip():
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
-  r = Rotator3(pan=45.0, tilt=90.0, roll=180.0)
-  clip.transforms = ((Transform(translation=v, rotation=Rotator3(45.0,90.0,180.0), name="Camera"),),)
+  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
+  clip.transforms = ((Transform(translation=v, rotation=r, name="Camera"),),)
   clip.lens_f_number = (4000,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
@@ -107,8 +107,8 @@ def _get_complete_dynamic_clip():
   ),)
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
-  r = Rotator3(pan=45.0, tilt=90.0, roll=180.0)
-  clip.transforms = ((Transform(translation=v, rotation=Rotator3(45.0,90.0,180.0), name="Dolly"),
+  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
+  clip.transforms = ((Transform(translation=v, rotation=r, name="Dolly"),
                       Transform(translation=v, rotation=r, scale=v, name="Crane Arm", parent="Dolly"),
                       Transform(translation=v, rotation=r, scale=v, name="Camera", parent="Crane Arm")
                       ),)

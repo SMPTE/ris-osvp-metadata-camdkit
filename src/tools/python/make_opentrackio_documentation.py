@@ -36,6 +36,16 @@ def main():
       f.write(example_json)
       f.close()
 
+  # Generate schema
+  schema_file_name = "schema.json"
+  print(f"Generating {schema_file_name}")
+  schema = camdkit.model.Clip.make_json_schema()
+  f = open(os.path.join(docs_path, schema_file_name), "w")
+  schema_json = json.dumps(schema, indent=2)
+  f.write(schema_json)
+  f.close()
+
+  # Generate web docs
   env = Environment(
     loader=FileSystemLoader(templates_path),
     autoescape=select_autoescape()

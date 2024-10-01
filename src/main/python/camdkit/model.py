@@ -186,7 +186,7 @@ class ShutterAngle(Parameter):
 
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
-  units = "degree (angular)"
+  units = "degree"
   section = "camera"
 
   @staticmethod
@@ -722,7 +722,7 @@ class TimingTimestamp(TimestampParameter):
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
   section = "timing"
-  units = None
+  units = "second"
 
 class RecordedTimestamp(TimestampParameter):
   """
@@ -732,7 +732,7 @@ class RecordedTimestamp(TimestampParameter):
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
   section = "timing"
-  units = None
+  units = "second"
 
 class TimingSequenceNumber(NonNegativeIntegerParameter):
   """
