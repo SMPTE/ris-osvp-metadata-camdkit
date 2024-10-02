@@ -9,7 +9,7 @@ import json
 import os
 import math
 
-class OTProtocol:
+class OpenTrackIOProtocol:
     """Class to decode and interpret the OpenTrackIO protocol
     Arguments:
         msg_text: string containing a single json "sample"
@@ -66,7 +66,7 @@ class OTProtocol:
             else:                                   # we have a OTP message
                 print("Parsed the sample JSON successfully.")
                 if self.verbose:
-                    print("Contents of the parsed JSON dict:\n")
+                    print("Contents of the parsed sample JSON dict:\n")
                     print(self.pd)
                     print("\n")
         else:
@@ -232,8 +232,10 @@ class OTProtocol:
 
     def Get_protocol(self):
         """The protocol to which this sample conforms"""
-        if (self.pd["protocol"]):
-            return str(self.pd["protocol"])
+        #if (self.pd["protocol"]):
+            #return str(self.pd["protocol"])
+        if (self.pd["protocolVersion"]):
+            return str(self.pd["protocolVersion"])
         else:
             return None
 

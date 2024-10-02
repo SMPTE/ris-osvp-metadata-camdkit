@@ -3,21 +3,20 @@
 # opentrackIO_parser.py
 #
 # Reference code for parsing/decoding opentrackIO samples
-# Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
 #
-# License: this code is open-source under the FreeBSD License
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 #
-# example: python3 opentrackIO_parser.py --file=../example_json/complete_static_example_20240907.json --schema=../example_json/opentrackio_schema_modified_20240907.json
+# Example run: python3 opentrackIO_parser.py --file=opentrackio_complete_static_example-20241001.json --schema=opentrackio_schema_20241001.json
+# This is tested against the generated "complete_static_example" and "complete_dynamic_example" json
 
 import os
 import argparse
 from opentrackIOlib import *
 
-
 parser = argparse.ArgumentParser(description='OpenTrackingProtocol parser')
 parser.add_argument('-f', '--file', help='The JSON input file.', default=None)
 parser.add_argument('-s', '--schema', help='The schema (JSON) input file.', default=None)
-#parser.add_argument('-t', '--test', help='If present, will only verify json',action='store_true')
 parser.add_argument('-v', '--verbose', help='Make script more verbose',action='store_true')
 args = parser.parse_args()
 
@@ -26,7 +25,6 @@ schematext = ''
 verbose = False
 
 if (args.schema):
-    #print("DEBUG: set schemapath to: {}".format(args.schema))
     if os.path.exists(args.schema):
         schemapath = args.schema
         if (schemapath != None):        
@@ -36,7 +34,6 @@ if (args.schema):
                 for line in lines:
                     schematext = schematext + line
 if (args.file):
-    #print("DEBUG: set filepath to: {}".format(args.file))
     if os.path.exists(args.file):
         filepath = args.file
         if (filepath != None):        
@@ -48,7 +45,7 @@ if (args.file):
 if (args.verbose):
     verbose = True
 
-sample = OTProtocol(sample_text,schematext,verbose) # a "Sample" is a de-serialized JSON object containing the protocol
+sample = OpenTrackIOProtocol(sample_text,schematext,verbose) # a "Sample" is a de-serialized JSON object containing the protocol
 sample.Parse()                # parse the actual JSON of the protocol
 sample.Import_schema()        # read the schema which governs the interpretation of the protocol
 
@@ -60,7 +57,7 @@ print()
 
 protocol= sample.Get_protocol()
 slate = sample.Get_slate()
-print("Detected protocol: {}".format(protocol))
+print("Detected protocol version: {}".format(protocol))
 print("On slate: {}".format(slate))
 timecode = sample.Get_timecode()
 print("Current camera timecode: {}".format(timecode))
