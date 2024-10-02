@@ -53,6 +53,7 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
+    clip.protocol = (PROTOCOL_STRING, PROTOCOL_STRING)
     clip.protocol_version = (VERSION_STRING, VERSION_STRING)
 
     clip.device_status = ("Optical Good","Optical Good")
@@ -144,6 +145,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
+    self.assertTupleEqual(d["protocol"], (PROTOCOL_STRING, PROTOCOL_STRING))
     self.assertTupleEqual(d["protocolVersion"], (VERSION_STRING, VERSION_STRING))
     self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
@@ -425,6 +427,22 @@ class ModelTest(unittest.TestCase):
     clip.sample_id = value
     self.assertEqual(clip.sample_id, value)
 
+  def test_protocol(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.protocol)
+
+    with self.assertRaises(ValueError):
+      clip.protocol = ""
+    with self.assertRaises(ValueError):
+      clip.protocol = "AnyString"
+    with self.assertRaises(ValueError):
+      clip.protocol = 123
+
+    value = (PROTOCOL_STRING,)
+    clip.protocol = value
+    self.assertTupleEqual(clip.protocol, value)
+    
   def test_protocol_version(self):
     clip = Clip()
 
@@ -432,6 +450,18 @@ class ModelTest(unittest.TestCase):
 
     with self.assertRaises(ValueError):
       clip.protocol_version = ""
+    with self.assertRaises(ValueError):
+      clip.protocol_version = "1"
+    with self.assertRaises(ValueError):
+      clip.protocol_version = "1.2"
+    with self.assertRaises(ValueError):
+      clip.protocol_version = "1.2.3.4"
+    with self.assertRaises(ValueError):
+      clip.protocol_version = 123
+    with self.assertRaises(ValueError):
+      clip.protocol_version = 1.23
+    with self.assertRaises(ValueError):
+      clip.protocol_version = "AnyString"
 
     value = (VERSION_STRING,)
     clip.protocol_version = value
