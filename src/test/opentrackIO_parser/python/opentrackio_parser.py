@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 #
-# Example run: python3 opentrackio_parser.py --file=opentrackio_complete_static_sample-20241002.json --schema=opentrackio_schema_20241002.json
+# Example run: python3 opentrackio_parser.py --file=opentrackio_complete_static_sample_20241002.json --schema=opentrackio_schema_20241002.json
 # This is tested against the generated "complete_static_example" and "complete_dynamic_example" json
 
 import os

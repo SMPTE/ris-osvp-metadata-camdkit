@@ -163,7 +163,6 @@ class OpenTrackIOProtocol:
             if self.sample_time_format == "sec":
                 return ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
             elif self.sample_time_format == "timecode":             # since midnight
-                # FIXME: is this using the sample framerate?
                 frm = int((nsec * 0.000000001) * self.get_timecode_framerate())
                 return '{:02}'.format(hr) + ":" + '{:02}'.format(mn) + ":" + '{:02}'.format(st) + ":" + '{:02}'.format(frm)
             elif self.sample_time_format == "string":
@@ -185,9 +184,9 @@ class OpenTrackIOProtocol:
 
     def get_timecode_framerate(self):
         """Frame rate which the house timecode represents"""
-        if self.validate_dict_elements(self.pd,["timing","timecode","format","frameRate","num"]):
-            numerator = float(self.pd["timing"]["timecode"]["format"]["frameRate"]["num"])  
-            denominator = float(self.pd["timing"]["timecode"]["format"]["frameRate"]["denom"]) 
+        if self.validate_dict_elements(self.pd,["timing","frameRate","num"]):
+            numerator = float(self.pd["timing"]["frameRate"]["num"])  
+            denominator = float(self.pd["timing"]["frameRate"]["denom"]) 
             return float(numerator / denominator)
         else:
             return None
