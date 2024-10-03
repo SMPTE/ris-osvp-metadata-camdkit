@@ -14,8 +14,10 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 current_path = os.path.dirname(__file__)
 templates_path = os.path.join(current_path, "templates")
 resources_path = os.path.join(current_path,"..","..","main","resources")
-docs_path = os.path.join(current_path,"..","..","..","docs")
+docs_path = os.path.join(current_path,"..","..","..","build/opentrackio")
 examples_path = os.path.join(docs_path,"examples")
+
+os.makedirs(examples_path)
 
 def main():
   template_data = {

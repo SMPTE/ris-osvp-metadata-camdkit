@@ -2,22 +2,50 @@ name: CI
 
 on:
   push:
-  workflow_dispatch:
+  pull_request:
+
+env:
+  AWS_REGION: us-east-1
+  AWS_S3_BUCKET: smpte-ris-pub
+  AWS_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
+  CANONICAL_LINK_PREFIX: https://ris-pub.smpte.org/
+  PYTHONPATH: src/main/python
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
 
-      - name: Unit tests and generate documentation
-        env:
-          PYTHONPATH: src/main/python
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
         run: |
-          python -m unittest discover -v -s src/test/python
-          mkdir -p build
-          python src/tools/python/make_documentation.py > build/index.md
+          python -m pip install --upgrade pipenv
+          pipenv install --deploy --dev
+
+      - name: Setup build directory
+        run: mkdir -p build
+
+      - name: Unit tests
+        run: |
+          pipenv run python -m unittest discover -v -s src/test/python
+
+      - name: Generate opentrackio documentation
+        run: |
+          pipenv run python src/tools/python/make_opentrackio_documentation.py
+
+      - name: Generate parameter documentation
+        run: |
+          pipenv run python src/tools/python/make_documentation.py > build/index.md
 
       - name: Generate HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
@@ -25,11 +53,31 @@ jobs:
           input_path: build/index.md
           output_dir: build/
 
-      - run: ls -al build
-
       - name: Deploy to GitHub pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to opentrackio.org
+        shell: bash
+        run: |
+          if [ -z "$GITHUB_HEAD_REF" ]; then
+            S3_PATH=
+          else
+            S3_PATH=$GITHUB_SHA
+          fi
+          aws s3 sync ./build/opentrackio s3://smpte-ris-pub/$S3_PATH
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name != 'push'
+        with:
+          message: |
+            [OpenTrackIO documentation](${CANONICAL_LINK_PREFIX}/${GITHUB_SHA}/)
