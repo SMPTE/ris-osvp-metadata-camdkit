@@ -48,7 +48,7 @@
             }
           },
           "description": "Photosite resolution of the active area of the camera sensor in pixels",
-          "units": "pixels"
+          "units": "pixel"
         },
         "anamorphicSqueeze": {
           "type": "integer",
@@ -444,7 +444,7 @@
             }
           },
           "description": "Shift in x and y of the centre of perspective projection of the virtual camera",
-          "units": "millimetres"
+          "units": "millimeter"
         },
         "rawEncoders": {
           "type": "object",
@@ -528,7 +528,16 @@
         "minLength": 1,
         "maxLength": 1023
       },
-      "description": "Free string that describes the version of the protocol that this sample employs."
+      "description": "Free string that describes the version of the OpenTrackIO protocol that this sample employs."
+    },
+    "protocolVersion": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1023
+      },
+      "description": "Free string that describes the version of the OpenTrackIO protocol that this sample employs."
     },
     "relatedSamples": {
       "type": "array",
@@ -572,7 +581,7 @@
             "denom"
           ],
           "additionalProperties": false,
-          "description": " TODO doc "
+          "description": " The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. "
         },
         "mode": {
           "type": "string",
@@ -606,7 +615,8 @@
             "seconds",
             "nanoseconds"
           ],
-          "description": " PTP timestamp at which the data was recorded. Provided for convenience during playback of e.g. pre-recorded tracking data. 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) "
+          "description": " PTP timestamp at which the data was recorded. Provided for convenience during playback of e.g. pre-recorded tracking data. 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) ",
+          "units": "second"
         },
         "sampleTimestamp": {
           "type": "object",
@@ -632,18 +642,19 @@
             "seconds",
             "nanoseconds"
           ],
-          "units": "second",          
-          "description": " PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) "
+          "description": " PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds) ",
+          "units": "second"
         },
         "sequenceNumber": {
           "type": "integer",
           "minimum": 0,
           "maximum": 2147483647,
-          "description": " TODO doc "
+          "description": " An integer that increments with each sample to help maintain the sample sequence in a packet-switched network for example. "
         },
         "synchronization": {
           "type": "object",
           "additionalProperties": false,
+          "description": " The synchronization object describe how the device is synchonized for this sample.\n frequency: The frequency of the samples (in a variable rate system this should is estimated from the last sample delta time) locked: Is the device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \"master\": The MAC address of the PTP master - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The device is locked to a PTP master - \"ntp\": The device is locked to an NTP server ",
           "properties": {
             "frequency": {
               "type": "object",
@@ -686,16 +697,22 @@
             "present": {
               "type": "boolean"
             },
-            "ptp_master": {
-              "type": "string",
-              "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
-            },
-            "ptp_offset": {
-              "type": "number"
-            },
-            "ptp_domain": {
-              "type": "integer",
-              "minimum": 0
+            "ptp": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "master": {
+                  "type": "string",
+                  "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "domain": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
             },
             "source": {
               "type": "string",
@@ -711,8 +728,7 @@
             "frequency",
             "locked",
             "source"
-          ],
-          "description": " TODO doc "
+          ]
         },
         "timecode": {
           "type": "object",
@@ -779,7 +795,7 @@
               }
             }
           },
-          "description": " TODO doc "
+          "description": " The SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency. "
         }
       }
     },
@@ -857,7 +873,7 @@
           ]
         }
       },
-      "description": " A list of transforms. Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in metres of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision "
+      "description": " A list of transforms. Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision "
     }
   }
 }

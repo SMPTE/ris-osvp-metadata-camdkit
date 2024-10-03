@@ -1,4 +1,30 @@
 {
+  "static": {
+    "camera": {
+      "activeSensorPhysicalDimensions": {
+        "height": 24000,
+        "width": 36000
+      },
+      "activeSensorResolution": {
+        "height": 2160,
+        "width": 3840
+      },
+      "anamorphicSqueeze": 1,
+      "id": "A"
+    },
+    "device": {
+      "firmwareVersion": "1.2.3",
+      "make": "TrackerMaker",
+      "model": "Tracker",
+      "serialNumber": "1234567890A"
+    },
+    "lens": {
+      "make": "LensMaker",
+      "model": "Model15",
+      "nominalFocalLength": 14,
+      "serialNumber": "1234567890A"
+    }
+  },
   "device": {
     "notes": "Example generated sample.",
     "recording": false,
@@ -69,12 +95,13 @@
       ]
     }
   },
-  "protocol": "OpenTrackIO_0.1.0",
+  "protocol": "OpenTrackIO",
+  "protocolVersion": "1.0.0",
   "relatedSamples": [
-    "urn:uuid:00e774ae-ba27-4dad-9fcd-bf844f6a6e19",
-    "urn:uuid:676d40e4-a5bb-40bc-817c-ff8cf3e71c35"
+    "urn:uuid:acc99f0d-34ac-410f-a1ac-c2a0497a3554",
+    "urn:uuid:1e0e20e7-d4e1-4fb4-888c-92f5d34cf4ca"
   ],
-  "sampleId": "urn:uuid:b2d73422-2b1f-4fe6-9cad-1052306daa63",
+  "sampleId": "urn:uuid:fb39713f-ba29-4f7f-a761-f63a8748b4cd",
   "timing": {
     "frameRate": {
       "num": 24000,
@@ -83,7 +110,7 @@
     "mode": "internal",
     "recordedTimestamp": {
       "seconds": 1718806000,
-      "nanoseconds": 0
+      "nanoseconds": 500000000
     },
     "sampleTimestamp": {
       "seconds": 1718806554,
@@ -104,9 +131,11 @@
         "encoders": 3.0
       },
       "present": true,
-      "ptp_master": "00:11:22:33:44:55",
-      "ptp_offset": 0.0,
-      "ptp_domain": 1
+      "ptp": {
+        "domain": 1,
+        "master": "00:11:22:33:44:55",
+        "offset": 0.0
+      }
     },
     "timecode": {
       "hours": 1,
@@ -130,9 +159,9 @@
         "z": 3.0
       },
       "rotation": {
-        "pan": 0,
-        "tilt": 0,
-        "roll": 0
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
       },
       "name": "Dolly"
     },
@@ -143,9 +172,9 @@
         "z": 3.0
       },
       "rotation": {
-        "pan": 1.0,
-        "tilt": 2.0,
-        "roll": 3.0
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
       },
       "scale": {
         "x": 1.0,
@@ -162,9 +191,9 @@
         "z": 3.0
       },
       "rotation": {
-        "pan": 1.0,
-        "tilt": 2.0,
-        "roll": 3.0
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
       },
       "scale": {
         "x": 1.0,
@@ -174,9 +203,5 @@
       "name": "Camera",
       "parent": "Crane Arm"
     }
-  ],
-  "custom": {
-    "pot1": 2435,
-    "button1": false
-  }
+  ]
 }

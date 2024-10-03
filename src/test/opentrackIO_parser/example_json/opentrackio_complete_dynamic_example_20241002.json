@@ -69,12 +69,13 @@
       ]
     }
   },
+  "protocol": "OpenTrackIO",
   "protocolVersion": "1.0.0",
   "relatedSamples": [
-    "urn:uuid:c6f40d37-4f05-4fc8-84b7-37a49b6a4160",
-    "urn:uuid:febc69f1-ee56-49b9-8b80-075bc09c220b"
+    "urn:uuid:146d7f66-20e5-4b46-8d8f-b490b2c2cfd5",
+    "urn:uuid:630d291b-b65a-43be-b883-ad7db3952203"
   ],
-  "sampleId": "urn:uuid:c57acc40-b657-4a6e-b779-5088eaf24d31",
+  "sampleId": "urn:uuid:b75df889-e218-45c4-92d8-3b44215d2ff7",
   "timing": {
     "frameRate": {
       "num": 24000,
