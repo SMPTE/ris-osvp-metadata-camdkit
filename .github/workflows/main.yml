@@ -80,4 +80,4 @@ jobs:
         if: github.event_name != 'push'
         with:
           message: |
-            [OpenTrackIO documentation](${CANONICAL_LINK_PREFIX}/${GITHUB_SHA}/)
+            [OpenTrackIO documentation](${{ env.CANONICAL_LINK_PREFIX }}/${{ env.GITHUB_SHA }}/)
