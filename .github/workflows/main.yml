@@ -91,4 +91,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           message: |
-            [OpenTrackIO documentation](${{ env.RIS_PUB_PREFIX }}/${{ steps.deployRISpub.outputs.SNAP_PATH }}/opentrackio)
+            [OpenTrackIO documentation](${{ env.RIS_PUB_PREFIX }}/${{ steps.deployRISpub.outputs.SNAP_PATH }}/opentrackio/)
