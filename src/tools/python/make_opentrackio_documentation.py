@@ -14,10 +14,10 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 current_path = os.path.dirname(__file__)
 templates_path = os.path.join(current_path, "templates")
 resources_path = os.path.join(current_path,"..","..","main","resources")
-docs_path = os.path.join(current_path,"..","..","..","build/opentrackio")
+docs_path = os.path.join(current_path,"..","..","..","build","opentrackio")
 examples_path = os.path.join(docs_path,"examples")
-
-os.makedirs(examples_path)
+if not os.path.exists(examples_path):
+  os.makedirs(examples_path)
 
 def main():
   template_data = {
@@ -60,7 +60,7 @@ def main():
   f.write(html)
   f.close()
   print("Publishing static web resources")
-  for folder in ["css", "img"]:
+  for folder in ["css", "img", "res"]:
     shutil.copytree(os.path.join(resources_path, folder), os.path.join(docs_path, folder), dirs_exist_ok=True)
 
 if __name__ == "__main__":
