@@ -7,8 +7,9 @@ on:
 env:
   AWS_REGION: us-east-1
   AWS_RIS_PUB_BUCKET: smpte-ris-pub
+  AWS_RIS_PUB_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
   AWS_OPENTRACKIO_BUCKET: opentrackio-www
-  AWS_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
+  AWS_OPENTRACKIO_ROLE: arn:aws:iam::189079736792:role/role-opentrackio-www
   RIS_PUB_PREFIX: https://ris-pub.smpte.org
   PYTHONPATH: src/main/python
 
@@ -70,7 +71,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.AWS_ROLE }}
+          role-to-assume: ${{ env.AWS_RIS_PUB_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to RIS pub
@@ -80,6 +81,12 @@ jobs:
           SNAP_PATH=${GITHUB_REPOSITORY#*/}/${GITHUB_SHA}
           aws s3 sync ./build/ s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_OPENTRACKIO_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to www.opentrackio.org
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
