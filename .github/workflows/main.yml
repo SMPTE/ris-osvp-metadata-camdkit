@@ -89,7 +89,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to www.opentrackio.org
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           aws s3 sync ./build/opentrackio s3://${{ env.AWS_OPENTRACKIO_BUCKET }}
