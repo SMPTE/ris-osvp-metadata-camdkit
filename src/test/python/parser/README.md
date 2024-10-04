@@ -1,15 +1,11 @@
-README.md
+#Documentation for opentrackIO_parser.py
 
-Documentation for opentrackIO_parser.py
-
-This python reference code is for parsing "sample" JSON in opentrackIO format.
-User API is in the methods of the class "OTProtocol" and includes methods for getting and 
-scaling values to user-preferred units.
+This python reference code is for parsing "sample" JSON in OpenTrackIO format. User API is in the methods of the class "OpenTrackIOProtocol" and includes methods for getting and scaling values to user-preferred units.
 
 This code works with Python 3.11 and above
 
-
 Example:
+```
 export PYTHONPATH=src/main/python
 python3 src/tools/python/generate_opentrackio_schema.py > opentrackio_schema.json
 python3 src/tools/python/generate_complete_static_example.py > opentrackio_complete_static_sample.json
@@ -42,7 +38,6 @@ Active camera sensor height: 2160, width: 3840 micron
 Focal length is: 24.305 millimeter
 Focus distance is: 100.0 cm
 Focus distance is: 39.37 in
-
+```
 
 Note that JSON dictionary contents and other debug info can be examined with the verbose flag: -v
-
