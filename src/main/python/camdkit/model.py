@@ -507,7 +507,7 @@ class TimingSynchronization(Parameter):
   """
   The synchronization object describe how the device is synchonized for this sample.
 
-  frequency: The frequency of the samples (in a variable rate system this should is estimated from the last sample delta time)
+  frequency: The frequency of the synchronisation. This may differ from the sample frame rate for example in a Genlocked device.
   locked: Is the device locked to the synchronization source
   offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding
   present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example)
@@ -779,7 +779,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
 
 class TimingFrameRate(StrictlyPositiveRationalParameter):
   """
-  The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001.
+  The sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
   canonical_name = "frameRate"
@@ -1244,7 +1244,7 @@ class Clip(ParameterContainer):
   protocol_version: typing.Optional[typing.Tuple[str]] = ProtocolVersion()
   related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
-  timing_frame_rate: typing.Optional[typing.Tuple[NonNegativeRealParameter]] = TimingFrameRate()
+  timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
   timing_sample_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()

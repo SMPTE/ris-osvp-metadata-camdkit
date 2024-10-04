@@ -26,7 +26,7 @@ body {
     margin:20px 0;
 }
 a {
-    color:#ebeb10;
+    color:#1076eb;
     text-decoration:none;
 }
 th, td {
@@ -51,8 +51,15 @@ table {
     max-width:1200px;
     padding-bottom:40px;
 }
+.wrapper img {
+    display:block;
+    margin:auto;
+    padding-bottom:10px;
+}
 .inner {
     padding:10px;
+    max-width: 800px;
+    margin:auto;
 }
 .header {
 
