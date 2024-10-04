@@ -6,9 +6,10 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  AWS_S3_BUCKET: smpte-ris-pub
+  AWS_RIS_PUB_BUCKET: smpte-ris-pub
+  AWS_OPENTRACKIO_BUCKET: opentrackio-www
   AWS_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
-  CANONICAL_LINK_PREFIX: https://ris-pub.smpte.org
+  RIS_PUB_PREFIX: https://ris-pub.smpte.org
   PYTHONPATH: src/main/python
 
 jobs:
@@ -72,18 +73,22 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to opentrackio.org
+      - name: Deploy to RIS pub
+        id: deployRISpub
         shell: bash
         run: |
-          if [ -z "$GITHUB_HEAD_REF" ]; then
-            S3_PATH=
-          else
-            S3_PATH=${GITHUB_SHA}
-          fi
-          aws s3 sync ./build/opentrackio s3://smpte-ris-pub/$S3_PATH
+          SNAP_PATH=${GITHUB_REPOSITORY#*/}/${GITHUB_SHA}
+          aws s3 sync ./build/ s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
+          echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
+
+      - name: Deploy to www.opentrackio.org
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          aws s3 sync ./build/opentrackio s3://${{ env.AWS_OPENTRACKIO_BUCKET }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
           message: |
-            [OpenTrackIO documentation](${{ env.CANONICAL_LINK_PREFIX }}/${{ github.sha }}/)
+            [OpenTrackIO documentation](${{ env.RIS_PUB_PREFIX }}/${{ steps.deployRISpub.outputs.SNAP_PATH }}/opentrackio)
