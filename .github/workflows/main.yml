@@ -86,4 +86,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           message: |
-            [OpenTrackIO documentation](${{ env.CANONICAL_LINK_PREFIX }}/${{ env.GITHUB_SHA }}/)
+            [OpenTrackIO documentation](${{ env.CANONICAL_LINK_PREFIX }}/${{ github.sha }}/)
