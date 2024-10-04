@@ -82,7 +82,7 @@ jobs:
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
 
       - name: Deploy to www.opentrackio.org
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           aws s3 sync ./build/opentrackio s3://${{ env.AWS_OPENTRACKIO_BUCKET }}
