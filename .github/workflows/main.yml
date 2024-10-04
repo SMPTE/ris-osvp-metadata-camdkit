@@ -8,11 +8,17 @@ env:
   AWS_REGION: us-east-1
   AWS_S3_BUCKET: smpte-ris-pub
   AWS_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
-  CANONICAL_LINK_PREFIX: https://ris-pub.smpte.org/
+  CANONICAL_LINK_PREFIX: https://ris-pub.smpte.org
   PYTHONPATH: src/main/python
 
 jobs:
   build:
+    if: >
+      github.repository_owner	== 'SMPTE' && (
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      || github.event_name == 'pull_request'
+      || github.event_name == 'release'
+      )
     runs-on: ubuntu-latest
 
     permissions:
@@ -72,12 +78,12 @@ jobs:
           if [ -z "$GITHUB_HEAD_REF" ]; then
             S3_PATH=
           else
-            S3_PATH=$GITHUB_SHA
+            S3_PATH=${GITHUB_SHA}
           fi
           aws s3 sync ./build/opentrackio s3://smpte-ris-pub/$S3_PATH
 
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name != 'push'
+        if: github.event_name == 'pull_request'
         with:
           message: |
             [OpenTrackIO documentation](${{ env.CANONICAL_LINK_PREFIX }}/${{ env.GITHUB_SHA }}/)
