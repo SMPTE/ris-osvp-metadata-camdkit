@@ -27,7 +27,7 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.shutter_angle, 180000)    # shutter_angle: 180 deg
 
-    self.assertIsNone(clip.lens_entrance_pupil_distance)
+    self.assertIsNone(clip.lens_entrance_pupil_offset)
 
     self.assertEqual(clip.lens_t_number[0], 4500)        # t_number: 4.5
 

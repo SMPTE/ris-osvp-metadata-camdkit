@@ -37,7 +37,7 @@ class ModelTest(unittest.TestCase):
     clip.camera_model = "Hello"
     clip.camera_serial_number = "132456"
     clip.camera_firmware = "7.1"
-    clip.camera_id = "A"
+    clip.camera_label = "A"
     clip.device_make = "ABCD"
     clip.device_model = "EFGH"
     clip.device_firmware = "1.0.1a"
@@ -98,7 +98,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_f_number = (1200, 2800)
     clip.lens_focal_length = (2.0, 4.0)
     clip.lens_focus_distance = (2, 4)
-    clip.lens_entrance_pupil_distance = (Fraction(1, 2), Fraction(13, 7))
+    clip.lens_entrance_pupil_offset = (Fraction(1, 2), Fraction(13, 7))
     clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
                           FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
     clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
@@ -126,7 +126,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["model"], "Hello")
     self.assertEqual(d["static"]["camera"]["serialNumber"], "132456")
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
-    self.assertEqual(d["static"]["camera"]["id"], "A")
+    self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
@@ -180,7 +180,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
     self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
     self.assertTupleEqual(d["lens"]["focusDistance"], (2, 4))
-    self.assertTupleEqual(d["lens"]["entrancePupilDistance"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
+    self.assertTupleEqual(d["lens"]["entrancePupilOffset"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
     self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
                                                   { "focus":0.1, "iris":0.2, "zoom":0.3 }))
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
@@ -374,19 +374,19 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(clip.lens_focus_distance, value)
 
-  def test_entrance_pupil_distance(self):
+  def test_entrance_pupil_offset(self):
     clip = Clip()
 
-    self.assertIsNone(clip.lens_entrance_pupil_distance)
+    self.assertIsNone(clip.lens_entrance_pupil_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_entrance_pupil_distance = 0.6
+      clip.lens_entrance_pupil_offset = 0.6
 
     value = (Fraction(5,7), 7)
 
-    clip.lens_entrance_pupil_distance = value
+    clip.lens_entrance_pupil_offset = value
 
-    self.assertTupleEqual(clip.lens_entrance_pupil_distance, value)
+    self.assertTupleEqual(clip.lens_entrance_pupil_offset, value)
 
   def test_fdl_link(self):
     clip = Clip()

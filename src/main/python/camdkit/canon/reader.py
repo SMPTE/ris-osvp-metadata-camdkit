@@ -66,7 +66,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   # focus_position
   clip.lens_focus_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
 
-  # entrance_pupil_position not supported
+  # entrance_pupil_offset not supported
 
   # t_number
   if int(first_frame_data['ApertureMode']) == 2:
