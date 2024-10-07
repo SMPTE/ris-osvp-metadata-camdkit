@@ -220,13 +220,14 @@ class SampleId(UUIDURNParameter):
   units = None
 
 class Protocol(Parameter):
-  sampling = Sampling.REGULAR
+  """Name of the protocol in which the sample is being employed, and version of that protocol"""
   canonical_name = "protocol"
+  sampling = Sampling.REGULAR
   units = None
 
   @staticmethod
   def validate(value) -> bool:
-    """protocol name and version are each free strings (but both must be non-blank)"""
+    """Protocol name and version are each free strings (but both must be non-blank)"""
 
     if not isinstance(value, VersionedProtocol):
       return False
