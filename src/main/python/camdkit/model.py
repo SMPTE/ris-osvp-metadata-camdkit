@@ -220,7 +220,7 @@ class SampleId(UUIDURNParameter):
   units = None
 
 class Protocol(StringParameter):
-  """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+  """Free string that describes the name of the protocol that this sample employs."""
 
   canonical_name = "protocol"
   sampling = Sampling.REGULAR
@@ -237,7 +237,7 @@ class Protocol(StringParameter):
     return value == "OpenTrackIO"
 
 class ProtocolVersion(StringParameter):
-  """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+  """Free string that describes the version of the protocol that this sample employs."""
 
   canonical_name = "protocolVersion"
   sampling = Sampling.REGULAR
