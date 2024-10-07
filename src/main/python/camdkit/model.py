@@ -219,46 +219,6 @@ class SampleId(UUIDURNParameter):
   sampling = Sampling.REGULAR
   units = None
 
-# class OldProtocol(StringParameter):
-#   """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
-#
-#   canonical_name = "protocol"
-#   sampling = Sampling.REGULAR
-#   units = None
-#
-#   @staticmethod
-#   def validate(value) -> bool:
-#     """
-#     This field must contain "OpenTrackIO"
-#     """
-#     if not isinstance(value, str):
-#       return False
-#
-#     return value == "OpenTrackIO"
-#
-# class ProtocolVersion(StringParameter):
-#   """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
-#
-#   canonical_name = "protocolVersion"
-#   sampling = Sampling.REGULAR
-#   units = None
-#
-#   @staticmethod
-#   def validate(value) -> bool:
-#     """
-#     This field must contain a string of <integer>.<integer>.<integer>
-#     """
-#     if not isinstance(value, str):
-#       return False
-#     splitValue = value.split(".")
-#     if len(splitValue) != 3:
-#       return False
-#     for n in splitValue:
-#       if not n.isdigit():
-#         return False
-#
-#     return True
-
 class Protocol(Parameter):
   sampling = Sampling.REGULAR
   canonical_name = "protocol"
