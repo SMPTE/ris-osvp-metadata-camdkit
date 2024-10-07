@@ -255,17 +255,17 @@ class OpenTrackIOProtocol:
         elif schema_units == None:
             print("Error: focus distance units not found in schema")
 
-    def get_protocol_version(self):
-        """The version of the protocol to which this sample conforms"""
-        if "protocolVersion" in self.pd.keys():
-            return str(self.pd["protocolVersion"])
+    def get_protocol_name(self):
+        """Name of protocol to which this sample conforms"""
+        if self.validate_dict_elements(self.pd["protocol","name"]) in self.pd.keys():
+            return str(self.pd["protocol"]["name"])
         else:
             return None
 
-    def get_protocol(self):
-        """The protocol to which this sample conforms"""
-        if "protocol" in self.pd.keys():
-            return str(self.pd["protocol"])
+    def get_protocol_version(self):
+        """Version of the protocol to which this sample conforms"""
+        if self.validate_dict_elements(self.pd,["protocol","version"]):
+            return str(self.pd["protocol"]["version"])
         else:
             return None
 

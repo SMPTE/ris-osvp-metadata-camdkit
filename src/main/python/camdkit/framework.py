@@ -115,6 +115,16 @@ class Timestamp:
   nanoseconds: int
   attoseconds: typing.Optional[int] = None
 
+@dataclasses.dataclass
+class VersionedProtocol:
+  """
+  A pair of protocol name and protocol version number (though 'number' should not be seen
+  as a restriction to a numeric character set. Both must be specified as strings with
+  strictly positive length.
+  """
+  name: str
+  version: str
+
 class BaseEnum(Enum):
   "Base class for enumerations"
 

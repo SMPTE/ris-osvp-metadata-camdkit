@@ -11,7 +11,7 @@ import struct
 import uuid
 
 from camdkit.framework import *
-from camdkit.model import Clip, Synchronization, PROTOCOL_STRING, VERSION_STRING
+from camdkit.model import Clip, Synchronization, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 
 class F4:
   
@@ -193,8 +193,7 @@ class F4PacketParser:
       rotation = Rotator3(0,0,0)
       focus = iris = zoom = frequency = None
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
-      frame.protocol = (PROTOCOL_STRING,)
-      frame.protocol_version = (VERSION_STRING,)
+      frame.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION),)
       frame.sample_id = (uuid.uuid4().urn,)
       frame.device_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):

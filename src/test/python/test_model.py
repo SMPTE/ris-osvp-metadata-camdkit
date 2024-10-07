@@ -53,9 +53,8 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
-    clip.protocol = (PROTOCOL_STRING, PROTOCOL_STRING)
-    clip.protocol_version = (VERSION_STRING, VERSION_STRING)
-
+    clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),
+                     VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION))
     clip.device_status = ("Optical Good","Optical Good")
     clip.device_recording = (False,True)
     clip.device_slate = ("A101_A_4","A101_A_5")
@@ -145,8 +144,8 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
-    self.assertTupleEqual(d["protocol"], (PROTOCOL_STRING, PROTOCOL_STRING))
-    self.assertTupleEqual(d["protocolVersion"], (VERSION_STRING, VERSION_STRING))
+    self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
+                                          {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
     self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
                                                 ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
@@ -433,39 +432,34 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.protocol)
 
     with self.assertRaises(ValueError):
-      clip.protocol = ""
+      clip.protocol = (VersionedProtocol("", "1.2.3"),)
     with self.assertRaises(ValueError):
-      clip.protocol = "AnyString"
+      # For now, we require the protocol name to be OPENTRACKIO_PROTOCOL_NAME
+      clip.protocol = (VersionedProtocol("AnyString", "1.2.3"),)
     with self.assertRaises(ValueError):
-      clip.protocol = 123
+      clip.protocol = (VersionedProtocol(123, "1.2.3"),)
 
-    value = (PROTOCOL_STRING,)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ""),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2.3.4"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 123),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 1.23),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "AnyString"),)
+
+    clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
+
+    value = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
     clip.protocol = value
     self.assertTupleEqual(clip.protocol, value)
-    
-  def test_protocol_version(self):
-    clip = Clip()
 
-    self.assertIsNone(clip.protocol_version)
-
-    with self.assertRaises(ValueError):
-      clip.protocol_version = ""
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1.2"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1.2.3.4"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = 123
-    with self.assertRaises(ValueError):
-      clip.protocol_version = 1.23
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "AnyString"
-
-    value = (VERSION_STRING,)
-    clip.protocol_version = value
-    self.assertTupleEqual(clip.protocol_version, value)
 
   def test_device_data(self):
     clip = Clip()

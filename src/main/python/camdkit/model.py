@@ -12,8 +12,8 @@ from jsonschema import validate
 
 from camdkit.framework import *
 
-PROTOCOL_STRING = "OpenTrackIO"
-VERSION_STRING = "1.0.0"
+OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
+OPENTRACKIO_PROTOCOL_VERSION = "1.0.0"
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   "Height and width of the active area of the camera sensor in microns"
@@ -219,45 +219,103 @@ class SampleId(UUIDURNParameter):
   sampling = Sampling.REGULAR
   units = None
 
-class Protocol(StringParameter):
-  """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+# class OldProtocol(StringParameter):
+#   """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+#
+#   canonical_name = "protocol"
+#   sampling = Sampling.REGULAR
+#   units = None
+#
+#   @staticmethod
+#   def validate(value) -> bool:
+#     """
+#     This field must contain "OpenTrackIO"
+#     """
+#     if not isinstance(value, str):
+#       return False
+#
+#     return value == "OpenTrackIO"
+#
+# class ProtocolVersion(StringParameter):
+#   """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+#
+#   canonical_name = "protocolVersion"
+#   sampling = Sampling.REGULAR
+#   units = None
+#
+#   @staticmethod
+#   def validate(value) -> bool:
+#     """
+#     This field must contain a string of <integer>.<integer>.<integer>
+#     """
+#     if not isinstance(value, str):
+#       return False
+#     splitValue = value.split(".")
+#     if len(splitValue) != 3:
+#       return False
+#     for n in splitValue:
+#       if not n.isdigit():
+#         return False
+#
+#     return True
 
+class Protocol(Parameter):
+  sampling = Sampling.REGULAR
   canonical_name = "protocol"
-  sampling = Sampling.REGULAR
   units = None
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    This field must contain "OpenTrackIO"
-    """
-    if not isinstance(value, str):
+    """protocol name and version are each free strings (but both must be non-blank)"""
+
+    if not isinstance(value, VersionedProtocol):
       return False
-    
-    return value == "OpenTrackIO"
 
-class ProtocolVersion(StringParameter):
-  """Free string that describes the version of the OpenTrackIO protocol that this sample employs."""
+    if not isinstance(value.name, str):
+      return False
+    if not len(value.name):
+      return False
+    if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
+      return False
 
-  canonical_name = "protocolVersion"
-  sampling = Sampling.REGULAR
-  units = None
+    if not isinstance(value.version, str):
+      return False
+    if not len(value.version):
+      return False
+    version_number_components = value.version.split(".")
+    if len(version_number_components) != 3:
+      return False
+    return all([version_number_component.isdigit()
+                for version_number_component in version_number_components])
 
   @staticmethod
-  def validate(value) -> bool:
-    """
-    This field must contain a string of <integer>.<integer>.<integer>
-    """
-    if not isinstance(value, str):
-      return False
-    splitValue = value.split(".")
-    if len(splitValue) != 3:
-      return False
-    for n in splitValue:
-      if not n.isdigit():
-        return False
-    
-    return True
+  def to_json(value: typing.Any) -> typing.Any:
+    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return VersionedProtocol(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "name": {
+          "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+        },
+        "version": {
+          "type": "string",
+            "pattern": r'^[0-9]+.[0-9]+.[0-9]+$'
+        }
+      },
+      "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
+      ]
+    }
+
 
 class Status(StringParameter):
   """Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"""
@@ -1240,8 +1298,7 @@ class Clip(ParameterContainer):
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
-  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
-  protocol_version: typing.Optional[typing.Tuple[str]] = ProtocolVersion()
+  protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
   timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()

@@ -7,7 +7,7 @@
 import uuid
 
 from camdkit.framework import *
-from camdkit.model import Clip, PROTOCOL_STRING, VERSION_STRING
+from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 
 def get_recommended_static_example():
   clip = _get_recommended_dynamic_clip()
@@ -51,8 +51,7 @@ def get_complete_dynamic_example():
 def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.protocol = (PROTOCOL_STRING,)
-  clip.protocol_version = (VERSION_STRING,)
+  clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION,),)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
 
   clip.device_status = ("Optical Good",)
@@ -79,8 +78,7 @@ def _get_recommended_dynamic_clip():
 def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.protocol = (PROTOCOL_STRING,)
-  clip.protocol_version = (VERSION_STRING,)
+  clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
   clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
 
