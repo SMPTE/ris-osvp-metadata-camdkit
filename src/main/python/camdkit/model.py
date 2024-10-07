@@ -121,10 +121,10 @@ class CameraFirmware(StringParameter):
   units = None
   section = "camera"
   
-class CameraId(StringParameter):
+class CameraLabel(StringParameter):
   """Free string that identifies the camera - e.g. 'A'"""
   
-  canonical_name = "id"
+  canonical_name = "label"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
@@ -937,12 +937,12 @@ class FocusDistance(StrictlyPositiveIntegerParameter):
   units = "millimeter"
   section = "lens"
 
-class EntrancePupilDistance(RationalParameter):
-  """Position of the entrance pupil relative to the nominal imaging plane
+class EntrancePupilOffset(RationalParameter):
+  """Offset of the entrance pupil relative to the nominal imaging plane
   (positive if the entrance pupil is located on the side of the nominal imaging
   plane that is towards the object, and negative otherwise)"""
 
-  canonical_name = "entrancePupilDistance"
+  canonical_name = "entrancePupilOffset"
   sampling = Sampling.REGULAR
   units = "millimeter"
   section = "lens"
@@ -1204,7 +1204,7 @@ class Clip(ParameterContainer):
   camera_model: typing.Optional[str] = CameraModel()
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
-  camera_id: typing.Optional[str] = CameraId()
+  camera_label: typing.Optional[str] = CameraLabel()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
   device_make: typing.Optional[str] = DeviceMake()
   device_model: typing.Optional[str] = DeviceModel()
@@ -1231,7 +1231,7 @@ class Clip(ParameterContainer):
   lens_distortion_scale: typing.Optional[typing.Tuple[Orientations]] = DistortionScale()
   lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
-  lens_entrance_pupil_distance: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilDistance()
+  lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilOffset()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()

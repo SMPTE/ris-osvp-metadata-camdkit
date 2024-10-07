@@ -11,7 +11,7 @@ from camdkit.model import Clip, PROTOCOL_STRING, VERSION_STRING
 
 def get_recommended_static_example():
   clip = _get_recommended_dynamic_clip()
-  clip.camera_id = "A"
+  clip.camera_label = "A"
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
@@ -19,7 +19,7 @@ def get_recommended_static_example():
 
 def get_complete_static_example():
   clip = _get_complete_dynamic_clip()
-  clip.camera_id = "A"
+  clip.camera_label = "A"
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
@@ -70,7 +70,7 @@ def _get_recommended_dynamic_clip():
   clip.lens_f_number = (4000,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
-  clip.lens_entrance_pupil_distance = (Fraction(1000,100),)
+  clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
@@ -119,7 +119,7 @@ def _get_complete_dynamic_clip():
   clip.lens_t_number = (4100,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
-  clip.lens_entrance_pupil_distance = (Fraction(1000,100),)
+  clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion_overscan = (1.0,)
   clip.lens_distortion_scale = (1.0,)

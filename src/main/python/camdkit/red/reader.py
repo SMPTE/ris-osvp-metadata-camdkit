@@ -83,7 +83,7 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   cooke_metadata = tuple(cooke.lens_data_from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
-  clip.entrance_pupil_position = tuple(m.entrance_pupil_position for m in cooke_metadata)
+  clip.entrance_pupil_offset = tuple(m.entrance_pupil_position for m in cooke_metadata)
 
   clip.t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
 

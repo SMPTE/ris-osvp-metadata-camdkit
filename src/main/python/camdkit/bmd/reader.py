@@ -114,7 +114,7 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   # focus_position
   clip.focus_position = tuple(int(m["distance"][:-2]) for m in frame_data)
 
-  # entrance_pupil_position not supported
+  # entrance_pupil_offset not supported
 
   # t_number
   clip.t_number = tuple(round(float(m["aperture"][1:]) * 1000) for m in frame_data)
