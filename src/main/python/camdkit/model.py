@@ -272,9 +272,7 @@ class Protocol(Parameter):
           "type": "string",
             "pattern": r'^[0-9]+.[0-9]+.[0-9]+$'
         }
-      },
-      "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
-      ]
+      }
     }
 
 
