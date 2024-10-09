@@ -84,14 +84,14 @@ class Distortion:
 @dataclasses.dataclass
 class PerspectiveShift:
   "Shift in x and y of the centre of perspective projection of the virtual camera"
-  Px: float
-  Py: float
+  x: float
+  y: float
   
 @dataclasses.dataclass
 class DistortionShift:
   "Shift in x and y of the centre of distortion of the virtual camera"
-  Cx: float
-  Cy: float
+  x: float
+  y: float
 
 @dataclasses.dataclass
 class GlobalPosition:

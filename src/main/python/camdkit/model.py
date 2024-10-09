@@ -1124,9 +1124,9 @@ class LensDistortionShift(Parameter):
     if not isinstance(value, DistortionShift):
       return False
  
-    if value.Cx is None or not isinstance(value.Cx, numbers.Real):
+    if value.x is None or not isinstance(value.x, numbers.Real):
       return False
-    if value.Cy is None or not isinstance(value.Cx, numbers.Real):
+    if value.y is None or not isinstance(value.x, numbers.Real):
       return False
 
     return True
@@ -1144,12 +1144,12 @@ class LensDistortionShift(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["Cx", "Cy"],
+      "required": ["x", "y"],
       "properties": {
-        "Cx": {
+        "x": {
           "type": "number"
         },
-        "Cy": {
+        "y": {
           "type": "number"
         }
       }
@@ -1169,9 +1169,9 @@ class LensPerspectiveShift(Parameter):
     if not isinstance(value, PerspectiveShift):
       return False
  
-    if value.Px is None or not isinstance(value.Px, numbers.Real):
+    if value.x is None or not isinstance(value.x, numbers.Real):
       return False
-    if value.Py is None or not isinstance(value.Px, numbers.Real):
+    if value.y is None or not isinstance(value.x, numbers.Real):
       return False
 
     return True
@@ -1189,12 +1189,12 @@ class LensPerspectiveShift(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["Px", "Py"],
+      "required": ["x", "y"],
       "properties": {
-        "Px": {
+        "x": {
           "type": "number"
         },
-        "Py": {
+        "y": {
           "type": "number"
         }
       }

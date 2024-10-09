@@ -192,8 +192,8 @@ class ModelTest(unittest.TestCase):
                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                       { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "Cx":1.0,"Cy":2.0 }, { "Cx":1.0,"Cy":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Px":0.1,"Py":0.2 }, { "Px":0.1,"Py":0.2 }))
+    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
+    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
     d_clip = Clip()
     d_clip.from_json(d)
@@ -929,16 +929,16 @@ class ModelTest(unittest.TestCase):
     
   def test_lens_distortion_shift_from_dict(self):
     r = LensDistortionShift.from_json({
-      "Cx": -1.0,
-      "Cy": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     self.assertEqual(r,DistortionShift(-1.0,1.0))
     
   def test_lens_distortion_shift_to_dict(self):
     j = LensDistortionShift.to_json(DistortionShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "Cx": -1.0,
-      "Cy": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     
   def test_lens_perspective_shift(self):
@@ -960,16 +960,16 @@ class ModelTest(unittest.TestCase):
     
   def test_lens_perspective_shift_from_dict(self):
     r = LensPerspectiveShift.from_json({
-      "Px": -1.0,
-      "Py": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     self.assertEqual(r,PerspectiveShift(-1.0,1.0))
     
   def test_lens_perspective_shift_to_dict(self):
     j = LensPerspectiveShift.to_json(PerspectiveShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "Px": -1.0,
-      "Py": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
   
   def test_lens_custom(self):
