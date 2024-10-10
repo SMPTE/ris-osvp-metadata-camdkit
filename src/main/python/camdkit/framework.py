@@ -21,81 +21,92 @@ class Sampling(Enum):
 
 @dataclasses.dataclass
 class Dimensions:
-  "Height and width of a rectangular area"
+  """Height and width of a rectangular area"""
   height: numbers.Real
   width: numbers.Real
 
 @dataclasses.dataclass
 class Orientations:
-  "Horizontal and vertical measurements"
+  """Horizontal and vertical measurements"""
   horizontal: numbers.Real
   vertical: numbers.Real
 
 @dataclasses.dataclass
 class Vector3:
-  "3 doubles x,y,z to encode - for example - a location or a translation."
+  """3 doubles x,y,z to encode - for example - a location or a
+  translation.
+  """
   x: typing.Optional[numbers.Real]
   y: typing.Optional[numbers.Real]
   z: typing.Optional[numbers.Real]
 
 @dataclasses.dataclass
 class Rotator3:
-  "3 doubles pan, tilt, roll to encode - for example - a camera rotation."
+  """3 doubles pan, tilt, roll to encode - for example - a camera
+  rotation.
+  """
   pan: typing.Optional[numbers.Real]
   tilt: typing.Optional[numbers.Real]
   roll: typing.Optional[numbers.Real]
 
 @dataclasses.dataclass
 class Transform:
-  "A translation, rotation and scale. 'name' and 'parent' fields enable geometry chains"
+  """A translation, rotation and scale. 'transformId' and
+  'parentTransformId' fields enable geometry chains
+  """
   translation: Vector3
   rotation: Rotator3
   scale: typing.Optional[Vector3] = None
-  name: typing.Optional[str] = None
-  parent: typing.Optional[str] = None
+  transformId: typing.Optional[str] = None
+  parentTransformId: typing.Optional[str] = None
 
 @dataclasses.dataclass
 class FizEncoders:
-  "Normalised FIZ encoder values"
+  """Normalised FIZ encoder values"""
   focus: typing.Optional[numbers.Real] = None
   iris: typing.Optional[numbers.Real] = None
   zoom: typing.Optional[numbers.Real] = None
 
 @dataclasses.dataclass
 class RawFizEncoders:
-  "Unnormalised FIZ encoder values"
+  """Unnormalised FIZ encoder values"""
   focus: typing.Optional[int] = None
   iris: typing.Optional[int] = None
   zoom: typing.Optional[int] = None
 
 @dataclasses.dataclass
 class ExposureFalloff:
-  "Coefficients for the calculation of exposure fall-off"
+  """Coefficients for the calculation of exposure fall-off"""
   a1: float
   a2: typing.Optional[float] = None
   a3: typing.Optional[float] = None
 
 @dataclasses.dataclass
 class Distortion:
-  "Coefficients for the calculation of radial and (optionally) tangential lens distortion"
+  """Coefficients for the calculation of radial and (optionally)
+  tangential lens distortion
+  """
   radial: typing.Tuple[float]
   tangential: typing.Optional[typing.Tuple[float]] = None
 
 @dataclasses.dataclass
 class PerspectiveShift:
-  "Shift in x and y of the centre of perspective projection of the virtual camera"
-  Px: float
-  Py: float
+  """Shift in x and y of the centre of perspective projection of the
+  virtual camera
+  """
+  x: float
+  y: float
   
 @dataclasses.dataclass
 class DistortionShift:
-  "Shift in x and y of the centre of distortion of the virtual camera"
-  Cx: float
-  Cy: float
+  """Shift in x and y of the centre of distortion of the virtual camera
+  """
+  x: float
+  y: float
 
 @dataclasses.dataclass
 class GlobalPosition:
-  "Global ENU and geodetic coordinates"
+  """Global ENU and geodetic coordinates"""
   E: float
   N: float
   U: float
@@ -105,9 +116,9 @@ class GlobalPosition:
 
 @dataclasses.dataclass
 class Timestamp:
-  """
-  A 48-bit integer representing seconds, and a 32-bit integer representing nanoseconds, and an
-  optional 32-bit integer representing attoseconds elapsed since 00:00 January 1st 1970 epoch.
+  """48-bit integer representing seconds, 32-bit integer representing
+  nanoseconds, and (optionally) an optional 32-bit integer representing
+  attoseconds elapsed since 00:00 January 1st 1970 epoch.
   Reference: https://datatracker.ietf.org/doc/html/rfc8877
   """
 
@@ -115,20 +126,32 @@ class Timestamp:
   nanoseconds: int
   attoseconds: typing.Optional[int] = None
 
+@dataclasses.dataclass
+class VersionedProtocol:
+  """A pair of protocol name and protocol version number (though
+  'number' should not be seen as a restriction to a numeric character
+  set. Both must be specified as strings with strictly positive length.
+  The version must be specified as three integers separated by '.'
+  characters, and embody the major, minor and patch meanings of
+  semantic versioning.
+  """
+  name: str
+  version: str
+
 class BaseEnum(Enum):
-  "Base class for enumerations"
+  """Base class for enumerations"""
 
   def __str__(self):
     return self.value
 
 class SampleTypeEnum(BaseEnum):
-  "Enumeration for sample types"
+  """Enumeration for sample types"""
 
   STATIC = "static"
   DYNAMIC = "dynamic"
 
 class SynchronizationSourceEnum(BaseEnum):
-  "Enumeration for synchronization sources"
+  """Enumeration for synchronization sources"""
 
   GENLOCK = "genlock"
   VIDEO_IN = "videoIn"
@@ -137,7 +160,7 @@ class SynchronizationSourceEnum(BaseEnum):
 
 @dataclasses.dataclass
 class SynchronizationOffsets:
-  "Data structure for synchronization offsets"
+  """Data structure for synchronization offsets"""
 
   translation: typing.Optional[float] = None		
   rotation: typing.Optional[float] = None		
@@ -145,7 +168,8 @@ class SynchronizationOffsets:
 
   def validate(self):
     return all([isinstance(self.translation, float), 
-                isinstance(self.rotation, float), isinstance(self.encoders, float)])
+                isinstance(self.rotation, float),
+                isinstance(self.encoders, float)])
   
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -153,7 +177,7 @@ class SynchronizationOffsets:
 
 @dataclasses.dataclass
 class SynchronizationPTP:
-  "Data structure for PTP synchronization"
+  """Data structure for PTP synchronization"""
 
   domain: typing.Optional[int] = None
   master: typing.Optional[str] = None
@@ -161,25 +185,29 @@ class SynchronizationPTP:
   
   def validate(self):
     return all([isinstance(self.master, str), 
-                isinstance(self.offset, float), isinstance(self.domain, int)])
+                isinstance(self.offset, float),
+                isinstance(self.domain, int)])
   
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     return dataclasses.asdict(value)
 
 class TimingModeEnum(BaseEnum):
-  "Enumeration for sample timing modes"
+  """Enumeration for sample timing modes"""
 
   INTERNAL = "internal"
   EXTERNAL = "external"
 
-class TimecodeFormat():
-  "The timecode format is defined as a rational frame rate and drop frame flag"
+class TimecodeFormat:
+  """The timecode format is defined as a rational frame rate and drop
+  frame flag
+  """
 
   frame_rate: numbers.Rational
   drop_frame: bool = False
 
-  def __init__(self, in_frame_rate: numbers.Rational, in_drop_frame: bool = False):
+  def __init__(self, in_frame_rate: numbers.Rational,
+               in_drop_frame: bool = False):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
@@ -203,7 +231,9 @@ class TimecodeFormat():
 
 @dataclasses.dataclass
 class Timecode:
-  "Timecode is a standard for labeling individual frames of data in media systems."
+  """Timecode is a standard for labeling individual frames of data in
+  media systems.
+  """
   
   hours: int
   minutes: int
@@ -212,11 +242,12 @@ class Timecode:
   format: TimecodeFormat
 
   def __str__(self):
-    return f"{self.hours:>02}:{self.minutes:>02}:{self.seconds:>02}:{self.frames:>02}"
+    return (f"{self.hours:>02}:{self.minutes:>02}"
+            f":{self.seconds:>02}:{self.frames:>02}")
 
 @dataclasses.dataclass
 class Synchronization:
-  "Data structure for synchronization data"
+  """Data structure for synchronization data"""
 
   frequency: numbers.Rational
   locked: bool
@@ -248,15 +279,21 @@ class IntegerDimensionsParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The height and width shall be each be an integer in the range [0..2,147,483,647]."""
+    """The height and width shall be each be an integer in the range
+    [0..2,147,483,647].
+    """
 
     if not isinstance(value, Dimensions):
       return False
 
-    if not isinstance(value.height, numbers.Integral) or not isinstance(value.width, numbers.Integral):
+    if (not isinstance(value.height, numbers.Integral)
+            or not isinstance(value.width, numbers.Integral)):
       return False
 
-    if value.height < 0 or value.width < 0 or value.height > INT_MAX or value.width > INT_MAX:
+    if (value.height < 0
+            or value.width < 0
+            or value.height > INT_MAX
+            or value.width > INT_MAX):
       return False
 
     return True
@@ -317,7 +354,9 @@ class StringParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a Unicode string betwee 0 and 1023 codepoints."""
+    """The parameter shall be a Unicode string betwee 0 and 1023
+    codepoints.
+    """
     return isinstance(value, str) and len(value) < 1024
 
   @staticmethod
@@ -341,14 +380,17 @@ class ArrayParameter(Parameter):
   item_class = None
 
   def validate(self, value) -> bool:
-    """The parameter shall be a tuple of items of the class itemClass. The tuple can be empty"""
+    """The parameter shall be a tuple of items of the class itemClass.
+    The tuple can be empty
+    """
 
-    if self.item_class == None:
+    if self.item_class is None:
       return False
     if not isinstance(value, tuple):
       return False
     for item in value:
-      if not isinstance(item, self.item_class) and not self.item_class.validate(item):
+      if (not isinstance(item, self.item_class)
+              and not self.item_class.validate(item)):
         return False
     return True
 
@@ -374,8 +416,10 @@ class UUIDURNParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a UUID URN as specified in IETF RFC 4122. Only lowercase characters shall be used.
-    Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`"""
+    """The parameter shall be a UUID URN as specified in IETF RFC 4122.
+    Only lowercase characters shall be used.
+    Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+    """
     return isinstance(value, str) and UUIDURNParameter._UUID_RE.match(value)
 
   @staticmethod
@@ -399,12 +443,16 @@ class StrictlyPositiveRationalParameter(Parameter):
   def validate(value) -> bool:
     """The parameter shall be a rational number whose numerator
     is in the range [0..2,147,483,647] and denominator in the range
-    (0..4,294,967,295]."""
+    (0..4,294,967,295].
+    """
 
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator <= 0 or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
+    if (value.numerator <= 0
+            or value.denominator <= 0
+            or value.numerator > INT_MAX
+            or value.denominator > UINT_MAX):
       return False
 
     return True
@@ -444,14 +492,18 @@ class RationalParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a rational number where (i) the numerator is in the
-    range [-2,147,483,648..2,147,483,647] and (ii) the denominator is in the
-    range (0..4,294,967,295]."""
+    """The parameter shall be a rational number where (i) the numerator
+    is in the range [-2,147,483,648..2,147,483,647] and (ii) the
+    denominator is in the range (0..4,294,967,295].
+    """
 
     if not isinstance(value, numbers.Rational):
       return False
 
-    if value.numerator < INT_MIN or value.denominator <= 0 or value.numerator > INT_MAX or value.denominator > UINT_MAX:
+    if (value.numerator < INT_MIN
+            or value.denominator <= 0
+            or value.numerator > INT_MAX
+            or value.denominator > UINT_MAX):
       return False
 
     return True
@@ -502,7 +554,8 @@ class NonNegativeIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (0..2,147,483,647]."""
+    """The parameter shall be a integer in the range (0..2,147,483,647].
+    """
 
     return isinstance(value, numbers.Integral) and value >= 0
 
@@ -518,7 +571,8 @@ class StrictlyPositiveIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (1..2,147,483,647]."""
+    """The parameter shall be a integer in the range (1..2,147,483,647].
+    """
 
     return isinstance(value, numbers.Integral) and value > 0
 
@@ -582,25 +636,26 @@ class EnumParameter(StringParameter):
     }
 
 class TimestampParameter(Parameter):
-  """
-  PTP timestamp: 48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds),
-  optional 32-bit unsigned integer (attoseconds)
+  """PTP timestamp: 48-bit unsigned integer (seconds), 32-bit unsigned
+  integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
   """
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    The parameter shall contain valid number of seconds, nanoseconds and optionally
-    attoseconds elapsed since the start of the epoch.
+    """The parameter shall contain valid number of seconds, nanoseconds
+    and optionally attoseconds elapsed since the start of the epoch.
     """
     if not isinstance(value, Timestamp):
       return False
-    if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds <= UINT48_MAX):
+    if (not (isinstance(value.seconds, int)
+             and 0 <= value.seconds <= UINT48_MAX)):
       return False
-    if not (isinstance(value.nanoseconds, int) and value.nanoseconds >= 0 and value.nanoseconds <= UINT_MAX):
+    if (not (isinstance(value.nanoseconds, int)
+             and 0 <= value.nanoseconds <= UINT_MAX)):
       return False
     if value.attoseconds != None:
-      if not (isinstance(value.attoseconds, int) and value.attoseconds >= 0 and value.attoseconds <= UINT_MAX):
+      if (not (isinstance(value.attoseconds, int)
+               and 0 <= value.attoseconds <= UINT_MAX)):
         return False
     return True
 

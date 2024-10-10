@@ -38,10 +38,10 @@ class ModelTest(unittest.TestCase):
     clip.camera_serial_number = "132456"
     clip.camera_firmware = "7.1"
     clip.camera_label = "A"
-    clip.device_make = "ABCD"
-    clip.device_model = "EFGH"
-    clip.device_firmware = "1.0.1a"
-    clip.device_serial_number = "1234567890A"
+    clip.tracker_make = "ABCD"
+    clip.tracker_model = "EFGH"
+    clip.tracker_firmware = "1.0.1a"
+    clip.tracker_serial_number = "1234567890A"
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
     clip.lens_make = "ABC"
@@ -53,17 +53,16 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
-    clip.protocol = (PROTOCOL_STRING, PROTOCOL_STRING)
-    clip.protocol_version = (VERSION_STRING, VERSION_STRING)
-
-    clip.device_status = ("Optical Good","Optical Good")
-    clip.device_recording = (False,True)
-    clip.device_slate = ("A101_A_4","A101_A_5")
-    clip.device_notes = ("Test serialize.","Test serialize.")
-    clip.related_samples = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
-                            ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                             "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
+    clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),
+                     VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION))
+    clip.tracker_status = ("Optical Good","Optical Good")
+    clip.tracker_recording = (False,True)
+    clip.tracker_slate = ("A101_A_4","A101_A_5")
+    clip.tracker_notes = ("Test serialize.","Test serialize.")
+    clip.related_sampleIds = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
+                              ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
     clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
                          GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
 
@@ -132,10 +131,10 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
     self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
     self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
-    self.assertEqual(d["static"]["device"]["make"], "ABCD")
-    self.assertEqual(d["static"]["device"]["model"], "EFGH")
-    self.assertEqual(d["static"]["device"]["serialNumber"], "1234567890A")
-    self.assertEqual(d["static"]["device"]["firmwareVersion"], "1.0.1a")
+    self.assertEqual(d["static"]["tracker"]["make"], "ABCD")
+    self.assertEqual(d["static"]["tracker"]["model"], "EFGH")
+    self.assertEqual(d["static"]["tracker"]["serialNumber"], "1234567890A")
+    self.assertEqual(d["static"]["tracker"]["firmwareVersion"], "1.0.1a")
     self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], 120)
     self.assertEqual(d["static"]["camera"]["isoSpeed"], 13)
     self.assertEqual(d["static"]["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
@@ -145,9 +144,9 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
-    self.assertTupleEqual(d["protocol"], (PROTOCOL_STRING, PROTOCOL_STRING))
-    self.assertTupleEqual(d["protocolVersion"], (VERSION_STRING, VERSION_STRING))
-    self.assertTupleEqual(d["relatedSamples"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
+                                          {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
+    self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
                                                 ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                                                  "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
@@ -155,10 +154,10 @@ class ModelTest(unittest.TestCase):
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 },
                                              { "E":100.0, "N":200.0, "U":300.0,
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 }))
-    self.assertTupleEqual(d["device"]["status"], ("Optical Good","Optical Good"))
-    self.assertTupleEqual(d["device"]["recording"], (False,True))
-    self.assertTupleEqual(d["device"]["slate"], ("A101_A_4","A101_A_5"))
-    self.assertTupleEqual(d["device"]["notes"], ("Test serialize.","Test serialize."))
+    self.assertTupleEqual(d["tracker"]["status"], ("Optical Good","Optical Good"))
+    self.assertTupleEqual(d["tracker"]["recording"], (False,True))
+    self.assertTupleEqual(d["tracker"]["slate"], ("A101_A_4","A101_A_5"))
+    self.assertTupleEqual(d["tracker"]["notes"], ("Test serialize.","Test serialize."))
 
     self.assertTupleEqual(d["timing"]["mode"], ("internal", "internal"))
     self.assertTupleEqual(d["timing"]["sampleTimestamp"], ({ "seconds": 1718806554, "nanoseconds": 0 },
@@ -193,8 +192,8 @@ class ModelTest(unittest.TestCase):
                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
     self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
                                                       { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "Cx":1.0,"Cy":2.0 }, { "Cx":1.0,"Cy":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "Px":0.1,"Py":0.2 }, { "Px":0.1,"Py":0.2 }))
+    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
+    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
     d_clip = Clip()
     d_clip.from_json(d)
@@ -433,63 +432,58 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.protocol)
 
     with self.assertRaises(ValueError):
-      clip.protocol = ""
+      clip.protocol = (VersionedProtocol("", "1.2.3"),)
     with self.assertRaises(ValueError):
-      clip.protocol = "AnyString"
+      # For now, we require the protocol name to be OPENTRACKIO_PROTOCOL_NAME
+      clip.protocol = (VersionedProtocol("AnyString", "1.2.3"),)
     with self.assertRaises(ValueError):
-      clip.protocol = 123
+      clip.protocol = (VersionedProtocol(123, "1.2.3"),)
 
-    value = (PROTOCOL_STRING,)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ""),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2.3.4"),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 123),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 1.23),)
+    with self.assertRaises(ValueError):
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "AnyString"),)
+
+    clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
+
+    value = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
     clip.protocol = value
     self.assertTupleEqual(clip.protocol, value)
-    
-  def test_protocol_version(self):
+
+
+  def test_tracker_data(self):
     clip = Clip()
 
-    self.assertIsNone(clip.protocol_version)
-
-    with self.assertRaises(ValueError):
-      clip.protocol_version = ""
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1.2"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "1.2.3.4"
-    with self.assertRaises(ValueError):
-      clip.protocol_version = 123
-    with self.assertRaises(ValueError):
-      clip.protocol_version = 1.23
-    with self.assertRaises(ValueError):
-      clip.protocol_version = "AnyString"
-
-    value = (VERSION_STRING,)
-    clip.protocol_version = value
-    self.assertTupleEqual(clip.protocol_version, value)
-
-  def test_device_data(self):
-    clip = Clip()
-
-    self.assertIsNone(clip.device_status)
-    self.assertIsNone(clip.device_recording)
-    self.assertIsNone(clip.device_slate)
-    self.assertIsNone(clip.device_notes)
-    self.assertIsNone(clip.related_samples)
+    self.assertIsNone(clip.tracker_status)
+    self.assertIsNone(clip.tracker_recording)
+    self.assertIsNone(clip.tracker_slate)
+    self.assertIsNone(clip.tracker_notes)
+    self.assertIsNone(clip.related_sampleIds)
     self.assertIsNone(clip.global_stage)
 
     with self.assertRaises(ValueError):
-      clip.device_status = ""
+      clip.tracker_status = ""
     with self.assertRaises(ValueError):
-      clip.device_recording = 0
+      clip.tracker_recording = 0
     with self.assertRaises(ValueError):
-      clip.device_recording = "True"
+      clip.tracker_recording = "True"
     with self.assertRaises(ValueError):
-      clip.device_slate = ""
+      clip.tracker_slate = ""
     with self.assertRaises(ValueError):
-      clip.device_notes = ""
+      clip.tracker_notes = ""
     with self.assertRaises(ValueError):
-      clip.related_samples = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                              "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+      clip.related_sampleIds = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     with self.assertRaises(ValueError):
       clip.global_stage = GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
     with self.assertRaises(TypeError):
@@ -500,21 +494,21 @@ class ModelTest(unittest.TestCase):
       clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0),)
 
     value = ("Optical Good",)
-    clip.device_status = value
-    self.assertTupleEqual(clip.device_status, value)
+    clip.tracker_status = value
+    self.assertTupleEqual(clip.tracker_status, value)
     value = (True,False)
-    clip.device_recording = value
-    self.assertTupleEqual(clip.device_recording, value)
+    clip.tracker_recording = value
+    self.assertTupleEqual(clip.tracker_recording, value)
     value = ("A104_A_4",)
-    clip.device_slate = value
-    self.assertTupleEqual(clip.device_slate, value)
+    clip.tracker_slate = value
+    self.assertTupleEqual(clip.tracker_slate, value)
     value = ("Test notes",)
-    clip.device_notes = value
-    self.assertTupleEqual(clip.device_notes, value)
+    clip.tracker_notes = value
+    self.assertTupleEqual(clip.tracker_notes, value)
     value = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
-    clip.related_samples = value
-    self.assertTupleEqual(clip.related_samples, value)
+    clip.related_sampleIds = value
+    self.assertTupleEqual(clip.related_sampleIds, value)
     value = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
     clip.global_stage = value
     self.assertTupleEqual(clip.global_stage, value)
@@ -935,16 +929,16 @@ class ModelTest(unittest.TestCase):
     
   def test_lens_distortion_shift_from_dict(self):
     r = LensDistortionShift.from_json({
-      "Cx": -1.0,
-      "Cy": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     self.assertEqual(r,DistortionShift(-1.0,1.0))
     
   def test_lens_distortion_shift_to_dict(self):
     j = LensDistortionShift.to_json(DistortionShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "Cx": -1.0,
-      "Cy": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     
   def test_lens_perspective_shift(self):
@@ -966,16 +960,16 @@ class ModelTest(unittest.TestCase):
     
   def test_lens_perspective_shift_from_dict(self):
     r = LensPerspectiveShift.from_json({
-      "Px": -1.0,
-      "Py": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
     self.assertEqual(r,PerspectiveShift(-1.0,1.0))
     
   def test_lens_perspective_shift_to_dict(self):
     j = LensPerspectiveShift.to_json(PerspectiveShift(-1.0,1.0))
     self.assertDictEqual(j, {
-      "Px": -1.0,
-      "Py": 1.0
+      "x": -1.0,
+      "y": 1.0
     })
   
   def test_lens_custom(self):

@@ -12,11 +12,12 @@ from jsonschema import validate
 
 from camdkit.framework import *
 
-PROTOCOL_STRING = "OpenTrackIO"
-VERSION_STRING = "1.0.0"
+OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
+OPENTRACKIO_PROTOCOL_VERSION = "1.0.0"
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
-  "Height and width of the active area of the camera sensor in microns"
+  """Height and width of the active area of the camera sensor in microns
+  """
 
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
@@ -24,7 +25,9 @@ class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   section = "camera"
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
-  "Photosite resolution of the active area of the camera sensor in pixels"
+  """Photosite resolution of the active area of the camera sensor in
+  pixels
+  """
 
   canonical_name = "activeSensorResolution"
   sampling = Sampling.STATIC
@@ -58,7 +61,7 @@ class ISO(StrictlyPositiveIntegerParameter):
 
 
 class LensSerialNumber(StringParameter):
-  """Unique identifier of the lens"""
+  """Non-blank string uniquely identifying the lens"""
 
   canonical_name = "serialNumber"
   sampling = Sampling.STATIC
@@ -66,7 +69,7 @@ class LensSerialNumber(StringParameter):
   section = "lens"
 
 class LensMake(StringParameter):
-  """Make of the lens"""
+  """Nob-blank string naming lens manufacturer"""
 
   canonical_name = "make"
   sampling = Sampling.STATIC
@@ -74,7 +77,7 @@ class LensMake(StringParameter):
   section = "lens"
 
 class LensModel(StringParameter):
-  """Model of the lens"""
+  """Non-blank string identifying lens model"""
 
   canonical_name = "model"
   sampling = Sampling.STATIC
@@ -82,7 +85,7 @@ class LensModel(StringParameter):
   section = "lens"
 
 class LensFirmware(StringParameter):
-  """Version identifier for the firmware of the lens"""
+  """Non-blank string identifying lens firmware version"""
 
   canonical_name = "firmwareVersion"
   sampling = Sampling.STATIC
@@ -90,7 +93,7 @@ class LensFirmware(StringParameter):
   section = "lens"
 
 class CameraSerialNumber(StringParameter):
-  """Unique identifier of the camera"""
+  """Non-blank string uniquely identifying the camera"""
 
   canonical_name = "serialNumber"
   sampling = Sampling.STATIC
@@ -98,7 +101,7 @@ class CameraSerialNumber(StringParameter):
   section = "camera"
 
 class CameraMake(StringParameter):
-  """Make of the camera"""
+  """Non-blank string naming camera manufacturer"""
 
   canonical_name = "make"
   sampling = Sampling.STATIC
@@ -106,7 +109,7 @@ class CameraMake(StringParameter):
   section = "camera"
 
 class CameraModel(StringParameter):
-  """Model of the camera"""
+  """Non-blank string identifying camera model"""
 
   canonical_name = "model"
   sampling = Sampling.STATIC
@@ -114,7 +117,7 @@ class CameraModel(StringParameter):
   section = "camera"
 
 class CameraFirmware(StringParameter):
-  """Version identifier for the firmware of the camera"""
+  """Non-blank string identifying camera firmware version"""
 
   canonical_name = "firmwareVersion"
   sampling = Sampling.STATIC
@@ -122,50 +125,51 @@ class CameraFirmware(StringParameter):
   section = "camera"
   
 class CameraLabel(StringParameter):
-  """Free string that identifies the camera - e.g. 'A'"""
+  """Non-blank string containing user-determined camera identifier"""
   
   canonical_name = "label"
   sampling = Sampling.STATIC
   units = None
   section = "camera"
 
-class DeviceSerialNumber(StringParameter):
-  """Unique identifier of the device producing data"""
+class TrackerSerialNumber(StringParameter):
+  """Non-blank string uniquely identifying the tracking device"""
 
   canonical_name = "serialNumber"
   sampling = Sampling.STATIC
   units = None
-  section = "device"
+  section = "tracker"
 
-class DeviceMake(StringParameter):
-  """Make of the device producing data"""
+class TrackerMake(StringParameter):
+  """Non-blank string naming tracking device manufacturer"""
 
   canonical_name = "make"
   sampling = Sampling.STATIC
   units = None
-  section = "device"
+  section = "tracker"
 
-class DeviceModel(StringParameter):
-  """Model of the device producing data"""
+class TrackerModel(StringParameter):
+  """Non-blank string identifying tracking device model"""
 
   canonical_name = "model"
   sampling = Sampling.STATIC
   units = None
-  section = "device"
+  section = "tracker"
 
-class DeviceFirmware(StringParameter):
-  """Version identifier for the firmware of the device producing data"""
+class TrackerFirmware(StringParameter):
+  """Non-blank string identifying tracking device firmware version"""
 
   canonical_name = "firmwareVersion"
   sampling = Sampling.STATIC
   units = None
-  section = "device"
+  section = "tracker"
 
 class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
-  """Nominal ratio of height to width of the image of an axis-aligned square
-  captured by the camera sensor. It can be used to de-squeeze images but is not
-  however an exact number over the entire captured area due to a lens' intrinsic
-  analog nature."""
+  """Nominal ratio of height to width of the image of an axis-aligned
+  square captured by the camera sensor. It can be used to de-squeeze
+  images but is not however an exact number over the entire captured
+  area due to a lens' intrinsic analog nature.
+  """
 
   canonical_name = "anamorphicSqueeze"
   sampling = Sampling.STATIC
@@ -173,7 +177,8 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
   section = "camera"
 
 class FDLLink(UUIDURNParameter):
-  """Unique identifier of the FDL used by the camera."""
+  """URN identifying the ASC Framing Decision List used by the camera.
+  """
 
   canonical_name = "fdlLink"
   sampling = Sampling.STATIC
@@ -181,9 +186,10 @@ class FDLLink(UUIDURNParameter):
   section = "camera"
 
 class ShutterAngle(Parameter):
-  """Shutter speed as a fraction of the capture frame rate. The shutter speed
-  (in units of 1/s) is equal to the value of the parameter divided by 360 times
-  the capture frame rate."""
+  """Shutter speed as a fraction of the capture frame rate. The shutter
+  speed (in units of 1/s) is equal to the value of the parameter divided
+  by 360 times the capture frame rate.
+  """
 
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
@@ -213,99 +219,121 @@ class ShutterAngle(Parameter):
     }
 
 class SampleId(UUIDURNParameter):
-  """Unique identifier of the sample in which data is being transported."""
+  """URN serving as unique identifier of the sample in which data is
+  being transported.
+  """
 
   canonical_name = "sampleId"
   sampling = Sampling.REGULAR
   units = None
 
-class Protocol(StringParameter):
-  """Free string that describes the name of the protocol that this sample employs."""
-
+class Protocol(Parameter):
+  """Name of the protocol in which the sample is being employed, and
+  version of that protocol
+  """
   canonical_name = "protocol"
   sampling = Sampling.REGULAR
   units = None
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    This field must contain "OpenTrackIO"
-    """
-    if not isinstance(value, str):
+    """Protocol name is nonblank string; protocol version is basic x.y.z
+     semantic versioning string
+     """
+
+    if not isinstance(value, VersionedProtocol):
       return False
-    
-    return value == "OpenTrackIO"
 
-class ProtocolVersion(StringParameter):
-  """Free string that describes the version of the protocol that this sample employs."""
+    if not isinstance(value.name, str):
+      return False
+    if not len(value.name):
+      return False
+    if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
+      return False
 
-  canonical_name = "protocolVersion"
-  sampling = Sampling.REGULAR
-  units = None
+    if not isinstance(value.version, str):
+      return False
+    if not len(value.version):
+      return False
+    version_number_components = value.version.split(".")
+    if len(version_number_components) != 3:
+      return False
+    return all([version_number_component.isdigit()
+                for version_number_component in version_number_components])
 
   @staticmethod
-  def validate(value) -> bool:
-    """
-    This field must contain a string of <integer>.<integer>.<integer>
-    """
-    if not isinstance(value, str):
-      return False
-    splitValue = value.split(".")
-    if len(splitValue) != 3:
-      return False
-    for n in splitValue:
-      if not n.isdigit():
-        return False
-    
-    return True
+  def to_json(value: typing.Any) -> typing.Any:
+    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return VersionedProtocol(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "name": {
+          "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+        },
+        "version": {
+          "type": "string",
+            "pattern": r'^[0-9]+.[0-9]+.[0-9]+$'
+        }
+      }
+    }
+
 
 class Status(StringParameter):
-  """Free string that describes the status of the system - e.g. 'Optical Good' in a tracking system"""
+  """Non-blank string describing status of tracking system"""
 
   canonical_name = "status"
   sampling = Sampling.REGULAR
   units = None
-  section = "device"
+  section = "tracker"
   
 class Recording(BooleanParameter):
-  """True if the system is recording data - e.g. tracking data"""
+  """Boolean indicating whether tracking system is recording data"""
   
   canonical_name = "recording"
   sampling = Sampling.REGULAR
   units = None
-  section = "device"
+  section = "tracker"
   
 class Slate(StringParameter):
-  """Free string that describes the recording slate - e.g. 'A101_A_4'"""
+  """Non-blank string describing the recording slate"""
   
   canonical_name = "slate"
   sampling = Sampling.REGULAR
   units = None
-  section = "device"
+  section = "tracker"
   
 class Notes(StringParameter):
-  """Free string for notes about tracking"""
+  """Non-blank string containing notes about tracking system"""
   
   canonical_name = "notes"
   sampling = Sampling.REGULAR
   units = None
-  section = "device"
+  section = "tracker"
 
-class RelatedSamples(ArrayParameter):
-  """
-  List of sample unique IDs that are related to this sample. E.g. a related performance capture sample
-  or a sample of static data from the same device. The existence of the related sample should not be relied upon.
+class RelatedSampleIds(ArrayParameter):
+  """List of sampleId properties of samples related to this sample. The
+  existence of a sample with a given sampleId is not guaranteed.
   """
 
-  canonical_name = "relatedSamples"
+  canonical_name = "relatedSampleIds"
   sampling = Sampling.REGULAR
   units = None
   item_class = UUIDURNParameter
 
 class GlobalStagePosition(Parameter):
-  """
-  Position of stage origin in global ENU and geodetic coordinates (E, N, U, lat0, lon0, h0). Note this may be dynamic
-  e.g. if the stage is inside a moving vehicle.
+  """Position of stage origin in global ENU and geodetic coordinates
+  (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
+  inside a moving vehicle.
   """
   sampling = Sampling.REGULAR
   canonical_name = "globalStage"
@@ -350,19 +378,28 @@ class GlobalStagePosition(Parameter):
     }
 
 class Transforms(Parameter):
-  """
-  A list of transforms.
-  Transforms can have a name and parent that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array.
+  """A list of transforms.
+  Transforms can have a transformId and parentTransformId that can be used
+  to compose a transform hierarchy. In the case of multiple children their
+  transforms should be processed in their order in the array.
   X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
-  Y points in the forward camera direction (when pan, tilt and roll are zero).
-  For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.
-  Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin
-  Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll]
+  Y points in the forward camera direction (when pan, tilt and roll are
+  zero).
+  For example in an LED volume Y would point towards the centre of the
+  LED wall and so X would point to camera-right.
+  Rotation expressed as euler angles in degrees of the camera sensor
+  relative to stage origin
+  Rotations are intrinsic and are measured around the axes ZXY, commonly
+  referred to as [pan, tilt, roll]
   Notes on Euler angles:
-  Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees).
-  Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system.
-  Conversion to and from quarternions is trivial with an acceptable loss of precision
+  Euler angles are human readable and unlike quarternions, provide the
+  ability for cycles (with angles >360 or <0 degrees).
+  Where a tracking system is providing the pose of a virtual camera,
+  gimbal lock does not present the physical challenges of a robotic
+  system.
+  Conversion to and from quarternions is trivial with an acceptable loss
+  of precision
   """
   sampling = Sampling.REGULAR
   canonical_name = "transforms"
@@ -401,10 +438,10 @@ class Transforms(Parameter):
            or not isinstance(transform.scale.y, numbers.Real) \
            or not isinstance(transform.scale.z, numbers.Real):
           return False
-      # Name and parent are optional
-      if transform.name != None and not isinstance(transform.name, str):
+      # transformId and parentTransformId are optional
+      if transform.transformId != None and not isinstance(transform.transformId, str):
         return False
-      if transform.parent != None and not isinstance(transform.parent, str):
+      if transform.parentTransformId != None and not isinstance(transform.parentTransformId, str):
         return False
 
     return True
@@ -487,12 +524,12 @@ class Transforms(Parameter):
               }
             }
           },
-          "name": {
+          "transformId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
           },
-          "parent": {
+          "parentTransformId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
@@ -504,22 +541,33 @@ class Transforms(Parameter):
 
 
 class TimingSynchronization(Parameter):
-  """
-  The synchronization object describe how the device is synchonized for this sample.
+  """Object describing how the tracking device is synchronized for this
+  sample.
 
-  frequency: The frequency of the synchronisation. This may differ from the sample frame rate for example in a Genlocked device.
-  locked: Is the device locked to the synchronization source
-  offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding
-  present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example)
-  ptp: If the synchronization source is a PTP master, then this object contains:
+  frequency: The frequency of the synchronisation. This may differ from
+  the sample frame rate for example in a genlocked tracking device.
+  locked: Is the tracking device locked to the synchronization source
+  offsets: Offsets in seconds between sync and sample. Critical for e.g.
+  frame remapping, or when using different data sources for
+  position/rotation and lens encoding
+  present: Is the synchronization source present (a synchronization
+  source can be present but not locked if frame rates differ for
+  example)
+  ptp: If the synchronization source is a PTP master, then this object
+  contains:
   - "master": The MAC address of the PTP master
-  - "offset": The timing offset in seconds from the sample timestamp to the PTP timestamp
+  - "offset": The timing offset in seconds from the sample timestamp to
+  the PTP timestamp
   - "domain": The PTP domain number
-  source: The source of synchronization must be defined as one of the following:
-  - "genlock": The device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples
-  - "videoIn": The device has an external video signal that is triggering the capture of tracking samples
-  - "ptp": The device is locked to a PTP master
-  - "ntp": The device is locked to an NTP server
+  source: The source of synchronization must be defined as one of the
+  following:
+  - "genlock": The tracking device has an external black/burst or
+  tri-level analog sync signal that is triggering the capture of
+  tracking samples
+  - "videoIn": The tracking device has an external video signal that is
+  triggering the capture of tracking samples
+  - "ptp": The tracking device is locked to a PTP master
+  - "ntp": The tracking device is locked to an NTP server
   """
   
   sampling = Sampling.REGULAR
@@ -625,9 +673,11 @@ class TimingSynchronization(Parameter):
 class LensEncoders(Parameter):
   """
   Normalised real numbers (0-1) for focus, iris and zoom.
-  Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent
-  of encoder resolution, mininum and maximum (at an acceptable loss of precision).
-  These values are only relevant in lenses with end-stops that demark the 0 and 1 range."
+  Encoders are represented in this way (as opposed to raw integer
+    values) to ensure values remain independent of encoder resolution,
+    mininum and maximum (at an acceptable loss of precision).
+  These values are only relevant in lenses with end-stops that
+    demarcate the 0 and 1 range.
   """
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
@@ -685,7 +735,8 @@ class LensEncoders(Parameter):
 class LensRawEncoders(Parameter):
   """
   Raw encoder values for focus, iris and zoom.
-  These values are dependent on encoder resolution and before any homing / ranging has taken place.
+  These values are dependent on encoder resolution and before any
+    homing / ranging has taken place.
   """
   sampling = Sampling.REGULAR
   canonical_name = "rawEncoders"
@@ -739,9 +790,10 @@ class LensRawEncoders(Parameter):
   
   
 class TimingMode(EnumParameter):
-  """
-  'external' timing mode describes the case where the transport packet has inherent timing, so no explicit timing data is required in the data).
-  'internal' mode indicates the transport packet does not have inherent timing, so a PTP timestamp must be provided.
+  """Enumerated value indicating whether the sample transport mechanism
+    provides inherent ('external') timing, or whether the transport
+    mechanism lacks inherent timing and so the sample must contain a PTP
+    timestamp itself ('internal') to carry timing information.
   """
   sampling = Sampling.REGULAR
   canonical_name = "mode"
@@ -749,9 +801,11 @@ class TimingMode(EnumParameter):
   units = None
 
 class TimingTimestamp(TimestampParameter):
-  """
-  PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp
-  48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
+  """PTP timestamp of the data capture instant. Note this may differ
+    from the packet's transmission PTP timestamp. The timestamp
+    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+    integer (nanoseconds), and an optional 32-bit unsigned integer
+    (attoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
@@ -760,8 +814,11 @@ class TimingTimestamp(TimestampParameter):
 
 class RecordedTimestamp(TimestampParameter):
   """
-  PTP timestamp at which the data was recorded. Provided for convenience during playback of e.g. pre-recorded tracking data.
-  48-bit unsigned integer (seconds), 32-bit unsigned integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
+  PTP timestamp of the data recording instant, provided for convenience
+    during playback of e.g. pre-recorded tracking data. The timestamp
+    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+    integer (nanoseconds), and an optional 32-bit unsigned integer
+    (attoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
@@ -769,17 +826,16 @@ class RecordedTimestamp(TimestampParameter):
   units = "second"
 
 class TimingSequenceNumber(NonNegativeIntegerParameter):
-  """
-  An integer that increments with each sample to help maintain the sample sequence in a packet-switched network for example.
-  """
+  """Integer incrementing with each sample."""
   sampling = Sampling.REGULAR
   canonical_name = "sequenceNumber"
   section = "timing"
   units = None
 
 class TimingFrameRate(StrictlyPositiveRationalParameter):
-  """
-  The sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time.
+  """Sample frame rate as a rational number. Drop frame rates such as
+  29.97 should be represented as e.g. 30000/1001. In a variable rate
+  system this should is estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
   canonical_name = "frameRate"
@@ -787,8 +843,9 @@ class TimingFrameRate(StrictlyPositiveRationalParameter):
   units = None
 
 class TimingTimecode(Parameter):
-  """
-  The SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.
+  """SMPTE timecode of the sample. Timecode is a standard for labeling
+  individual frames of data in media systems and is useful for
+  inter-frame synchronization.
    - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
    - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
   """
@@ -799,9 +856,8 @@ class TimingTimecode(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    The parameter shall contain a valid format and hours, minutes, seconds and frames with
-    appropriate min/max values.
+    """The parameter shall contain a valid format and hours, minutes,
+    seconds and frames with appropriate min/max values.
     """
 
     if not isinstance(value, Timecode):
@@ -895,8 +951,9 @@ class TimingTimecode(Parameter):
     }
 
 class TStop(StrictlyPositiveIntegerParameter):
-  """The linear t-number of the lens, equal to the F-number of the lens divided
-  by the square root of the transmittance of the lens."""
+  """Linear t-number of the lens, equal to the F-number of the lens
+  divided by the square root of the transmittance of the lens.
+  """
 
   canonical_name = "tStop"
   sampling = Sampling.REGULAR
@@ -904,8 +961,9 @@ class TStop(StrictlyPositiveIntegerParameter):
   section = "lens"
 
 class FStop(StrictlyPositiveIntegerParameter):
-  """The linear f-number of the lens, equal to the focal length divided by the
-  diameter of the entrance pupil."""
+  """The linear f-number of the lens, equal to the focal length divided
+  by the diameter of the entrance pupil.
+  """
 
   canonical_name = "fStop"
   sampling = Sampling.REGULAR
@@ -913,8 +971,9 @@ class FStop(StrictlyPositiveIntegerParameter):
   section = "lens"
 
 class NominalFocalLength(StrictlyPositiveIntegerParameter):
-  """Nominal focal length of the lens. The number printed on the side of a prime
-  lens, e.g. 50 mm, and undefined in the case of a zoom lens."""
+  """Nominal focal length of the lens. The number printed on the side
+  of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
+  """
 
   canonical_name = "nominalFocalLength"
   sampling = Sampling.STATIC
@@ -939,8 +998,9 @@ class FocusDistance(StrictlyPositiveIntegerParameter):
 
 class EntrancePupilOffset(RationalParameter):
   """Offset of the entrance pupil relative to the nominal imaging plane
-  (positive if the entrance pupil is located on the side of the nominal imaging
-  plane that is towards the object, and negative otherwise)"""
+  (positive if the entrance pupil is located on the side of the nominal
+  imaging plane that is towards the object, and negative otherwise)
+  """
 
   canonical_name = "entrancePupilOffset"
   sampling = Sampling.REGULAR
@@ -964,7 +1024,9 @@ class DistortionScale(NonNegativeRealParameter):
   units = None
   
 class LensExposureFalloff(Parameter):
-  """Coefficients for calculating the exposure fall-off (vignetting) of a lens"""
+  """Coefficients for calculating the exposure fall-off (vignetting) of
+  a lens
+  """
   sampling = Sampling.REGULAR
   canonical_name = "exposureFalloff"
   section = "lens"
@@ -1015,9 +1077,9 @@ class LensExposureFalloff(Parameter):
     }
   
 class LensDistortion(Parameter):
-  """
-  Coefficients for calculating the distortion characteristics of a lens comprising radial distortion
-  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N).
+  """Coefficients for calculating the distortion characteristics of a
+  lens comprising radial distortion coefficients of the spherical
+  distortion (k1-N) and the tangential distortion (p1-N).
   """
   sampling = Sampling.REGULAR
   canonical_name = "distortion"
@@ -1081,9 +1143,9 @@ class LensDistortion(Parameter):
     }
   
 class LensUndistortion(LensDistortion):
-  """
-  Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion
-  coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N).
+  """Coefficients for calculating the undistortion characteristics of a
+  lens comprising radial distortion coefficients of the spherical
+  distortion (k1-N) and the tangential distortion (p1-N).
   """
   sampling = Sampling.REGULAR
   canonical_name = "undistortion"
@@ -1091,7 +1153,8 @@ class LensUndistortion(LensDistortion):
   units = None
   
 class LensDistortionShift(Parameter):
-  "Shift in x and y of the centre of distortion of the virtual camera"
+  """Shift in x and y of the centre of distortion of the virtual camera
+  """
 
   sampling = Sampling.REGULAR
   canonical_name = "distortionShift"
@@ -1105,9 +1168,9 @@ class LensDistortionShift(Parameter):
     if not isinstance(value, DistortionShift):
       return False
  
-    if value.Cx is None or not isinstance(value.Cx, numbers.Real):
+    if value.x is None or not isinstance(value.x, numbers.Real):
       return False
-    if value.Cy is None or not isinstance(value.Cx, numbers.Real):
+    if value.y is None or not isinstance(value.x, numbers.Real):
       return False
 
     return True
@@ -1125,19 +1188,21 @@ class LensDistortionShift(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["Cx", "Cy"],
+      "required": ["x", "y"],
       "properties": {
-        "Cx": {
+        "x": {
           "type": "number"
         },
-        "Cy": {
+        "y": {
           "type": "number"
         }
       }
     }
   
 class LensPerspectiveShift(Parameter):
-  "Shift in x and y of the centre of perspective projection of the virtual camera"
+  """Shift in x and y of the centre of perspective projection of the
+  virtual camera
+  """
   sampling = Sampling.REGULAR
   canonical_name = "perspectiveShift"
   section = "lens"
@@ -1150,9 +1215,9 @@ class LensPerspectiveShift(Parameter):
     if not isinstance(value, PerspectiveShift):
       return False
  
-    if value.Px is None or not isinstance(value.Px, numbers.Real):
+    if value.x is None or not isinstance(value.x, numbers.Real):
       return False
-    if value.Py is None or not isinstance(value.Px, numbers.Real):
+    if value.y is None or not isinstance(value.x, numbers.Real):
       return False
 
     return True
@@ -1170,21 +1235,21 @@ class LensPerspectiveShift(Parameter):
     return {
       "type": "object",
       "additionalProperties": False,
-      "required": ["Px", "Py"],
+      "required": ["x", "y"],
       "properties": {
-        "Px": {
+        "x": {
           "type": "number"
         },
-        "Py": {
+        "y": {
           "type": "number"
         }
       }
     }
 
 class LensCustom(ArrayParameter):
-  """
-  Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model
-  e.g. undistortion, anamorphic etc
+  """Until the OpenLensIO model is finalised, this list provides custom
+  coefficients for a particular lens model e.g. undistortion, anamorphic
+  etc
   """
   sampling = Sampling.REGULAR
   canonical_name = "custom"
@@ -1206,10 +1271,10 @@ class Clip(ParameterContainer):
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   camera_label: typing.Optional[str] = CameraLabel()
   capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
-  device_make: typing.Optional[str] = DeviceMake()
-  device_model: typing.Optional[str] = DeviceModel()
-  device_firmware: typing.Optional[str] = DeviceFirmware()
-  device_serial_number: typing.Optional[str] = DeviceSerialNumber()
+  tracker_make: typing.Optional[str] = TrackerMake()
+  tracker_model: typing.Optional[str] = TrackerModel()
+  tracker_firmware: typing.Optional[str] = TrackerFirmware()
+  tracker_serial_number: typing.Optional[str] = TrackerSerialNumber()
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
@@ -1220,10 +1285,10 @@ class Clip(ParameterContainer):
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # Regular parameters
-  device_notes: typing.Optional[typing.Tuple[str]] = Notes()
-  device_recording: typing.Optional[typing.Tuple[bool]] = Recording()
-  device_slate: typing.Optional[typing.Tuple[str]] = Slate()
-  device_status: typing.Optional[typing.Tuple[str]] = Status()
+  tracker_notes: typing.Optional[typing.Tuple[str]] = Notes()
+  tracker_recording: typing.Optional[typing.Tuple[bool]] = Recording()
+  tracker_slate: typing.Optional[typing.Tuple[str]] = Slate()
+  tracker_status: typing.Optional[typing.Tuple[str]] = Status()
   global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
@@ -1240,9 +1305,8 @@ class Clip(ParameterContainer):
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
-  protocol: typing.Optional[typing.Tuple[str]] = Protocol()
-  protocol_version: typing.Optional[typing.Tuple[str]] = ProtocolVersion()
-  related_samples: typing.Optional[typing.Tuple[tuple]] = RelatedSamples()
+  protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
+  related_sampleIds: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
   timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
@@ -1254,7 +1318,9 @@ class Clip(ParameterContainer):
   transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
 
   def validate(self):
-    "Validate a single static data set against the schema. Return the JSON for convenience"
+    """Validate a single static data set against the schema. Return the
+    JSON for convenience
+    """
     json = self[0].to_json()
     schema = self.make_json_schema()
     validate(json, schema)
@@ -1262,7 +1328,9 @@ class Clip(ParameterContainer):
     return json
 
   def append(self, clip):
-    "Helper to add another clip's parameters to this clip's REGULAR data tuples"
+    """Helper to add another clip's parameters to this clip's REGULAR
+    data tuples
+    """
     if not isinstance(clip, Clip):
       raise ValueError
     for prop, desc in self._params.items():
@@ -1272,7 +1340,9 @@ class Clip(ParameterContainer):
   _changed_sampling = []
 
   def __getitem__(self, i):
-    "Helper to convert the frame at the given index to a single data frame for JSON output"
+    """Helper to convert the frame at the given index to a single data
+    frame for JSON output
+    """
     clip = Clip()
     for f in dir(self):
       desc = getattr(self, f)
@@ -1287,7 +1357,9 @@ class Clip(ParameterContainer):
     return clip
   
   def _reset_sampling(self):
-    "Used in conjunction with __getitem__ to reset the Clip's sampling back to default"
+    """Used in conjunction with __getitem__ to reset the Clip's sampling
+    back to default
+    """
     for f in self._changed_sampling:
       self._params[f].sampling = Sampling.REGULAR
     self._changed_sampling = []

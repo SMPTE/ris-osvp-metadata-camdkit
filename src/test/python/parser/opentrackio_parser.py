@@ -63,9 +63,7 @@ def main():
     print()
 
     protocol= sample.get_protocol()
-    protocolVersion = sample.get_protocol_version()
-    print("Detected protocol: {}".format(protocol))
-    print("Protocol version: {}".format(protocolVersion))
+    print("Detected protocol: {} version: {}".format(protocol.name, protocol.version))
     slate = sample.get_slate()
     print("On slate: {}".format(slate))
     timecode = sample.get_timecode()

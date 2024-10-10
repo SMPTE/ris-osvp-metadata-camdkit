@@ -96,7 +96,7 @@ class OpenTrackIOProtocol:
         """Return a single axis of camera translation, such as: x,y, or z"""
         if "transforms" in self.pd.keys():
             for tr in self.pd["transforms"]:
-                if ("Camera" in tr["name"]):
+                if ("Camera" in tr["transformId"]):
                     if self.verbose:
                         print("found camera, dim = {}, mult factor: {}".format(dimension,self.trans_mult))
                     if (dimension == 'x'):
@@ -113,7 +113,7 @@ class OpenTrackIOProtocol:
         Valid arguments are: p, t, r"""
         if "transforms" in self.pd.keys():
            for tr in self.pd["transforms"]:
-               if ("Camera" in tr["name"]):
+               if ("Camera" in tr["transformId"]):
                    if (dimension == 'p'):
                        return tr["rotation"]["pan"] * self.rot_mult
                    elif (dimension == 't'):
@@ -255,24 +255,24 @@ class OpenTrackIOProtocol:
         elif schema_units == None:
             print("Error: focus distance units not found in schema")
 
-    def get_protocol_version(self):
-        """The version of the protocol to which this sample conforms"""
-        if "protocolVersion" in self.pd.keys():
-            return str(self.pd["protocolVersion"])
+    def get_protocol_name(self):
+        """Name of protocol to which this sample conforms"""
+        if self.validate_dict_elements(self.pd["protocol","name"]) in self.pd.keys():
+            return str(self.pd["protocol"]["name"])
         else:
             return None
 
-    def get_protocol(self):
-        """The protocol to which this sample conforms"""
-        if "protocol" in self.pd.keys():
-            return str(self.pd["protocol"])
+    def get_protocol_version(self):
+        """Version of the protocol to which this sample conforms"""
+        if self.validate_dict_elements(self.pd,["protocol","version"]):
+            return str(self.pd["protocol"]["version"])
         else:
             return None
 
     def get_slate(self):
         """The current slate denoting scene,setup,take etc."""
-        if self.validate_dict_elements(self.pd,["device","slate"]):
-            return str(self.pd["device"]["slate"])
+        if self.validate_dict_elements(self.pd,["tracker","slate"]):
+            return str(self.pd["tracker"]["slate"])
         else:
             return None
 
@@ -302,10 +302,10 @@ class OpenTrackIOProtocol:
             return None
 
     def get_tracking_device_serial_number(self):
-        """Return the device serial number.
+        """Return the tracking device serial number.
         If present in this sample, the 'static' block would have this info"""
-        if self.validate_dict_elements(self.pd,["static","device","serialNumber"]):
-            return str(self.pd["static"]["device"]["serialNumber"])
+        if self.validate_dict_elements(self.pd,["static","tracker","serialNumber"]):
+            return str(self.pd["static"]["tracker"]["serialNumber"])
         else:
             return None
         return None
