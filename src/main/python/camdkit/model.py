@@ -678,6 +678,10 @@ class LensEncoders(Parameter):
     mininum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
     demarcate the 0 and 1 range.
+  Value should be provided in the following directions (if known):
+    Focus:   0=infinite     1=closest
+    Iris:    0=open         1=closed
+    Zoom:    0=wide angle   1=telephoto
   """
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
@@ -882,7 +886,8 @@ class TimingTimecode(Parameter):
         "num": d["format"].frame_rate.numerator,
         "denom": d["format"].frame_rate.denominator
       },
-      "dropFrame": d["format"].drop_frame
+      "dropFrame": d["format"].drop_frame,
+      "oddField": d["format"].odd_field,
     }
     return d
 
@@ -891,7 +896,8 @@ class TimingTimecode(Parameter):
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
                                                           value["format"]["frameRate"]["denom"]),
-                                   in_drop_frame=value["format"]["dropFrame"]))
+                                   in_drop_frame=value["format"]["dropFrame"],
+                                   in_odd_field=value["format"]["oddField"]))
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -922,6 +928,7 @@ class TimingTimecode(Parameter):
         },
         "format": {
           "type": "object",
+          "description": TimecodeFormat.__doc__.replace("\n ", ""),
           "required": [ "frameRate", "dropFrame" ],
           "additionalProperties": False,
           "properties": {
@@ -943,6 +950,9 @@ class TimingTimecode(Parameter):
               }
             },
             "dropFrame": {
+              "type": "boolean"
+            },
+            "oddField": {
               "type": "boolean"
             }
           }

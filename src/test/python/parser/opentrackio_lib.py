@@ -257,7 +257,7 @@ class OpenTrackIOProtocol:
 
     def get_protocol_name(self):
         """Name of protocol to which this sample conforms"""
-        if self.validate_dict_elements(self.pd["protocol","name"]) in self.pd.keys():
+        if self.validate_dict_elements(self.pd,["protocol","name"]):
             return str(self.pd["protocol"]["name"])
         else:
             return None

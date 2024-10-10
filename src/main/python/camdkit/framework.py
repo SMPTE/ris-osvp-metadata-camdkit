@@ -200,19 +200,23 @@ class TimingModeEnum(BaseEnum):
 
 class TimecodeFormat:
   """The timecode format is defined as a rational frame rate and drop
-  frame flag
+  frame flag. Where an interlaced signal is described, the oddField flag
+  indicates which field (odd or even) is referred to by the timecode.
   """
 
   frame_rate: numbers.Rational
   drop_frame: bool = False
+  odd_field: bool = True
 
   def __init__(self, in_frame_rate: numbers.Rational,
-               in_drop_frame: bool = False):
+               in_drop_frame: bool = False,
+               in_odd_field: bool = True):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
     self.frame_rate = in_frame_rate
     self.drop_frame = in_drop_frame
+    self.odd_field = in_odd_field
 
   def to_int(self):
     return self.frame_rate.__ceil__()

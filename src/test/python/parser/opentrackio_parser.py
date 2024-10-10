@@ -62,8 +62,7 @@ def main():
     sample.set_rotation_units("deg")
     print()
 
-    protocol= sample.get_protocol()
-    print("Detected protocol: {} version: {}".format(protocol.name, protocol.version))
+    print("Detected protocol: {} version: {}".format(sample.get_protocol_name(), sample.get_protocol_version()))
     slate = sample.get_slate()
     print("On slate: {}".format(slate))
     timecode = sample.get_timecode()
