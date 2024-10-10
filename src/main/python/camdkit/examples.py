@@ -31,7 +31,14 @@ def get_complete_static_example():
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
   clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
-  return clip.to_json(0)
+  
+  clip_json = clip.to_json(0)
+  # Add additional custom data
+  clip_json["custom"] = {
+    "pot1": 2435,
+    "button1": False
+  }
+  return clip_json
 
 def get_recommended_dynamic_example():
   clip = _get_recommended_dynamic_clip()
