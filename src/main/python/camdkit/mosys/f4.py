@@ -195,7 +195,7 @@ class F4PacketParser:
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION),)
       frame.sample_id = (uuid.uuid4().urn,)
-      frame.device_recording = ((self._packet.status & (1 << 4)) != 0,)
+      frame.tracker_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
         match axis_block.axis_id:
@@ -258,7 +258,7 @@ class F4PacketParser:
             frequency = frame_rate
             pass
           case F4.TRACKING_STATUS:
-            frame.device_status = (self._axis_block_to_status_string(axis_block),)
+            frame.tracker_status = (self._axis_block_to_status_string(axis_block),)
             pass
       
       frame.timing_mode = ("internal",)
@@ -273,7 +273,7 @@ class F4PacketParser:
       frame.timing_synchronization = (sync,)
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)
-      transform.name = f'Camera {self._packet.camera_id}'
+      transform.transformId = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
       # Assuming a full frame 35mm active sensor 36x24mm
       # f = 36/[2*tand(FoV/2)]

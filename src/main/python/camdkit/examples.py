@@ -24,10 +24,10 @@ def get_complete_static_example():
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
   clip.lens_serial_number = "1234567890A"
-  clip.device_model = "Tracker"
-  clip.device_firmware = "1.2.3"
-  clip.device_make = "TrackerMaker"
-  clip.device_serial_number = "1234567890A"
+  clip.tracker_model = "Tracker"
+  clip.tracker_firmware = "1.2.3"
+  clip.tracker_make = "TrackerMaker"
+  clip.tracker_serial_number = "1234567890A"
   clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
   clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
@@ -41,23 +41,23 @@ def get_complete_dynamic_example():
   clip = _get_complete_dynamic_clip()
   clip_json = clip.to_json(0)
 
-	# Add additional custom data
+  # Add additional custom data
   clip_json["custom"] = {
-		"pot1": 2435,
-		"button1": False
-	}
+    "pot1": 2435,
+    "button1": False
+  }
   return clip_json
 
 def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION,),)
-  clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
+  clip.related_sampleIds = ((uuid.uuid4().urn,uuid.uuid4().urn),)
 
-  clip.device_status = ("Optical Good",)
-  clip.device_recording = (False,)
-  clip.device_slate = ("A101_A_4",)
-  clip.device_notes = ("Example generated sample.",)
+  clip.tracker_status = ("Optical Good",)
+  clip.tracker_recording = (False,)
+  clip.tracker_slate = ("A101_A_4",)
+  clip.tracker_notes = ("Example generated sample.",)
 
   clip.timing_mode = (TimingModeEnum.EXTERNAL,)
   clip.timing_frame_rate = (Fraction(24000, 1001),)
@@ -65,7 +65,7 @@ def _get_recommended_dynamic_clip():
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
   r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
-  clip.transforms = ((Transform(translation=v, rotation=r, name="Camera"),),)
+  clip.transforms = ((Transform(translation=v, rotation=r, transformId="Camera"),),)
   clip.lens_f_number = (4000,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
@@ -79,13 +79,13 @@ def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
-  clip.related_samples = ((uuid.uuid4().urn,uuid.uuid4().urn),)
+  clip.related_sampleIds = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
 
-  clip.device_status = ("Optical Good",)
-  clip.device_recording = (False,)
-  clip.device_slate = ("A101_A_4",)
-  clip.device_notes = ("Example generated sample.",)
+  clip.tracker_status = ("Optical Good",)
+  clip.tracker_recording = (False,)
+  clip.tracker_slate = ("A101_A_4",)
+  clip.tracker_notes = ("Example generated sample.",)
 
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
   clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000, 0),)
@@ -108,9 +108,9 @@ def _get_complete_dynamic_clip():
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
   r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
-  clip.transforms = ((Transform(translation=v, rotation=r, name="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, name="Crane Arm", parent="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, name="Camera", parent="Crane Arm")
+  clip.transforms = ((Transform(translation=v, rotation=r, transformId="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, transformId="Crane Arm", parentTransformId="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, transformId="Camera", parentTransformId="Crane Arm")
                       ),)
 
   clip.lens_f_number = (4000,)
