@@ -8,7 +8,7 @@ import json, os, shutil
 from inspect import getmembers, isfunction
 
 import camdkit.examples
-from camdkit.model import Clip
+from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_VERSION
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 current_path = os.path.dirname(__file__)
@@ -23,7 +23,8 @@ def main():
   template_data = {
     "examples": {},
     "fields": Clip.make_documentation(),
-    "schema": json.dumps(Clip.make_json_schema(), indent=2)
+    "schema": json.dumps(Clip.make_json_schema(), indent=2),
+    "version": OPENTRACKIO_PROTOCOL_VERSION
   }
   # Generate all the examples
   for function_name, function in getmembers(camdkit.examples, isfunction):
