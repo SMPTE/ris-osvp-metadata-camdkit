@@ -37,28 +37,37 @@
             <h2>OpenTrackIO protocol</h2>
             <p>This documentation is designed for those producing and consuming tracking data. There may be multiple CONSUMERS of a single PRODUCER'S data. In the AR example above, the camera tracking system is the producer and the render engine is the consumer.</p>
             <img src="img/Producer_Consumers.svg" />
-            <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a>.</p>
+            <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples <a href="#recommended">below</a>).</p>
             <p>OpenTrackIO employs the <a href="pdf/OpenLensIO_v1.0.0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
             
             <h2>Software resources</h2>
-            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit">CamDKit</a>. This repo includes examples for <a href="TODO-mosys-f4">generating</a> and <a href="TODO-steve-parser">parsing</a> data.</p>
-            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp">Mo-Sys' GitHub</a></p>
+            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repo includes examples for <a href="TODO-mosys-f4">generating</a> and <a href="TODO-steve-parser">parsing</a> data.</p>
+            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a></p>
 
             <h2 id="recommended">OpenTrackIO sample</h2>
             <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
             <button class="collapsible">Recommended minimum VP example</button>
-            <div class="content"><pre><code>{{examples.recommended_dynamic_example}}</code></pre></div>
+            <div class="content">
+                <pre><code>{{examples.recommended_dynamic_example}}</code></pre>
+                <p><a href="examples/recommended_dynamic_example.json" target="_blank">Download</a></p>
+            </div>
 
             <h2>Providing additional static data</h2>
             <p>It is recommended that a static metadata object is added to a sample approximately every 2 seconds. This additional metadata describes the context of the samples in the stream, with data that may change - for example - every take, but will not change every frame.</p>
             <button class="collapsible">Recommended minimum VP example with static data</button>
-            <div class="content"><pre><code>{{examples.recommended_static_example}}</code></pre></div>
+            <div class="content">
+                <pre><code>{{examples.recommended_static_example}}</code></pre>
+                <p><a href="examples/recommended_static_example.json" target="_blank">Download</a></p>
+            </div>
 
             <h2>Complete sample</h2>
             <p>OpenTrackIO defines many more options and fields and these should be parsed where appropriate by the consumer. Custom fields can also be added as shown (although these will require specific producer / consumer negotiation)</p>
             <button class="collapsible">Complete example sample with static data</button>
-            <div class="content"><pre><code>{{examples.complete_static_example}}</code></pre></div>
+            <div class="content">
+                <pre><code>{{examples.complete_static_example}}</code></pre>
+                <p><a href="examples/complete_static_example.json" target="_blank">Download</a></p>
+            </div>
             
             <h2>Transport recommendations</h2>
             <p>It is recommended that OpenTrackIO samples be encapsulated in a network packet for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
@@ -77,7 +86,7 @@
             </div>
 
             <h2 id="schema">JSON schema</h2>
-            <p>This JSON Schema can be used to validate OpenTrackIO samples</p>
+            <p><a href="schema.json" target="_blank">This JSON Schema</a> can be used to validate OpenTrackIO samples</p>
             <button class="collapsible">OpenTrackIO schema</button>
             <div class="content"><pre><code>{{schema}}</code></pre></div>
         </div>
@@ -85,7 +94,7 @@
     <div class="footer">
         <div class="inner">
             <p><strong>Authored by SMPTE RIS OSVP</strong></p>
-            <p>The OpenTrackIO documentation is generated by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit">CamDKit</a></p>
+            <p>The OpenTrackIO documentation is generated by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a></p>
             <p>Lead author: <a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</p>
         </div>
     </div>

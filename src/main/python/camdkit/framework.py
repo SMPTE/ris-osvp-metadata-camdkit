@@ -809,7 +809,7 @@ class ParameterContainer:
   @classmethod
   def make_json_schema(cls) -> dict:
     schema = {
-      # TODO "$id": "https://...",
+      "$id": "https://opentrackio.org/schema.json",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
       "properties": {}
