@@ -558,7 +558,7 @@ class NonNegativeIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (0..2,147,483,647].
+    """The parameter shall be a integer in the range (0..4,294,967,295].
     """
 
     return isinstance(value, numbers.Integral) and value >= 0
@@ -568,14 +568,14 @@ class NonNegativeIntegerParameter(IntegerParameter):
     return {
       "type": "integer",
       "minimum": 0,
-      "maximum": INT_MAX
+      "maximum": UINT_MAX
     }
   
 class StrictlyPositiveIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (1..2,147,483,647].
+    """The parameter shall be a integer in the range (1..4,294,967,295].
     """
 
     return isinstance(value, numbers.Integral) and value > 0
@@ -585,7 +585,7 @@ class StrictlyPositiveIntegerParameter(IntegerParameter):
     return {
       "type": "integer",
       "minimum": 1,
-      "maximum": INT_MAX
+      "maximum": UINT_MAX
     }
   
 class NonNegativeRealParameter(Parameter):
