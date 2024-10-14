@@ -818,22 +818,39 @@ class ParameterContainer:
       description = desc.__doc__.replace("\n ", "")
       # Handle sections
       if hasattr(desc, "section"):
-        if desc.section not in schema["properties"]:
-          schema["properties"][desc.section] = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {}
-          }
-        # Assumes STATIC sampling
-        schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
-        schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
-        if desc.units:
-          schema["properties"][desc.section]["properties"][desc.canonical_name]["units"] = desc.units
+        if desc.sampling is Sampling.STATIC:
+          if "static" not in schema["properties"]:
+            schema["properties"]["static"] = {
+              "type": "object",
+              "additionalProperties": False,
+              "properties": {}
+            }
+          if desc.section not in schema["properties"]["static"]["properties"]:
+            schema["properties"]["static"]["properties"][desc.section] = {
+              "type": "object",
+              "additionalProperties": False,
+              "properties": {}
+            }
+          schema["properties"]["static"]["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
+          schema["properties"]["static"]["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
+          if desc.units:
+            schema["properties"]["static"]["properties"][desc.section]["properties"][desc.canonical_name]["units"] = desc.units
+        elif desc.sampling is Sampling.REGULAR:
+          if desc.section not in schema["properties"]:
+            schema["properties"][desc.section] = {
+              "type": "object",
+              "additionalProperties": False,
+              "properties": {}
+            }
+          schema["properties"][desc.section]["properties"][desc.canonical_name] = desc.make_json_schema()
+          schema["properties"][desc.section]["properties"][desc.canonical_name]["description"] = description
+          if desc.units:
+            schema["properties"][desc.section]["properties"][desc.canonical_name]["units"] = desc.units
       elif desc.sampling is Sampling.STATIC:
-        schema["properties"][desc.canonical_name] = desc.make_json_schema()
-        schema["properties"][desc.canonical_name]["description"] = description
+        schema["properties"]["static"]["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"]["static"]["properties"][desc.canonical_name]["description"] = description
         if desc.units:
-          schema["properties"][desc.canonical_name]["units"] = desc.units
+          schema["properties"]["static"]["properties"][desc.canonical_name]["units"] = desc.units
       elif desc.sampling is Sampling.REGULAR:
         schema["properties"][desc.canonical_name] = {
           "type": "array",

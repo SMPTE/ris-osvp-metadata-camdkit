@@ -69,7 +69,7 @@ class LensSerialNumber(StringParameter):
   section = "lens"
 
 class LensMake(StringParameter):
-  """Nob-blank string naming lens manufacturer"""
+  """Non-blank string naming lens manufacturer"""
 
   canonical_name = "make"
   sampling = Sampling.STATIC
