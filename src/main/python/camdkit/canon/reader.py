@@ -51,7 +51,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
     clip.iso = Fraction(first_frame_data['PhotographicSensitivity']).numerator - 0x80000000
 
   # clip.active_sensor_physical_dimensions is not supported
-  # clip.capture_fps is no supported
+  # clip.capture_frame_rate is no supported
 
   clip.camera_make = "Canon"
 
@@ -64,7 +64,7 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   clip.lens_focal_length = tuple(round(Fraction(m["FocalLength"])) for m in frame_data)
 
   # focus_position
-  clip.lens_focus_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
+  clip.lens_focus_distance = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
 
   # entrance_pupil_offset not supported
 

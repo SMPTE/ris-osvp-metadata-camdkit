@@ -39,6 +39,7 @@
             <img src="img/Producer_Consumers.svg" />
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples <a href="#recommended">below</a>).</p>
+            <p>TODO note on transforms and INSERT diagram of coord systems and roation signs/orders</p>
             <p>OpenTrackIO employs the <a href="pdf/OpenLensIO_v1.0.0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
             
             <h2>Software resources</h2>
@@ -72,7 +73,11 @@
             <h2>Transport recommendations</h2>
             <p>It is recommended that OpenTrackIO samples be encapsulated in a network packet for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
             <img src="img/RTP_Transport.svg">
+            <p>The RTP header should be populated as follows:</p>
+            <p>TODO</p>
+            <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
             <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO producer.</p>
+            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>streamIds</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
 
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
@@ -89,6 +94,14 @@
             <p><a href="schema.json" target="_blank">This JSON Schema</a> can be used to validate OpenTrackIO samples</p>
             <button class="collapsible">OpenTrackIO schema</button>
             <div class="content"><pre><code>{{schema}}</code></pre></div>
+
+            <h2>Future additions</h2>
+            <p>In the future RIS intends to add support for:</p>
+            <ul>
+                <li>SMPTE 2110 -41 and -42</li>
+                <li>Anamorphic lens mathematics (in OpenLensIO)</li>
+                <li>Device discovery</li>
+            </ul>
         </div>
     </div>
     <div class="footer">

@@ -58,8 +58,8 @@ def get_complete_dynamic_example():
 def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
+  clip.stream_id = (uuid.uuid4().urn,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION,),)
-  clip.related_sampleIds = ((uuid.uuid4().urn,uuid.uuid4().urn),)
 
   clip.tracker_status = ("Optical Good",)
   clip.tracker_recording = (False,)
@@ -85,8 +85,9 @@ def _get_recommended_dynamic_clip():
 def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
+  clip.stream_id = (uuid.uuid4().urn,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
-  clip.related_sampleIds = ((uuid.uuid4().urn,uuid.uuid4().urn),)
+  clip.related_sample_ids = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
 
   clip.tracker_status = ("Optical Good",)

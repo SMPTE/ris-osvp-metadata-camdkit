@@ -126,6 +126,7 @@ class F4PacketParser:
   _packet: F4Packet = F4Packet()
   _frame_number: int = 0
   _initialised: bool = False
+  _stream_id = uuid.uuid4().urn
 
   def _twos_comp(self, val, bits):
     if (val & (1 << (bits - 1))) != 0:
@@ -195,6 +196,7 @@ class F4PacketParser:
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION),)
       frame.sample_id = (uuid.uuid4().urn,)
+      frame.stream_id = (self._stream_id,)
       frame.tracker_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]

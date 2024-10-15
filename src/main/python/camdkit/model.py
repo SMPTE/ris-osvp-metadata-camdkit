@@ -42,10 +42,10 @@ class Duration(StrictlyPositiveRationalParameter):
   units = "second"
 
 
-class CaptureFPS(StrictlyPositiveRationalParameter):
+class CaptureFrameRate(StrictlyPositiveRationalParameter):
   """Capture frame rate of the camera"""
 
-  canonical_name = "captureRate"
+  canonical_name = "captureFrameRate"
   sampling = Sampling.STATIC
   units = "hertz"
   section = "camera"
@@ -56,7 +56,7 @@ class ISO(StrictlyPositiveIntegerParameter):
 
   canonical_name = "isoSpeed"
   sampling = Sampling.STATIC
-  units = "unit"
+  units = None
   section = "camera"
 
 
@@ -164,7 +164,7 @@ class TrackerFirmware(StringParameter):
   units = None
   section = "tracker"
 
-class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
+class AnamorphicSqueeze(StrictlyPositiveRationalParameter):
   """Nominal ratio of height to width of the image of an axis-aligned
   square captured by the camera sensor. It can be used to de-squeeze
   images but is not however an exact number over the entire captured
@@ -173,7 +173,7 @@ class AnamorphicSqueeze(StrictlyPositiveIntegerParameter):
 
   canonical_name = "anamorphicSqueeze"
   sampling = Sampling.STATIC
-  units = "0.01 unit"
+  units = None
   section = "camera"
 
 class FDLLink(UUIDURNParameter):
@@ -193,7 +193,7 @@ class ShutterAngle(Parameter):
 
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
-  units = "degree"
+  units = "degree/1000"
   section = "camera"
 
   @staticmethod
@@ -224,6 +224,16 @@ class SampleId(UUIDURNParameter):
   """
 
   canonical_name = "sampleId"
+  sampling = Sampling.REGULAR
+  units = None
+
+class StreamId(UUIDURNParameter):
+  """URN serving as unique identifier of the stream in which data is
+  being transported. This is most important in the case where a single
+  device is producing multiple streams of samples.
+  """
+
+  canonical_name = "streamId"
   sampling = Sampling.REGULAR
   units = None
 
@@ -610,13 +620,16 @@ class TimingSynchronization(Parameter):
     d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
     d["source"] = str(d["source"])
     d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
+    d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
     return d
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     sync = Synchronization(**value)
     sync.source = SynchronizationSourceEnum(sync.source)
-    sync.offsets = SynchronizationOffsets(**value["offsets"])
+    sync.offsets = SynchronizationOffsets(translation=value["offsets"]["translation"],
+                                          rotation=value["offsets"]["rotation"],
+                                          lens_encoders=value["offsets"]["lensEncoders"])
     sync.ptp = SynchronizationPTP(**value["ptp"])
     sync.frequency = Fraction(value["frequency"]["num"], value["frequency"]["denom"])
     return sync
@@ -652,7 +665,7 @@ class TimingSynchronization(Parameter):
           "properties": {
             "translation": { "type": "number" },
             "rotation": { "type": "number" },
-            "encoders": { "type": "number" }
+            "lensEncoders": { "type": "number" }
           }
         },
         "present": { "type": "boolean" },
@@ -980,7 +993,7 @@ class FStop(StrictlyPositiveIntegerParameter):
   units = "0.001 unit"
   section = "lens"
 
-class NominalFocalLength(StrictlyPositiveIntegerParameter):
+class NominalFocalLength(NonNegativeRealParameter):
   """Nominal focal length of the lens. The number printed on the side
   of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
   """
@@ -1280,7 +1293,7 @@ class Clip(ParameterContainer):
   camera_firmware: typing.Optional[str] = CameraFirmware()
   camera_serial_number: typing.Optional[str] = CameraSerialNumber()
   camera_label: typing.Optional[str] = CameraLabel()
-  capture_fps: typing.Optional[numbers.Rational] = CaptureFPS()
+  capture_frame_rate: typing.Optional[numbers.Rational] = CaptureFrameRate()
   tracker_make: typing.Optional[str] = TrackerMake()
   tracker_model: typing.Optional[str] = TrackerModel()
   tracker_firmware: typing.Optional[str] = TrackerFirmware()
@@ -1291,7 +1304,7 @@ class Clip(ParameterContainer):
   lens_firmware: typing.Optional[str] = LensFirmware()
   lens_make: typing.Optional[str] = LensMake()
   lens_model: typing.Optional[str] = LensModel()
-  lens_nominal_focal_length: typing.Optional[numbers.Integral] = NominalFocalLength()
+  lens_nominal_focal_length: typing.Optional[numbers.Real] = NominalFocalLength()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
   shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
   # Regular parameters
@@ -1306,7 +1319,7 @@ class Clip(ParameterContainer):
   lens_distortion_scale: typing.Optional[typing.Tuple[Orientations]] = DistortionScale()
   lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
-  lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Rational]] = EntrancePupilOffset()
+  lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
@@ -1316,8 +1329,9 @@ class Clip(ParameterContainer):
   lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
-  related_sampleIds: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
+  related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
+  stream_id: typing.Optional[typing.Tuple[str]] = StreamId()
   timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()

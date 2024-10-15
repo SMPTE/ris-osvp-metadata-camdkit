@@ -69,22 +69,22 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   if len(csv_data) != n_frames:
     raise ValueError(f"Inconsistent frame count between header {n_frames} and frame {len(csv_data)} files")
 
-  clip.capture_fps = utils.guess_fps(Fraction(clip_metadata["FPS"]))
+  clip.capture_frame_rate = utils.guess_fps(Fraction(clip_metadata["FPS"]))
 
-  clip.duration = len(csv_data)/clip.capture_fps
+  clip.duration = len(csv_data)/clip.capture_frame_rate
 
   clip.anamorphic_squeeze = int(float(clip_metadata["Pixel Aspect Ratio"]) * 100)
 
   clip.shutter_angle = round(float(clip_metadata["Shutter (deg)"]) * 1000)
 
-  clip.focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
+  clip.lens_focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
 
-  clip.focus_position = tuple(int(m["Focus Distance"]) for m in csv_data)
+  clip.lens_focus_distance = tuple(int(m["Focus Distance"]) for m in csv_data)
 
   cooke_metadata = tuple(cooke.lens_data_from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
-  clip.entrance_pupil_offset = tuple(m.entrance_pupil_position for m in cooke_metadata)
+  clip.lens_entrance_pupil_offset = tuple(m.entrance_pupil_position for m in cooke_metadata)
 
-  clip.t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
+  clip.lens_t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
 
   return clip

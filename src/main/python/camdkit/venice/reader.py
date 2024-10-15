@@ -168,7 +168,7 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   if clip_fps is None:
     raise ValueError("No valid capture fps found")
 
-  clip.capture_fps = utils.guess_fps(clip_fps)
+  clip.capture_frame_rate = utils.guess_fps(clip_fps)
 
   n_frames = find_duration(clip_metadata)
 
@@ -190,12 +190,12 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.duration = len(csv_data)/clip_fps
 
-  clip.focal_length = tuple(int(m["Focal Length (mm)"]) for m in csv_data)
+  clip.lens_focal_length = tuple(int(m["Focal Length (mm)"]) for m in csv_data)
 
-  clip.focus_position = tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data)
+  clip.lens_focus_distance = tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data)
 
   # TODO: clip.entrance_pupil_offset
 
-  clip.t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
+  clip.lens_t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
 
   return clip

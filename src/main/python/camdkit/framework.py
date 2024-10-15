@@ -164,16 +164,20 @@ class SynchronizationOffsets:
 
   translation: typing.Optional[float] = None		
   rotation: typing.Optional[float] = None		
-  encoders: typing.Optional[float] = None
+  lens_encoders: typing.Optional[float] = None
 
   def validate(self):
     return all([isinstance(self.translation, float), 
                 isinstance(self.rotation, float),
-                isinstance(self.encoders, float)])
+                isinstance(self.lens_encoders, float)])
   
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
+    return {
+      "translation": value.translation,
+      "rotation": value.rotation,
+      "lensEncoders": value.lens_encoders
+    }
 
 @dataclasses.dataclass
 class SynchronizationPTP:
@@ -852,11 +856,10 @@ class ParameterContainer:
         if desc.units:
           schema["properties"]["static"]["properties"][desc.canonical_name]["units"] = desc.units
       elif desc.sampling is Sampling.REGULAR:
-        schema["properties"][desc.canonical_name] = {
-          "type": "array",
-          "items": desc.make_json_schema(),
-          "description": description
-        }
+        schema["properties"][desc.canonical_name] = desc.make_json_schema()
+        schema["properties"][desc.canonical_name]["description"] = description
+        if desc.units:
+          schema["properties"][desc.canonical_name]["units"] = desc.units
       else:
         raise ValueError
     return schema

@@ -62,15 +62,15 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
         height=round(int(height) * 14250 / 6480)
       )
 
-  # fps
+  # frame rate
   sensor_rate = first_frame_data.get("sensor_rate")
   if sensor_rate is not None:
     num, denom, _ = sensor_rate.split(",")
-    clip.capture_fps = Fraction(int(num), int(denom))
+    clip.capture_frame_rate = Fraction(int(num), int(denom))
 
   # duration
-  if clip.capture_fps is not None:
-    clip.duration = clip.capture_fps * len(frame_data)
+  if clip.capture_frame_rate is not None:
+    clip.duration = clip.capture_frame_rate * len(frame_data)
 
   # anamorphic_squeeze
   anamorphic_enable = int(clip_data.get("anamorphic_enable", 0))
@@ -109,14 +109,14 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   # sampled metadata
 
   # focal_length
-  clip.focal_length = tuple(int(m["focal_length"][:-2]) for m in frame_data)
+  clip.lens_focal_length = tuple(int(m["focal_length"][:-2]) for m in frame_data)
 
   # focus_position
-  clip.focus_position = tuple(int(m["distance"][:-2]) for m in frame_data)
+  clip.lens_focus_distance = tuple(int(m["distance"][:-2]) for m in frame_data)
 
   # entrance_pupil_offset not supported
 
   # t_number
-  clip.t_number = tuple(round(float(m["aperture"][1:]) * 1000) for m in frame_data)
+  clip.lens_t_number = tuple(round(float(m["aperture"][1:]) * 1000) for m in frame_data)
 
   return clip

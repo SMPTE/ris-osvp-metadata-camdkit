@@ -63,7 +63,7 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.lens_serial_number = csv_data[0]["Lens Serial Number"]
 
-    clip.capture_fps = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
+    clip.capture_frame_rate = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
 
     clip.shutter_angle = round(float(csv_data[0]["Shutter Angle"])  * 1000)
 
@@ -79,11 +79,11 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
         height=round(pix_dims.height * pixel_pitch)
       )
 
-    clip.focal_length = tuple(round(float(m["Lens Focal Length"])) for m in csv_data)
+    clip.lens_focal_length = tuple(round(float(m["Lens Focal Length"])) for m in csv_data)
 
-    clip.focus_position = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
+    clip.lens_focus_distance = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
 
-    clip.t_number = tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data)
+    clip.lens_t_number = tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data)
 
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions

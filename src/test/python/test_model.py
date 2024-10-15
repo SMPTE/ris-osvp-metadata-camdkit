@@ -31,7 +31,7 @@ class ModelTest(unittest.TestCase):
     clip.active_sensor_physical_dimensions = Dimensions(width=36000, height=24000)
     clip.active_sensor_resolution = Dimensions(width=3840, height=2160)
     clip.anamorphic_squeeze = 120
-    clip.capture_fps = Fraction(24000, 1001)
+    clip.capture_frame_rate = Fraction(24000, 1001)
     clip.duration = 3
     clip.camera_make = "Bob"
     clip.camera_model = "Hello"
@@ -53,16 +53,18 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
+    clip.stream_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                      "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9")
     clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),
                      VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION))
     clip.tracker_status = ("Optical Good","Optical Good")
     clip.tracker_recording = (False,True)
     clip.tracker_slate = ("A101_A_4","A101_A_5")
     clip.tracker_notes = ("Test serialize.","Test serialize.")
-    clip.related_sampleIds = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
-                              ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
+    clip.related_sample_ids = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
+                               ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
     clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),
                          GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0))
 
@@ -118,7 +120,7 @@ class ModelTest(unittest.TestCase):
 
     # Static parameters
     self.assertEqual(d["static"]["duration"], {"num": 3, "denom": 1})
-    self.assertEqual(d["static"]["camera"]["captureRate"], {"num": 24000, "denom": 1001})
+    self.assertEqual(d["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
     self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
     self.assertDictEqual(d["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
     self.assertEqual(d["static"]["camera"]["make"], "Bob")
@@ -135,7 +137,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["tracker"]["model"], "EFGH")
     self.assertEqual(d["static"]["tracker"]["serialNumber"], "1234567890A")
     self.assertEqual(d["static"]["tracker"]["firmwareVersion"], "1.0.1a")
-    self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], 120)
+    self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], {"num": 120, "denom": 1})
     self.assertEqual(d["static"]["camera"]["isoSpeed"], 13)
     self.assertEqual(d["static"]["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertEqual(d["static"]["camera"]["shutterAngle"], 180)
@@ -144,6 +146,8 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
+    self.assertTupleEqual(d["streamId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                          "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
     self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
                                           {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
     self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
@@ -170,7 +174,7 @@ class ModelTest(unittest.TestCase):
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False, "oddField": True } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
                   "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
-                  "offsets": {"translation":1.0,"rotation":2.0,"encoders":3.0 } }
+                  "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
     self.assertTupleEqual(d["transforms"], ([transform_dict, transform_dict], [transform_dict, transform_dict]))
@@ -267,22 +271,22 @@ class ModelTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, value)
 
-  def test_fps(self):
+  def test_frame_rate(self):
     clip = Clip()
 
-    self.assertIsNone(clip.capture_fps)
+    self.assertIsNone(clip.capture_frame_rate)
 
     with self.assertRaises(ValueError):
-      clip.capture_fps = 0.7
+      clip.capture_frame_rate = 0.7
 
     with self.assertRaises(ValueError):
-      clip.capture_fps = -24
+      clip.capture_frame_rate = -24
 
     value = Fraction(24000, 1001)
 
-    clip.capture_fps = value
+    clip.capture_frame_rate = value
 
-    self.assertEqual(clip.capture_fps, value)
+    self.assertEqual(clip.capture_frame_rate, value)
 
   def test_shutter_angle(self):
     clip = Clip()
@@ -426,6 +430,28 @@ class ModelTest(unittest.TestCase):
     clip.sample_id = value
     self.assertEqual(clip.sample_id, value)
 
+  def test_stream_id(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.stream_id)
+
+    with self.assertRaises(ValueError):
+      clip.stream_id = ""
+    with self.assertRaises(ValueError):
+      clip.stream_id = ("",)
+    with self.assertRaises(ValueError):
+      clip.stream_id = ("a",)
+    with self.assertRaises(ValueError):
+      clip.stream_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+    with self.assertRaises(ValueError):
+      clip.stream_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+    with self.assertRaises(ValueError):
+      clip.stream_id = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
+
+    value = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+    clip.stream_id = value
+    self.assertEqual(clip.stream_id, value)
+
   def test_protocol(self):
     clip = Clip()
 
@@ -468,7 +494,7 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.tracker_recording)
     self.assertIsNone(clip.tracker_slate)
     self.assertIsNone(clip.tracker_notes)
-    self.assertIsNone(clip.related_sampleIds)
+    self.assertIsNone(clip.related_sample_ids)
     self.assertIsNone(clip.global_stage)
 
     with self.assertRaises(ValueError):
@@ -482,8 +508,8 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.tracker_notes = ""
     with self.assertRaises(ValueError):
-      clip.related_sampleIds = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+      clip.related_sample_ids = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     with self.assertRaises(ValueError):
       clip.global_stage = GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0)
     with self.assertRaises(TypeError):
@@ -507,8 +533,8 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.tracker_notes, value)
     value = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
               "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"),)
-    clip.related_sampleIds = value
-    self.assertTupleEqual(clip.related_sampleIds, value)
+    clip.related_sample_ids = value
+    self.assertTupleEqual(clip.related_sample_ids, value)
     value = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
     clip.global_stage = value
     self.assertTupleEqual(clip.global_stage, value)
