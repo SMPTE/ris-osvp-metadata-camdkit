@@ -1037,14 +1037,6 @@ class DistortionOverscan(NonNegativeRealParameter):
   canonical_name = "distortionOverscan"
   section = "lens"
   units = None
-
-class DistortionScale(NonNegativeRealParameter):
-  """Scaling factor on field-of-view for tweaking lens calibrations"""
-
-  sampling = Sampling.REGULAR
-  canonical_name = "distortionScale"
-  section = "lens"
-  units = None
   
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
@@ -1316,7 +1308,6 @@ class Clip(ParameterContainer):
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_distortion_overscan: typing.Optional[typing.Tuple[Orientations]] = DistortionOverscan()
-  lens_distortion_scale: typing.Optional[typing.Tuple[Orientations]] = DistortionScale()
   lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()

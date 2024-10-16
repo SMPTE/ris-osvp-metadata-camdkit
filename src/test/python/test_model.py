@@ -30,7 +30,7 @@ class ModelTest(unittest.TestCase):
     # Static parameters
     clip.active_sensor_physical_dimensions = Dimensions(width=36000, height=24000)
     clip.active_sensor_resolution = Dimensions(width=3840, height=2160)
-    clip.anamorphic_squeeze = 120
+    clip.anamorphic_squeeze = 1
     clip.capture_frame_rate = Fraction(24000, 1001)
     clip.duration = 3
     clip.camera_make = "Bob"
@@ -104,7 +104,6 @@ class ModelTest(unittest.TestCase):
                           FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
     clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
                               RawFizEncoders(focus=1, iris=2, zoom=3))
-    clip.lens_distortion_scale = (1.0, 1.0)
     clip.lens_distortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                   ExposureFalloff(1.0, 2.0, 3.0))
@@ -137,7 +136,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["tracker"]["model"], "EFGH")
     self.assertEqual(d["static"]["tracker"]["serialNumber"], "1234567890A")
     self.assertEqual(d["static"]["tracker"]["firmwareVersion"], "1.0.1a")
-    self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], {"num": 120, "denom": 1})
+    self.assertEqual(d["static"]["camera"]["anamorphicSqueeze"], {"num": 1, "denom": 1})
     self.assertEqual(d["static"]["camera"]["isoSpeed"], 13)
     self.assertEqual(d["static"]["camera"]["fdlLink"], "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     self.assertEqual(d["static"]["camera"]["shutterAngle"], 180)
@@ -189,7 +188,6 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
                                                      { "focus":1, "iris":2, "zoom":3 }))
     self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
-    self.assertTupleEqual(d["lens"]["distortionScale"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                      { "a1":1.0,"a2":2.0,"a3":3.0 }))
     self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
@@ -850,20 +848,6 @@ class ModelTest(unittest.TestCase):
     value = (1.0,)
     clip.lens_distortion_overscan = value
     self.assertTupleEqual(clip.lens_distortion_overscan, value)
-
-  def test_lens_distortion_scale(self):
-    clip = Clip()
-
-    self.assertIsNone(clip.lens_distortion_scale)
-
-    with self.assertRaises(ValueError):
-      clip.lens_distortion_scale = ""
-    with self.assertRaises(ValueError):
-      clip.lens_distortion_scale = (-1.0,)
-
-    value = (1.0,)
-    clip.lens_distortion_scale = value
-    self.assertTupleEqual(clip.lens_distortion_scale, value)
     
   def test_lens_exposure_falloff(self):
     clip = Clip()

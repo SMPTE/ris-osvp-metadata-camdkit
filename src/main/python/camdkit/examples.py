@@ -19,18 +19,27 @@ def get_recommended_static_example():
 
 def get_complete_static_example():
   clip = _get_complete_dynamic_clip()
+  clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
+  clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
+  clip.anamorphic_squeeze = 1
   clip.camera_label = "A"
+  clip.camera_make = "CameraMaker"
+  clip.camera_model = "Model20"
+  clip.camera_firmware = "1.2.3"
+  clip.camera_serial_number = "1234567890A"
+  clip.capture_frame_rate = Fraction(24000, 1001)
+  clip.duration = Fraction(1,25)
+  clip.fdl_link = uuid.uuid4().urn
+  clip.iso = 4000
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
   clip.lens_serial_number = "1234567890A"
+  clip.shutter_angle = 45
   clip.tracker_model = "Tracker"
   clip.tracker_firmware = "1.2.3"
   clip.tracker_make = "TrackerMaker"
   clip.tracker_serial_number = "1234567890A"
-  clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
-  clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
-  clip.anamorphic_squeeze = 1
   
   clip_json = clip.to_json(0)
   # Add additional custom data
@@ -128,10 +137,9 @@ def _get_complete_dynamic_clip():
   clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion_overscan = (1.0,)
-  clip.lens_distortion_scale = (1.0,)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
-  clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
-  clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
+  clip.lens_distortion = (Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0]),)
+  clip.lens_undistortion = (Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0]),)
   clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
