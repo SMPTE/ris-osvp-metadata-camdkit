@@ -11,7 +11,7 @@ import unittest
 import camdkit.venice.reader
 from fractions import Fraction
 
-class VenicReaderTest(unittest.TestCase):
+class VeniceReaderTest(unittest.TestCase):
 
   def test_frac_stop(self):
     self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 2 3/10") * 1000), 2219)
@@ -39,11 +39,11 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 500)
 
-    self.assertEqual(clip.focal_length[0], 32)
+    self.assertEqual(clip.lens_focal_length[0], 32)
 
-    self.assertEqual(clip.t_number[0], 2219)
+    self.assertEqual(clip.lens_t_number[0], 2219)
 
-    self.assertEqual(clip.capture_fps, 24)
+    self.assertEqual(clip.capture_frame_rate, 24)
 
     self.assertEqual(clip.anamorphic_squeeze, 100)
 
