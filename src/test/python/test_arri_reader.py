@@ -21,7 +21,7 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(
       clip.active_sensor_physical_dimensions,
-      camdkit.model.Dimensions(width=316800, height=178200)
+      camdkit.model.Dimensions(width=316.8, height=178.2)
     )
 
     self.assertEqual(clip.camera_make, "ARRI")
@@ -36,17 +36,17 @@ class ARRIReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.lens_serial_number, "2")
 
-    self.assertEqual(clip.capture_fps, 24)
+    self.assertEqual(clip.capture_frame_rate, 24)
 
-    self.assertEqual(clip.focal_length[0], 40)
+    self.assertEqual(clip.lens_focal_length[0], 40)
 
-    self.assertEqual(clip.focus_position[0], 4812)
+    self.assertEqual(clip.lens_focus_distance[0], 4.812)
 
-    self.assertEqual(clip.anamorphic_squeeze, 100)
+    self.assertEqual(clip.anamorphic_squeeze, 1)
 
-    self.assertEqual(clip.t_number[0], 1782)
+    self.assertEqual(round(clip.lens_t_number[0] * 1000), 1782)
 
-    self.assertEqual(clip.shutter_angle, 172800)
+    self.assertEqual(clip.shutter_angle, 172.8)
 
   def test_linear_iris_value(self):
     self.assertEqual(round(camdkit.arri.reader.t_number_from_linear_iris_value(6000) * 1000), 5657)

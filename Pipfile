@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 pylint = "==2.6.0"
 coverage = "*"
+jsonschema = "*"
+jinja2 = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.11"
