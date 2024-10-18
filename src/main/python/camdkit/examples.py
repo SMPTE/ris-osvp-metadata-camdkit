@@ -136,6 +136,7 @@ def _get_complete_dynamic_clip():
   clip.lens_focus_distance = (1000,)
   clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
+  clip.lens_raw_encoders = (RawFizEncoders(focus=1000, iris=2000, zoom=3000),)
   clip.lens_distortion_overscan = (1.0,)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0]),)

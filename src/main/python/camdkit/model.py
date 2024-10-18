@@ -13,7 +13,7 @@ from jsonschema import validate
 from camdkit.framework import *
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = "1.0.0"
+OPENTRACKIO_PROTOCOL_VERSION = "0.9.0"
 
 class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
   """Height and width of the active area of the camera sensor in microns
