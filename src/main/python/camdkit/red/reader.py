@@ -57,8 +57,8 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
   )
   pixel_pitch = _LENS_NAME_PIXEL_PITCH_MAP[clip_metadata["Sensor Name"]]
   clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(
-    width=round(pix_dims.width * pixel_pitch),
-    height=round(pix_dims.height * pixel_pitch)
+    width=pix_dims.width * pixel_pitch / 1000.0,
+    height=pix_dims.height * pixel_pitch / 1000.0
   )
 
   # read frame metadata
@@ -73,9 +73,9 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.duration = len(csv_data)/clip.capture_frame_rate
 
-  clip.anamorphic_squeeze = int(float(clip_metadata["Pixel Aspect Ratio"]) * 100)
+  clip.anamorphic_squeeze = Fraction(clip_metadata["Pixel Aspect Ratio"])
 
-  clip.shutter_angle = round(float(clip_metadata["Shutter (deg)"]) * 1000)
+  clip.shutter_angle = float(clip_metadata["Shutter (deg)"])
 
   clip.lens_focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
 
@@ -83,8 +83,8 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   cooke_metadata = tuple(cooke.lens_data_from_binary_string(bytes(int(i, 16) for i in m["Cooke Metadata"].split("/"))) for m in csv_data)
 
-  clip.lens_entrance_pupil_offset = tuple(m.entrance_pupil_position for m in cooke_metadata)
+  clip.lens_entrance_pupil_offset = tuple(float(m.entrance_pupil_position) / 1000.0 for m in cooke_metadata)
 
-  clip.lens_t_number = tuple(m.aperture_value * 10 for m in cooke_metadata)
+  clip.lens_t_number = tuple(m.aperture_value / 100.0 for m in cooke_metadata)
 
   return clip

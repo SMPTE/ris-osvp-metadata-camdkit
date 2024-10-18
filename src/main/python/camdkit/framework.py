@@ -283,7 +283,55 @@ class Parameter:
   def make_json_schema() -> dict:
     raise NotImplementedError
 
-class IntegerDimensionsParameter(Parameter):
+class DimensionsParameter(Parameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The height and width shall be each be real non-negative numbers.
+    """
+
+    if not isinstance(value, Dimensions):
+      return False
+
+    if (not isinstance(value.height, numbers.Real)
+            or not isinstance(value.width, numbers.Real)):
+      return False
+
+    if value.height < 0 or value.width < 0:
+      return False
+
+    return True
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return dataclasses.asdict(value)
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return Dimensions(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "required": [
+          "height",
+          "width"
+      ],
+      "properties": {
+        "height": {
+            "type": "number",
+            "minimum": 0.0,
+        },
+        "width": {
+            "type": "number",
+            "minimum": 0.0,
+        }
+      }
+    }
+  
+class IntegerDimensionsParameter(DimensionsParameter):
 
   @staticmethod
   def validate(value) -> bool:
@@ -305,15 +353,7 @@ class IntegerDimensionsParameter(Parameter):
       return False
 
     return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Dimensions(**value)
-
+  
   @staticmethod
   def make_json_schema() -> dict:
     return {
@@ -592,13 +632,13 @@ class StrictlyPositiveIntegerParameter(IntegerParameter):
       "maximum": UINT_MAX
     }
   
-class NonNegativeRealParameter(Parameter):
+class RealParameter(Parameter):
   
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a non-negative real number."""
+    """The parameter shall be a real number."""
 
-    return isinstance(value, numbers.Real) and value >= 0.0
+    return isinstance(value, numbers.Real)
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -607,6 +647,20 @@ class NonNegativeRealParameter(Parameter):
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
     return float(value)
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+    }
+
+class NonNegativeRealParameter(RealParameter):
+  
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a non-negative real number."""
+
+    return isinstance(value, numbers.Real) and value >= 0.0
   
   @staticmethod
   def make_json_schema() -> dict:

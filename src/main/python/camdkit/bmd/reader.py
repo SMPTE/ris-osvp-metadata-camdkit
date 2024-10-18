@@ -76,7 +76,7 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   anamorphic_enable = int(clip_data.get("anamorphic_enable", 0))
   anamorphic = clip_data.get("anamorphic")
   if anamorphic_enable != 0 and anamorphic is not None:
-    clip.anamorphic_squeeze = 100 * int(anamorphic[:-1])
+    clip.anamorphic_squeeze = Fraction(anamorphic[:-1])
 
   # ISO
   iso = first_frame_data.get("iso", None)
@@ -104,19 +104,19 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   # shutter angle
   shutter_value = first_frame_data.get("shutter_value")
   if shutter_value is not None:
-    clip.shutter_angle = int(shutter_value[:-1]) * 1000
+    clip.shutter_angle = float(shutter_value[:-1])
 
   # sampled metadata
 
   # focal_length
-  clip.lens_focal_length = tuple(int(m["focal_length"][:-2]) for m in frame_data)
+  clip.lens_focal_length = tuple(float(m["focal_length"][:-2]) for m in frame_data)
 
   # focus_position
-  clip.lens_focus_distance = tuple(int(m["distance"][:-2]) for m in frame_data)
+  clip.lens_focus_distance = tuple(float(m["distance"][:-2]) for m in frame_data)
 
   # entrance_pupil_offset not supported
 
   # t_number
-  clip.lens_t_number = tuple(round(float(m["aperture"][1:]) * 1000) for m in frame_data)
+  clip.lens_t_number = tuple(float(m["aperture"][1:]) for m in frame_data)
 
   return clip

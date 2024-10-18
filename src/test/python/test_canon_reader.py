@@ -23,18 +23,18 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.lens_focal_length[0], 18)      # focal_length: 18 mm
 
-    self.assertEqual(clip.lens_focus_distance[0], 500)   # focus_position: 500 mm
+    self.assertEqual(clip.lens_focus_distance[0], 0.5)   # focus_position: 0.5 mm
 
-    self.assertEqual(clip.shutter_angle, 180000)    # shutter_angle: 180 deg
+    self.assertEqual(clip.shutter_angle, 180)    # shutter_angle: 180 deg
 
     self.assertIsNone(clip.lens_entrance_pupil_offset)
 
-    self.assertEqual(clip.lens_t_number[0], 4500)        # t_number: 4.5
+    self.assertEqual(clip.lens_t_number[0], 4.5)        # t_number: 4.5
 
     self.assertIsNone(clip.capture_frame_rate)
 
     self.assertIsNone(clip.lens_serial_number)
 
-    self.assertEqual(clip.anamorphic_squeeze, 100)  # anamorphic_squeeze: 1
+    self.assertEqual(clip.anamorphic_squeeze, 1)  # anamorphic_squeeze: 1
 
     self.assertIsNone(clip.active_sensor_physical_dimensions)

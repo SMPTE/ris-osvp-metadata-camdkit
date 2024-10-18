@@ -14,12 +14,12 @@ def get_recommended_static_example():
   clip.camera_label = "A"
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
-  clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
+  clip.active_sensor_physical_dimensions = Dimensions(width=36.0,height=24.0)
   return clip.to_json(0)
 
 def get_complete_static_example():
   clip = _get_complete_dynamic_clip()
-  clip.active_sensor_physical_dimensions = Dimensions(width=36000,height=24000)
+  clip.active_sensor_physical_dimensions = Dimensions(width=36.0,height=24.0)
   clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
   clip.camera_label = "A"
@@ -35,7 +35,7 @@ def get_complete_static_example():
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
   clip.lens_serial_number = "1234567890A"
-  clip.shutter_angle = 45
+  clip.shutter_angle = 45.0
   clip.tracker_model = "Tracker"
   clip.tracker_firmware = "1.2.3"
   clip.tracker_make = "TrackerMaker"
@@ -82,10 +82,10 @@ def _get_recommended_dynamic_clip():
   v = Vector3(x=1.0, y=2.0, z=3.0)
   r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
   clip.transforms = ((Transform(translation=v, rotation=r, transformId="Camera"),),)
-  clip.lens_f_number = (4000,)
+  clip.lens_f_number = (4.0,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (1000,)
-  clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
+  clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),)
   clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),)
@@ -130,11 +130,11 @@ def _get_complete_dynamic_clip():
                       Transform(translation=v, rotation=r, scale=v, transformId="Camera", parentTransformId="Crane Arm")
                       ),)
 
-  clip.lens_f_number = (4000,)
-  clip.lens_t_number = (4100,)
+  clip.lens_f_number = (4.0,)
+  clip.lens_t_number = (4.1,)
   clip.lens_focal_length = (24.305,)
-  clip.lens_focus_distance = (1000,)
-  clip.lens_entrance_pupil_offset = (Fraction(1000,100),)
+  clip.lens_focus_distance = (10.0,)
+  clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_raw_encoders = (RawFizEncoders(focus=1000, iris=2000, zoom=3000),)
   clip.lens_distortion_overscan = (1.0,)

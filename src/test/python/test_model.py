@@ -28,7 +28,7 @@ class ModelTest(unittest.TestCase):
     clip = Clip()
 
     # Static parameters
-    clip.active_sensor_physical_dimensions = Dimensions(width=36000, height=24000)
+    clip.active_sensor_physical_dimensions = Dimensions(width=36.0, height=24.0)
     clip.active_sensor_resolution = Dimensions(width=3840, height=2160)
     clip.anamorphic_squeeze = 1
     clip.capture_frame_rate = Fraction(24000, 1001)
@@ -99,7 +99,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_f_number = (1200, 2800)
     clip.lens_focal_length = (2.0, 4.0)
     clip.lens_focus_distance = (2, 4)
-    clip.lens_entrance_pupil_offset = (Fraction(1, 2), Fraction(13, 7))
+    clip.lens_entrance_pupil_offset = (1.23, 2.34)
     clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
                           FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
     clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
@@ -120,7 +120,7 @@ class ModelTest(unittest.TestCase):
     # Static parameters
     self.assertEqual(d["static"]["duration"], {"num": 3, "denom": 1})
     self.assertEqual(d["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
-    self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24000, "width": 36000})
+    self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24.0, "width": 36.0})
     self.assertDictEqual(d["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
     self.assertEqual(d["static"]["camera"]["make"], "Bob")
     self.assertEqual(d["static"]["camera"]["model"], "Hello")
@@ -182,7 +182,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
     self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
     self.assertTupleEqual(d["lens"]["focusDistance"], (2, 4))
-    self.assertTupleEqual(d["lens"]["entrancePupilOffset"], ({ "num":1, "denom":2 }, { "num":13, "denom":7 }))
+    self.assertTupleEqual(d["lens"]["entrancePupilOffset"], (1.23, 2.34))
     self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
                                                   { "focus":0.1, "iris":0.2, "zoom":0.3 }))
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
@@ -292,12 +292,12 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.shutter_angle)
 
     with self.assertRaises(ValueError):
-      clip.shutter_angle = 0
+      clip.shutter_angle = -0.1
 
     with self.assertRaises(ValueError):
-      clip.shutter_angle = 360001
+      clip.shutter_angle = 360.1
 
-    value = 180
+    value = 180.0
 
     clip.shutter_angle = value
 
@@ -381,9 +381,9 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.lens_entrance_pupil_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_entrance_pupil_offset = 0.6
+      clip.lens_entrance_pupil_offset = Fraction(5,7)
 
-    value = (Fraction(5,7), 7)
+    value = (0.5, 0.7)
 
     clip.lens_entrance_pupil_offset = value
 

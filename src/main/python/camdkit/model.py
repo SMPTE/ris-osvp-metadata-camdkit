@@ -15,13 +15,13 @@ from camdkit.framework import *
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
 OPENTRACKIO_PROTOCOL_VERSION = "0.9.0"
 
-class ActiveSensorPhysicalDimensions(IntegerDimensionsParameter):
+class ActiveSensorPhysicalDimensions(DimensionsParameter):
   """Height and width of the active area of the camera sensor in microns
   """
 
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
-  units = "micron"
+  units = "millimeter"
   section = "camera"
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
@@ -185,7 +185,7 @@ class FDLLink(UUIDURNParameter):
   units = None
   section = "camera"
 
-class ShutterAngle(Parameter):
+class ShutterAngle(RealParameter):
   """Shutter speed as a fraction of the capture frame rate. The shutter
   speed (in units of 1/s) is equal to the value of the parameter divided
   by 360 times the capture frame rate.
@@ -193,29 +193,21 @@ class ShutterAngle(Parameter):
 
   canonical_name = "shutterAngle"
   sampling = Sampling.STATIC
-  units = "degree/1000"
+  units = "degree"
   section = "camera"
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be an integer in the range (0..360000]."""
+    """The parameter shall be a real number in the range (0..360]."""
 
-    return isinstance(value, numbers.Integral) and 0 < value <= 360000
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return value
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return int(value)
+    return isinstance(value, numbers.Real) and 0.0 <= value <= 360.0
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 360000
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 360.0
     }
 
 class SampleId(UUIDURNParameter):
@@ -973,24 +965,24 @@ class TimingTimecode(Parameter):
       }
     }
 
-class TStop(StrictlyPositiveIntegerParameter):
+class TStop(NonNegativeRealParameter):
   """Linear t-number of the lens, equal to the F-number of the lens
   divided by the square root of the transmittance of the lens.
   """
 
   canonical_name = "tStop"
   sampling = Sampling.REGULAR
-  units = "0.001 unit"
+  units = None
   section = "lens"
 
-class FStop(StrictlyPositiveIntegerParameter):
+class FStop(NonNegativeRealParameter):
   """The linear f-number of the lens, equal to the focal length divided
   by the diameter of the entrance pupil.
   """
 
   canonical_name = "fStop"
   sampling = Sampling.REGULAR
-  units = "0.001 unit"
+  units = None
   section = "lens"
 
 class NominalFocalLength(NonNegativeRealParameter):
@@ -1011,23 +1003,25 @@ class FocalLength(NonNegativeRealParameter):
   units = "millimeter"
   section = "lens"
 
-class FocusDistance(StrictlyPositiveIntegerParameter):
+class FocusDistance(NonNegativeRealParameter):
   """Focus distance/position of the lens"""
 
   canonical_name = "focusDistance"
   sampling = Sampling.REGULAR
-  units = "millimeter"
+  units = "meter"
   section = "lens"
 
-class EntrancePupilOffset(RationalParameter):
+class EntrancePupilOffset(RealParameter):
   """Offset of the entrance pupil relative to the nominal imaging plane
   (positive if the entrance pupil is located on the side of the nominal
-  imaging plane that is towards the object, and negative otherwise)
+  imaging plane that is towards the object, and negative otherwise).
+  Measured in meters as in a render engine it is often applied in the
+  virtual camera's transform chain.
   """
 
   canonical_name = "entrancePupilOffset"
   sampling = Sampling.REGULAR
-  units = "millimeter"
+  units = "meter"
   section = "lens"
 
 class DistortionOverscan(NonNegativeRealParameter):
@@ -1298,7 +1292,7 @@ class Clip(ParameterContainer):
   lens_model: typing.Optional[str] = LensModel()
   lens_nominal_focal_length: typing.Optional[numbers.Real] = NominalFocalLength()
   lens_serial_number: typing.Optional[str] = LensSerialNumber()
-  shutter_angle: typing.Optional[numbers.Integral] = ShutterAngle()
+  shutter_angle: typing.Optional[numbers.Real] = ShutterAngle()
   # Regular parameters
   tracker_notes: typing.Optional[typing.Tuple[str]] = Notes()
   tracker_recording: typing.Optional[typing.Tuple[bool]] = Recording()
@@ -1312,12 +1306,12 @@ class Clip(ParameterContainer):
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
-  lens_f_number: typing.Optional[typing.Tuple[numbers.Integral]] = FStop()
+  lens_f_number: typing.Optional[typing.Tuple[numbers.Real]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
-  lens_focus_distance: typing.Optional[typing.Tuple[numbers.Integral]] = FocusDistance()
+  lens_focus_distance: typing.Optional[typing.Tuple[numbers.Real]] = FocusDistance()
   lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
-  lens_t_number: typing.Optional[typing.Tuple[numbers.Integral]] = TStop()
+  lens_t_number: typing.Optional[typing.Tuple[numbers.Real]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()

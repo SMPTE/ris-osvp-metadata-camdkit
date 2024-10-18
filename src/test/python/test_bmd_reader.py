@@ -45,8 +45,8 @@ class BMDReaderTest(unittest.TestCase):
 
     # self.assertEqual(clip.white_balance, 6000)
 
-    self.assertEqual(clip.anamorphic_squeeze, 200)
+    self.assertEqual(clip.anamorphic_squeeze, 2)
 
-    self.assertEqual(clip.lens_t_number[0], 2300)
+    self.assertEqual(clip.lens_t_number[0], 2.3)
 
-    self.assertEqual(clip.shutter_angle, 180000)
+    self.assertEqual(clip.shutter_angle, 180)

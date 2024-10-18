@@ -40,17 +40,17 @@ class REDReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.lens_focus_distance[0], 410)
 
-    self.assertEqual(clip.lens_entrance_pupil_offset[0], 127)
+    self.assertEqual(clip.lens_entrance_pupil_offset[0], 0.127)
 
-    self.assertEqual(clip.lens_t_number[0], 5600)
+    self.assertEqual(clip.lens_t_number[0], 5.6)
 
     self.assertEqual(clip.capture_frame_rate, 24)
 
-    self.assertEqual(clip.anamorphic_squeeze, 100)
+    self.assertEqual(clip.anamorphic_squeeze, 1)
 
-    self.assertEqual(clip.shutter_angle, 180000)
+    self.assertEqual(clip.shutter_angle, 180)
 
     self.assertEqual(
       clip.active_sensor_physical_dimensions,
-      camdkit.model.Dimensions(width=4096 * 5, height=2160 * 5)
+      camdkit.model.Dimensions(width=(4096 * 5 / 1000.0), height=(2160 * 5 / 1000.0))
     )

@@ -155,13 +155,13 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   # lens_firmware not supported
 
   shutter_angle = find_value(clip_metadata, "ShutterSpeedAngle")
-  clip.shutter_angle = int(shutter_angle) * 10 if shutter_angle is not None else None
+  clip.shutter_angle = float(shutter_angle) / 100.0
 
   pixel_aspect_ratio = find_value(clip_metadata, "PixelAspectRatio")
   if pixel_aspect_ratio is not None:
     m = re.fullmatch("([0-9]+):([0-9]+)", pixel_aspect_ratio)
     if m is not None:
-      clip.anamorphic_squeeze = round(float(m.group(1)) / float(m.group(2)) * 100.0)
+      clip.anamorphic_squeeze = Fraction(int(m.group(1)), int(m.group(2)))
 
   clip_fps = find_fps(clip_metadata)
 
@@ -178,8 +178,8 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
   pixel_pitch = 22800 / 3840 # page 5 of "VENICE v6 Ops.pdf"
   pix_dims = find_px_dims(clip_metadata)
   clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(
-        width=round(pix_dims.width * pixel_pitch),
-        height=round(pix_dims.height * pixel_pitch)
+        width=pix_dims.width * pixel_pitch  / 1000.0,
+        height=pix_dims.height * pixel_pitch / 1000.0
       )
 
   # read frame metadata
@@ -190,12 +190,12 @@ def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Cl
 
   clip.duration = len(csv_data)/clip_fps
 
-  clip.lens_focal_length = tuple(int(m["Focal Length (mm)"]) for m in csv_data)
+  clip.lens_focal_length = tuple(float(m["Focal Length (mm)"]) for m in csv_data)
 
-  clip.lens_focus_distance = tuple(round(float(m["Focus Distance (ft)"]) * 12 * 25.4) for m in csv_data)
+  clip.lens_focus_distance = tuple(float(m["Focus Distance (ft)"]) * 12.0 * 25.4 / 1000.0 for m in csv_data)
 
   # TODO: clip.entrance_pupil_offset
 
-  clip.lens_t_number = tuple(round(t_number_from_frac_stop(m["Aperture"]) * 1000) for m in csv_data)
+  clip.lens_t_number = tuple(t_number_from_frac_stop(m["Aperture"]) for m in csv_data)
 
   return clip

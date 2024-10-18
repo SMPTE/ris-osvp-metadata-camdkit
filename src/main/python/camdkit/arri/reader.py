@@ -65,9 +65,9 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
 
     clip.capture_frame_rate = utils.guess_fps(Fraction(csv_data[0]["Project FPS"]))
 
-    clip.shutter_angle = round(float(csv_data[0]["Shutter Angle"])  * 1000)
+    clip.shutter_angle = float(csv_data[0]["Shutter Angle"])
 
-    clip.anamorphic_squeeze = round(float(csv_data[0]["Lens Squeeze"]) * 100)
+    clip.anamorphic_squeeze = Fraction(csv_data[0]["Lens Squeeze"])
 
     pix_dims = camdkit.model.Dimensions(
       width=int(csv_data[0]["Image Width"]),
@@ -75,15 +75,15 @@ def to_clip(csv_path: str) -> camdkit.model.Clip:
     )
     pixel_pitch = _CAMERA_FAMILY_PIXEL_PITCH_MAP[(csv_data[0]["Camera Family"], pix_dims.width)]
     clip.active_sensor_physical_dimensions = camdkit.model.Dimensions(
-        width=round(pix_dims.width * pixel_pitch),
-        height=round(pix_dims.height * pixel_pitch)
+        width=pix_dims.width * pixel_pitch / 1000.0,
+        height=pix_dims.height * pixel_pitch / 1000.0
       )
 
-    clip.lens_focal_length = tuple(round(float(m["Lens Focal Length"])) for m in csv_data)
+    clip.lens_focal_length = tuple(float(m["Lens Focal Length"]) for m in csv_data)
 
-    clip.lens_focus_distance = tuple(int(float(m["Lens Focus Distance"]) * 1000) for m in csv_data)
+    clip.lens_focus_distance = tuple(float(m["Lens Focus Distance"]) for m in csv_data)
 
-    clip.lens_t_number = tuple(round(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) * 1000) for m in csv_data)
+    clip.lens_t_number = tuple(t_number_from_linear_iris_value(int(m["Lens Linear Iris"])) for m in csv_data)
 
     # TODO: Entrance Pupil Position
     # TODO: Sensor physical dimensions
