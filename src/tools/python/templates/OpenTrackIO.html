@@ -44,7 +44,7 @@
             
             <h2>Software resources</h2>
             <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repo includes examples for <a href="TODO-mosys-f4">generating</a> and <a href="TODO-steve-parser">parsing</a> data.</p>
-            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a></p>
+            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="TODO-james-parser">CamDKit</a> that demonstrates linkage.</p>
 
             <h2 id="recommended">OpenTrackIO sample</h2>
             <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
@@ -98,8 +98,9 @@
             <h2>Future additions</h2>
             <p>In the future RIS intends to add support for:</p>
             <ul>
+                <li>Improved session and transport details and reference examples</li>
                 <li>SMPTE 2110 -41 and -42</li>
-                <li>Anamorphic lens mathematics (in OpenLensIO)</li>
+                <li>Anamorphic lens mathematics and enhanced vignette model (in OpenLensIO)</li>
                 <li>Device discovery</li>
             </ul>
         </div>
