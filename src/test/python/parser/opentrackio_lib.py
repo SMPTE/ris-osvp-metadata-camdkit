@@ -195,8 +195,8 @@ class OpenTrackIOProtocol:
         """Establish user-preferred units for translations. 
         Valid args: m, cm, mm, in"""
         schema_units = None
-        if self.validate_dict_elements(self.sd,["properties","transforms","items","items","properties","translation","units"]):
-            schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["translation"]["units"]
+        if self.validate_dict_elements(self.sd,["properties","transforms","items","properties","translation","units"]):
+            schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["translation"]["units"]
         if self.verbose:
             print("Schema says camera translation units are: {}".format(schema_units))
             print("Setting preferred camera translation units to: {0}".format(unit_str))
@@ -209,8 +209,8 @@ class OpenTrackIOProtocol:
         """Establish user-preferred units for rotations. 
         Valid args: deg, rad"""
         schema_units = None
-        if self.validate_dict_elements(self.sd,["properties","transforms","items","items","properties","rotation","units"]):
-            schema_units = self.sd["properties"]["transforms"]["items"]["items"]["properties"]["rotation"]["units"]
+        if self.validate_dict_elements(self.sd,["properties","transforms","items","properties","rotation","units"]):
+            schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["rotation"]["units"]
         if self.verbose:
             print("Schema says camera rotation units are: {}".format(schema_units))
             print("Setting preferred camera rotation units to: {0}".format(unit_str))
