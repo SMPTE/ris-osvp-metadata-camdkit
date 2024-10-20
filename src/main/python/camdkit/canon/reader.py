@@ -38,40 +38,40 @@ def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   # anamorphic_squeeze
   lens_squeeze_factor = int(clip_metadata["LensSqueezeFactor"])
   if lens_squeeze_factor == 0:
-    clip.anamorphic_squeeze = 100
+    clip.anamorphic_squeeze = 1
   elif lens_squeeze_factor == 1:
-    clip.anamorphic_squeeze = 133
+    clip.anamorphic_squeeze = 1.33
   elif lens_squeeze_factor == 2:
-    clip.anamorphic_squeeze = 200
+    clip.anamorphic_squeeze = 2
   elif lens_squeeze_factor == 3:
-    clip.anamorphic_squeeze = 180
+    clip.anamorphic_squeeze = 1.8
 
   # ISO
   if int(first_frame_data['PhotographicSensitivityMode']) == 1:
     clip.iso = Fraction(first_frame_data['PhotographicSensitivity']).numerator - 0x80000000
 
   # clip.active_sensor_physical_dimensions is not supported
-  # clip.capture_fps is no supported
+  # clip.capture_frame_rate is no supported
 
   clip.camera_make = "Canon"
 
   # shutter angle
-  clip.shutter_angle = round(Fraction(first_frame_data['ExposureTime']) * 1000)
+  clip.shutter_angle = float(Fraction(first_frame_data['ExposureTime']))
 
   # sampled metadata
 
   # focal_length
-  clip.focal_length = tuple(round(Fraction(m["FocalLength"])) for m in frame_data)
+  clip.lens_focal_length = tuple(Fraction(m["FocalLength"]) for m in frame_data)
 
   # focus_position
-  clip.focus_position = tuple(round(_read_float32_as_hex(m["FocusPosition"]) * 1000) for m in frame_data)
+  clip.lens_focus_distance = tuple(_read_float32_as_hex(m["FocusPosition"]) for m in frame_data)
 
-  # entrance_pupil_position not supported
+  # entrance_pupil_offset not supported
 
   # t_number
   if int(first_frame_data['ApertureMode']) == 2:
-    clip.t_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
+    clip.lens_t_number = tuple(Fraction(m["ApertureNumber"]) for m in frame_data)
   elif int(first_frame_data['ApertureMode']) == 1:
-    clip.f_number = tuple(round(Fraction(m["ApertureNumber"]) * 1000) for m in frame_data)
+    clip.lens_f_number = tuple(Fraction(m["ApertureNumber"]) for m in frame_data)
 
   return clip

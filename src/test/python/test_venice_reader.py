@@ -11,12 +11,12 @@ import unittest
 import camdkit.venice.reader
 from fractions import Fraction
 
-class VenicReaderTest(unittest.TestCase):
+class VeniceReaderTest(unittest.TestCase):
 
   def test_frac_stop(self):
-    self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 2 3/10") * 1000), 2219)
+    self.assertEqual(round(1000*camdkit.venice.reader.t_number_from_frac_stop("T 2 3/10")), 2219)
 
-    self.assertEqual(round(camdkit.venice.reader.t_number_from_frac_stop("T 6") * 1000), 8000)
+    self.assertEqual(round(1000*camdkit.venice.reader.t_number_from_frac_stop("T 6")), 8000)
 
   def test_reader(self):
     with open("src/test/resources/venice/D001C005_210716AGM01.xml", "r", encoding="utf-8") as static_file, \
@@ -39,17 +39,17 @@ class VenicReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 500)
 
-    self.assertEqual(clip.focal_length[0], 32)
+    self.assertEqual(clip.lens_focal_length[0], 32)
 
-    self.assertEqual(clip.t_number[0], 2219)
+    self.assertEqual(round(1000.0*clip.lens_t_number[0]), 2219)
 
-    self.assertEqual(clip.capture_fps, 24)
+    self.assertEqual(clip.capture_frame_rate, 24)
 
-    self.assertEqual(clip.anamorphic_squeeze, 100)
+    self.assertEqual(clip.anamorphic_squeeze, 1)
 
-    self.assertEqual(clip.shutter_angle, 103800)
+    self.assertEqual(clip.shutter_angle, 103.8)
 
     self.assertEqual(
       clip.active_sensor_physical_dimensions,
-      camdkit.model.Dimensions(width=round(5674 * 5.9375), height=round(3192 * 5.9375))
+      camdkit.model.Dimensions(width=5674.0 * 5.9375 / 1000.0, height=3192.0 * 5.9375 / 1000.0)
     )
