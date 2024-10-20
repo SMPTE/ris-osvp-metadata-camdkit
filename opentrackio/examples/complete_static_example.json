@@ -1,0 +1,240 @@
+{
+  "static": {
+    "camera": {
+      "activeSensorPhysicalDimensions": {
+        "height": 24.0,
+        "width": 36.0
+      },
+      "activeSensorResolution": {
+        "height": 2160,
+        "width": 3840
+      },
+      "anamorphicSqueeze": {
+        "num": 1,
+        "denom": 1
+      },
+      "firmwareVersion": "1.2.3",
+      "label": "A",
+      "make": "CameraMaker",
+      "model": "Model20",
+      "serialNumber": "1234567890A",
+      "captureFrameRate": {
+        "num": 24000,
+        "denom": 1001
+      },
+      "fdlLink": "urn:uuid:72b91ed6-41df-4c3a-ab4d-902428dee95c",
+      "isoSpeed": 4000,
+      "shutterAngle": 45.0
+    },
+    "duration": {
+      "num": 1,
+      "denom": 25
+    },
+    "lens": {
+      "make": "LensMaker",
+      "model": "Model15",
+      "nominalFocalLength": 14,
+      "serialNumber": "1234567890A"
+    },
+    "tracker": {
+      "firmwareVersion": "1.2.3",
+      "make": "TrackerMaker",
+      "model": "Tracker",
+      "serialNumber": "1234567890A"
+    }
+  },
+  "globalStage": {
+    "E": 100.0,
+    "N": 200.0,
+    "U": 300.0,
+    "lat0": 100.0,
+    "lon0": 200.0,
+    "h0": 300.0
+  },
+  "lens": {
+    "custom": [
+      1.0,
+      2.0
+    ],
+    "distortion": {
+      "radial": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0
+      ],
+      "tangential": [
+        1.0,
+        2.0
+      ]
+    },
+    "distortionOverscan": 1.0,
+    "distortionShift": {
+      "x": 1.0,
+      "y": 2.0
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "exposureFalloff": {
+      "a1": 1.0,
+      "a2": 2.0,
+      "a3": 3.0
+    },
+    "fStop": 4.0,
+    "focalLength": 24.305,
+    "focusDistance": 10.0,
+    "perspectiveShift": {
+      "x": 0.1,
+      "y": 0.2
+    },
+    "rawEncoders": {
+      "focus": 1000,
+      "iris": 2000,
+      "zoom": 3000
+    },
+    "tStop": 4.1,
+    "undistortion": {
+      "radial": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0
+      ],
+      "tangential": [
+        1.0,
+        2.0
+      ]
+    }
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": "0.9.0"
+  },
+  "relatedSampleIds": [
+    "urn:uuid:546f63ad-460c-4009-ba06-05afbc66855c",
+    "urn:uuid:ef4e2612-7636-48e1-9443-5146caf6b479"
+  ],
+  "sampleId": "urn:uuid:6c364ea5-063d-4b63-82eb-33f14b739bee",
+  "streamId": "urn:uuid:db1a2a6b-62ac-4018-8777-7debfb67c9fd",
+  "timing": {
+    "frameRate": {
+      "num": 24000,
+      "denom": 1001
+    },
+    "mode": "internal",
+    "recordedTimestamp": {
+      "seconds": 1718806000,
+      "nanoseconds": 500000000
+    },
+    "sampleTimestamp": {
+      "seconds": 1718806554,
+      "nanoseconds": 500000000,
+      "attoseconds": 0
+    },
+    "sequenceNumber": 0,
+    "synchronization": {
+      "frequency": {
+        "num": 24000,
+        "denom": 1001
+      },
+      "locked": true,
+      "source": "ptp",
+      "offsets": {
+        "translation": 1.0,
+        "rotation": 2.0,
+        "lensEncoders": 3.0
+      },
+      "present": true,
+      "ptp": {
+        "domain": 1,
+        "master": "00:11:22:33:44:55",
+        "offset": 0.0
+      }
+    },
+    "timecode": {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "format": {
+        "frameRate": {
+          "num": 24000,
+          "denom": 1001
+        },
+        "dropFrame": true,
+        "oddField": true
+      }
+    }
+  },
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
+  },
+  "transforms": [
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "transformId": "Dolly"
+    },
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "scale": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "transformId": "Crane Arm",
+      "parentTransformId": "Dolly"
+    },
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "scale": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "transformId": "Camera",
+      "parentTransformId": "Crane Arm"
+    }
+  ],
+  "custom": {
+    "pot1": 2435,
+    "button1": false
+  }
+}

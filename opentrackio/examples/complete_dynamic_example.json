@@ -1,0 +1,196 @@
+{
+  "globalStage": {
+    "E": 100.0,
+    "N": 200.0,
+    "U": 300.0,
+    "lat0": 100.0,
+    "lon0": 200.0,
+    "h0": 300.0
+  },
+  "lens": {
+    "custom": [
+      1.0,
+      2.0
+    ],
+    "distortion": {
+      "radial": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0
+      ],
+      "tangential": [
+        1.0,
+        2.0
+      ]
+    },
+    "distortionOverscan": 1.0,
+    "distortionShift": {
+      "x": 1.0,
+      "y": 2.0
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "exposureFalloff": {
+      "a1": 1.0,
+      "a2": 2.0,
+      "a3": 3.0
+    },
+    "fStop": 4.0,
+    "focalLength": 24.305,
+    "focusDistance": 10.0,
+    "perspectiveShift": {
+      "x": 0.1,
+      "y": 0.2
+    },
+    "rawEncoders": {
+      "focus": 1000,
+      "iris": 2000,
+      "zoom": 3000
+    },
+    "tStop": 4.1,
+    "undistortion": {
+      "radial": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0
+      ],
+      "tangential": [
+        1.0,
+        2.0
+      ]
+    }
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": "0.9.0"
+  },
+  "relatedSampleIds": [
+    "urn:uuid:c260b464-ca1b-44b9-b37c-2fe06848e164",
+    "urn:uuid:aceb7524-3d02-4b51-87a6-dcd958b87075"
+  ],
+  "sampleId": "urn:uuid:fecfb9c3-eb02-4601-bc6b-fb8f7dbab9a1",
+  "streamId": "urn:uuid:c0a0164b-3e08-417f-85b3-85e728eb33de",
+  "timing": {
+    "frameRate": {
+      "num": 24000,
+      "denom": 1001
+    },
+    "mode": "internal",
+    "recordedTimestamp": {
+      "seconds": 1718806000,
+      "nanoseconds": 500000000
+    },
+    "sampleTimestamp": {
+      "seconds": 1718806554,
+      "nanoseconds": 500000000,
+      "attoseconds": 0
+    },
+    "sequenceNumber": 0,
+    "synchronization": {
+      "frequency": {
+        "num": 24000,
+        "denom": 1001
+      },
+      "locked": true,
+      "source": "ptp",
+      "offsets": {
+        "translation": 1.0,
+        "rotation": 2.0,
+        "lensEncoders": 3.0
+      },
+      "present": true,
+      "ptp": {
+        "domain": 1,
+        "master": "00:11:22:33:44:55",
+        "offset": 0.0
+      }
+    },
+    "timecode": {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "format": {
+        "frameRate": {
+          "num": 24000,
+          "denom": 1001
+        },
+        "dropFrame": true,
+        "oddField": true
+      }
+    }
+  },
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
+  },
+  "transforms": [
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "transformId": "Dolly"
+    },
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "scale": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "transformId": "Crane Arm",
+      "parentTransformId": "Dolly"
+    },
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "scale": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "transformId": "Camera",
+      "parentTransformId": "Crane Arm"
+    }
+  ],
+  "custom": {
+    "pot1": 2435,
+    "button1": false
+  }
+}

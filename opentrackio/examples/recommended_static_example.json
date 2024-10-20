@@ -1,0 +1,89 @@
+{
+  "static": {
+    "camera": {
+      "activeSensorPhysicalDimensions": {
+        "height": 24.0,
+        "width": 36.0
+      },
+      "label": "A"
+    },
+    "lens": {
+      "make": "LensMaker",
+      "model": "Model15"
+    }
+  },
+  "lens": {
+    "distortion": {
+      "radial": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "tangential": [
+        1.0,
+        2.0
+      ]
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "fStop": 4.0,
+    "focalLength": 24.305,
+    "focusDistance": 1000,
+    "perspectiveShift": {
+      "x": 0.1,
+      "y": 0.2
+    }
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": "0.9.0"
+  },
+  "sampleId": "urn:uuid:8b3e7d22-86d5-4143-8777-7be63dde1ba8",
+  "streamId": "urn:uuid:22b288ec-25c0-4186-86a1-b69c9a4d7fd1",
+  "timing": {
+    "frameRate": {
+      "num": 24000,
+      "denom": 1001
+    },
+    "mode": "external",
+    "timecode": {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "format": {
+        "frameRate": {
+          "num": 24000,
+          "denom": 1001
+        },
+        "dropFrame": true,
+        "oddField": true
+      }
+    }
+  },
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
+  },
+  "transforms": [
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "transformId": "Camera"
+    }
+  ]
+}
