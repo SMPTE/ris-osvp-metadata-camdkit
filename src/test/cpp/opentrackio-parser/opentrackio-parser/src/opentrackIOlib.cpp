@@ -4,7 +4,7 @@
 // Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
 //
 // License: this code is open-source under the FreeBSD License
-// nlohmann JSON library licensed under the MIT License, Copyright © 2013-2022 Niels Lohmann
+// nlohmann JSON library licensed under the MIT License, Copyright ï¿½ 2013-2022 Niels Lohmann
 
 #include "opentrackIOlib.h"
 #include <iostream>
@@ -35,7 +35,7 @@ int OTProtocol::Import_schema(void) {
             sd = nullptr;
         }
         if (sd.is_null()) {
-            std::cout << "Import_schema(): Failed to parse OTIO schema file." << std::endl;
+            std::cout << "Import_schema(): Failed to parse OpenTrackIO schema file." << std::endl;
         } else {
             std::cout << "Parsed the schema JSON successfully." << std::endl;
             if (verbose) {

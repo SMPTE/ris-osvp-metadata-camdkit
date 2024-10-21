@@ -5,7 +5,7 @@
 //
 // License: this code is open-source under the FreeBSD License
 //
-// nlohmann JSON library licensed under the MIT License, Copyright © 2013-2022 Niels Lohmann
+// nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
 
 // PROBLEMS: 
 // return tr["translation"]["z"].get<double>() * trans_mult; 
@@ -23,7 +23,7 @@
 #include <nlohmann/json.hpp>
 #include <opentrackio-cpp/OpenTrackIOSample.h>
 
-// Class to decode and interpret the OTIO protocol
+// Class to decode and interpret the OpenTrackIO protocol
 // msg_text: string containing a single json "sample"
 // schema_text: string containing a json schema for the protocol
 // verbose: Whether to print extra status during processing
