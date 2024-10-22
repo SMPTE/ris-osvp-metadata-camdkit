@@ -126,7 +126,7 @@ class F4PacketParser:
   _packet: F4Packet = F4Packet()
   _frame_number: int = 0
   _initialised: bool = False
-  _stream_id = uuid.uuid4().urn
+  _source_id = uuid.uuid4().urn
 
   def _twos_comp(self, val, bits):
     if (val & (1 << (bits - 1))) != 0:
@@ -196,7 +196,8 @@ class F4PacketParser:
       k1 = k2 = cx = cy = fov_h = fov_v = 0.0
       frame.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION),)
       frame.sample_id = (uuid.uuid4().urn,)
-      frame.stream_id = (self._stream_id,)
+      frame.source_id = (self._source_id,)
+      frame.source_number = (1,)
       frame.tracker_recording = ((self._packet.status & (1 << 4)) != 0,)
       for i in range(0, self._packet.axis_count):
         axis_block = self._packet.axis_block_list[i]
@@ -237,12 +238,11 @@ class F4PacketParser:
           case F4.FIELD_ID_FOCAL_DISTANCE:
             inv_focal_d = self._axis_block_to_lens_param(axis_block)
             # In mm
-            frame.lens_focus_distance = (int(1000.0 / inv_focal_d),)
+            frame.lens_focus_distance = ((1.0 / inv_focal_d),)
             pass
           case F4.FIELD_ID_APERTURE:
             f: float = self._axis_block_to_lens_param(axis_block)
-            # Units are 0.001 e.g. F4.0 => 4000
-            frame.lens_f_number = (round(f*1000.0),)
+            frame.lens_f_number = (f,)
             pass
           case F4.FIELD_ID_FOCUS:
             focus = self._axis_block_to_lens_type(axis_block) / 65536.0

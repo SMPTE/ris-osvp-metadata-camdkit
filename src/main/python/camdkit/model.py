@@ -219,13 +219,22 @@ class SampleId(UUIDURNParameter):
   sampling = Sampling.REGULAR
   units = None
 
-class StreamId(UUIDURNParameter):
-  """URN serving as unique identifier of the stream in which data is
-  being transported. This is most important in the case where a single
-  device is producing multiple streams of samples.
+class SourceId(UUIDURNParameter):
+  """URN serving as unique identifier of the source from which data is
+  being transported.
   """
 
-  canonical_name = "streamId"
+  canonical_name = "sourceId"
+  sampling = Sampling.REGULAR
+  units = None
+
+class SourceNumber(NonNegativeIntegerParameter):
+  """Number that identifies the index of the stream from a source from which
+  data is being transported. This is most important in the case where a source
+  is producing multiple streams of samples.
+  """
+
+  canonical_name = "sourceNumber"
   sampling = Sampling.REGULAR
   units = None
 
@@ -612,7 +621,8 @@ class TimingSynchronization(Parameter):
     d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
     d["source"] = str(d["source"])
     d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
-    d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
+    if value.offsets is not None:
+        d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
     return d
 
   @staticmethod
@@ -1316,7 +1326,8 @@ class Clip(ParameterContainer):
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
-  stream_id: typing.Optional[typing.Tuple[str]] = StreamId()
+  source_id: typing.Optional[typing.Tuple[str]] = SourceId()
+  source_number: typing.Optional[typing.Tuple[int]] = SourceNumber()
   timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
