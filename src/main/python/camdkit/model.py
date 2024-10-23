@@ -1041,6 +1041,14 @@ class DistortionOverscan(NonNegativeRealParameter):
   canonical_name = "distortionOverscan"
   section = "lens"
   units = None
+
+class DistortionOverscanMaximum(NonNegativeRealParameter):
+  """Static maximum overscan factor on lens distortion"""
+
+  sampling = Sampling.STATIC
+  canonical_name = "distortionOverscanMax"
+  section = "lens"
+  units = None
   
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
@@ -1297,6 +1305,7 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
+  lens_distortion_overscan_max: typing.Optional[numbers.Real] = DistortionOverscanMaximum()
   lens_firmware: typing.Optional[str] = LensFirmware()
   lens_make: typing.Optional[str] = LensMake()
   lens_model: typing.Optional[str] = LensModel()
@@ -1311,7 +1320,7 @@ class Clip(ParameterContainer):
   global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
-  lens_distortion_overscan: typing.Optional[typing.Tuple[Orientations]] = DistortionOverscan()
+  lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
   lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()

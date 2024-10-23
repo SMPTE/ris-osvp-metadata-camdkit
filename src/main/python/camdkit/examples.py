@@ -31,6 +31,7 @@ def get_complete_static_example():
   clip.duration = Fraction(1,25)
   clip.fdl_link = uuid.uuid4().urn
   clip.iso = 4000
+  clip.lens_distortion_overscan_max = 1.2
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14

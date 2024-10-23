@@ -44,6 +44,7 @@ class ModelTest(unittest.TestCase):
     clip.tracker_serial_number = "1234567890A"
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
+    clip.lens_distortion_overscan_max = 1.2
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
@@ -128,6 +129,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["serialNumber"], "132456")
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
+    self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
@@ -864,6 +866,20 @@ class ModelTest(unittest.TestCase):
     value = (1.0,)
     clip.lens_distortion_overscan = value
     self.assertTupleEqual(clip.lens_distortion_overscan, value)
+    
+  def test_lens_distortion_overscan_max(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_distortion_overscan_max)
+
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan_max = ""
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan_max = -1.0
+
+    value = 1.2
+    clip.lens_distortion_overscan_max = value
+    self.assertEqual(clip.lens_distortion_overscan_max, value)
     
   def test_lens_exposure_falloff(self):
     clip = Clip()
