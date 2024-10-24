@@ -352,6 +352,24 @@ Regular
 
 The parameter shall be a non-negative real number.
 
+### `distortionOverscanMax`
+
+#### Description
+
+Static maximum overscan factor on lens distortion
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a non-negative real number.
+
 ### `distortionShift`
 
 #### Description
@@ -774,13 +792,12 @@ Static
 
 The parameter shall be a real number in the range (0..360].
 
-### `streamId`
+### `sourceId`
 
 #### Description
 
-URN serving as unique identifier of the stream in which data is
-  being transported. This is most important in the case where a single
-  device is producing multiple streams of samples.
+URN serving as unique identifier of the source from which data is
+  being transported.
   
 
 #### Units
@@ -796,6 +813,28 @@ Regular
 The parameter shall be a UUID URN as specified in IETF RFC 4122.
     Only lowercase characters shall be used.
     Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+    
+
+### `sourceNumber`
+
+#### Description
+
+Number that identifies the index of the stream from a source from which
+  data is being transported. This is most important in the case where a source
+  is producing multiple streams of samples.
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Regular
+
+#### Constraints
+
+The parameter shall be a integer in the range (0..4,294,967,295].
     
 
 ### `frameRate`
@@ -1188,12 +1227,12 @@ Each component of each transform shall contain Real numbers.
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortion | distortionOverscan | distortionShift | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | perspectiveShift | rawEncoders | serialNumber | tStop | undistortion | protocol | relatedSampleIds | sampleId | shutterAngle | streamId | frameRate | mode | recordedTimestamp | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | | + | + | | + | + | + | + | + | | | + | | | | | | + | | | + | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | |
-| ARRI | + | | + | | | + | + | + | + | + | | | + | | | | | | | | | | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | |
-| Venice | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | | | + | + | | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | |
-| Canon | | | + | | | + | | | | + | | | + | | | | | | | | | | + | + | | | | | | | + | | | | | + | | | | | | | | | | | | | | | | | |
+| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortion | distortionOverscan | distortionOverscanMax | distortionShift | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | perspectiveShift | rawEncoders | serialNumber | tStop | undistortion | protocol | relatedSampleIds | sampleId | shutterAngle | sourceId | sourceNumber | frameRate | mode | recordedTimestamp | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | | + | + | | + | + | + | + | + | | | + | | | | | | | + | | | + | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
+| ARRI | + | | + | | | + | + | + | + | + | | | + | | | | | | | | | | | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
+| Venice | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | | | | + | + | | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
+| Canon | | | + | | | + | | | | + | | | + | | | | | | | | | | | + | + | | | | | | | + | | | | | + | | | | | | | | | | | | | | | | | | |
 ## Clip JSON Schema
 
 ```{
@@ -1370,6 +1409,11 @@ The following table indicates the camera parameters supported by each of the rea
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "distortionOverscanMax": {
+              "type": "number",
+              "minimum": 0.0,
+              "description": "Static maximum overscan factor on lens distortion"
+            },
             "firmwareVersion": {
               "type": "string",
               "minLength": 1,
@@ -1720,10 +1764,16 @@ The following table indicates the camera parameters supported by each of the rea
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
       "description": "URN serving as unique identifier of the sample in which data is being transported. "
     },
-    "streamId": {
+    "sourceId": {
       "type": "string",
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "description": "URN serving as unique identifier of the stream in which data is being transported. This is most important in the case where a single device is producing multiple streams of samples. "
+      "description": "URN serving as unique identifier of the source from which data is being transported. "
+    },
+    "sourceNumber": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Number that identifies the index of the stream from a source from which data is being transported. This is most important in the case where a source is producing multiple streams of samples. "
     },
     "timing": {
       "type": "object",

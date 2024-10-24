@@ -39,12 +39,13 @@
             <img src="img/Producer_Consumers.svg" />
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples <a href="#recommended">below</a>).</p>
-            <p>TODO note on transforms and INSERT diagram of coord systems and roation signs/orders</p>
-            <p>OpenTrackIO employs the <a href="pdf/OpenLensIO_v1.0.0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
+            <p>OpenTrackIO transforms employs a right-handed coordinate system where the Z axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.</p>
+            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v0_9_0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
+            <img class="img-inline" src="img/Coordinate_System.svg" /><img class="img-inline" src="img/Axis_Rotation.svg" /></span>
             
             <h2>Software resources</h2>
-            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repo includes examples for <a href="TODO-mosys-f4">generating</a> and <a href="TODO-steve-parser">parsing</a> data.</p>
-            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="TODO-james-parser">CamDKit</a> that demonstrates linkage.</p>
+            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repository includes examples for <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/main/python/camdkit/mosys" target="_blank">generating</a> and parsing data in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/python/parser" target="_blank">python</a> and <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">C++</a>.</p>
+            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">CamDKit</a> that demonstrates linkage.</p>
 
             <h2 id="recommended">OpenTrackIO sample</h2>
             <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
@@ -81,8 +82,9 @@
     &#34;name&#34;: &#34;OpenTrackIO&#34;,
     &#34;version&#34;: &#34;0.9.0&#34;
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:5a0ff236-d4e6-4216-8ec4-2ab28fd09651&#34;,
-  &#34;streamId&#34;: &#34;urn:uuid:cfbcbbcf-bb62-42f5-b8dc-85e6b37bb794&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a0f12ddd-75f4-4a16-9f9a-7901f73f3b24&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:ae3c3754-d1a1-400a-8f3a-fc9e05464752&#34;,
+  &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;frameRate&#34;: {
       &#34;num&#34;: 24000,
@@ -177,8 +179,9 @@
     &#34;name&#34;: &#34;OpenTrackIO&#34;,
     &#34;version&#34;: &#34;0.9.0&#34;
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:8b3e7d22-86d5-4143-8777-7be63dde1ba8&#34;,
-  &#34;streamId&#34;: &#34;urn:uuid:22b288ec-25c0-4186-86a1-b69c9a4d7fd1&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:ff60fd06-d4c8-458a-b720-5e86a7f519cf&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:b2741940-e04d-40e1-9f94-5f3361bf1716&#34;,
+  &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;frameRate&#34;: {
       &#34;num&#34;: 24000,
@@ -253,7 +256,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:72b91ed6-41df-4c3a-ab4d-902428dee95c&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:0348af7b-5410-4261-b8ee-854e1b249f15&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -262,6 +265,7 @@
       &#34;denom&#34;: 25
     },
     &#34;lens&#34;: {
+      &#34;distortionOverscanMax&#34;: 1.2,
       &#34;make&#34;: &#34;LensMaker&#34;,
       &#34;model&#34;: &#34;Model15&#34;,
       &#34;nominalFocalLength&#34;: 14,
@@ -350,11 +354,12 @@
     &#34;version&#34;: &#34;0.9.0&#34;
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:546f63ad-460c-4009-ba06-05afbc66855c&#34;,
-    &#34;urn:uuid:ef4e2612-7636-48e1-9443-5146caf6b479&#34;
+    &#34;urn:uuid:92d09c50-853c-4990-b080-2aa63c3cc3e9&#34;,
+    &#34;urn:uuid:5fc0d366-1d5b-4809-acb8-03b606f6507d&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:6c364ea5-063d-4b63-82eb-33f14b739bee&#34;,
-  &#34;streamId&#34;: &#34;urn:uuid:db1a2a6b-62ac-4018-8777-7debfb67c9fd&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:13231dd5-8f11-4c6a-9a8c-bddc8f0cbe40&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:9770258b-abdd-4399-a115-d868524027f9&#34;,
+  &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;frameRate&#34;: {
       &#34;num&#34;: 24000,
@@ -475,12 +480,10 @@
             <h2>Transport recommendations</h2>
             <p>It is recommended that OpenTrackIO samples be encapsulated in a network packet for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
             <img src="img/RTP_Transport.svg">
-            <p>The RTP header should be populated as follows:</p>
-            <p>TODO</p>
             <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
             <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO producer.</p>
-            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>streamIds</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
-
+            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>sourceIds / sourceNumbers</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
+            <p>Specification and reference examples of session and transport will be included in future releases.</p>
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
             <div class="content">
@@ -565,6 +568,8 @@
   </td><td>None</td><td>The radial and tangential coefficients shall each be real numbers.</td></tr>
                     
                     <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
+                    
+                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
                     
                     <tr><td>distortionShift</td><td>lens</td><td>Regular</td><td>Shift in x and y of the centre of distortion of the virtual camera
   </td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
@@ -668,12 +673,17 @@
   by 360 times the capture frame rate.
   </td><td>degree</td><td>The parameter shall be a real number in the range (0..360].</td></tr>
                     
-                    <tr><td>streamId</td><td>None</td><td>Regular</td><td>URN serving as unique identifier of the stream in which data is
-  being transported. This is most important in the case where a single
-  device is producing multiple streams of samples.
+                    <tr><td>sourceId</td><td>None</td><td>Regular</td><td>URN serving as unique identifier of the source from which data is
+  being transported.
   </td><td>None</td><td>The parameter shall be a UUID URN as specified in IETF RFC 4122.
     Only lowercase characters shall be used.
     Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+    </td></tr>
+                    
+                    <tr><td>sourceNumber</td><td>None</td><td>Regular</td><td>Number that identifies the index of the stream from a source from which
+  data is being transported. This is most important in the case where a source
+  is producing multiple streams of samples.
+  </td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].
     </td></tr>
                     
                     <tr><td>frameRate</td><td>timing</td><td>Regular</td><td>Sample frame rate as a rational number. Drop frame rates such as
@@ -986,6 +996,11 @@
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
           &#34;properties&#34;: {
+            &#34;distortionOverscanMax&#34;: {
+              &#34;type&#34;: &#34;number&#34;,
+              &#34;minimum&#34;: 0.0,
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion&#34;
+            },
             &#34;firmwareVersion&#34;: {
               &#34;type&#34;: &#34;string&#34;,
               &#34;minLength&#34;: 1,
@@ -1336,10 +1351,16 @@
       &#34;pattern&#34;: &#34;^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&#34;,
       &#34;description&#34;: &#34;URN serving as unique identifier of the sample in which data is being transported. &#34;
     },
-    &#34;streamId&#34;: {
+    &#34;sourceId&#34;: {
       &#34;type&#34;: &#34;string&#34;,
       &#34;pattern&#34;: &#34;^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&#34;,
-      &#34;description&#34;: &#34;URN serving as unique identifier of the stream in which data is being transported. This is most important in the case where a single device is producing multiple streams of samples. &#34;
+      &#34;description&#34;: &#34;URN serving as unique identifier of the source from which data is being transported. &#34;
+    },
+    &#34;sourceNumber&#34;: {
+      &#34;type&#34;: &#34;integer&#34;,
+      &#34;minimum&#34;: 0,
+      &#34;maximum&#34;: 4294967295,
+      &#34;description&#34;: &#34;Number that identifies the index of the stream from a source from which data is being transported. This is most important in the case where a source is producing multiple streams of samples. &#34;
     },
     &#34;timing&#34;: {
       &#34;type&#34;: &#34;object&#34;,
@@ -1694,8 +1715,8 @@
             <h2>Future additions</h2>
             <p>In the future RIS intends to add support for:</p>
             <ul>
-                <li>Improved session and transport details and reference examples</li>
-                <li>SMPTE 2110 -41 and -42</li>
+                <li>Improved session and transport specifications and reference examples</li>
+                <li>SMPTE 2110 -41 and -42 integration</li>
                 <li>Anamorphic lens mathematics and enhanced vignette model (in OpenLensIO)</li>
                 <li>Device discovery</li>
             </ul>
@@ -1704,6 +1725,7 @@
     <div class="footer">
         <div class="inner">
             <p><strong>Authored by SMPTE RIS OSVP</strong></p>
+            <img src="img/RISLogoFinalwhiteColor.png" class="footerLogo" />
             <p>The OpenTrackIO documentation is generated by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a></p>
             <p>Lead author: <a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</p>
         </div>

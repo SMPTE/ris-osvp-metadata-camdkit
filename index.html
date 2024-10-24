@@ -1290,17 +1290,26 @@ distortion (k1-N) and the tangential distortion (p1-N).</p>
 <p>Regular</p>
 <h4 id="constraints-15" tabindex="-1"><a class="anchor" href="#constraints-15" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a non-negative real number.</p>
-<h3 id="distortionshift" tabindex="-1"><a class="anchor" href="#distortionshift" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionShift</code></h3>
+<h3 id="distortionoverscanmax" tabindex="-1"><a class="anchor" href="#distortionoverscanmax" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionOverscanMax</code></h3>
 <h4 id="description-16" tabindex="-1"><a class="anchor" href="#description-16" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Shift in x and y of the centre of distortion of the virtual camera</p>
+<p>Static maximum overscan factor on lens distortion</p>
 <h4 id="units-16" tabindex="-1"><a class="anchor" href="#units-16" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
+<p>n/a</p>
 <h4 id="sampling-16" tabindex="-1"><a class="anchor" href="#sampling-16" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-16" tabindex="-1"><a class="anchor" href="#constraints-16" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a non-negative real number.</p>
+<h3 id="distortionshift" tabindex="-1"><a class="anchor" href="#distortionshift" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionShift</code></h3>
+<h4 id="description-17" tabindex="-1"><a class="anchor" href="#description-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Shift in x and y of the centre of distortion of the virtual camera</p>
+<h4 id="units-17" tabindex="-1"><a class="anchor" href="#units-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>millimeter</p>
+<h4 id="sampling-17" tabindex="-1"><a class="anchor" href="#sampling-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-17" tabindex="-1"><a class="anchor" href="#constraints-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>X and Y centre shift shall each be real numbers.</p>
 <h3 id="encoders" tabindex="-1"><a class="anchor" href="#encoders" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>encoders</code></h3>
-<h4 id="description-17" tabindex="-1"><a class="anchor" href="#description-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-18" tabindex="-1"><a class="anchor" href="#description-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Normalised real numbers (0-1) for focus, iris and zoom.
 Encoders are represented in this way (as opposed to raw integer
 values) to ensure values remain independent of encoder resolution,
@@ -1311,87 +1320,77 @@ Value should be provided in the following directions (if known):
 Focus:   0=infinite     1=closest
 Iris:    0=open         1=closed
 Zoom:    0=wide angle   1=telephoto</p>
-<h4 id="units-17" tabindex="-1"><a class="anchor" href="#units-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-18" tabindex="-1"><a class="anchor" href="#units-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
-<h4 id="sampling-17" tabindex="-1"><a class="anchor" href="#sampling-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-18" tabindex="-1"><a class="anchor" href="#sampling-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-17" tabindex="-1"><a class="anchor" href="#constraints-17" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-18" tabindex="-1"><a class="anchor" href="#constraints-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <pre><code>The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
 </code></pre>
 <h3 id="entrancepupiloffset" tabindex="-1"><a class="anchor" href="#entrancepupiloffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>entrancePupilOffset</code></h3>
-<h4 id="description-18" tabindex="-1"><a class="anchor" href="#description-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-19" tabindex="-1"><a class="anchor" href="#description-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Offset of the entrance pupil relative to the nominal imaging plane
 (positive if the entrance pupil is located on the side of the nominal
 imaging plane that is towards the object, and negative otherwise).
 Measured in meters as in a render engine it is often applied in the
 virtual camera's transform chain.</p>
-<h4 id="units-18" tabindex="-1"><a class="anchor" href="#units-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>meter</p>
-<h4 id="sampling-18" tabindex="-1"><a class="anchor" href="#sampling-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-18" tabindex="-1"><a class="anchor" href="#constraints-18" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number.</p>
-<h3 id="exposurefalloff" tabindex="-1"><a class="anchor" href="#exposurefalloff" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>exposureFalloff</code></h3>
-<h4 id="description-19" tabindex="-1"><a class="anchor" href="#description-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Coefficients for calculating the exposure fall-off (vignetting) of
-a lens</p>
 <h4 id="units-19" tabindex="-1"><a class="anchor" href="#units-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
+<p>meter</p>
 <h4 id="sampling-19" tabindex="-1"><a class="anchor" href="#sampling-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-19" tabindex="-1"><a class="anchor" href="#constraints-19" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The coefficients shall each be real numbers.</p>
-<h3 id="fstop" tabindex="-1"><a class="anchor" href="#fstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fStop</code></h3>
+<p>The parameter shall be a real number.</p>
+<h3 id="exposurefalloff" tabindex="-1"><a class="anchor" href="#exposurefalloff" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>exposureFalloff</code></h3>
 <h4 id="description-20" tabindex="-1"><a class="anchor" href="#description-20" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>The linear f-number of the lens, equal to the focal length divided
-by the diameter of the entrance pupil.</p>
+<p>Coefficients for calculating the exposure fall-off (vignetting) of
+a lens</p>
 <h4 id="units-20" tabindex="-1"><a class="anchor" href="#units-20" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-20" tabindex="-1"><a class="anchor" href="#sampling-20" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-20" tabindex="-1"><a class="anchor" href="#constraints-20" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
-<h3 id="firmwareversion-1" tabindex="-1"><a class="anchor" href="#firmwareversion-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>firmwareVersion</code></h3>
+<p>The coefficients shall each be real numbers.</p>
+<h3 id="fstop" tabindex="-1"><a class="anchor" href="#fstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fStop</code></h3>
 <h4 id="description-21" tabindex="-1"><a class="anchor" href="#description-21" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string identifying lens firmware version</p>
+<p>The linear f-number of the lens, equal to the focal length divided
+by the diameter of the entrance pupil.</p>
 <h4 id="units-21" tabindex="-1"><a class="anchor" href="#units-21" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-21" tabindex="-1"><a class="anchor" href="#sampling-21" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-21" tabindex="-1"><a class="anchor" href="#constraints-21" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a non-negative real number.</p>
+<h3 id="firmwareversion-1" tabindex="-1"><a class="anchor" href="#firmwareversion-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>firmwareVersion</code></h3>
+<h4 id="description-22" tabindex="-1"><a class="anchor" href="#description-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Non-blank string identifying lens firmware version</p>
+<h4 id="units-22" tabindex="-1"><a class="anchor" href="#units-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-22" tabindex="-1"><a class="anchor" href="#sampling-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Static</p>
+<h4 id="constraints-22" tabindex="-1"><a class="anchor" href="#constraints-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
 <h3 id="focallength" tabindex="-1"><a class="anchor" href="#focallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focalLength</code></h3>
-<h4 id="description-22" tabindex="-1"><a class="anchor" href="#description-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focal length of the lens.</p>
-<h4 id="units-22" tabindex="-1"><a class="anchor" href="#units-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
-<h4 id="sampling-22" tabindex="-1"><a class="anchor" href="#sampling-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-22" tabindex="-1"><a class="anchor" href="#constraints-22" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
-<h3 id="focusdistance" tabindex="-1"><a class="anchor" href="#focusdistance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focusDistance</code></h3>
 <h4 id="description-23" tabindex="-1"><a class="anchor" href="#description-23" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focus distance/position of the lens</p>
+<p>Focal length of the lens.</p>
 <h4 id="units-23" tabindex="-1"><a class="anchor" href="#units-23" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>meter</p>
+<p>millimeter</p>
 <h4 id="sampling-23" tabindex="-1"><a class="anchor" href="#sampling-23" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-23" tabindex="-1"><a class="anchor" href="#constraints-23" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a non-negative real number.</p>
-<h3 id="make-1" tabindex="-1"><a class="anchor" href="#make-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>make</code></h3>
+<h3 id="focusdistance" tabindex="-1"><a class="anchor" href="#focusdistance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focusDistance</code></h3>
 <h4 id="description-24" tabindex="-1"><a class="anchor" href="#description-24" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string naming lens manufacturer</p>
+<p>Focus distance/position of the lens</p>
 <h4 id="units-24" tabindex="-1"><a class="anchor" href="#units-24" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
+<p>meter</p>
 <h4 id="sampling-24" tabindex="-1"><a class="anchor" href="#sampling-24" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-24" tabindex="-1"><a class="anchor" href="#constraints-24" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a Unicode string betwee 0 and 1023
-codepoints.</p>
-<h3 id="model-1" tabindex="-1"><a class="anchor" href="#model-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>model</code></h3>
+<p>The parameter shall be a non-negative real number.</p>
+<h3 id="make-1" tabindex="-1"><a class="anchor" href="#make-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>make</code></h3>
 <h4 id="description-25" tabindex="-1"><a class="anchor" href="#description-25" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string identifying lens model</p>
+<p>Non-blank string naming lens manufacturer</p>
 <h4 id="units-25" tabindex="-1"><a class="anchor" href="#units-25" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-25" tabindex="-1"><a class="anchor" href="#sampling-25" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1399,191 +1398,211 @@ codepoints.</p>
 <h4 id="constraints-25" tabindex="-1"><a class="anchor" href="#constraints-25" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
-<h3 id="nominalfocallength" tabindex="-1"><a class="anchor" href="#nominalfocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>nominalFocalLength</code></h3>
+<h3 id="model-1" tabindex="-1"><a class="anchor" href="#model-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>model</code></h3>
 <h4 id="description-26" tabindex="-1"><a class="anchor" href="#description-26" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Nominal focal length of the lens. The number printed on the side
-of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.</p>
+<p>Non-blank string identifying lens model</p>
 <h4 id="units-26" tabindex="-1"><a class="anchor" href="#units-26" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
+<p>n/a</p>
 <h4 id="sampling-26" tabindex="-1"><a class="anchor" href="#sampling-26" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Static</p>
 <h4 id="constraints-26" tabindex="-1"><a class="anchor" href="#constraints-26" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
-<h3 id="perspectiveshift" tabindex="-1"><a class="anchor" href="#perspectiveshift" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>perspectiveShift</code></h3>
+<p>The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.</p>
+<h3 id="nominalfocallength" tabindex="-1"><a class="anchor" href="#nominalfocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>nominalFocalLength</code></h3>
 <h4 id="description-27" tabindex="-1"><a class="anchor" href="#description-27" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Shift in x and y of the centre of perspective projection of the
-virtual camera</p>
+<p>Nominal focal length of the lens. The number printed on the side
+of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.</p>
 <h4 id="units-27" tabindex="-1"><a class="anchor" href="#units-27" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>millimeter</p>
 <h4 id="sampling-27" tabindex="-1"><a class="anchor" href="#sampling-27" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-27" tabindex="-1"><a class="anchor" href="#constraints-27" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>X and Y perspective shift shall each be real numbers.</p>
-<h3 id="rawencoders" tabindex="-1"><a class="anchor" href="#rawencoders" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>rawEncoders</code></h3>
+<p>The parameter shall be a non-negative real number.</p>
+<h3 id="perspectiveshift" tabindex="-1"><a class="anchor" href="#perspectiveshift" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>perspectiveShift</code></h3>
 <h4 id="description-28" tabindex="-1"><a class="anchor" href="#description-28" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Raw encoder values for focus, iris and zoom.
-These values are dependent on encoder resolution and before any
-homing / ranging has taken place.</p>
+<p>Shift in x and y of the centre of perspective projection of the
+virtual camera</p>
 <h4 id="units-28" tabindex="-1"><a class="anchor" href="#units-28" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
+<p>millimeter</p>
 <h4 id="sampling-28" tabindex="-1"><a class="anchor" href="#sampling-28" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-28" tabindex="-1"><a class="anchor" href="#constraints-28" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<pre><code>The parameter shall contain at least one integer value for the FIZ encoders.
-</code></pre>
-<h3 id="serialnumber-1" tabindex="-1"><a class="anchor" href="#serialnumber-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>serialNumber</code></h3>
+<p>X and Y perspective shift shall each be real numbers.</p>
+<h3 id="rawencoders" tabindex="-1"><a class="anchor" href="#rawencoders" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>rawEncoders</code></h3>
 <h4 id="description-29" tabindex="-1"><a class="anchor" href="#description-29" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string uniquely identifying the lens</p>
+<p>Raw encoder values for focus, iris and zoom.
+These values are dependent on encoder resolution and before any
+homing / ranging has taken place.</p>
 <h4 id="units-29" tabindex="-1"><a class="anchor" href="#units-29" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-29" tabindex="-1"><a class="anchor" href="#sampling-29" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-29" tabindex="-1"><a class="anchor" href="#constraints-29" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a Unicode string betwee 0 and 1023
-codepoints.</p>
-<h3 id="tstop" tabindex="-1"><a class="anchor" href="#tstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tStop</code></h3>
+<pre><code>The parameter shall contain at least one integer value for the FIZ encoders.
+</code></pre>
+<h3 id="serialnumber-1" tabindex="-1"><a class="anchor" href="#serialnumber-1" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>serialNumber</code></h3>
 <h4 id="description-30" tabindex="-1"><a class="anchor" href="#description-30" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Linear t-number of the lens, equal to the F-number of the lens
-divided by the square root of the transmittance of the lens.</p>
+<p>Non-blank string uniquely identifying the lens</p>
 <h4 id="units-30" tabindex="-1"><a class="anchor" href="#units-30" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-30" tabindex="-1"><a class="anchor" href="#sampling-30" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-30" tabindex="-1"><a class="anchor" href="#constraints-30" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
-<h3 id="undistortion" tabindex="-1"><a class="anchor" href="#undistortion" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>undistortion</code></h3>
+<p>The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.</p>
+<h3 id="tstop" tabindex="-1"><a class="anchor" href="#tstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tStop</code></h3>
 <h4 id="description-31" tabindex="-1"><a class="anchor" href="#description-31" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Coefficients for calculating the undistortion characteristics of a
-lens comprising radial distortion coefficients of the spherical
-distortion (k1-N) and the tangential distortion (p1-N).</p>
+<p>Linear t-number of the lens, equal to the F-number of the lens
+divided by the square root of the transmittance of the lens.</p>
 <h4 id="units-31" tabindex="-1"><a class="anchor" href="#units-31" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-31" tabindex="-1"><a class="anchor" href="#sampling-31" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-31" tabindex="-1"><a class="anchor" href="#constraints-31" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The radial and tangential coefficients shall each be real numbers.</p>
-<h3 id="protocol" tabindex="-1"><a class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>protocol</code></h3>
+<p>The parameter shall be a non-negative real number.</p>
+<h3 id="undistortion" tabindex="-1"><a class="anchor" href="#undistortion" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>undistortion</code></h3>
 <h4 id="description-32" tabindex="-1"><a class="anchor" href="#description-32" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Name of the protocol in which the sample is being employed, and
-version of that protocol</p>
+<p>Coefficients for calculating the undistortion characteristics of a
+lens comprising radial distortion coefficients of the spherical
+distortion (k1-N) and the tangential distortion (p1-N).</p>
 <h4 id="units-32" tabindex="-1"><a class="anchor" href="#units-32" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-32" tabindex="-1"><a class="anchor" href="#sampling-32" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-32" tabindex="-1"><a class="anchor" href="#constraints-32" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>Protocol name is nonblank string; protocol version is basic x.y.z
-semantic versioning string</p>
-<h3 id="relatedsampleids" tabindex="-1"><a class="anchor" href="#relatedsampleids" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>relatedSampleIds</code></h3>
+<p>The radial and tangential coefficients shall each be real numbers.</p>
+<h3 id="protocol" tabindex="-1"><a class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>protocol</code></h3>
 <h4 id="description-33" tabindex="-1"><a class="anchor" href="#description-33" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>List of sampleId properties of samples related to this sample. The
-existence of a sample with a given sampleId is not guaranteed.</p>
+<p>Name of the protocol in which the sample is being employed, and
+version of that protocol</p>
 <h4 id="units-33" tabindex="-1"><a class="anchor" href="#units-33" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-33" tabindex="-1"><a class="anchor" href="#sampling-33" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-33" tabindex="-1"><a class="anchor" href="#constraints-33" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a tuple of items of the class itemClass.
-The tuple can be empty</p>
-<h3 id="sampleid" tabindex="-1"><a class="anchor" href="#sampleid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sampleId</code></h3>
+<p>Protocol name is nonblank string; protocol version is basic x.y.z
+semantic versioning string</p>
+<h3 id="relatedsampleids" tabindex="-1"><a class="anchor" href="#relatedsampleids" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>relatedSampleIds</code></h3>
 <h4 id="description-34" tabindex="-1"><a class="anchor" href="#description-34" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>URN serving as unique identifier of the sample in which data is
-being transported.</p>
+<p>List of sampleId properties of samples related to this sample. The
+existence of a sample with a given sampleId is not guaranteed.</p>
 <h4 id="units-34" tabindex="-1"><a class="anchor" href="#units-34" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-34" tabindex="-1"><a class="anchor" href="#sampling-34" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-34" tabindex="-1"><a class="anchor" href="#constraints-34" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a tuple of items of the class itemClass.
+The tuple can be empty</p>
+<h3 id="sampleid" tabindex="-1"><a class="anchor" href="#sampleid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sampleId</code></h3>
+<h4 id="description-35" tabindex="-1"><a class="anchor" href="#description-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>URN serving as unique identifier of the sample in which data is
+being transported.</p>
+<h4 id="units-35" tabindex="-1"><a class="anchor" href="#units-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-35" tabindex="-1"><a class="anchor" href="#sampling-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-35" tabindex="-1"><a class="anchor" href="#constraints-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
 Only lowercase characters shall be used.
 Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
 <h3 id="shutterangle" tabindex="-1"><a class="anchor" href="#shutterangle" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>shutterAngle</code></h3>
-<h4 id="description-35" tabindex="-1"><a class="anchor" href="#description-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-36" tabindex="-1"><a class="anchor" href="#description-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Shutter speed as a fraction of the capture frame rate. The shutter
 speed (in units of 1/s) is equal to the value of the parameter divided
 by 360 times the capture frame rate.</p>
-<h4 id="units-35" tabindex="-1"><a class="anchor" href="#units-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>degree</p>
-<h4 id="sampling-35" tabindex="-1"><a class="anchor" href="#sampling-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
-<h4 id="constraints-35" tabindex="-1"><a class="anchor" href="#constraints-35" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number in the range (0..360].</p>
-<h3 id="streamid" tabindex="-1"><a class="anchor" href="#streamid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>streamId</code></h3>
-<h4 id="description-36" tabindex="-1"><a class="anchor" href="#description-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>URN serving as unique identifier of the stream in which data is
-being transported. This is most important in the case where a single
-device is producing multiple streams of samples.</p>
 <h4 id="units-36" tabindex="-1"><a class="anchor" href="#units-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
+<p>degree</p>
 <h4 id="sampling-36" tabindex="-1"><a class="anchor" href="#sampling-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-36" tabindex="-1"><a class="anchor" href="#constraints-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
-Only lowercase characters shall be used.
-Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
-<h3 id="framerate" tabindex="-1"><a class="anchor" href="#framerate" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>frameRate</code></h3>
+<p>The parameter shall be a real number in the range (0..360].</p>
+<h3 id="sourceid" tabindex="-1"><a class="anchor" href="#sourceid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceId</code></h3>
 <h4 id="description-37" tabindex="-1"><a class="anchor" href="#description-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Sample frame rate as a rational number. Drop frame rates such as
-29.97 should be represented as e.g. 30000/1001. In a variable rate
-system this should is estimated from the last sample delta time.</p>
+<p>URN serving as unique identifier of the source from which data is
+being transported.</p>
 <h4 id="units-37" tabindex="-1"><a class="anchor" href="#units-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-37" tabindex="-1"><a class="anchor" href="#sampling-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-37" tabindex="-1"><a class="anchor" href="#constraints-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a rational number whose numerator
-is in the range [0..2,147,483,647] and denominator in the range
-(0..4,294,967,295].</p>
-<h3 id="mode" tabindex="-1"><a class="anchor" href="#mode" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>mode</code></h3>
+<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
+Only lowercase characters shall be used.
+Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
+<h3 id="sourcenumber" tabindex="-1"><a class="anchor" href="#sourcenumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceNumber</code></h3>
 <h4 id="description-38" tabindex="-1"><a class="anchor" href="#description-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Enumerated value indicating whether the sample transport mechanism
-provides inherent ('external') timing, or whether the transport
-mechanism lacks inherent timing and so the sample must contain a PTP
-timestamp itself ('internal') to carry timing information.</p>
+<p>Number that identifies the index of the stream from a source from which
+data is being transported. This is most important in the case where a source
+is producing multiple streams of samples.</p>
 <h4 id="units-38" tabindex="-1"><a class="anchor" href="#units-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-38" tabindex="-1"><a class="anchor" href="#sampling-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-38" tabindex="-1"><a class="anchor" href="#constraints-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a integer in the range (0..4,294,967,295].</p>
+<h3 id="framerate" tabindex="-1"><a class="anchor" href="#framerate" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>frameRate</code></h3>
+<h4 id="description-39" tabindex="-1"><a class="anchor" href="#description-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Sample frame rate as a rational number. Drop frame rates such as
+29.97 should be represented as e.g. 30000/1001. In a variable rate
+system this should is estimated from the last sample delta time.</p>
+<h4 id="units-39" tabindex="-1"><a class="anchor" href="#units-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-39" tabindex="-1"><a class="anchor" href="#sampling-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-39" tabindex="-1"><a class="anchor" href="#constraints-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a rational number whose numerator
+is in the range [0..2,147,483,647] and denominator in the range
+(0..4,294,967,295].</p>
+<h3 id="mode" tabindex="-1"><a class="anchor" href="#mode" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>mode</code></h3>
+<h4 id="description-40" tabindex="-1"><a class="anchor" href="#description-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Enumerated value indicating whether the sample transport mechanism
+provides inherent ('external') timing, or whether the transport
+mechanism lacks inherent timing and so the sample must contain a PTP
+timestamp itself ('internal') to carry timing information.</p>
+<h4 id="units-40" tabindex="-1"><a class="anchor" href="#units-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-40" tabindex="-1"><a class="anchor" href="#sampling-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-40" tabindex="-1"><a class="anchor" href="#constraints-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be one of the allowed values.</p>
 <h3 id="recordedtimestamp" tabindex="-1"><a class="anchor" href="#recordedtimestamp" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>recordedTimestamp</code></h3>
-<h4 id="description-39" tabindex="-1"><a class="anchor" href="#description-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-41" tabindex="-1"><a class="anchor" href="#description-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>PTP timestamp of the data recording instant, provided for convenience
 during playback of e.g. pre-recorded tracking data. The timestamp
 comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
 integer (nanoseconds), and an optional 32-bit unsigned integer
 (attoseconds)</p>
-<h4 id="units-39" tabindex="-1"><a class="anchor" href="#units-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-41" tabindex="-1"><a class="anchor" href="#units-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>second</p>
-<h4 id="sampling-39" tabindex="-1"><a class="anchor" href="#sampling-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-41" tabindex="-1"><a class="anchor" href="#sampling-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-39" tabindex="-1"><a class="anchor" href="#constraints-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-41" tabindex="-1"><a class="anchor" href="#constraints-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall contain valid number of seconds, nanoseconds
 and optionally attoseconds elapsed since the start of the epoch.</p>
 <h3 id="sampletimestamp" tabindex="-1"><a class="anchor" href="#sampletimestamp" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sampleTimestamp</code></h3>
-<h4 id="description-40" tabindex="-1"><a class="anchor" href="#description-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-42" tabindex="-1"><a class="anchor" href="#description-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>PTP timestamp of the data capture instant. Note this may differ
 from the packet's transmission PTP timestamp. The timestamp
 comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
 integer (nanoseconds), and an optional 32-bit unsigned integer
 (attoseconds)</p>
-<h4 id="units-40" tabindex="-1"><a class="anchor" href="#units-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-42" tabindex="-1"><a class="anchor" href="#units-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>second</p>
-<h4 id="sampling-40" tabindex="-1"><a class="anchor" href="#sampling-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-42" tabindex="-1"><a class="anchor" href="#sampling-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-40" tabindex="-1"><a class="anchor" href="#constraints-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-42" tabindex="-1"><a class="anchor" href="#constraints-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall contain valid number of seconds, nanoseconds
 and optionally attoseconds elapsed since the start of the epoch.</p>
 <h3 id="sequencenumber" tabindex="-1"><a class="anchor" href="#sequencenumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sequenceNumber</code></h3>
-<h4 id="description-41" tabindex="-1"><a class="anchor" href="#description-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-43" tabindex="-1"><a class="anchor" href="#description-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Integer incrementing with each sample.</p>
-<h4 id="units-41" tabindex="-1"><a class="anchor" href="#units-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-43" tabindex="-1"><a class="anchor" href="#units-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
-<h4 id="sampling-41" tabindex="-1"><a class="anchor" href="#sampling-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-43" tabindex="-1"><a class="anchor" href="#sampling-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-41" tabindex="-1"><a class="anchor" href="#constraints-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-43" tabindex="-1"><a class="anchor" href="#constraints-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a integer in the range (0..4,294,967,295].</p>
 <h3 id="synchronization" tabindex="-1"><a class="anchor" href="#synchronization" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>synchronization</code></h3>
-<h4 id="description-42" tabindex="-1"><a class="anchor" href="#description-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-44" tabindex="-1"><a class="anchor" href="#description-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Object describing how the tracking device is synchronized for this
 sample.</p>
 <p>frequency: The frequency of the synchronisation. This may differ from
@@ -1612,15 +1631,15 @@ triggering the capture of tracking samples</li>
 <li>"ptp": The tracking device is locked to a PTP master</li>
 <li>"ntp": The tracking device is locked to an NTP server</li>
 </ul>
-<h4 id="units-42" tabindex="-1"><a class="anchor" href="#units-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-44" tabindex="-1"><a class="anchor" href="#units-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
-<h4 id="sampling-42" tabindex="-1"><a class="anchor" href="#sampling-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-44" tabindex="-1"><a class="anchor" href="#sampling-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-42" tabindex="-1"><a class="anchor" href="#constraints-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-44" tabindex="-1"><a class="anchor" href="#constraints-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <pre><code>The parameter shall contain the required valid fields.
 </code></pre>
 <h3 id="timecode" tabindex="-1"><a class="anchor" href="#timecode" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>timecode</code></h3>
-<h4 id="description-43" tabindex="-1"><a class="anchor" href="#description-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-45" tabindex="-1"><a class="anchor" href="#description-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>SMPTE timecode of the sample. Timecode is a standard for labeling
 individual frames of data in media systems and is useful for
 inter-frame synchronization.</p>
@@ -1628,36 +1647,16 @@ inter-frame synchronization.</p>
 <li>format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.</li>
 <li>format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.</li>
 </ul>
-<h4 id="units-43" tabindex="-1"><a class="anchor" href="#units-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
-<h4 id="sampling-43" tabindex="-1"><a class="anchor" href="#sampling-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-43" tabindex="-1"><a class="anchor" href="#constraints-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall contain a valid format and hours, minutes,
-seconds and frames with appropriate min/max values.</p>
-<h3 id="firmwareversion-2" tabindex="-1"><a class="anchor" href="#firmwareversion-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>firmwareVersion</code></h3>
-<h4 id="description-44" tabindex="-1"><a class="anchor" href="#description-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string identifying tracking device firmware version</p>
-<h4 id="units-44" tabindex="-1"><a class="anchor" href="#units-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>n/a</p>
-<h4 id="sampling-44" tabindex="-1"><a class="anchor" href="#sampling-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
-<h4 id="constraints-44" tabindex="-1"><a class="anchor" href="#constraints-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a Unicode string betwee 0 and 1023
-codepoints.</p>
-<h3 id="make-2" tabindex="-1"><a class="anchor" href="#make-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>make</code></h3>
-<h4 id="description-45" tabindex="-1"><a class="anchor" href="#description-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string naming tracking device manufacturer</p>
 <h4 id="units-45" tabindex="-1"><a class="anchor" href="#units-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-45" tabindex="-1"><a class="anchor" href="#sampling-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-45" tabindex="-1"><a class="anchor" href="#constraints-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a Unicode string betwee 0 and 1023
-codepoints.</p>
-<h3 id="model-2" tabindex="-1"><a class="anchor" href="#model-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>model</code></h3>
+<p>The parameter shall contain a valid format and hours, minutes,
+seconds and frames with appropriate min/max values.</p>
+<h3 id="firmwareversion-2" tabindex="-1"><a class="anchor" href="#firmwareversion-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>firmwareVersion</code></h3>
 <h4 id="description-46" tabindex="-1"><a class="anchor" href="#description-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string identifying tracking device model</p>
+<p>Non-blank string identifying tracking device firmware version</p>
 <h4 id="units-46" tabindex="-1"><a class="anchor" href="#units-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-46" tabindex="-1"><a class="anchor" href="#sampling-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1665,57 +1664,77 @@ codepoints.</p>
 <h4 id="constraints-46" tabindex="-1"><a class="anchor" href="#constraints-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
-<h3 id="notes" tabindex="-1"><a class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>notes</code></h3>
+<h3 id="make-2" tabindex="-1"><a class="anchor" href="#make-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>make</code></h3>
 <h4 id="description-47" tabindex="-1"><a class="anchor" href="#description-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string containing notes about tracking system</p>
+<p>Non-blank string naming tracking device manufacturer</p>
 <h4 id="units-47" tabindex="-1"><a class="anchor" href="#units-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-47" tabindex="-1"><a class="anchor" href="#sampling-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-47" tabindex="-1"><a class="anchor" href="#constraints-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
-<h3 id="recording" tabindex="-1"><a class="anchor" href="#recording" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>recording</code></h3>
+<h3 id="model-2" tabindex="-1"><a class="anchor" href="#model-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>model</code></h3>
 <h4 id="description-48" tabindex="-1"><a class="anchor" href="#description-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Boolean indicating whether tracking system is recording data</p>
+<p>Non-blank string identifying tracking device model</p>
 <h4 id="units-48" tabindex="-1"><a class="anchor" href="#units-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-48" tabindex="-1"><a class="anchor" href="#sampling-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-48" tabindex="-1"><a class="anchor" href="#constraints-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a boolean.</p>
-<h3 id="serialnumber-2" tabindex="-1"><a class="anchor" href="#serialnumber-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>serialNumber</code></h3>
+<p>The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.</p>
+<h3 id="notes" tabindex="-1"><a class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>notes</code></h3>
 <h4 id="description-49" tabindex="-1"><a class="anchor" href="#description-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string uniquely identifying the tracking device</p>
+<p>Non-blank string containing notes about tracking system</p>
 <h4 id="units-49" tabindex="-1"><a class="anchor" href="#units-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-49" tabindex="-1"><a class="anchor" href="#sampling-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Static</p>
+<p>Regular</p>
 <h4 id="constraints-49" tabindex="-1"><a class="anchor" href="#constraints-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
-<h3 id="slate" tabindex="-1"><a class="anchor" href="#slate" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>slate</code></h3>
+<h3 id="recording" tabindex="-1"><a class="anchor" href="#recording" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>recording</code></h3>
 <h4 id="description-50" tabindex="-1"><a class="anchor" href="#description-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string describing the recording slate</p>
+<p>Boolean indicating whether tracking system is recording data</p>
 <h4 id="units-50" tabindex="-1"><a class="anchor" href="#units-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-50" tabindex="-1"><a class="anchor" href="#sampling-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-50" tabindex="-1"><a class="anchor" href="#constraints-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a Unicode string betwee 0 and 1023
-codepoints.</p>
-<h3 id="status" tabindex="-1"><a class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>status</code></h3>
+<p>The parameter shall be a boolean.</p>
+<h3 id="serialnumber-2" tabindex="-1"><a class="anchor" href="#serialnumber-2" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>serialNumber</code></h3>
 <h4 id="description-51" tabindex="-1"><a class="anchor" href="#description-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Non-blank string describing status of tracking system</p>
+<p>Non-blank string uniquely identifying the tracking device</p>
 <h4 id="units-51" tabindex="-1"><a class="anchor" href="#units-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-51" tabindex="-1"><a class="anchor" href="#sampling-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
+<p>Static</p>
 <h4 id="constraints-51" tabindex="-1"><a class="anchor" href="#constraints-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a Unicode string betwee 0 and 1023
 codepoints.</p>
-<h3 id="transforms" tabindex="-1"><a class="anchor" href="#transforms" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>transforms</code></h3>
+<h3 id="slate" tabindex="-1"><a class="anchor" href="#slate" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>slate</code></h3>
 <h4 id="description-52" tabindex="-1"><a class="anchor" href="#description-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Non-blank string describing the recording slate</p>
+<h4 id="units-52" tabindex="-1"><a class="anchor" href="#units-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-52" tabindex="-1"><a class="anchor" href="#sampling-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-52" tabindex="-1"><a class="anchor" href="#constraints-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.</p>
+<h3 id="status" tabindex="-1"><a class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>status</code></h3>
+<h4 id="description-53" tabindex="-1"><a class="anchor" href="#description-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Non-blank string describing status of tracking system</p>
+<h4 id="units-53" tabindex="-1"><a class="anchor" href="#units-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>n/a</p>
+<h4 id="sampling-53" tabindex="-1"><a class="anchor" href="#sampling-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-53" tabindex="-1"><a class="anchor" href="#constraints-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.</p>
+<h3 id="transforms" tabindex="-1"><a class="anchor" href="#transforms" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>transforms</code></h3>
+<h4 id="description-54" tabindex="-1"><a class="anchor" href="#description-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>A list of transforms.
 Transforms can have a transformId and parentTransformId that can be used
 to compose a transform hierarchy. In the case of multiple children their
@@ -1738,11 +1757,11 @@ gimbal lock does not present the physical challenges of a robotic
 system.
 Conversion to and from quarternions is trivial with an acceptable loss
 of precision</p>
-<h4 id="units-52" tabindex="-1"><a class="anchor" href="#units-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-54" tabindex="-1"><a class="anchor" href="#units-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>meter / degree</p>
-<h4 id="sampling-52" tabindex="-1"><a class="anchor" href="#sampling-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-54" tabindex="-1"><a class="anchor" href="#sampling-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-52" tabindex="-1"><a class="anchor" href="#constraints-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-54" tabindex="-1"><a class="anchor" href="#constraints-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>Each component of each transform shall contain Real numbers.</p>
 <h2 id="reader-coverage" tabindex="-1"><a class="anchor" href="#reader-coverage" aria-hidden="true"><span class="octicon octicon-link"></span></a> Reader coverage</h2>
 <p>The following table indicates the camera parameters supported by each of the readers.</p>
@@ -1766,6 +1785,7 @@ of precision</p>
 <th>custom</th>
 <th>distortion</th>
 <th>distortionOverscan</th>
+<th>distortionOverscanMax</th>
 <th>distortionShift</th>
 <th>encoders</th>
 <th>entrancePupilOffset</th>
@@ -1786,7 +1806,8 @@ of precision</p>
 <th>relatedSampleIds</th>
 <th>sampleId</th>
 <th>shutterAngle</th>
-<th>streamId</th>
+<th>sourceId</th>
+<th>sourceNumber</th>
 <th>frameRate</th>
 <th>mode</th>
 <th>recordedTimestamp</th>
@@ -1826,6 +1847,7 @@ of precision</p>
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -1844,6 +1866,7 @@ of precision</p>
 <td></td>
 <td></td>
 <td>+</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1886,20 +1909,22 @@ of precision</p>
 <td></td>
 <td></td>
 <td></td>
-<td>+</td>
-<td>+</td>
-<td>+</td>
-<td>+</td>
 <td></td>
-<td></td>
-<td></td>
+<td>+</td>
+<td>+</td>
 <td>+</td>
 <td>+</td>
 <td></td>
 <td></td>
 <td></td>
+<td>+</td>
+<td>+</td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td>+</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1942,20 +1967,22 @@ of precision</p>
 <td></td>
 <td></td>
 <td></td>
-<td>+</td>
-<td>+</td>
-<td></td>
-<td>+</td>
-<td></td>
-<td></td>
 <td></td>
 <td>+</td>
 <td>+</td>
 <td></td>
+<td>+</td>
 <td></td>
 <td></td>
 <td></td>
 <td>+</td>
+<td>+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>+</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1998,20 +2025,22 @@ of precision</p>
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>+</td>
-<td>+</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td>+</td>
 <td></td>
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>+</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -2206,6 +2235,11 @@ of precision</p>
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "distortionOverscanMax": {
+              "type": "number",
+              "minimum": 0.0,
+              "description": "Static maximum overscan factor on lens distortion"
+            },
             "firmwareVersion": {
               "type": "string",
               "minLength": 1,
@@ -2556,10 +2590,16 @@ of precision</p>
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
       "description": "URN serving as unique identifier of the sample in which data is being transported. "
     },
-    "streamId": {
+    "sourceId": {
       "type": "string",
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "description": "URN serving as unique identifier of the stream in which data is being transported. This is most important in the case where a single device is producing multiple streams of samples. "
+      "description": "URN serving as unique identifier of the source from which data is being transported. "
+    },
+    "sourceNumber": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Number that identifies the index of the stream from a source from which data is being transported. This is most important in the case where a source is producing multiple streams of samples. "
     },
     "timing": {
       "type": "object",

@@ -75,11 +75,12 @@
     "version": "0.9.0"
   },
   "relatedSampleIds": [
-    "urn:uuid:c260b464-ca1b-44b9-b37c-2fe06848e164",
-    "urn:uuid:aceb7524-3d02-4b51-87a6-dcd958b87075"
+    "urn:uuid:2d272209-94f6-4cd5-9fa8-429a8d7942eb",
+    "urn:uuid:2dafed93-105b-41e8-a8d6-1566860b907a"
   ],
-  "sampleId": "urn:uuid:fecfb9c3-eb02-4601-bc6b-fb8f7dbab9a1",
-  "streamId": "urn:uuid:c0a0164b-3e08-417f-85b3-85e728eb33de",
+  "sampleId": "urn:uuid:d45c90a0-674e-4a37-ad77-2bdffe0e8c6f",
+  "sourceId": "urn:uuid:2eea8fcc-74c8-4303-aa4c-b81f8fcbf1f3",
+  "sourceNumber": 1,
   "timing": {
     "frameRate": {
       "num": 24000,

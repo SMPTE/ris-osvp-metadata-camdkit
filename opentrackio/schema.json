@@ -172,6 +172,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "distortionOverscanMax": {
+              "type": "number",
+              "minimum": 0.0,
+              "description": "Static maximum overscan factor on lens distortion"
+            },
             "firmwareVersion": {
               "type": "string",
               "minLength": 1,
@@ -522,10 +527,16 @@
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
       "description": "URN serving as unique identifier of the sample in which data is being transported. "
     },
-    "streamId": {
+    "sourceId": {
       "type": "string",
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "description": "URN serving as unique identifier of the stream in which data is being transported. This is most important in the case where a single device is producing multiple streams of samples. "
+      "description": "URN serving as unique identifier of the source from which data is being transported. "
+    },
+    "sourceNumber": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Number that identifies the index of the stream from a source from which data is being transported. This is most important in the case where a source is producing multiple streams of samples. "
     },
     "timing": {
       "type": "object",
