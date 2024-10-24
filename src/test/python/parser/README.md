@@ -12,8 +12,8 @@ python3 src/tools/python/generate_complete_static_example.py > opentrackio_compl
 
 python3 opentrackio_parser.py --file=opentrackio_complete_static_sample.json --schema=opentrackio_schema.json 
 
-Reading OTIO schema file: opentrackio_schema.json
-Reading OTIO sample file: opentrackio_complete_static_sample.json
+Reading OpenTrackIO schema file: opentrackio_schema.json
+Reading OpenTrackIO sample file: opentrackio_complete_static_sample.json
 Parsing JSON string from sample buffer...
 Parsed the sample JSON successfully.
 Parsed the schema JSON successfully.

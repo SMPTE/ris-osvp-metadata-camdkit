@@ -31,6 +31,7 @@ def get_complete_static_example():
   clip.duration = Fraction(1,25)
   clip.fdl_link = uuid.uuid4().urn
   clip.iso = 4000
+  clip.lens_distortion_overscan_max = 1.2
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
   clip.lens_nominal_focal_length = 14
@@ -67,7 +68,8 @@ def get_complete_dynamic_example():
 def _get_recommended_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.stream_id = (uuid.uuid4().urn,)
+  clip.source_id = (uuid.uuid4().urn,)
+  clip.source_number = (1,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION,),)
 
   clip.tracker_status = ("Optical Good",)
@@ -94,7 +96,8 @@ def _get_recommended_dynamic_clip():
 def _get_complete_dynamic_clip():
   clip = Clip()
   clip.sample_id = (uuid.uuid4().urn,)
-  clip.stream_id = (uuid.uuid4().urn,)
+  clip.source_id = (uuid.uuid4().urn,)
+  clip.source_number = (1,)
   clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
   clip.related_sample_ids = ((uuid.uuid4().urn,uuid.uuid4().urn),)
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)

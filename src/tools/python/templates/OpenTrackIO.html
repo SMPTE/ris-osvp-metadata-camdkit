@@ -39,12 +39,13 @@
             <img src="img/Producer_Consumers.svg" />
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples <a href="#recommended">below</a>).</p>
-            <p>TODO note on transforms and INSERT diagram of coord systems and roation signs/orders</p>
-            <p>OpenTrackIO employs the <a href="pdf/OpenLensIO_v1.0.0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
+            <p>OpenTrackIO transforms employs a right-handed coordinate system where the Z axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.</p>
+            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v0_9_0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
+            <img class="img-inline" src="img/Coordinate_System.svg" /><img class="img-inline" src="img/Axis_Rotation.svg" /></span>
             
             <h2>Software resources</h2>
-            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repo includes examples for <a href="TODO-mosys-f4">generating</a> and <a href="TODO-steve-parser">parsing</a> data.</p>
-            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="TODO-james-parser">CamDKit</a> that demonstrates linkage.</p>
+            <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repository includes examples for <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/main/python/camdkit/mosys" target="_blank">generating</a> and parsing data in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/python/parser" target="_blank">python</a> and <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">C++</a>.</p>
+            <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">CamDKit</a> that demonstrates linkage.</p>
 
             <h2 id="recommended">OpenTrackIO sample</h2>
             <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
@@ -73,12 +74,10 @@
             <h2>Transport recommendations</h2>
             <p>It is recommended that OpenTrackIO samples be encapsulated in a network packet for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
             <img src="img/RTP_Transport.svg">
-            <p>The RTP header should be populated as follows:</p>
-            <p>TODO</p>
             <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
             <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO producer.</p>
-            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>streamIds</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
-
+            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>sourceIds / sourceNumbers</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
+            <p>Specification and reference examples of session and transport will be included in future releases.</p>
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
             <div class="content">
@@ -98,8 +97,8 @@
             <h2>Future additions</h2>
             <p>In the future RIS intends to add support for:</p>
             <ul>
-                <li>Improved session and transport details and reference examples</li>
-                <li>SMPTE 2110 -41 and -42</li>
+                <li>Improved session and transport specifications and reference examples</li>
+                <li>SMPTE 2110 -41 and -42 integration</li>
                 <li>Anamorphic lens mathematics and enhanced vignette model (in OpenLensIO)</li>
                 <li>Device discovery</li>
             </ul>
@@ -108,6 +107,7 @@
     <div class="footer">
         <div class="inner">
             <p><strong>Authored by SMPTE RIS OSVP</strong></p>
+            <img src="img/RISLogoFinalwhiteColor.png" class="footerLogo" />
             <p>The OpenTrackIO documentation is generated by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a></p>
             <p>Lead author: <a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</p>
         </div>

@@ -59,6 +59,10 @@ code {
     margin:auto;
     padding-bottom:10px;
 }
+.img-inline {
+    display: inline !important;
+    vertical-align: middle;
+}
 .inner {
     padding:10px;
     max-width: 800px;
@@ -90,4 +94,7 @@ code {
     background-color:#101010;
     color:#FFFFFF;
     text-align:center;
+}
+.footerLogo{
+    width: 320px;
 }

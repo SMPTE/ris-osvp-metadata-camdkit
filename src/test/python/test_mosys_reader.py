@@ -37,4 +37,4 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(clip.lens_distortion[12], Distortion([0.15680991113185883, -0.0881580114364624]))
     self.assertEqual(clip.lens_perspective_shift[13], PerspectiveShift(-7.783590793609619, 6.896144866943359))
     self.assertAlmostEqual(clip.lens_focal_length[14], 22.35, 2)
-    self.assertEqual(clip.lens_focus_distance[15], 2313)
+    self.assertEqual(int(clip.lens_focus_distance[15]*1000), 2313)

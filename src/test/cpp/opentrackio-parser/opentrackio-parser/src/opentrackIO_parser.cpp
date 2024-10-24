@@ -6,7 +6,7 @@
 #include "opentrackIOlib.h"
 
 int main(int argc, char* argv[]) {
-    argparse::ArgumentParser parser("OpenTrackingProtocol parser");
+    argparse::ArgumentParser parser("OpenTrackIOProtocol parser");
     
     parser.add_argument("-f", "--file")
         .help("The JSON input file.")
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         if (std::filesystem::exists(schemapath)) {
             std::ifstream file(schemapath);
             if (file.is_open()) {
-                std::cout << "Reading OTIO schema file: " << schemapath << std::endl;
+                std::cout << "Reading OpenTrackIO schema file: " << schemapath << std::endl;
                 schematext.assign((std::istreambuf_iterator<char>(file)),
                                    std::istreambuf_iterator<char>());
                 file.close();
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
         if (std::filesystem::exists(filepath)) {
             std::ifstream file(filepath);
             if (file.is_open()) {
-                std::cout << "Reading OTIO sample file: " << filepath << std::endl;
+                std::cout << "Reading OpenTrackIO sample file: " << filepath << std::endl;
                 sample_text.assign((std::istreambuf_iterator<char>(file)),
                                     std::istreambuf_iterator<char>());
                 file.close();

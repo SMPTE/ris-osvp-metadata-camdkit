@@ -44,6 +44,7 @@ class ModelTest(unittest.TestCase):
     clip.tracker_serial_number = "1234567890A"
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
+    clip.lens_distortion_overscan_max = 1.2
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
@@ -53,8 +54,9 @@ class ModelTest(unittest.TestCase):
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
-    clip.stream_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+    clip.source_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                       "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9")
+    clip.source_number = (1,2)
     clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),
                      VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION))
     clip.tracker_status = ("Optical Good","Optical Good")
@@ -127,6 +129,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["serialNumber"], "132456")
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
+    self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
@@ -145,8 +148,9 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["sampleId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"))
-    self.assertTupleEqual(d["streamId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+    self.assertTupleEqual(d["sourceId"], ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
                                           "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
+    self.assertTupleEqual(d["sourceNumber"], (1, 2))
     self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
                                           {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
     self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
@@ -428,27 +432,41 @@ class ModelTest(unittest.TestCase):
     clip.sample_id = value
     self.assertEqual(clip.sample_id, value)
 
-  def test_stream_id(self):
+  def test_source_id(self):
     clip = Clip()
 
-    self.assertIsNone(clip.stream_id)
+    self.assertIsNone(clip.source_id)
 
     with self.assertRaises(ValueError):
-      clip.stream_id = ""
+      clip.source_id = ""
     with self.assertRaises(ValueError):
-      clip.stream_id = ("",)
+      clip.source_id = ("",)
     with self.assertRaises(ValueError):
-      clip.stream_id = ("a",)
+      clip.source_id = ("a",)
     with self.assertRaises(ValueError):
-      clip.stream_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      clip.source_id = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     with self.assertRaises(ValueError):
-      clip.stream_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
+      clip.source_id = ("f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
     with self.assertRaises(ValueError):
-      clip.stream_id = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
+      clip.source_id = ("urn:uuid:f81d4fae-7dec-11d0-A765-00a0c91e6Bf6",)
 
     value = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",)
-    clip.stream_id = value
-    self.assertEqual(clip.stream_id, value)
+    clip.source_id = value
+    self.assertEqual(clip.source_id, value)
+
+  def test_source_number(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.source_number)
+
+    with self.assertRaises(ValueError):
+      clip.source_number = ""
+    with self.assertRaises(ValueError):
+      clip.source_number = (-1,)
+
+    value = (1,)
+    clip.source_number = value
+    self.assertEqual(clip.source_number, value)
 
   def test_protocol(self):
     clip = Clip()
@@ -848,6 +866,20 @@ class ModelTest(unittest.TestCase):
     value = (1.0,)
     clip.lens_distortion_overscan = value
     self.assertTupleEqual(clip.lens_distortion_overscan, value)
+    
+  def test_lens_distortion_overscan_max(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_distortion_overscan_max)
+
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan_max = ""
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan_max = -1.0
+
+    value = 1.2
+    clip.lens_distortion_overscan_max = value
+    self.assertEqual(clip.lens_distortion_overscan_max, value)
     
   def test_lens_exposure_falloff(self):
     clip = Clip()

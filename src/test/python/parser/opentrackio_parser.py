@@ -32,7 +32,7 @@ def main():
             schemapath = args.schema
             if (schemapath != None):        
                 with open(schemapath, 'r') as fd:
-                    print("Reading OTIO schema file: {0}".format(schemapath))
+                    print("Reading OpenTrackIO schema file: {0}".format(schemapath))
                     lines = fd.readlines()
                     for line in lines:
                         schematext = schematext + line
@@ -41,7 +41,7 @@ def main():
             filepath = args.file
             if (filepath != None):        
                 with open(filepath, 'r') as fd:
-                    print("Reading OTIO sample file: {0}".format(filepath))
+                    print("Reading OpenTrackIO sample file: {0}".format(filepath))
                     lines = fd.readlines()
                     for line in lines:
                         sample_text = sample_text + line
