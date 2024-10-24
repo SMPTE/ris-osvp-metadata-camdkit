@@ -75,11 +75,11 @@
     "version": "0.9.0"
   },
   "relatedSampleIds": [
-    "urn:uuid:2d272209-94f6-4cd5-9fa8-429a8d7942eb",
-    "urn:uuid:2dafed93-105b-41e8-a8d6-1566860b907a"
+    "urn:uuid:b997988a-8b13-400e-b6b8-6a43d33ee1c6",
+    "urn:uuid:0e2f4e62-5c33-4df9-a4d7-45677783750c"
   ],
-  "sampleId": "urn:uuid:d45c90a0-674e-4a37-ad77-2bdffe0e8c6f",
-  "sourceId": "urn:uuid:2eea8fcc-74c8-4303-aa4c-b81f8fcbf1f3",
+  "sampleId": "urn:uuid:dc2d9b33-983e-44c4-8865-9c45fa6aafb4",
+  "sourceId": "urn:uuid:c2e2ca34-1b62-4736-964d-ee7072df4112",
   "sourceNumber": 1,
   "timing": {
     "frameRate": {
