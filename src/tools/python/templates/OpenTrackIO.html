@@ -22,24 +22,23 @@
     <div class="wrapper">
         <div class="inner">
             <h2>Overview</h2>
-            <p>OpenTrackIO is a free and open protocol designed by the RIS OSVP SMPTE group that seeks to improve interoperability in Virtual Production encoding, tracking and robotic systems.</p>
+            <p>OpenTrackIO is a free and open-source protocol designed by the SMPTE RiS-OSVP group that seeks to improve interoperability in Virtual Production and beyond.</p>
             <p>Virtual Production (VP) encompasses a range of techniques that use camera and lens tracking systems to generate real-time visual effects (VFX) in a render engine. VP encompasses:</p>
             <ul>
                 <li>Augmented Reality (AR),</li>
-                <li>chromakey (both for live broadcast and 'Simul-Cam' for on-set VFX pre-visualization),</li>
-                <li>In-Camera Visual Effects (ICVFX), eXtended Reailty (XR for LED set extensions) and other Mixed Reality (MR) combinations.</li>
+                <li>Chroma key (both for live broadcast and 'Simul-Cam' for on-set VFX pre-visualization),</li>
+                <li>In-Camera Visual Effects (ICVFX), eXtended Reality (XR for LED set extensions) and other Mixed Reality (MR) combinations.</li>
             </ul>
-            <p>In these Virtual Production examples the camera tracking system sends the pose of the camera, lens modelling and other metadata to a render engine every frame.</p>
+            <p>In these Virtual Production examples the camera tracking system sends the pose of the camera, lens modeling and other metadata to a render engine every frame.</p>
             <img src="img/Example_System.svg" />
-            <p>In Augmented Reailty (AR) this enables the engine to render virtual objects from the correct camera position and lens to match the real world. In the In-Camera Visual Effect (ICVFX) example, the tracking data is used to generate the correct perspective in the LED wall to create the illusion of depth.</p>
-            <p>In Virtual Production it is critical that the camera's video, the tracking and the lens data are synchronised in space and time to accurately reproduce the visual effect. A sample of the OpenTrackIO protocol contains all the required data in the appropriate formats to achieve this.</p>
+            <p>In Augmented Reality (AR) setups, this enables the render engine to generate virtual objects from the correct camera position and with correct lens distortions to match the real world camera image. In the In-Camera Visual Effect (ICVFX) example, the tracking data is used to render the correct perspective on the LED wall to create the illusion of depth and with a sense parallax.</p>
+            <p>In Virtual Production it is critical that the camera capture, the tracking data, and the lens data are synchronized in space and time to accurately reproduce the visual effect. A sample of the OpenTrackIO protocol contains all the required data in the appropriate formats to achieve this.</p>
             
-            <h2>OpenTrackIO protocol</h2>
-            <p>This documentation is designed for those producing and consuming tracking data. There may be multiple CONSUMERS of a single PRODUCER'S data. In the AR example above, the camera tracking system is the producer and the render engine is the consumer.</p>
-            <img src="img/Producer_Consumers.svg" />
+            <h2>The OpenTrackIO protocol</h2>
+            <p>This documentation is designed for those producing and consuming tracking data. Components that generate and transmit tracking data are referred to as Producers. Components that receive and act upon tracking data are referred to as Consumers. Multiple Producers and Consumers may coexist on the same network at the same time, and a Producer can send multiple concurrent Streams of data. There may also be multiple Consumers of a single Producer's data. In the AR example above, the camera tracking system is the Producer and the render engine is the Consumer.</p>
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
-            <p>All the fields described should be considered optional by the consumer (although for high-quality tracking for Virtual Production see the recommended set in the samples <a href="#recommended">below</a>).</p>
-            <p>OpenTrackIO transforms employs a right-handed coordinate system where the Z axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right.</p>
+            <p>All the fields described should be considered optional by the Consumer (although for high-quality tracking for Virtual Production see the recommended set of fields in the samples <a href="#recommended">below</a>).</p>
+            <p>OpenTrackIO employs a right-handed coordinate system where the Z-axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example, in an LED volume Y would point towards the centre of the LED wall and X would point towards camera-right.</p>
             <p>OpenTrackIO employs the <a href="res/OpenLensIO_v0_9_0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
             <img class="img-inline" src="img/Coordinate_System.svg" /><img class="img-inline" src="img/Axis_Rotation.svg" /></span>
             
@@ -64,7 +63,7 @@
             </div>
 
             <h2>Complete sample</h2>
-            <p>OpenTrackIO defines many more options and fields and these should be parsed where appropriate by the consumer. Custom fields can also be added as shown (although these will require specific producer / consumer negotiation)</p>
+            <p>OpenTrackIO defines many more options and fields and these should be parsed where appropriate by the Consumer. Custom fields can also be added as shown (although these will require specific Producer / Consumer negotiation)</p>
             <button class="collapsible">Complete example sample with static data</button>
             <div class="content">
                 <pre><code>{{examples.complete_static_example}}</code></pre>
@@ -72,12 +71,62 @@
             </div>
             
             <h2>Transport recommendations</h2>
-            <p>It is recommended that OpenTrackIO samples be encapsulated in a network packet for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
+            <h3>UDP Multicast</h3>
+            <p>When not used in combination with RTP or SMPTE 2110-41/42, OpenTrackIO can operate over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
+            <h4>Multicast Addressing</h4>
+            <p>OpenTrackIO Producers use multicast addressing to deliver messages  to Consumers. The use of unicast addressing is not recommended.</p>
+            
+            <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
+                
+            <table>
+                <thead>
+                    <tr>
+                        <th>IP Octet 1</th>
+                        <th>IP Octet 2</th>
+                        <th>IP Octet 3</th>
+                        <th>IP Octet 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>235</td>
+                        <td>135</td>
+                        <td>1</td>
+                        <td>Stream Number</td>
+                    </tr>
+                </tbody>
+            </table>
+                
+            <p>Stream Number is a user-configurable 8-bit value between 1 and 200 that is used to generate the multicast IP address for a specific Stream from a specific Producer. This ensures that Producers and Consumers can send and receive data for a specific Stream Number without requiring prior knowledge of the network topology, or without knowing the specific IP address of a Producer or Consumer. It also ensures that a single Producer can send out multiple Streams to different Consumers. The Stream Number is used to form the 4th octet of the IP address.</p>
+            
+            <h5>Example 1</h5>
+            <p>In the example above, using a Producer with Stream Number 14:</p>
+            <ul>
+                <li><strong>IP Octet 1:</strong> 235</li>
+                <li><strong>IP Octet 2:</strong> 135</li>
+                <li><strong>IP Octet 3:</strong> 1</li>
+                <li><strong>IP Octet 4:</strong> 14</li>
+            </ul>
+            
+            <p>The Stream Number identifies a Stream of data from a specific Producer and should <strong>not</strong> be inferred from the multicast address. Stream Numbers above 200 are reserved for future expansion of the OpenTrackIO protocol and may not be used.</p>
+            
+            <p>The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary based on local network requirements.</p> 
+            
+            <p>Consumers must handle identical multicast messages consistently. If a Consumers receives the same message multiple times, it should process only one instance.</p>
+            <p>OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included in a future version.</p>
+            
+            <h4>Multicast Subscription</h4>
+            <p>Components must implement IGMP V2 or any subsequent version that supports its functionality. This protocol communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across large and complex networks.</p>
+            
+            <h3>Real-time Transport Protocol (RTP)</h3>
+            
+            <p>OpenTrackIO supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
             <img src="img/RTP_Transport.svg">
             <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
-            <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO producer.</p>
+            <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO Producer.</p>
             <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>sourceIds / sourceNumbers</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
             <p>Specification and reference examples of session and transport will be included in future releases.</p>
+            
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
             <div class="content">
