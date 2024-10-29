@@ -229,9 +229,7 @@ class SourceId(UUIDURNParameter):
   units = None
 
 class SourceNumber(NonNegativeIntegerParameter):
-  """Number that identifies the index of the stream from a source from which
-  data is being transported. This is most important in the case where a source
-  is producing multiple streams of samples.
+  """Source Number is a user-configurable value between 1 and 200, unique within an OpenTrackIO network, that is used to generate the multicast IP address for a specific Source from a specific Producer. This ensures that Producers and Consumers can send and receive data for a specific Source Number without requiring prior knowledge of the network topology, or without knowing the specific IP address of a Producer or Consumer. It also ensures that a single Producer can transmit multiple Sources to different Consumers. The Source Number is used in the 4th octet of the multicast IP address.
   """
 
   canonical_name = "sourceNumber"
