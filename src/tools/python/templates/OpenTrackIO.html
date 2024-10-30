@@ -118,6 +118,65 @@
             <h4>Multicast Subscription</h4>
             <p>Components must implement IGMP V2 or any subsequent version that supports its functionality. This protocol communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across large and complex networks.</p>
             
+            
+            <h4>Packet Header</h4>
+            <p>When using UDP transport, each packet should include the header below:</p>
+            <p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Byte Offset</th>
+                      <th>Field</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0-4</td>
+                      <td>Identifier</td>
+                      <td>5 bytes: Static value to indicate OpenTrackIO packet, set to ASCII "OTrIO" (<code>0x4F5472494F</code>)</td>
+                    </tr>
+                    <tr>
+                      <td>5-8</td>
+                      <td>Sequence Number</td>
+                      <td>4 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT32</code>)</td>
+                    </tr>
+                    <tr>
+                      <td>9</td>
+                      <td>Total Segments</td>
+                      <td>1 byte: Total number of segments for the payload (<code>0x01</code> if not segmented)</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Segment Index</td>
+                      <td>1 byte: Zero-indexed segment number within the series (if segmented); set to <code>0x00</code> if not segmented</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Format Type</td>
+                      <td>1 byte: Indicates payload format (e.g., JSON = <code>0x01</code>, CBOR = <code>0x02</code>)</td>
+                    </tr>
+                    <tr>
+                      <td>12-13</td>
+                      <td>Payload Length</td>
+                      <td>2 bytes: Total length of the payload for the current packet (in bytes)</td>
+                    </tr>
+                    <tr>
+                      <td>14-17</td>
+                      <td>Checksum (CRC)</td>
+                      <td>4 bytes: CRC32 checksum of the header and payload, computed after constructing the full packet (not including checksum bytes)</td>
+                    </tr>
+                    <tr>
+                      <td>18+</td>
+                      <td>Payload</td>
+                      <td>The actual JSON or CBOR OpenTrackIO packet (or a segment thereof)  data starts here</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </p>
+            
+            
+            
             <h3>Real-time Transport Protocol (RTP)</h3>
             
             <p>In addition to simple UDP, OpenTrackIO supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
