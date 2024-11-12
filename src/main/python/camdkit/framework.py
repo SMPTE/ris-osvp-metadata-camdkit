@@ -184,11 +184,11 @@ class SynchronizationPTP:
   """Data structure for PTP synchronization"""
 
   domain: typing.Optional[int] = None
-  master: typing.Optional[str] = None
+  leader: typing.Optional[str] = None
   offset: typing.Optional[float] = None
   
   def validate(self):
-    return all([isinstance(self.master, str), 
+    return all([isinstance(self.leader, str), 
                 isinstance(self.offset, float),
                 isinstance(self.domain, int)])
   
