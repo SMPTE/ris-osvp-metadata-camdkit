@@ -283,6 +283,6 @@ class F4PacketParser:
       frame.lens_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
       frame.lens_encoders = (FizEncoders(focus, iris, zoom),)
       frame.lens_distortion = (Distortion([k1, k2],None,"Brown-Conrady D-U"),)
-      frame.lens_perspective_shift = (PerspectiveShift(cx, cy),)
+      frame.lens_projection_offset = (ProjectionOffset(cx, cy),)
     return frame
   

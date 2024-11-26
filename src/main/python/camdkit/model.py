@@ -1208,12 +1208,12 @@ class LensUndistortion(LensDistortion):
   section = "lens"
   units = None
   
-class LensDistortionShift(Parameter):
-  """Shift in x and y of the centre of distortion of the virtual camera
+class LensDistortionOffset(Parameter):
+  """Offset in x and y of the centre of distortion of the virtual camera
   """
 
   sampling = Sampling.REGULAR
-  canonical_name = "distortionShift"
+  canonical_name = "distortionOffset"
   section = "lens"
   units = "millimeter"
 
@@ -1221,7 +1221,7 @@ class LensDistortionShift(Parameter):
   def validate(value) -> bool:
     """X and Y centre shift shall each be real numbers."""
 
-    if not isinstance(value, DistortionShift):
+    if not isinstance(value, DistortionOffset):
       return False
  
     if value.x is None or not isinstance(value.x, numbers.Real):
@@ -1237,7 +1237,7 @@ class LensDistortionShift(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return DistortionShift(**value)
+    return DistortionOffset(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -1255,20 +1255,20 @@ class LensDistortionShift(Parameter):
       }
     }
   
-class LensPerspectiveShift(Parameter):
-  """Shift in x and y of the centre of perspective projection of the
+class LensProjectionOffset(Parameter):
+  """Offset in x and y of the centre of perspective projection of the
   virtual camera
   """
   sampling = Sampling.REGULAR
-  canonical_name = "perspectiveShift"
+  canonical_name = "projectionOffset"
   section = "lens"
   units = "millimeter"
 
   @staticmethod
   def validate(value) -> bool:
-    """X and Y perspective shift shall each be real numbers."""
+    """X and Y projection offset shall each be real numbers."""
 
-    if not isinstance(value, PerspectiveShift):
+    if not isinstance(value, ProjectionOffset):
       return False
  
     if value.x is None or not isinstance(value.x, numbers.Real):
@@ -1284,7 +1284,7 @@ class LensPerspectiveShift(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return PerspectiveShift(**value)
+    return ProjectionOffset(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -1352,14 +1352,14 @@ class Clip(ParameterContainer):
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
   lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
-  lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
+  lens_distortion_offset: typing.Optional[typing.Tuple[DistortionOffset]] = LensDistortionOffset()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Real]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
   lens_focus_distance: typing.Optional[typing.Tuple[numbers.Real]] = FocusDistance()
-  lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
+  lens_projection_offset: typing.Optional[typing.Tuple[ProjectionOffset]] = LensProjectionOffset()
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Real]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()

@@ -115,9 +115,8 @@ class ModelTest(unittest.TestCase):
                             Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"))
     clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"),
                               Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"))
-    clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),DistortionShift(1.0, 2.0))
-    clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),
-                                   PerspectiveShift(0.1, 0.2))
+    clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),DistortionOffset(1.0, 2.0))
+    clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),ProjectionOffset(0.1, 0.2))
 
     d = clip.to_json()
 
@@ -202,8 +201,8 @@ class ModelTest(unittest.TestCase):
                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"}))
     self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"},
                                                       { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}))
-    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
+    self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
+    self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
     d_clip = Clip()
     d_clip.from_json(d)
@@ -1000,63 +999,63 @@ class ModelTest(unittest.TestCase):
       "model": "TestModel",
     })
     
-  def test_lens_distortion_shift(self):
+  def test_lens_distortion_offset(self):
     clip = Clip()
-    self.assertIsNone(clip.lens_distortion_shift)
+    self.assertIsNone(clip.lens_distortion_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_distortion_shift = ""
+      clip.lens_distortion_offset = ""
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (DistortionShift(),)
+      clip.lens_distortion_offset = (DistortionOffset(),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (DistortionShift(1.0),)
+      clip.lens_distortion_offset = (DistortionOffset(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = DistortionShift(1.0)
+      clip.lens_distortion_offset = DistortionOffset(1.0)
 
-    value = (DistortionShift(-1.0,1.0),)
-    clip.lens_distortion_shift = value
-    self.assertTupleEqual(clip.lens_distortion_shift, value)
+    value = (DistortionOffset(-1.0,1.0),)
+    clip.lens_distortion_offset = value
+    self.assertTupleEqual(clip.lens_distortion_offset, value)
     
   def test_lens_distortion_shift_from_dict(self):
-    r = LensDistortionShift.from_json({
+    r = LensDistortionOffset.from_json({
       "x": -1.0,
       "y": 1.0
     })
-    self.assertEqual(r,DistortionShift(-1.0,1.0))
+    self.assertEqual(r,DistortionOffset(-1.0,1.0))
     
   def test_lens_distortion_shift_to_dict(self):
-    j = LensDistortionShift.to_json(DistortionShift(-1.0,1.0))
+    j = LensDistortionOffset.to_json(DistortionOffset(-1.0,1.0))
     self.assertDictEqual(j, {
       "x": -1.0,
       "y": 1.0
     })
     
-  def test_lens_perspective_shift(self):
+  def test_lens_projection_offset(self):
     clip = Clip()
-    self.assertIsNone(clip.lens_perspective_shift)
+    self.assertIsNone(clip.lens_projection_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_perspective_shift = ""
+      clip.lens_projection_offset = ""
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (PerspectiveShift(),)
+      clip.lens_projection_offset = (ProjectionOffset(),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (PerspectiveShift(1.0),)
+      clip.lens_projection_offset = (ProjectionOffset(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = PerspectiveShift(1.0)
+      clip.lens_projection_offset = ProjectionOffset(1.0)
 
-    value = (PerspectiveShift(-1.0,1.0),)
-    clip.lens_perspective_shift = value
-    self.assertTupleEqual(clip.lens_perspective_shift, value)
+    value = (ProjectionOffset(-1.0,1.0),)
+    clip.lens_projection_offset = value
+    self.assertTupleEqual(clip.lens_projection_offset, value)
     
-  def test_lens_perspective_shift_from_dict(self):
-    r = LensPerspectiveShift.from_json({
+  def test_lens_projection_offset_from_dict(self):
+    r = LensProjectionOffset.from_json({
       "x": -1.0,
       "y": 1.0
     })
-    self.assertEqual(r,PerspectiveShift(-1.0,1.0))
+    self.assertEqual(r,ProjectionOffset(-1.0,1.0))
     
-  def test_lens_perspective_shift_to_dict(self):
-    j = LensPerspectiveShift.to_json(PerspectiveShift(-1.0,1.0))
+  def test_lens_projection_offset_to_dict(self):
+    j = LensProjectionOffset.to_json(ProjectionOffset(-1.0,1.0))
     self.assertDictEqual(j, {
       "x": -1.0,
       "y": 1.0

@@ -92,16 +92,16 @@ class Distortion:
   model: typing.Optional[typing.Tuple[str]] = None
 
 @dataclasses.dataclass
-class PerspectiveShift:
-  """Shift in x and y of the centre of perspective projection of the
+class ProjectionOffset:
+  """Offset in x and y of the centre of perspective projection of the
   virtual camera
   """
   x: float
   y: float
   
 @dataclasses.dataclass
-class DistortionShift:
-  """Shift in x and y of the centre of distortion of the virtual camera
+class DistortionOffset:
+  """Offset in x and y of the centre of distortion of the virtual camera
   """
   x: float
   y: float

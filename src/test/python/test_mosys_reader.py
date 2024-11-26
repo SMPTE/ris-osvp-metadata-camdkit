@@ -10,7 +10,7 @@ import unittest
 import uuid
 
 from camdkit.framework import Vector3, Rotator3, Synchronization, SynchronizationSourceEnum, \
-                              Timecode, TimecodeFormat, FizEncoders, Distortion, PerspectiveShift
+                              Timecode, TimecodeFormat, FizEncoders, Distortion, ProjectionOffset
 from camdkit.model import OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.mosys import reader
 
@@ -35,6 +35,6 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(clip.transforms[10][0].rotation, Rotator3(pan=-2.969, tilt=-28.03, roll=3.1))
     self.assertEqual(clip.lens_encoders[11], FizEncoders(focus=0.7643280029296875, zoom=0.0014190673828125))
     self.assertEqual(clip.lens_distortion[12], Distortion([0.15680991113185883, -0.0881580114364624], None, "Brown-Conrady D-U"))
-    self.assertEqual(clip.lens_perspective_shift[13], PerspectiveShift(-7.783590793609619, 6.896144866943359))
+    self.assertEqual(clip.lens_projection_offset[13], ProjectionOffset(-7.783590793609619, 6.896144866943359))
     self.assertAlmostEqual(clip.lens_focal_length[14], 22.35, 2)
     self.assertEqual(int(clip.lens_focus_distance[15]*1000), 2313)
