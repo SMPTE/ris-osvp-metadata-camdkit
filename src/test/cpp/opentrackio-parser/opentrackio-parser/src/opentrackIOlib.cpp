@@ -141,7 +141,6 @@ std::string OTProtocol::Get_timecode(void) {
 std::string OTProtocol::Get_sample_time(const std::string& part) {
     int ssec = sample.timing->sampleTimestamp->seconds;
     int nsec = sample.timing->sampleTimestamp->nanoseconds;
-    int asec = sample.timing->sampleTimestamp->attoseconds;
     // Constants
     const int epoch = 1970; // PTP is since this epoch
     const int spm = 60;     // seconds per minute. Common knowledge, but consistency is important
@@ -160,7 +159,7 @@ std::string OTProtocol::Get_sample_time(const std::string& part) {
 
     if (part.empty()) {
         if (sample_time_format == "sec") {
-            return std::to_string(ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001));
+            return std::to_string(ssec + (nsec * 0.000000001));
         } else if (sample_time_format == "timecode") {
             int frm = static_cast<int>((nsec * 0.000000001) * Get_timecode_framerate());
             return std::to_string(hr) + ":" + std::to_string(mn) + ":" + std::to_string(st) + ":" + std::to_string(frm);

@@ -119,14 +119,12 @@ class GlobalPosition:
 @dataclasses.dataclass
 class Timestamp:
   """48-bit integer representing seconds, 32-bit integer representing
-  nanoseconds, and (optionally) an optional 32-bit integer representing
-  attoseconds elapsed since 00:00 January 1st 1970 epoch.
+  nanoseconds elapsed since 00:00 January 1st 1970 epoch.
   Reference: https://datatracker.ietf.org/doc/html/rfc8877
   """
 
   seconds: int
   nanoseconds: int
-  attoseconds: typing.Optional[int] = None
 
 @dataclasses.dataclass
 class VersionedProtocol:
@@ -696,13 +694,13 @@ class EnumParameter(StringParameter):
 
 class TimestampParameter(Parameter):
   """PTP timestamp: 48-bit unsigned integer (seconds), 32-bit unsigned
-  integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
+  integer (nanoseconds)
   """
 
   @staticmethod
   def validate(value) -> bool:
     """The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
     """
     if not isinstance(value, Timestamp):
       return False
@@ -712,17 +710,11 @@ class TimestampParameter(Parameter):
     if (not (isinstance(value.nanoseconds, int)
              and 0 <= value.nanoseconds <= UINT_MAX)):
       return False
-    if value.attoseconds != None:
-      if (not (isinstance(value.attoseconds, int)
-               and 0 <= value.attoseconds <= UINT_MAX)):
-        return False
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     d = dataclasses.asdict(value)
-    if d["attoseconds"] == None:
-      del d["attoseconds"]
     return d
 
   @staticmethod
@@ -741,11 +733,6 @@ class TimestampParameter(Parameter):
           "maximum": UINT48_MAX
         },
         "nanoseconds": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": UINT_MAX
-        },
-        "attoseconds": {
           "type": "integer",
           "minimum": 0,
           "maximum": UINT_MAX

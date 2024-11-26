@@ -700,14 +700,10 @@ class ModelTest(unittest.TestCase):
       Timestamp(0)
     self.assertTrue(TimingTimestamp.validate(Timestamp(0,0)))
     self.assertTrue(TimingTimestamp.validate(Timestamp(1,2)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(0,0,0)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(1,2,3)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295,4294967295)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2,3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2,3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(1,2,-3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655,0)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(0,0,281474976710655)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655)))
 
   def test_timecode_format(self):
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)

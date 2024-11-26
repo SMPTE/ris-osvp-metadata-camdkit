@@ -143,7 +143,6 @@ class OpenTrackIOProtocol:
         if self.validate_dict_elements(self.pd,["timing","sampleTimestamp","seconds"]):
             ssec = int(self.pd["timing"]["sampleTimestamp"]["seconds"])
             nsec = int(self.pd["timing"]["sampleTimestamp"]["nanoseconds"])
-            asec = int(self.pd["timing"]["sampleTimestamp"]["attoseconds"])
             # Constants
             epoch = 1970                        # PTP is since this epoch
             spm = 60                            # seconds per minute. Common knowledge, but consistency is important
@@ -161,7 +160,7 @@ class OpenTrackIOProtocol:
             st = int(std - (hr * sph) - (mn * spm))  # remainder seconds
         if not part:
             if self.sample_time_format == "sec":
-                return ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
+                return ssec + (nsec * 0.000000001)
             elif self.sample_time_format == "timecode":             # since midnight
                 frm = int((nsec * 0.000000001) * self.get_timecode_framerate())
                 return '{:02}'.format(hr) + ":" + '{:02}'.format(mn) + ":" + '{:02}'.format(st) + ":" + '{:02}'.format(frm)

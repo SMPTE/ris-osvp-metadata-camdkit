@@ -109,7 +109,7 @@ def _get_complete_dynamic_clip():
   clip.tracker_notes = ("Example generated sample.",)
 
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
-  clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000, 0),)
+  clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000),)
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 500000000),)
   clip.timing_sequence_number = (0,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)

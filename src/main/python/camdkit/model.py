@@ -829,8 +829,7 @@ class TimingTimestamp(TimestampParameter):
   """PTP timestamp of the data capture instant. Note this may differ
     from the packet's transmission PTP timestamp. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
@@ -842,8 +841,7 @@ class RecordedTimestamp(TimestampParameter):
   PTP timestamp of the data recording instant, provided for convenience
     during playback of e.g. pre-recorded tracking data. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
