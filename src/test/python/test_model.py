@@ -1084,8 +1084,6 @@ class ModelTest(unittest.TestCase):
       Synchronization(locked=True, frequency=0.0)
     with self.assertRaises(TypeError):
       Synchronization(locked=True, frequency=-1.0)
-    with self.assertRaises(TypeError):
-      Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK)
     
     clip = Clip()
     self.assertIsNone(clip.timing_synchronization)

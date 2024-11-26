@@ -393,9 +393,9 @@ class GlobalStagePosition(Parameter):
 
 class Transforms(Parameter):
   """A list of transforms.
-  Transforms can have a transformId and parentTransformId that can be used
-  to compose a transform hierarchy. In the case of multiple children their
-  transforms should be processed in their order in the array.
+  Transforms can have a id and parentId that can be used to compose a
+  transform hierarchy. In the case of multiple children their transforms
+  should be processed in their order in the array.
   X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
@@ -452,10 +452,10 @@ class Transforms(Parameter):
            or not isinstance(transform.scale.y, numbers.Real) \
            or not isinstance(transform.scale.z, numbers.Real):
           return False
-      # transformId and parentTransformId are optional
-      if transform.transformId != None and not isinstance(transform.transformId, str):
+      # id and parentId are optional
+      if transform.id != None and not isinstance(transform.id, str):
         return False
-      if transform.parentTransformId != None and not isinstance(transform.parentTransformId, str):
+      if transform.parentId != None and not isinstance(transform.parentId, str):
         return False
 
     return True
@@ -538,12 +538,12 @@ class Transforms(Parameter):
               }
             }
           },
-          "transformId": {
+          "id": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
           },
-          "parentTransformId": {
+          "parentId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023

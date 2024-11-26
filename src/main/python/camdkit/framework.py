@@ -51,14 +51,14 @@ class Rotator3:
 
 @dataclasses.dataclass
 class Transform:
-  """A translation, rotation and scale. 'transformId' and
-  'parentTransformId' fields enable geometry chains
+  """A translation, rotation and scale. 'id' and 'parentId' fields enable
+  geometry chains
   """
   translation: Vector3
   rotation: Rotator3
   scale: typing.Optional[Vector3] = None
-  transformId: typing.Optional[str] = None
-  parentTransformId: typing.Optional[str] = None
+  id: typing.Optional[str] = None
+  parentId: typing.Optional[str] = None
 
 @dataclasses.dataclass
 class FizEncoders:

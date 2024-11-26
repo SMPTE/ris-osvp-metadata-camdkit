@@ -90,7 +90,7 @@ double Conversion_factor_from_meters(const std::string& unit_str) {
 
 double OTProtocol::Get_camera_trans(const std::string& dimension) {
     for (auto transform : sample.transforms->transforms) {
-        if (transform.transformId == "Camera") {
+        if (transform.id == "Camera") {
             if (verbose) {
                 std::cout << "found camera, dim = " << dimension << ", mult factor: " << trans_mult << std::endl;
             }
@@ -109,7 +109,7 @@ double OTProtocol::Get_camera_trans(const std::string& dimension) {
 
 double OTProtocol::Get_camera_rot(const std::string& dimension) {
     for (auto transform : sample.transforms->transforms) {
-        if (transform.transformId == "Camera") {
+        if (transform.id == "Camera") {
             if (dimension == "p") {
                 return transform.rotation.pan * rot_mult;
             } else if (dimension == "t") {

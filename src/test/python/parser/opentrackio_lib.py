@@ -96,7 +96,7 @@ class OpenTrackIOProtocol:
         """Return a single axis of camera translation, such as: x,y, or z"""
         if "transforms" in self.pd.keys():
             for tr in self.pd["transforms"]:
-                if ("Camera" in tr["transformId"]):
+                if ("Camera" in tr["id"]):
                     if self.verbose:
                         print("found camera, dim = {}, mult factor: {}".format(dimension,self.trans_mult))
                     if (dimension == 'x'):
@@ -113,7 +113,7 @@ class OpenTrackIOProtocol:
         Valid arguments are: p, t, r"""
         if "transforms" in self.pd.keys():
            for tr in self.pd["transforms"]:
-               if ("Camera" in tr["transformId"]):
+               if ("Camera" in tr["id"]):
                    if (dimension == 'p'):
                        return tr["rotation"]["pan"] * self.rot_mult
                    elif (dimension == 't'):

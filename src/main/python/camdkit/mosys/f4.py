@@ -275,7 +275,7 @@ class F4PacketParser:
       frame.timing_synchronization = (sync,)
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)
-      transform.transformId = f'Camera {self._packet.camera_id}'
+      transform.id = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
       # Assuming a full frame 35mm active sensor 36x24mm
       # f = 36/[2*tand(FoV/2)]
