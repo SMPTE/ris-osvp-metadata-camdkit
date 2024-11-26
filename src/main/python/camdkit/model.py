@@ -1042,6 +1042,14 @@ class DistortionOverscan(NonNegativeRealParameter):
   section = "lens"
   units = None
 
+class UndistortionOverscan(NonNegativeRealParameter):
+  """Overscan factor on lens undistortion"""
+
+  sampling = Sampling.REGULAR
+  canonical_name = "undistortionOverscan"
+  section = "lens"
+  units = None
+
 class DistortionOverscanMaximum(NonNegativeRealParameter):
   """Static maximum overscan factor on lens distortion"""
 
@@ -1050,6 +1058,14 @@ class DistortionOverscanMaximum(NonNegativeRealParameter):
   section = "lens"
   units = None
   
+class UndistortionOverscanMaximum(NonNegativeRealParameter):
+  """Static maximum overscan factor on lens undistortion"""
+
+  sampling = Sampling.STATIC
+  canonical_name = "undistortionOverscanMax"
+  section = "lens"
+  units = None
+
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
   a lens
@@ -1119,6 +1135,10 @@ class LensDistortion(Parameter):
 
     if not isinstance(value, Distortion):
       return False
+    
+    # If model is provided check the length
+    if value.model != None and len(value.model) == 0:
+      return False
  
     # At least one radial coefficient is required
     if value.radial == None or len(value.radial) == 0:
@@ -1137,6 +1157,8 @@ class LensDistortion(Parameter):
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     d = dataclasses.asdict(value)
+    if d["model"] == None:
+      del d["model"]
     if d["tangential"] == None:
       del d["tangential"]
     return d
@@ -1152,19 +1174,22 @@ class LensDistortion(Parameter):
       "additionalProperties": False,
       "required": ["radial"],
       "properties": {
+        "model": {
+          "type": "string",
+        },
         "radial": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "minLength": 1
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minLength": 1
         },
         "tangential": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "minLength": 1
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minLength": 1
         },
       }
     }
@@ -1306,6 +1331,7 @@ class Clip(ParameterContainer):
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
   lens_distortion_overscan_max: typing.Optional[numbers.Real] = DistortionOverscanMaximum()
+  lens_undistortion_overscan_max: typing.Optional[numbers.Real] = UndistortionOverscanMaximum()
   lens_firmware: typing.Optional[str] = LensFirmware()
   lens_make: typing.Optional[str] = LensMake()
   lens_model: typing.Optional[str] = LensModel()
@@ -1321,6 +1347,7 @@ class Clip(ParameterContainer):
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
+  lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
   lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()

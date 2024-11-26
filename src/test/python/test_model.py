@@ -45,6 +45,7 @@ class ModelTest(unittest.TestCase):
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
     clip.lens_distortion_overscan_max = 1.2
+    clip.lens_undistortion_overscan_max = 1.2
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
@@ -107,12 +108,13 @@ class ModelTest(unittest.TestCase):
     clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
                               RawFizEncoders(focus=1, iris=2, zoom=3))
     clip.lens_distortion_overscan = (1.0, 1.0)
+    clip.lens_undistortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                   ExposureFalloff(1.0, 2.0, 3.0))
-    clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                            Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                              Distortion([1.0,2.0,3.0], [1.0,2.0]))
+    clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
+                            Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"))
+    clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"))
     clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),DistortionShift(1.0, 2.0))
     clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),
                                    PerspectiveShift(0.1, 0.2))
@@ -130,6 +132,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
+    self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
@@ -154,9 +157,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
                                           {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
     self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
-                                                ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
+                                                  ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
     self.assertTupleEqual(d["globalStage"], ({ "E":100.0, "N":200.0, "U":300.0,
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 },
                                              { "E":100.0, "N":200.0, "U":300.0,
@@ -192,12 +195,13 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
                                                      { "focus":1, "iris":2, "zoom":3 }))
     self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
+    self.assertTupleEqual(d["lens"]["undistortionOverscan"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
-                                                     { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
+                                                         { "a1":1.0,"a2":2.0,"a3":3.0 }))
+    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
+                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"}))
+    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"},
+                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}))
     self.assertTupleEqual(d["lens"]["distortionShift"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
     self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
@@ -881,6 +885,34 @@ class ModelTest(unittest.TestCase):
     clip.lens_distortion_overscan_max = value
     self.assertEqual(clip.lens_distortion_overscan_max, value)
     
+  def test_lens_undistortion_overscan(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_undistortion_overscan)
+
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = ""
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (-1.0,)
+
+    value = (1.0,)
+    clip.lens_undistortion_overscan = value
+    self.assertTupleEqual(clip.lens_undistortion_overscan, value)
+    
+  def test_lens_undistortion_overscan_max(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_undistortion_overscan_max)
+
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan_max = ""
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan_max = -1.0
+
+    value = 1.2
+    clip.lens_undistortion_overscan_max = value
+    self.assertEqual(clip.lens_undistortion_overscan_max, value)
+
   def test_lens_exposure_falloff(self):
     clip = Clip()
 
@@ -925,11 +957,17 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.lens_distortion = Distortion([1.0])
     with self.assertRaises(ValueError):
+      clip.lens_distortion = Distortion([1.0, 2.0], [], "TestModel")
+    with self.assertRaises(ValueError):
       clip.lens_exposure_falloff = (Distortion([]),)
     with self.assertRaises(ValueError):
       clip.lens_exposure_falloff = (Distortion([],[]),)
     with self.assertRaises(ValueError):
       clip.lens_exposure_falloff = (Distortion([1.0],[]),)
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = (Distortion([1.0, 2.0], None, ""),)
+    with self.assertRaises(ValueError):
+      clip.lens_exposure_falloff = (Distortion([1.0, 2.0], [1.0, 2.0], ""),)
 
     value = (Distortion([1.0]),)
     value = (Distortion([1.0,2.0]),)
@@ -943,15 +981,25 @@ class ModelTest(unittest.TestCase):
   def test_lens_distortion_from_dict(self):
     r = LensDistortion.from_json({
       "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3]
     })
-    self.assertEqual(r,Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    self.assertEqual(r,Distortion([0.1,0.2,0.3]))
+    r = LensDistortion.from_json({
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel",
+    })
+    self.assertEqual(r,Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"))
     
   def test_lens_distortion_to_dict(self):
-    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3]))
     self.assertDictEqual(j, {
       "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3]
+    })
+    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"))
+    self.assertDictEqual(j, {
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel",
     })
     
   def test_lens_distortion_shift(self):

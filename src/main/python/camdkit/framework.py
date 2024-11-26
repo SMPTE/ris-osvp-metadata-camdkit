@@ -84,10 +84,12 @@ class ExposureFalloff:
 @dataclasses.dataclass
 class Distortion:
   """Coefficients for the calculation of radial and (optionally)
-  tangential lens distortion
+  tangential lens distortion. Model is an optional string that describes
+  the distortion model
   """
   radial: typing.Tuple[float]
   tangential: typing.Optional[typing.Tuple[float]] = None
+  model: typing.Optional[typing.Tuple[str]] = None
 
 @dataclasses.dataclass
 class PerspectiveShift:
