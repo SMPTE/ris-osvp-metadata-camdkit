@@ -130,15 +130,13 @@ class Timestamp:
 
 @dataclasses.dataclass
 class VersionedProtocol:
-  """A pair of protocol name and protocol version number (though
-  'number' should not be seen as a restriction to a numeric character
-  set. Both must be specified as strings with strictly positive length.
-  The version must be specified as three integers separated by '.'
-  characters, and embody the major, minor and patch meanings of
-  semantic versioning.
+  """A pair of protocol name and protocol version number. The name must be
+  specified as a string with a strictly positive length. The version should
+  be specified as three integers separated that embody the major, minor and
+  patch meanings of semantic versioning.
   """
   name: str
-  version: str
+  version: typing.Tuple[int]
 
 class BaseEnum(Enum):
   """Base class for enumerations"""

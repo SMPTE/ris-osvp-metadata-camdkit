@@ -265,7 +265,7 @@ class OpenTrackIOProtocol:
     def get_protocol_version(self):
         """Version of the protocol to which this sample conforms"""
         if self.validate_dict_elements(self.pd,["protocol","version"]):
-            return str(self.pd["protocol"]["version"])
+            return ".".join(map(str, self.pd["protocol"]["version"]))
         else:
             return None
 

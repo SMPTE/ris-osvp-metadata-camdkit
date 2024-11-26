@@ -13,7 +13,7 @@ from jsonschema import validate
 from camdkit.framework import *
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = "0.9.0"
+OPENTRACKIO_PROTOCOL_VERSION = (0,9,1)
 
 class ActiveSensorPhysicalDimensions(DimensionsParameter):
   """Height and width of the active area of the camera sensor in microns
@@ -262,15 +262,12 @@ class Protocol(Parameter):
     if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
       return False
 
-    if not isinstance(value.version, str):
+    if not isinstance(value.version, tuple):
       return False
-    if not len(value.version):
+    if len(value.version) != 3:
       return False
-    version_number_components = value.version.split(".")
-    if len(version_number_components) != 3:
-      return False
-    return all([version_number_component.isdigit()
-                for version_number_component in version_number_components])
+    return all([version_number_component >= 0 and version_number_component <= 9
+                for version_number_component in value.version])
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -292,8 +289,14 @@ class Protocol(Parameter):
             "maxLength": 1023
         },
         "version": {
-          "type": "string",
-            "pattern": r'^[0-9]+.[0-9]+.[0-9]+$'
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minValue": 0,
+            "maxValue": 9
+          },
+          "minItems": 3,
+          "maxItems": 3
         }
       }
     }

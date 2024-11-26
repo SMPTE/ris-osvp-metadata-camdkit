@@ -478,21 +478,21 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.protocol)
 
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol("", "1.2.3"),)
+      clip.protocol = (VersionedProtocol("", (1,2,3)),)
     with self.assertRaises(ValueError):
       # For now, we require the protocol name to be OPENTRACKIO_PROTOCOL_NAME
-      clip.protocol = (VersionedProtocol("AnyString", "1.2.3"),)
+      clip.protocol = (VersionedProtocol("AnyString", (1,2,3)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(123, "1.2.3"),)
+      clip.protocol = (VersionedProtocol(123, (1,2,3)),)
 
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ""),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ()),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1,2)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2.3.4"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1,2,3,4)),)
     with self.assertRaises(ValueError):
       clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 123),)
     with self.assertRaises(ValueError):
