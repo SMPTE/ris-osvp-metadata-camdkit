@@ -79,8 +79,8 @@ def _get_recommended_dynamic_clip():
   clip.tracker_notes = ("Example generated sample.",)
 
   clip.timing_mode = (TimingModeEnum.EXTERNAL,)
-  clip.timing_frame_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
+  clip.timing_sample_rate = (Fraction(24000, 1001),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
   
   v = Vector3(x=1.0, y=2.0, z=3.0)
   r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
@@ -112,12 +112,11 @@ def _get_complete_dynamic_clip():
   clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000, 0),)
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 500000000),)
   clip.timing_sequence_number = (0,)
-  clip.timing_frame_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001),True)),)
+  clip.timing_sample_rate = (Fraction(24000, 1001),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
   clip.timing_synchronization = (Synchronization(
     present=True,
     locked=True,
-    frequency=Fraction(24000, 1001),
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
       offset=0.0,

@@ -25,7 +25,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(len(clip.sample_id[1]), len(uuid.uuid4().urn))
     self.assertEqual(clip.tracker_recording[2], True)
     self.assertEqual(clip.tracker_status[3], "Optical Good")
-    self.assertEqual(clip.timing_frame_rate[4], 25.0)
+    self.assertEqual(clip.timing_sample_rate[4], 25.0)
     self.assertEqual(clip.timing_mode[5], "internal")
     self.assertEqual(clip.timing_sequence_number[6], 13)
     self.assertEqual(clip.timing_synchronization[7],

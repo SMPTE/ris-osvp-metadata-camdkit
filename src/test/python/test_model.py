@@ -78,7 +78,7 @@ class ModelTest(unittest.TestCase):
     clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),
                                       Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
-    clip.timing_frame_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
+    clip.timing_sample_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
     clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(24)),
                             Timecode(1,2,3,5,TimecodeFormat(24)))
     sync = Synchronization(
@@ -175,9 +175,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["recordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
                                                              { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
-    self.assertTupleEqual(d["timing"]["frameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
-    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False, "oddField": True } },
-                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False, "oddField": True } }))
+    self.assertTupleEqual(d["timing"]["sampleRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
+    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "sub_frame": 0 } },
+                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "sub_frame": 0 } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
                   "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
@@ -573,17 +573,17 @@ class ModelTest(unittest.TestCase):
     clip.timing_mode = value
     self.assertEqual(clip.timing_mode, value)
 
-  def test_timing_frame_rate_model(self):
+  def test_timing_sample_rate_model(self):
     clip = Clip()
 
-    self.assertIsNone(clip.timing_frame_rate)
+    self.assertIsNone(clip.timing_sample_rate)
 
     with self.assertRaises(ValueError):
-      clip.timing_frame_rate = -1.0
+      clip.timing_sample_rate = -1.0
 
     value = (Fraction(24000, 1001),)
-    clip.timing_frame_rate = value
-    self.assertEqual(clip.timing_frame_rate, value)
+    clip.timing_sample_rate = value
+    self.assertEqual(clip.timing_sample_rate, value)
 
   def test_timing_sample_timestamp_model(self):
     clip = Clip()
@@ -757,8 +757,7 @@ class ModelTest(unittest.TestCase):
           "num": 24,
           "denom": 1
         },
-        "dropFrame": False,
-        "oddField": True,
+        "sub_frame": 0,
       }
     })
     self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(24))))
@@ -775,8 +774,7 @@ class ModelTest(unittest.TestCase):
           "num": 24,
           "denom": 1
         },
-        "dropFrame": False,
-        "oddField": True,
+        "sub_frame": 0,
       }
     })
 

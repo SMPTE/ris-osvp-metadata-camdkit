@@ -555,8 +555,9 @@ class TimingSynchronization(Parameter):
   """Object describing how the tracking device is synchronized for this
   sample.
 
-  frequency: The frequency of the synchronisation. This may differ from
-  the sample frame rate for example in a genlocked tracking device.
+  frequency: The frequency of a synchronization signal.This may differ from
+  the sample frame rate for example in a genlocked tracking device. This is
+  not required if the synchronization source is PTP or NTP.
   locked: Is the tracking device locked to the synchronization source
   offsets: Offsets in seconds between sync and sample. Critical for e.g.
   frame remapping, or when using different data sources for
@@ -593,12 +594,13 @@ class TimingSynchronization(Parameter):
     """
     if not isinstance(value, Synchronization):
       return False
-    if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
-      return False
     if not isinstance(value.locked, bool):
       return False
     if not isinstance(value.source, SynchronizationSourceEnum):
       return False
+    if value.frequency != None:
+      if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
+        return False
     if value.ptp != None:
       # Validate MAC address
       if value.ptp.master != None and not (isinstance(value.ptp.master,str) and 
@@ -620,7 +622,8 @@ class TimingSynchronization(Parameter):
   def to_json(value: typing.Any) -> typing.Any:
     d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
     d["source"] = str(d["source"])
-    d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
+    if "frequency" in d:
+      d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
     if value.offsets is not None:
         d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
     return d
@@ -682,7 +685,7 @@ class TimingSynchronization(Parameter):
         },
         "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
       },
-      "required": ["frequency", "locked", "source"]
+      "required": ["locked", "source"]
     }
 
 class LensEncoders(Parameter):
@@ -851,13 +854,13 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
   section = "timing"
   units = None
 
-class TimingFrameRate(StrictlyPositiveRationalParameter):
+class TimingSampleRate(StrictlyPositiveRationalParameter):
   """Sample frame rate as a rational number. Drop frame rates such as
   29.97 should be represented as e.g. 30000/1001. In a variable rate
   system this should is estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
-  canonical_name = "frameRate"
+  canonical_name = "sampleRate"
   section = "timing"
   units = None
 
@@ -865,8 +868,9 @@ class TimingTimecode(Parameter):
   """SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
-   - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
+   - format.frameRate: The frame rate as a rational number. Drop frame
+  rates such as 29.97 should be represented as e.g. 30000/1001. The
+  timecode frame rate may differ from the sample frequency.
   """
   sampling = Sampling.REGULAR
   canonical_name = "timecode"
@@ -901,8 +905,7 @@ class TimingTimecode(Parameter):
         "num": d["format"].frame_rate.numerator,
         "denom": d["format"].frame_rate.denominator
       },
-      "dropFrame": d["format"].drop_frame,
-      "oddField": d["format"].odd_field,
+      "sub_frame": d["format"].sub_frame,
     }
     return d
 
@@ -911,8 +914,7 @@ class TimingTimecode(Parameter):
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
                                                           value["format"]["frameRate"]["denom"]),
-                                   in_drop_frame=value["format"]["dropFrame"],
-                                   in_odd_field=value["format"]["oddField"]))
+                                   in_sub_frame=value["format"]["sub_frame"]))
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -944,7 +946,7 @@ class TimingTimecode(Parameter):
         "format": {
           "type": "object",
           "description": TimecodeFormat.__doc__.replace("\n ", ""),
-          "required": [ "frameRate", "dropFrame" ],
+          "required": [ "frameRate" ],
           "additionalProperties": False,
           "properties": {
             "frameRate": {
@@ -964,11 +966,10 @@ class TimingTimecode(Parameter):
                 }
               }
             },
-            "dropFrame": {
-              "type": "boolean"
-            },
-            "oddField": {
-              "type": "boolean"
+            "sub_frame": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": UINT_MAX
             }
           }
         }
@@ -1364,9 +1365,9 @@ class Clip(ParameterContainer):
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
   source_id: typing.Optional[typing.Tuple[str]] = SourceId()
   source_number: typing.Optional[typing.Tuple[int]] = SourceNumber()
-  timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
+  timing_sample_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingSampleRate()
   timing_sample_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()

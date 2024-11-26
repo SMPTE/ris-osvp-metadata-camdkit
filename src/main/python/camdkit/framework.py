@@ -205,30 +205,27 @@ class TimingModeEnum(BaseEnum):
   EXTERNAL = "external"
 
 class TimecodeFormat:
-  """The timecode format is defined as a rational frame rate and drop
-  frame flag. Where an interlaced signal is described, the oddField flag
-  indicates which field (odd or even) is referred to by the timecode.
+  """The timecode format is defined as a rational frame rate and - where a
+  signal with sub-frames is described, such as an interlaced signal - an
+  index of which sub-frame is referred to by the timecode.
   """
 
   frame_rate: numbers.Rational
-  drop_frame: bool = False
-  odd_field: bool = True
+  sub_frame: int = 0
 
   def __init__(self, in_frame_rate: numbers.Rational,
-               in_drop_frame: bool = False,
-               in_odd_field: bool = True):
+               in_sub_frame: int = 0):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
     self.frame_rate = in_frame_rate
-    self.drop_frame = in_drop_frame
-    self.odd_field = in_odd_field
+    self.sub_frame = in_sub_frame
 
   def to_int(self):
     return self.frame_rate.__ceil__()
   
   def __str__(self):
-    return f"{str(self.frame_rate)}{'D' if self.drop_frame else ''}"
+    return f"{str(self.frame_rate)}/{str(self.sub_frame)}"
   
   def __eq__(self, other):
       if isinstance(other, self.__class__):
@@ -259,9 +256,9 @@ class Timecode:
 class Synchronization:
   """Data structure for synchronization data"""
 
-  frequency: numbers.Rational
   locked: bool
   source: SynchronizationSourceEnum
+  frequency: typing.Optional[numbers.Rational] = None
   offsets: typing.Optional[SynchronizationOffsets] = None
   present: typing.Optional[bool] = None
   ptp: typing.Optional[SynchronizationPTP] = None

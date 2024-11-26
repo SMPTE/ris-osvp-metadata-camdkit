@@ -184,9 +184,9 @@ class OpenTrackIOProtocol:
 
     def get_timecode_framerate(self):
         """Frame rate which the house timecode represents"""
-        if self.validate_dict_elements(self.pd,["timing","frameRate","num"]):
-            numerator = float(self.pd["timing"]["frameRate"]["num"])  
-            denominator = float(self.pd["timing"]["frameRate"]["denom"]) 
+        if self.validate_dict_elements(self.pd,["timing","sampleRate","num"]):
+            numerator = float(self.pd["timing"]["sampleRate"]["num"])  
+            denominator = float(self.pd["timing"]["sampleRate"]["denom"]) 
             return float(numerator / denominator)
         else:
             return None

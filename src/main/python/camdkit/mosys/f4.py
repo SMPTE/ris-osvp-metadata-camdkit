@@ -256,7 +256,7 @@ class F4PacketParser:
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
             frame_rate = frame.timing_timecode[0].format.frame_rate
-            frame.timing_frame_rate = (frame_rate,)
+            frame.timing_sample_rate = (frame_rate,)
             frequency = frame_rate
             pass
           case F4.TRACKING_STATUS:
