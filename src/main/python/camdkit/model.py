@@ -1069,6 +1069,18 @@ class UndistortionOverscanMaximum(NonNegativeRealParameter):
   section = "lens"
   units = None
 
+class DistortionIsProjection(BooleanParameter):
+  """The OpenLensIO distortion model is the Projection Characterization,
+  not the Field-Of-View Characterization. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
+
+  sampling = Sampling.STATIC
+  canonical_name = "distortionProjection"
+  section = "lens"
+  units = None
+
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
   a lens
@@ -1333,6 +1345,7 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
+  lens_distortion_is_projection: typing.Optional[typing.Tuple[bool]] = DistortionIsProjection()
   lens_distortion_overscan_max: typing.Optional[numbers.Real] = DistortionOverscanMaximum()
   lens_undistortion_overscan_max: typing.Optional[numbers.Real] = UndistortionOverscanMaximum()
   lens_firmware: typing.Optional[str] = LensFirmware()
@@ -1350,7 +1363,6 @@ class Clip(ParameterContainer):
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
   lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
   lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
-  lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
   lens_distortion_offset: typing.Optional[typing.Tuple[DistortionOffset]] = LensDistortionOffset()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
@@ -1362,6 +1374,7 @@ class Clip(ParameterContainer):
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Real]] = TStop()
   lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
+  lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
