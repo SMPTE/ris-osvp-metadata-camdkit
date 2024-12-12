@@ -894,7 +894,8 @@ class TimingTimecode(Parameter):
       return False
     if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds < 60):
       return False
-    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < value.format.to_int()):
+    if not (isinstance(value.frames, int) and value.frames >= 0 and \
+            value.frames < value.format.to_int() and value.format.frame_rate <= 120):
       return False
     return True
 
@@ -942,7 +943,7 @@ class TimingTimecode(Parameter):
         "frames": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 29
+          "maximum": 119
         },
         "format": {
           "type": "object",

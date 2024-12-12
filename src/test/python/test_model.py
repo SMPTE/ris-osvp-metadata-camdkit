@@ -740,6 +740,9 @@ class ModelTest(unittest.TestCase):
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, True))))
+    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(120))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(121))))
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
