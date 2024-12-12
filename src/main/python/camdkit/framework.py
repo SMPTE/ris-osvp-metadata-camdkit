@@ -87,8 +87,8 @@ class Distortion:
   tangential lens distortion. Model is an optional string that describes
   the distortion model
   """
-  radial: typing.Tuple[float]
-  tangential: typing.Optional[typing.Tuple[float]] = None
+  radial: typing.Tuple[float, ...]
+  tangential: typing.Optional[typing.Tuple[float, ...]] = None
   model: typing.Optional[typing.Tuple[str]] = None
 
 @dataclasses.dataclass
@@ -134,7 +134,7 @@ class VersionedProtocol:
   patch meanings of semantic versioning.
   """
   name: str
-  version: typing.Tuple[int]
+  version: typing.Tuple[int, int, int]
 
 class BaseEnum(Enum):
   """Base class for enumerations"""
