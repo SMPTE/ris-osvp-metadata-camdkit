@@ -266,7 +266,10 @@ class Protocol(Parameter):
       return False
     if len(value.version) != 3:
       return False
-    return all([version_number_component >= 0 and version_number_component <= 9
+    return all([
+      isinstance(version_number_component, int) \
+                and version_number_component >= 0 \
+                and version_number_component <= 9 \
                 for version_number_component in value.version])
 
   @staticmethod
@@ -1037,32 +1040,44 @@ class EntrancePupilOffset(RealParameter):
   units = "meter"
   section = "lens"
 
-class DistortionOverscan(NonNegativeRealParameter):
-  """Overscan factor on lens distortion"""
+class DistortionOverscan(GreaterEqualOneRealParameter):
+  """Overscan factor on lens distortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
 
   sampling = Sampling.REGULAR
   canonical_name = "distortionOverscan"
   section = "lens"
   units = None
 
-class UndistortionOverscan(NonNegativeRealParameter):
-  """Overscan factor on lens undistortion"""
+class UndistortionOverscan(GreaterEqualOneRealParameter):
+  """Overscan factor on lens undistortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
 
   sampling = Sampling.REGULAR
   canonical_name = "undistortionOverscan"
   section = "lens"
   units = None
 
-class DistortionOverscanMaximum(NonNegativeRealParameter):
-  """Static maximum overscan factor on lens distortion"""
+class DistortionOverscanMaximum(GreaterEqualOneRealParameter):
+  """Static maximum overscan factor on lens distortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  """
 
   sampling = Sampling.STATIC
   canonical_name = "distortionOverscanMax"
   section = "lens"
   units = None
   
-class UndistortionOverscanMaximum(NonNegativeRealParameter):
-  """Static maximum overscan factor on lens undistortion"""
+class UndistortionOverscanMaximum(GreaterEqualOneRealParameter):
+  """Static maximum overscan factor on lens undistortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  """
 
   sampling = Sampling.STATIC
   canonical_name = "undistortionOverscanMax"

@@ -664,6 +664,22 @@ class NonNegativeRealParameter(RealParameter):
       "minimum": 0.0,
     }
 
+class GreaterEqualOneRealParameter(RealParameter):
+  
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a real number >= 1."""
+
+    return isinstance(value, numbers.Real) and value >= 1.0
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+      "minimum": 1.0,
+    }
+
+
 class EnumParameter(StringParameter):
   allowedValues = []
 

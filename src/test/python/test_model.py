@@ -877,6 +877,10 @@ class ModelTest(unittest.TestCase):
       clip.lens_distortion_overscan = ""
     with self.assertRaises(ValueError):
       clip.lens_distortion_overscan = (-1.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = (1.0,)
     clip.lens_distortion_overscan = value
@@ -891,6 +895,10 @@ class ModelTest(unittest.TestCase):
       clip.lens_distortion_overscan_max = ""
     with self.assertRaises(ValueError):
       clip.lens_distortion_overscan_max = -1.0
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = 1.2
     clip.lens_distortion_overscan_max = value
@@ -905,6 +913,10 @@ class ModelTest(unittest.TestCase):
       clip.lens_undistortion_overscan = ""
     with self.assertRaises(ValueError):
       clip.lens_undistortion_overscan = (-1.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = (1.0,)
     clip.lens_undistortion_overscan = value
@@ -919,6 +931,10 @@ class ModelTest(unittest.TestCase):
       clip.lens_undistortion_overscan_max = ""
     with self.assertRaises(ValueError):
       clip.lens_undistortion_overscan_max = -1.0
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = 1.2
     clip.lens_undistortion_overscan_max = value
