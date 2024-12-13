@@ -85,11 +85,12 @@ class ExposureFalloff:
 class Distortion:
   """Coefficients for the calculation of radial and (optionally)
   tangential lens distortion. Model is an optional string that describes
-  the distortion model
+  the distortion model. The default is Brown-Conrady D-U (that maps
+  Distorted to Undistorted coordinates).
   """
   radial: typing.Tuple[float, ...]
   tangential: typing.Optional[typing.Tuple[float, ...]] = None
-  model: typing.Optional[typing.Tuple[str]] = None
+  model: typing.Optional[str] = None
 
 @dataclasses.dataclass
 class ProjectionOffset:

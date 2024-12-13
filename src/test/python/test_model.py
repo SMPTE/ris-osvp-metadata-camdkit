@@ -112,10 +112,10 @@ class ModelTest(unittest.TestCase):
     clip.lens_undistortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                   ExposureFalloff(1.0, 2.0, 3.0))
-    clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
-                            Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"))
-    clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"),
-                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D"))
+    clip.lens_distortions = ((Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D")),
+                             (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D")))
     clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),DistortionOffset(1.0, 2.0))
     clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),ProjectionOffset(0.1, 0.2))
 
@@ -199,10 +199,10 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["undistortionOverscan"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                          { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
-                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"}))
-    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"},
-                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}))
+    self.assertTupleEqual(d["lens"]["distortion"], ([{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
+                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}],
+                                                    [{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
+                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}]))
     self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
     self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
@@ -974,60 +974,68 @@ class ModelTest(unittest.TestCase):
       "a3": 0.5
     })
     
-  def test_lens_distortion(self):
+  def test_lens_distortions(self):
     clip = Clip()
 
-    self.assertIsNone(clip.lens_distortion)
+    self.assertIsNone(clip.lens_distortions)
 
     with self.assertRaises(ValueError):
-      clip.lens_distortion = ""
+      clip.lens_distortions = ""
     with self.assertRaises(ValueError):
-      clip.lens_distortion = Distortion([1.0])
+      clip.lens_distortions = []
     with self.assertRaises(ValueError):
-      clip.lens_distortion = Distortion([1.0, 2.0], [], "TestModel")
+      clip.lens_distortions = ((),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([]),)
+      clip.lens_distortions = (Distortion([1.0]),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([],[]),)
+      clip.lens_distortions = (Distortion([1.0, 2.0], [], "TestModel"),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([1.0],[]),)
+      clip.lens_distortions = ((Distortion([]),),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([1.0, 2.0], None, ""),)
+      clip.lens_distortions = ((Distortion([],[]),),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([1.0, 2.0], [1.0, 2.0], ""),)
+      clip.lens_distortions = ((Distortion([1.0],[]),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([1.0, 2.0], None, ""),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([1.0, 2.0], [1.0, 2.0], ""),),)
 
-    value = (Distortion([1.0]),)
-    value = (Distortion([1.0,2.0]),)
-    value = (Distortion([-1.0,1.0,-1.0]),)
-    value = (Distortion([1.0],[0.0]),)
-    value = (Distortion([1.0,2.0],[1.0,2.0]),)
-    value = (Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),)
-    clip.lens_distortion = value
-    self.assertTupleEqual(clip.lens_distortion, value)
+    value = ((Distortion([1.0]),),)
+    value = ((Distortion([1.0,2.0]),),)
+    value = ((Distortion([-1.0,1.0,-1.0]),),)
+    value = ((Distortion([1.0],[0.0]),),)
+    value = ((Distortion([1.0,2.0],[1.0,2.0]),),)
+    value = ((Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),),)
+    clip.lens_distortions = value
+    self.assertTupleEqual(clip.lens_distortions, value)
     
-  def test_lens_distortion_from_dict(self):
-    r = LensDistortion.from_json({
+  def test_lens_distortions_from_dict(self):
+    r = LensDistortions.from_json(({
       "radial": [0.1,0.2,0.3],
-    })
-    self.assertEqual(r,Distortion([0.1,0.2,0.3]))
-    r = LensDistortion.from_json({
+    },))
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3]),))
+    r = LensDistortions.from_json([{
       "radial": [0.1,0.2,0.3],
       "tangential": [0.1,0.2,0.3],
       "model": "TestModel",
-    })
-    self.assertEqual(r,Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"))
+    }])
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),))
     
   def test_lens_distortion_to_dict(self):
-    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3]))
-    self.assertDictEqual(j, {
+    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
+    self.assertListEqual(j, [{
       "radial": [0.1,0.2,0.3],
-    })
-    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"))
-    self.assertDictEqual(j, {
+    }])
+    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel2")))
+    self.assertListEqual(j, [{
       "radial": [0.1,0.2,0.3],
       "tangential": [0.1,0.2,0.3],
       "model": "TestModel",
-    })
+    }, {
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel2",
+    }])
     
   def test_lens_distortion_offset(self):
     clip = Clip()

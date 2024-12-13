@@ -1149,10 +1149,13 @@ class LensExposureFalloff(Parameter):
       }
     }
   
-class LensDistortion(Parameter):
-  """Coefficients for calculating the distortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
+class LensDistortions(Parameter):
+  """A list of Distortion objects that each define the coefficients for
+  calculating the distortion characteristics of a lens comprising radial
+  distortion coefficients of the spherical distortion (k1-N) and the
+  tangential distortion (p1-N). An optional key 'model' can be used that
+  describes the distortion model. The default is Brown-Conrady D-U (that
+  maps Distorted to Undistorted coordinates).
   """
   sampling = Sampling.REGULAR
   canonical_name = "distortion"
@@ -1161,78 +1164,89 @@ class LensDistortion(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The radial and tangential coefficients shall each be real numbers."""
+    """The list shall contain at least one Distortion object, and in each
+    object the radial and tangential coefficients shall each be real numbers.
+    """
 
-    if not isinstance(value, Distortion):
+    if not isinstance(value, tuple):
       return False
     
-    # If model is provided check the length
-    if value.model != None and len(value.model) == 0:
+    if len(value) == 0:
       return False
- 
-    # At least one radial coefficient is required
-    if value.radial == None or len(value.radial) == 0:
-      return False
-
-    for k in value.radial:
-      if k is not None and not isinstance(k, numbers.Real):
+    
+    for v in value:
+      if not isinstance(v, Distortion):
         return False
-    if value.tangential is not None:
-      for p in value.tangential:
-        if p is not None and not isinstance(p, numbers.Real):
+      
+      # If model is provided check the length
+      if v.model != None and len(v.model) == 0:
+        return False
+  
+      # At least one radial coefficient is required
+      if v.radial == None or len(v.radial) == 0:
+        return False
+
+      for k in v.radial:
+        if k is not None and not isinstance(k, numbers.Real):
           return False
+      if v.tangential is not None:
+        if len(v.tangential) == 0:
+          return False
+        for p in v.tangential:
+          if p is not None and not isinstance(p, numbers.Real):
+            return False
 
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    d = dataclasses.asdict(value)
-    if d["model"] == None:
-      del d["model"]
-    if d["tangential"] == None:
-      del d["tangential"]
-    return d
+    a = []
+    for element in value:
+      d = dataclasses.asdict(element)
+      if d["model"] == None:
+        del d["model"]
+      if d["tangential"] == None:
+        del d["tangential"]
+      a.append(d)
+    return a
 
   @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Distortion(**value)
+  def from_json(value: typing.Any) -> typing.Tuple[Distortion]:
+    a = ()
+    for element in value:
+      a += (Distortion(**element),)
+    return a
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
-      "type": "object",
-      "additionalProperties": False,
-      "required": ["radial"],
-      "properties": {
-        "model": {
-          "type": "string",
-        },
-        "radial": {
-          "type": "array",
-          "items": {
-            "type": "number"
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["radial"],
+        "properties": {
+          "model": {
+            "type": "string",
           },
-          "minLength": 1
-        },
-        "tangential": {
-          "type": "array",
-          "items": {
-            "type": "number"
+          "radial": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minLength": 1
           },
-          "minLength": 1
-        },
+          "tangential": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minLength": 1
+          },
+        }
       }
     }
-  
-class LensUndistortion(LensDistortion):
-  """Coefficients for calculating the undistortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
-  """
-  sampling = Sampling.REGULAR
-  canonical_name = "undistortion"
-  section = "lens"
-  units = None
   
 class LensDistortionOffset(Parameter):
   """Offset in x and y of the centre of distortion of the virtual camera
@@ -1376,7 +1390,7 @@ class Clip(ParameterContainer):
   tracker_status: typing.Optional[typing.Tuple[str]] = Status()
   global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
-  lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_distortions: typing.Optional[typing.Tuple[typing.Tuple[Distortion]]] = LensDistortions()
   lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
   lens_distortion_offset: typing.Optional[typing.Tuple[DistortionOffset]] = LensDistortionOffset()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
@@ -1388,7 +1402,6 @@ class Clip(ParameterContainer):
   lens_projection_offset: typing.Optional[typing.Tuple[ProjectionOffset]] = LensProjectionOffset()
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Real]] = TStop()
-  lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
   lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()

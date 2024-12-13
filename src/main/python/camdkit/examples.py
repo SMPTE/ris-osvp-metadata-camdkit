@@ -91,7 +91,7 @@ def _get_recommended_dynamic_clip():
   clip.lens_focus_distance = (1000,)
   clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
-  clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),)
+  clip.lens_distortions = ((Distortion([1.0,2.0,3.0], [1.0,2.0]),),)
   clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),)
   return clip
 
@@ -144,8 +144,7 @@ def _get_complete_dynamic_clip():
   clip.lens_distortion_overscan = (1.1,)
   clip.lens_undistortion_overscan = (1.2,)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
-  clip.lens_distortion = (Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady D-U"),)
-  clip.lens_undistortion = (Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady U-D"),)
+  clip.lens_distortions = ((Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady D-U"), Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady U-D"),),)
   clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),)
   clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
