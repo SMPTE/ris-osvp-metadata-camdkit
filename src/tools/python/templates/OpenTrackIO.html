@@ -71,10 +71,10 @@
             </div>
             
             <h2>Transport recommendations</h2>
-            <h3>UDP Multicast</h3>
+            <h3>UDP</h3>
             <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
             <h4>Multicast Addressing</h4>
-            <p>OpenTrackIO Producers use multicast addressing to deliver messages to Consumers. The use of unicast addressing is not recommended.</p>
+            <p>OpenTrackIO Producers use multicast addressing to deliver messages to Consumers. To guarantee interoperability and ease of configuration, the use of unicast addressing is discouraged, but allowed in specific cases. </p>
             
             <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
                 
@@ -125,49 +125,54 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>Byte Offset</th>
+                      <th>Bit Offset</th>
                       <th>Field</th>
                       <th>Description</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>0-4</td>
+                      <td>0-31</td>
                       <td>Identifier</td>
-                      <td>5 bytes: Static value to indicate OpenTrackIO packet, set to ASCII "OTrIO" (<code>0x4F5472494F</code>)</td>
+                      <td>4 bytes: Static value to indicate OpenTrackIO packet, set to ASCII "OTrk" (<code>0x4F54726B</code>)</td>
                     </tr>
                     <tr>
-                      <td>5-8</td>
-                      <td>Sequence Number</td>
-                      <td>4 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT32</code>)</td>
+                      <td>32-39</td>
+                      <td>Reserved</td>
+                      <td>1 byte: This field is reserved for future use and should be ignored by both Producers and Consumers.</td>
                     </tr>
                     <tr>
-                      <td>9</td>
-                      <td>Total Segments</td>
-                      <td>1 byte: Total number of segments for the payload (<code>0x01</code> if not segmented)</td>
+                      <td>40-47</td>
+                      <td>Encoding</td>
+                      <td>1 byte: Indicates the payload format (e.g., JSON = <code>0x01</code>, CBOR = <code>0x02</code>, OTP = <code>0x02</code>). <code>0x80</code> and above are reserved for vendor specific protocols.</td>
                     </tr>
                     <tr>
-                      <td>10</td>
-                      <td>Segment Index</td>
-                      <td>1 byte: Zero-indexed segment number within the series (if segmented); set to <code>0x00</code> if not segmented</td>
+                      <td>48-63</td>
+                      <td>Sequence number</td>
+                      <td>1 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
                     </tr>
                     <tr>
-                      <td>11</td>
-                      <td>Format Type</td>
-                      <td>1 byte: Indicates payload format (e.g., JSON = <code>0x01</code>, CBOR = <code>0x02</code>)</td>
+                      <td>64–95</td>
+                      <td>Segment offset</td>
+                      <td>4 bytes: A 32-bit field indicating the byte offset of this payload segment when the overall payload length necessitates segmentation. Must be set to <code>0x00</code> for single-segment payloads.</td>
                     </tr>
                     <tr>
-                      <td>12-13</td>
+                      <td>96</td>
+                      <td>Last segment flag</td>
+                      <td>This bit shall be set to <code>1</code> if this is the last segment in a multi-segment payload, or<code>0</code> if more segments are expected.</td>
+                    </tr>
+                    <tr>
+                      <td>97–111</td>
                       <td>Payload Length</td>
-                      <td>2 bytes: Total length of the payload for the current packet (in bytes)</td>
+                      <td>15 bits: Total length of the payload for the current packet (in bytes).</td>
                     </tr>
                     <tr>
-                      <td>14-17</td>
-                      <td>Checksum (CRC)</td>
-                      <td>4 bytes: CRC32 checksum of the header and payload, computed after constructing the full packet (not including checksum bytes)</td>
+                      <td>112–127</td>
+                      <td>Checksum (Fletcher16)</td>
+                      <td>2 bytes: A 16-bit checksum computed using the Fletcher-16 algorithm, covering the header and payload (excluding checksum bytes)</td>
                     </tr>
                     <tr>
-                      <td>18+</td>
+                      <td>128+</td>
                       <td>Payload</td>
                       <td>The actual JSON or CBOR OpenTrackIO packet (or a segment thereof)  data starts here</td>
                     </tr>
@@ -175,11 +180,9 @@
                 </table>
             </p>
             
-            
-            
             <h3>Real-time Transport Protocol (RTP)</h3>
             
-            <p>In addition to simple UDP, OpenTrackIO supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
+            <p>In addition to UDP, OpenTrackIO also supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
             <img src="img/RTP_Transport.svg">
             <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
             <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO Producer.</p>
