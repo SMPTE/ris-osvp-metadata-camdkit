@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+#
+# opentrackio_sender.py
+#
+# Reference code for encoding and sending OpenTrackIO data
+#
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
 import socket
 import struct
 import time
@@ -24,6 +33,10 @@ FREQUENCY_DENOM = 1001
 FREQUENCY = BASE_FREQUENCY / FREQUENCY_DENOM 
 INTERVAL = 1 / FREQUENCY
 MY_UUID = "" # UUID to be set in the main() function
+
+MTU = 1500  # Maximum Transmission Unit (bytes)
+HEADER_SIZE = 16  # Fixed header size (bytes)
+MAX_PAYLOAD_SIZE = MTU - HEADER_SIZE
 
 payloadformat = None
 
@@ -61,7 +74,6 @@ def init_time_source():
 		return
 	else:
 		return
-
 
 def increment_frame(current_time):
 	global last_second, current_frame
@@ -197,29 +209,101 @@ def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0
 	else:	
 		payload = json.dumps(payload_data).encode('utf-8')
 	
-	identifier = b'OTrIO'
-	sequence_number_bytes = struct.pack('!I', sequence_number)
-	total_segments_byte = struct.pack('!B', total_segments)
-	segment_index_byte = struct.pack('!B', segment_index)
-	#format_type = CBOR_FORMAT if use_cbor else JSON_FORMAT
-	#format_type = struct.pack('!B', PayloadFormat.CBOR.value) if use_cbor else struct.pack('!B', PayloadFormat.JSON.value)
-	format_type = struct.pack('!B', payloadformat.value)
-	payload_length = struct.pack('!H', len(payload))
+	udp_segments = construct_udp_segments(sequence_number, payload, payloadformat.value)
+	return udp_segments
+	
+def fletcher16(data: bytes) -> bytes:
+	"""
+	Compute the Fletcher-16 checksum for the given data.
 
+	Args:
+		data (bytes): Input data for which the checksum is calculated.
+
+	Returns:
+		bytes: A 2-byte Fletcher-16 checksum.
+	"""
+	sum1 = 0
+	sum2 = 0
+	for byte in data:
+		sum1 = (sum1 + byte) % 255
+		sum2 = (sum2 + sum1) % 255
+	checksum = (sum2 << 8) | sum1
+	return struct.pack('!H', checksum)
+
+def construct_udp_header(sequence_number: int, segment_offset: int, payload: bytes, encoding: int = 0, last_segment: bool = False) -> bytes:
+	"""
+	Construct a UDP header with the new format.
+
+	Args:
+		sequence_number (int): Sequence number of the packet (0-65535).
+		segment_offset (int): Offset of this segment in the full data stream (0-2^32-1).
+		payload (bytes): The payload to be sent.
+		encoding (int): Encoding type (0-255).
+		last_segment (bool): Whether this is the last segment.
+
+	Returns:
+		bytes: The constructed UDP header and payload.
+	"""
+	identifier = b'OTrk'  # 4-byte identifier
+	reserved = 0          # Reserved field (1 byte)
+	encoding_byte = struct.pack('!B', encoding)  # Encoding (1 byte)
+	sequence_number_bytes = struct.pack('!H', sequence_number)  # Sequence number (2 bytes)
+	segment_offset_bytes = struct.pack('!I', segment_offset)  # Segment offset (4 bytes)
+
+	payload_length = len(payload)
+	
+	l_and_payload_length = (int(last_segment) << 15) | payload_length
+	l_and_payload_length_bytes = struct.pack('!H', l_and_payload_length)
+	
 	header = (
 		identifier +
+		struct.pack('!B', reserved) +
+		encoding_byte +
 		sequence_number_bytes +
-		total_segments_byte +
-		segment_index_byte +
-		format_type +
-		payload_length
+		segment_offset_bytes +
+		l_and_payload_length_bytes
 	)
 
-	crc_value = zlib.crc32(header + payload) & 0xFFFFFFFF
-	crc_bytes = struct.pack('!I', crc_value)
-
-	return header + crc_bytes + payload
-
+	checksum = fletcher16(header + payload)
+	
+	return header + checksum
+	
+def construct_udp_segments(sequence_number: int, payload: bytes, encoding: int = 0) -> list:
+		"""
+		Construct UDP packets with segmentation if payload exceeds 1500 bytes.
+	
+		Args:
+			sequence_number (int): Sequence number of the first packet.
+			payload (bytes): The payload to be sent.
+			encoding (int): Encoding type (0-255).
+	
+		Returns:
+			list: A list of UDP packets (bytes), each with its own header and payload.
+		"""
+	
+		segments = []  # List to store individual segments
+		total_length = len(payload)
+	
+		for offset in range(0, total_length, MAX_PAYLOAD_SIZE):
+			segment_payload = payload[offset : offset + MAX_PAYLOAD_SIZE]
+			last_segment = (offset + MAX_PAYLOAD_SIZE >= total_length)  # Is this the last segment?
+			
+			header = construct_udp_header(
+				sequence_number=sequence_number,
+				segment_offset=offset,
+				payload=segment_payload,
+				encoding=encoding,
+				last_segment=last_segment
+			)
+	
+			# Append the complete packet (header + payload)
+			segments.append(header + segment_payload)
+			
+			# Increment sequence number for the next segment
+			sequence_number += 1
+	
+		return segments
+	
 def send_multicast_packets():
 	global sequence_number
 	
@@ -231,8 +315,11 @@ def send_multicast_packets():
 	print(f"Sending packets to {MULTICAST_GROUP}:{MULTICAST_PORT} at {FREQUENCY} packets per second")
 
 	while True:
-		packet = create_opentrackio_packet(use_cbor = (payloadformat == PayloadFormat.CBOR), sequence_number=sequence_number)
-		sock.sendto(packet, (MULTICAST_GROUP, MULTICAST_PORT))
+		segments = create_opentrackio_packet(use_cbor = (payloadformat == PayloadFormat.CBOR), sequence_number=sequence_number)
+	
+		for i, segment in enumerate(segments):
+			sock.sendto(segment, (MULTICAST_GROUP, MULTICAST_PORT))
+		
 		increment_sequence_number()
 		move_camera()
 		time.sleep(INTERVAL)

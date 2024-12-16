@@ -18,17 +18,16 @@ from cbor2 import loads
 from opentrackio_lib import *
 
 MULTICAST_PORT = 55555
-IDENTIFIER = b'OTrIO'  # ASCII "OTrIO"
+IDENTIFIER = b'OTrk'  # ASCII "OTrIO"
 IDENTIFIER_LENGTH = len(IDENTIFIER) 
-HEADER_LENGTH = 19
+HEADER_LENGTH = 16
 VERBOSE = False
-#CBOR_FORMAT = 0x02
-#JSON_FORMAT = 0x01
+
+opentrackiolib = None
 
 sequence_number = 0
 prev_sequence_number = 0
-
-opentrackiolib = None
+segment_buffer = {}
 
 timesource = ''
 
@@ -49,9 +48,26 @@ def init_time_source():
 	else:
 		return
 
+def fletcher16(data: bytes) -> bytes:
+	"""
+	Compute the Fletcher-16 checksum for the given data.
+	
+	Args:
+		data (bytes): Input data for which the checksum is calculated.
+	
+	Returns:
+		bytes: A 2-byte Fletcher-16 checksum.
+	"""
+	sum1 = 0
+	sum2 = 0
+	for byte in data:
+		sum1 = (sum1 + byte) % 255
+		sum2 = (sum2 + sum1) % 255
+	checksum = (sum2 << 8) | sum1
+	return struct.pack('!H', checksum)
 
 def parse_opentrackio_packet(data):
-	global sequence_number, prev_sequence_number, opentrackiolib, timesource
+	global sequence_number, prev_sequence_number, opentrackiolib, timesource, segment_buffer
 	
 	if len(data) < HEADER_LENGTH:
 		print("Invalid packet: Packet is too short.")
@@ -62,13 +78,18 @@ def parse_opentrackio_packet(data):
 		print("Invalid packet: Identifier mismatch.")
 		return False
 
-	sequence_number = struct.unpack('!I', data[5:9])[0]
-	total_segments = struct.unpack('!B', data[9:10])[0]
-	segment_index = struct.unpack('!B', data[10:11])[0]
-	format_type = struct.unpack('!B', data[11:12])[0]
-	payload_length = struct.unpack('!H', data[12:14])[0]
-	crc_value = struct.unpack('!I', data[14:18])[0]
-	payload = data[18:]
+	reserved = data[4]
+	encoding = data[5]
+	sequence_number = struct.unpack('!H', data[6:8])[0]
+	segment_offset = struct.unpack('!I', data[8:12])[0]
+	l_and_payload_length = struct.unpack('!H', data[12:14])[0]
+	
+	last_segment = bool(l_and_payload_length >> 15)
+	payload_length = l_and_payload_length & 0x7FFF
+	
+	checksum_val = struct.unpack('!H', data[14:16])[0]
+	
+	payload = data[16:]
 	
 	if sequence_number == prev_sequence_number:
 		print(f"Invalid packet: Same sequence number received twice.")
@@ -80,15 +101,34 @@ def parse_opentrackio_packet(data):
 		print(f"Invalid packet: Expected payload length {payload_length}, but got {len(payload)}.")
 		return False
 
-	header_without_crc = data[:14]
-	calculated_crc = zlib.crc32(header_without_crc + payload) & 0xFFFFFFFF
-	if calculated_crc != crc_value:
-		print("Invalid packet: CRC checksum mismatch.")
+	header_without_checksum = data[:14]
+	calculated_checksum = fletcher16(header_without_checksum + payload)
+	if calculated_checksum != struct.pack('!H', checksum_val):
+		print("Invalid packet: Checksum mismatch.")
 		return False
 		
+	if sequence_number not in segment_buffer:
+		segment_buffer[sequence_number] = {}
+	
+	segment_buffer[sequence_number][segment_offset] = payload
+	
+	if last_segment:
+		segments = segment_buffer[sequence_number]
+		sorted_offsets = sorted(segments.keys())
+		payload_parts = [segments[offset] for offset in sorted_offsets]
+		assembled_payload = b''.join(payload_parts)
+		
+		process_payload(assembled_payload, encoding)
+		
+		# Clear the buffer for this sequence number
+		del segment_buffer[sequence_number]
+		
+def process_payload(payload, encoding):
+	global opentrackiolib, timesource
+	
 	try:
-		payloadformat = PayloadFormat(format_type)
-	except:
+		payloadformat = PayloadFormat(encoding)
+	except ValueError:
 		print("Invalid payload format.")
 		return False
 	
@@ -112,20 +152,6 @@ def parse_opentrackio_packet(data):
 	ref_timestamp = get_local_timestamp()
 	ref_delta = ref_timestamp - opentrackiolib.get_sample_time(TimeFormat.SECONDS)
 	
-	if VERBOSE:
-		print(f"OpenTrackIO header:\n")
-		print(f"  Sequence Number: {sequence_number}")
-		print(f"  Total Segments: {total_segments}")
-		print(f"  Segment Index: {segment_index}")
-		print(f"  Format Type: {payloadformat.name}")
-		print(f"  Checksum: {crc_value}")
-		print(f"  Payload Length: {payload_length}\n")
-		
-		#if format_type == CBOR_FORMAT:	
-		#	print(f"    OpenTrackIO Payload: {json.dumps(payload, indent=4)}")
-		#else:
-		#	print(f"    OpenTrackIO Payload: {json.dumps(json.loads(payload), indent=4)}")
-			
 	try:
 		if VERBOSE:
 			print(f"OpenTrackIO packet:\n")
