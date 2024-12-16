@@ -74,7 +74,7 @@
             <h3>UDP</h3>
             <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
             <h4>IP Addressing</h4>
-            <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed.</p>
+            <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed, but outside the scope of this document.</p>
             
             <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
                 
@@ -97,7 +97,14 @@
                 </tbody>
             </table>
                 
-            <p>Source Number is a user-configurable 8-bit value between 1 and 200 that is used to generate the multicast IP address for a specific Source from a specific Producer. This ensures that Producers and Consumers can send and receive data for a specific Source Number without requiring prior knowledge of the network topology, or without knowing the specific IP address of a Producer or Consumer. It also ensures that a single Producer can transmit multiple Sources to different Consumers. The Source Number is used in the 4th octet of the multicast IP address.</p>
+            <p>
+                The <strong>Source Number</strong> is a user-configurable 8-bit value (1–200) that determines the multicast IP address for a specific Source from a Producer. By embedding the Source Number in the 4th octet of the multicast IP address, this mechanism enables Producers and Consumers to exchange data for a given Source without requiring prior knowledge of the network topology or specific IP addresses.
+            </p>
+            <p>This design allows:</p>
+            <ul>
+                <li>A single Producer to transmit multiple Sources to multiple Consumers.</li>
+                <li>Consumers to receive multiple data streams over a single network interface.</li>
+            </ul>
             
             <h5>Example 1</h5>
             <p>In the example above, using a Producer with Source Number 14:</p>
@@ -108,15 +115,34 @@
                 <li><strong>IP Octet 4:</strong> 14</li>
             </ul>
             
-            <p>The Source Number is an user-assignable number, unique within a OpenTrackIO network, that identifies a unique Source of data from a specific Producer. The Source Number should <strong>not</strong> be inferred from the multicast address. Source Numbers above 200 are reserved for future expansion of the OpenTrackIO protocol and may not be used. Consumers shall discard any messages containing a Source Number of 0 or 201-255.</p>
-            
-            <p>The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary based on local network requirements.</p> 
-            
-            <p>Consumers must handle identical multicast messages consistently. If a Consumer receives the same message multiple times, it should process only one instance.</p>
-            <p>OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included in a future version.</p>
+            <p>
+                The <strong>Source Number</strong> is a configurable, user-assignable value that is unique within an OpenTrackIO network. 
+                It identifies a specific Source of data from a particular Producer. The Source Number must be explicitly configured and 
+                should <strong>not</strong> be inferred from the multicast address. Source Numbers above <strong>200</strong> are reserved 
+                for future expansion of the OpenTrackIO protocol and may not be used. Consumers shall discard any messages containing a 
+                Source Number of <strong>0</strong> or <strong>201–255</strong>.
+            </p>
+            <p>
+                The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary 
+                based on local network requirements.
+            </p>
+            <p>
+                Consumers must handle identical multicast messages consistently. If a Consumer receives the same message multiple times, 
+                it should process only one instance.
+            </p>
+            <p>
+                OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply 
+                should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines 
+                for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included 
+                in a future version.
+            </p>
             
             <h4>Multicast Subscription</h4>
-            <p>Components must implement IGMP V2 or any subsequent version that supports its functionality. This protocol communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across large and complex networks.</p>
+            <p>
+                Components must implement <strong>IGMP V2</strong> or any subsequent version that supports its functionality. This protocol 
+                communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across 
+                large and complex networks.
+            </p>
             
             <h4>Packet Header</h4>
             <p>When using UDP transport, each packet should include the header below:</p>
