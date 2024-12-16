@@ -73,8 +73,8 @@
             <h2>Transport recommendations</h2>
             <h3>UDP</h3>
             <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
-            <h4>Multicast Addressing</h4>
-            <p>OpenTrackIO Producers use multicast addressing to deliver messages to Consumers. To guarantee interoperability and ease of configuration, the use of unicast addressing is discouraged, but allowed in specific cases. </p>
+            <h4>IP Addressing</h4>
+            <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed.</p>
             
             <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
                 
@@ -118,7 +118,6 @@
             <h4>Multicast Subscription</h4>
             <p>Components must implement IGMP V2 or any subsequent version that supports its functionality. This protocol communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across large and complex networks.</p>
             
-            
             <h4>Packet Header</h4>
             <p>When using UDP transport, each packet should include the header below:</p>
             <p>
@@ -159,7 +158,7 @@
                     <tr>
                       <td>96</td>
                       <td>Last segment flag</td>
-                      <td>This bit shall be set to <code>1</code> if this is the last segment in a multi-segment payload, or<code>0</code> if more segments are expected.</td>
+                      <td>This bit shall be set to <code>1</code> if this is the only segment or the last segment in a segmented payload, or<code>0</code> if more segments are expected.</td>
                     </tr>
                     <tr>
                       <td>97–111</td>
