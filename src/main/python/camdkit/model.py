@@ -615,7 +615,9 @@ class TimingSynchronization(Parameter):
         return False
       if value.ptp.offset != None and not isinstance(value.ptp.offset, float):
         return False
-      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) and value.ptp.domain >= 0):
+      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) \
+                                           and value.ptp.domain < 128 \
+                                           and value.ptp.domain >= 0):
         return False
       if value.offsets != None and not value.offsets.validate():
         return False
@@ -686,7 +688,7 @@ class TimingSynchronization(Parameter):
           "properties": {
             "master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
             "offset": { "type": "number" },
-            "domain": { "type": "integer", "minimum": 0 }
+            "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
           }
         },
         "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },

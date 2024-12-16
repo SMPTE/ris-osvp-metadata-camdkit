@@ -1129,8 +1129,8 @@ class ModelTest(unittest.TestCase):
     clip.timing_synchronization = value
     self.assertTupleEqual(clip.timing_synchronization, value)
 
-  def test_synchronization_mac(self):
-    sync = Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK, frequency=25)
+  def test_synchronization_ptp(self):
+    sync = Synchronization(locked=True, source=SynchronizationSourceEnum.PTP, frequency=25)
     clip = Clip()
     sync.ptp = SynchronizationPTP()
     with self.assertRaises(ValueError):
@@ -1154,7 +1154,21 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.master = "WE:TE:AS:TE:GD:DS"
       clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.offset = "1"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = "1"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = -1
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = 128
+      clip.timing_synchronization = (sync, )
 
+    sync.ptp.domain = 0
+    sync.ptp.offset = 0.0
     sync.ptp.master = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
     sync.ptp.master = "ab:CD:eF:23:45:67"
