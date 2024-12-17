@@ -912,7 +912,7 @@ class TimingTimecode(Parameter):
         "num": d["format"].frame_rate.numerator,
         "denom": d["format"].frame_rate.denominator
       },
-      "sub_frame": d["format"].sub_frame,
+      "subFrame": d["format"].sub_frame,
     }
     return d
 
@@ -921,7 +921,7 @@ class TimingTimecode(Parameter):
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
                                                           value["format"]["frameRate"]["denom"]),
-                                   in_sub_frame=value["format"]["sub_frame"]))
+                                   in_sub_frame=value["format"]["subFrame"]))
 
   @staticmethod
   def make_json_schema() -> dict:

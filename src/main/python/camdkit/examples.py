@@ -88,7 +88,7 @@ def _get_recommended_dynamic_clip():
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
   clip.lens_f_number = (4.0,)
   clip.lens_focal_length = (24.305,)
-  clip.lens_focus_distance = (1000,)
+  clip.lens_focus_distance = (10.0,)
   clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_distortions = ((Distortion([1.0,2.0,3.0], [1.0,2.0]),),)
