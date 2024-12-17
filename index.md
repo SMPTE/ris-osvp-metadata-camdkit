@@ -313,50 +313,15 @@ The parameter shall be a tuple of items of the class itemClass.
     The tuple can be empty
     
 
-### `distortion`
+### `distortionProjection`
 
 #### Description
 
-Coefficients for calculating the distortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
+The OpenLensIO distortion model is the Projection Characterization,
+  not the Field-Of-View Characterization. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
   
-
-#### Units
-
-n/a
-
-#### Sampling
-
-Regular
-
-#### Constraints
-
-The radial and tangential coefficients shall each be real numbers.
-
-### `distortionOverscan`
-
-#### Description
-
-Overscan factor on lens distortion
-
-#### Units
-
-n/a
-
-#### Sampling
-
-Regular
-
-#### Constraints
-
-The parameter shall be a non-negative real number.
-
-### `distortionOverscanMax`
-
-#### Description
-
-Static maximum overscan factor on lens distortion
 
 #### Units
 
@@ -368,13 +333,13 @@ Static
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a boolean.
 
-### `distortionShift`
+### `distortionOffset`
 
 #### Description
 
-Shift in x and y of the centre of distortion of the virtual camera
+Offset in x and y of the centre of distortion of the virtual camera
   
 
 #### Units
@@ -388,6 +353,74 @@ Regular
 #### Constraints
 
 X and Y centre shift shall each be real numbers.
+
+### `distortionOverscan`
+
+#### Description
+
+Overscan factor on lens distortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Regular
+
+#### Constraints
+
+The parameter shall be a real number >= 1.
+
+### `distortionOverscanMax`
+
+#### Description
+
+Static maximum overscan factor on lens distortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a real number >= 1.
+
+### `distortion`
+
+#### Description
+
+A list of Distortion objects that each define the coefficients for
+  calculating the distortion characteristics of a lens comprising radial
+  distortion coefficients of the spherical distortion (k1-N) and the
+  tangential distortion (p1-N). An optional key 'model' can be used that
+  describes the distortion model. The default is Brown-Conrady D-U (that
+  maps Distorted to Undistorted coordinates).
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Regular
+
+#### Constraints
+
+The list shall contain at least one Distortion object, and in each
+    object the radial and tangential coefficients shall each be real numbers.
+    
 
 ### `encoders`
 
@@ -599,11 +632,11 @@ Static
 
 The parameter shall be a non-negative real number.
 
-### `perspectiveShift`
+### `projectionOffset`
 
 #### Description
 
-Shift in x and y of the centre of perspective projection of the
+Offset in x and y of the centre of perspective projection of the
   virtual camera
   
 
@@ -617,7 +650,7 @@ Regular
 
 #### Constraints
 
-X and Y perspective shift shall each be real numbers.
+X and Y projection offset shall each be real numbers.
 
 ### `rawEncoders`
 
@@ -683,13 +716,13 @@ Regular
 
 The parameter shall be a non-negative real number.
 
-### `undistortion`
+### `undistortionOverscan`
 
 #### Description
 
-Coefficients for calculating the undistortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
+Overscan factor on lens undistortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
   
 
 #### Units
@@ -702,7 +735,28 @@ Regular
 
 #### Constraints
 
-The radial and tangential coefficients shall each be real numbers.
+The parameter shall be a real number >= 1.
+
+### `undistortionOverscanMax`
+
+#### Description
+
+Static maximum overscan factor on lens undistortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Static
+
+#### Constraints
+
+The parameter shall be a real number >= 1.
 
 ### `protocol`
 
@@ -837,30 +891,6 @@ Regular
 The parameter shall be a integer in the range (0..4,294,967,295].
     
 
-### `frameRate`
-
-#### Description
-
-Sample frame rate as a rational number. Drop frame rates such as
-  29.97 should be represented as e.g. 30000/1001. In a variable rate
-  system this should is estimated from the last sample delta time.
-  
-
-#### Units
-
-n/a
-
-#### Sampling
-
-Regular
-
-#### Constraints
-
-The parameter shall be a rational number whose numerator
-    is in the range [0..2,147,483,647] and denominator in the range
-    (0..4,294,967,295].
-    
-
 ### `mode`
 
 #### Description
@@ -891,8 +921,7 @@ The parameter shall be one of the allowed values.
   PTP timestamp of the data recording instant, provided for convenience
     during playback of e.g. pre-recorded tracking data. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   
 
 #### Units
@@ -906,7 +935,31 @@ Regular
 #### Constraints
 
 The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
+    
+
+### `sampleRate`
+
+#### Description
+
+Sample frame rate as a rational number. Drop frame rates such as
+  29.97 should be represented as e.g. 30000/1001. In a variable rate
+  system this should is estimated from the last sample delta time.
+  
+
+#### Units
+
+n/a
+
+#### Sampling
+
+Regular
+
+#### Constraints
+
+The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..4,294,967,295].
     
 
 ### `sampleTimestamp`
@@ -916,8 +969,7 @@ The parameter shall contain valid number of seconds, nanoseconds
 PTP timestamp of the data capture instant. Note this may differ
     from the packet's transmission PTP timestamp. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   
 
 #### Units
@@ -931,7 +983,7 @@ Regular
 #### Constraints
 
 The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
     
 
 ### `sequenceNumber`
@@ -960,8 +1012,9 @@ The parameter shall be a integer in the range (0..4,294,967,295].
 Object describing how the tracking device is synchronized for this
   sample.
 
-  frequency: The frequency of the synchronisation. This may differ from
-  the sample frame rate for example in a genlocked tracking device.
+  frequency: The frequency of a synchronization signal.This may differ from
+  the sample frame rate for example in a genlocked tracking device. This is
+  not required if the synchronization source is PTP or NTP.
   locked: Is the tracking device locked to the synchronization source
   offsets: Offsets in seconds between sync and sample. Critical for e.g.
   frame remapping, or when using different data sources for
@@ -1007,8 +1060,9 @@ Regular
 SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
-   - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
+   - format.frameRate: The frame rate as a rational number. Drop frame
+  rates such as 29.97 should be represented as e.g. 30000/1001. The
+  timecode frame rate may differ from the sample frequency.
   
 
 #### Units
@@ -1188,9 +1242,9 @@ The parameter shall be a Unicode string betwee 0 and 1023
 #### Description
 
 A list of transforms.
-  Transforms can have a transformId and parentTransformId that can be used
-  to compose a transform hierarchy. In the case of multiple children their
-  transforms should be processed in their order in the array.
+  Transforms can have a id and parentId that can be used to compose a
+  transform hierarchy. In the case of multiple children their transforms
+  should be processed in their order in the array.
   X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
@@ -1227,12 +1281,12 @@ Each component of each transform shall contain Real numbers.
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortion | distortionOverscan | distortionOverscanMax | distortionShift | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | perspectiveShift | rawEncoders | serialNumber | tStop | undistortion | protocol | relatedSampleIds | sampleId | shutterAngle | sourceId | sourceNumber | frameRate | mode | recordedTimestamp | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | | + | + | | + | + | + | + | + | | | + | | | | | | | + | | | + | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
-| ARRI | + | | + | | | + | + | + | + | + | | | + | | | | | | | | | | | + | + | + | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
-| Venice | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | | | | + | + | | + | | | | + | + | | | | | + | | | | | | | | | | | | | | | | | | |
-| Canon | | | + | | | + | | | | + | | | + | | | | | | | | | | | + | + | | | | | | | + | | | | | + | | | | | | | | | | | | | | | | | | |
+| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortionProjection | distortionOffset | distortionOverscan | distortionOverscanMax | distortion | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | projectionOffset | rawEncoders | serialNumber | tStop | undistortionOverscan | undistortionOverscanMax | protocol | relatedSampleIds | sampleId | shutterAngle | sourceId | sourceNumber | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
+| RED | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | + | | | + | + | + | + | + | | | | + | + | | | | | | + | | | | | | | | | | | | | | | | | | |
+| ARRI | + | | + | | | + | + | + | + | + | | | + | | | | | | | | | | | | + | + | + | + | | | | + | + | | | | | | + | | | | | | | | | | | | | | | | | | |
+| Venice | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | | | | | + | + | | + | | | | + | + | | | | | | + | | | | | | | | | | | | | | | | | | |
+| Canon | | | + | | | + | | | | + | | | + | | | | | | | | | | | | + | + | | | | | | | + | | | | | | + | | | | | | | | | | | | | | | | | | |
 ## Clip JSON Schema
 
 ```{
@@ -1409,10 +1463,14 @@ The following table indicates the camera parameters supported by each of the rea
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "distortionProjection": {
+              "type": "boolean",
+              "description": "The OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
+            },
             "distortionOverscanMax": {
               "type": "number",
-              "minimum": 0.0,
-              "description": "Static maximum overscan factor on lens distortion"
+              "minimum": 1.0,
+              "description": "Static maximum overscan factor on lens distortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             },
             "firmwareVersion": {
               "type": "string",
@@ -1443,6 +1501,11 @@ The following table indicates the camera parameters supported by each of the rea
               "minLength": 1,
               "maxLength": 1023,
               "description": "Non-blank string uniquely identifying the lens"
+            },
+            "undistortionOverscanMax": {
+              "type": "number",
+              "minimum": 1.0,
+              "description": "Static maximum overscan factor on lens undistortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             }
           }
         },
@@ -1523,36 +1586,7 @@ The following table indicates the camera parameters supported by each of the rea
           },
           "description": "Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model e.g. undistortion, anamorphic etc "
         },
-        "distortion": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "radial"
-          ],
-          "properties": {
-            "radial": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "minLength": 1
-            },
-            "tangential": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "minLength": 1
-            }
-          },
-          "description": "Coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
-        },
-        "distortionOverscan": {
-          "type": "number",
-          "minimum": 0.0,
-          "description": "Overscan factor on lens distortion"
-        },
-        "distortionShift": {
+        "distortionOffset": {
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -1567,8 +1601,44 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "number"
             }
           },
-          "description": "Shift in x and y of the centre of distortion of the virtual camera ",
+          "description": "Offset in x and y of the centre of distortion of the virtual camera ",
           "units": "millimeter"
+        },
+        "distortionOverscan": {
+          "type": "number",
+          "minimum": 1.0,
+          "description": "Overscan factor on lens distortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
+        },
+        "distortion": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "radial"
+            ],
+            "properties": {
+              "model": {
+                "type": "string"
+              },
+              "radial": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minLength": 1
+              },
+              "tangential": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minLength": 1
+              }
+            }
+          },
+          "description": "A list of Distortion objects that each define the coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). An optional key 'model' can be used that describes the distortion model. The default is Brown-Conrady D-U (that maps Distorted to Undistorted coordinates). "
         },
         "encoders": {
           "type": "object",
@@ -1650,7 +1720,7 @@ The following table indicates the camera parameters supported by each of the rea
           "description": "Focus distance/position of the lens",
           "units": "meter"
         },
-        "perspectiveShift": {
+        "projectionOffset": {
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -1665,7 +1735,7 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "number"
             }
           },
-          "description": "Shift in x and y of the centre of perspective projection of the virtual camera ",
+          "description": "Offset in x and y of the centre of perspective projection of the virtual camera ",
           "units": "millimeter"
         },
         "rawEncoders": {
@@ -1709,29 +1779,10 @@ The following table indicates the camera parameters supported by each of the rea
           "minimum": 0.0,
           "description": "Linear t-number of the lens, equal to the F-number of the lens divided by the square root of the transmittance of the lens. "
         },
-        "undistortion": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "radial"
-          ],
-          "properties": {
-            "radial": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "minLength": 1
-            },
-            "tangential": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "minLength": 1
-            }
-          },
-          "description": "Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). "
+        "undistortionOverscan": {
+          "type": "number",
+          "minimum": 1.0,
+          "description": "Overscan factor on lens undistortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
         }
       }
     },
@@ -1745,8 +1796,14 @@ The following table indicates the camera parameters supported by each of the rea
           "maxLength": 1023
         },
         "version": {
-          "type": "string",
-          "pattern": "^[0-9]+.[0-9]+.[0-9]+$"
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minValue": 0,
+            "maxValue": 9
+          },
+          "minItems": 3,
+          "maxItems": 3
         }
       },
       "description": "Name of the protocol in which the sample is being employed, and version of that protocol "
@@ -1779,27 +1836,6 @@ The following table indicates the camera parameters supported by each of the rea
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "frameRate": {
-          "type": "object",
-          "properties": {
-            "num": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 2147483647
-            },
-            "denom": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 4294967295
-            }
-          },
-          "required": [
-            "num",
-            "denom"
-          ],
-          "additionalProperties": false,
-          "description": "Sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time. "
-        },
         "mode": {
           "type": "string",
           "enum": [
@@ -1821,19 +1857,35 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "integer",
               "minimum": 0,
               "maximum": 4294967295
-            },
-            "attoseconds": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 4294967295
             }
           },
           "required": [
             "seconds",
             "nanoseconds"
           ],
-          "description": " PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds), and an optional 32-bit unsigned integer   (attoseconds) ",
+          "description": " PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
           "units": "second"
+        },
+        "sampleRate": {
+          "type": "object",
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
+          "required": [
+            "num",
+            "denom"
+          ],
+          "additionalProperties": false,
+          "description": "Sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time. "
         },
         "sampleTimestamp": {
           "type": "object",
@@ -1848,18 +1900,13 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "integer",
               "minimum": 0,
               "maximum": 4294967295
-            },
-            "attoseconds": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 4294967295
             }
           },
           "required": [
             "seconds",
             "nanoseconds"
           ],
-          "description": "PTP timestamp of the data capture instant. Note this may differ   from the packet's transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds), and an optional 32-bit unsigned integer   (attoseconds) ",
+          "description": "PTP timestamp of the data capture instant. Note this may differ   from the packet's transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
           "units": "second"
         },
         "sequenceNumber": {
@@ -1871,7 +1918,7 @@ The following table indicates the camera parameters supported by each of the rea
         "synchronization": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of the synchronisation. This may differ from the sample frame rate for example in a genlocked tracking device. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \"master\": The MAC address of the PTP master - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP master - \"ntp\": The tracking device is locked to an NTP server ",
+          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \"master\": The MAC address of the PTP master - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP master - \"ntp\": The tracking device is locked to an NTP server ",
           "properties": {
             "frequency": {
               "type": "object",
@@ -1927,7 +1974,8 @@ The following table indicates the camera parameters supported by each of the rea
                 },
                 "domain": {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "maximum": 127
                 }
               }
             },
@@ -1942,7 +1990,6 @@ The following table indicates the camera parameters supported by each of the rea
             }
           },
           "required": [
-            "frequency",
             "locked",
             "source"
           ]
@@ -1976,14 +2023,13 @@ The following table indicates the camera parameters supported by each of the rea
             "frames": {
               "type": "integer",
               "minimum": 0,
-              "maximum": 29
+              "maximum": 119
             },
             "format": {
               "type": "object",
-              "description": "The timecode format is defined as a rational frame rate and drop frame flag. Where an interlaced signal is described, the oddField flag indicates which field (odd or even) is referred to by the timecode. ",
+              "description": "The timecode format is defined as a rational frame rate and - where a signal with sub-frames is described, such as an interlaced signal - an index of which sub-frame is referred to by the timecode. ",
               "required": [
-                "frameRate",
-                "dropFrame"
+                "frameRate"
               ],
               "additionalProperties": false,
               "properties": {
@@ -2007,16 +2053,15 @@ The following table indicates the camera parameters supported by each of the rea
                     }
                   }
                 },
-                "dropFrame": {
-                  "type": "boolean"
-                },
-                "oddField": {
-                  "type": "boolean"
+                "sub_frame": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4294967295
                 }
               }
             }
           },
-          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency. "
+          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. "
         }
       }
     },
@@ -2103,12 +2148,12 @@ The following table indicates the camera parameters supported by each of the rea
               }
             }
           },
-          "transformId": {
+          "id": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
           },
-          "parentTransformId": {
+          "parentId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
@@ -2119,7 +2164,7 @@ The following table indicates the camera parameters supported by each of the rea
           "rotation"
         ]
       },
-      "description": "A list of transforms. Transforms can have a transformId and parentTransformId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision ",
+      "description": "A list of transforms. Transforms can have a id and parentId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision ",
       "units": "meter / degree"
     }
   }

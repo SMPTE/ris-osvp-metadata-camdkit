@@ -16,7 +16,7 @@
     <div class="header">
         <div class="headerInner">
             <a href="https://www.smpte.org/"></a><img src="img/logo_white.svg" class="headerLogo" /></a>
-            <h1>OpenTrackIO Documentation v0.9.0</h1>
+            <h1>OpenTrackIO Documentation v(0, 9, 1)</h1>
         </div>
     </div>
     <div class="wrapper">
@@ -52,17 +52,19 @@
             <div class="content">
                 <pre><code>{
   &#34;lens&#34;: {
-    &#34;distortion&#34;: {
-      &#34;radial&#34;: [
-        1.0,
-        2.0,
-        3.0
-      ],
-      &#34;tangential&#34;: [
-        1.0,
-        2.0
-      ]
-    },
+    &#34;distortion&#34;: [
+      {
+        &#34;radial&#34;: [
+          1.0,
+          2.0,
+          3.0
+        ],
+        &#34;tangential&#34;: [
+          1.0,
+          2.0
+        ]
+      }
+    ],
     &#34;encoders&#34;: {
       &#34;focus&#34;: 0.1,
       &#34;iris&#34;: 0.2,
@@ -71,25 +73,29 @@
     &#34;entrancePupilOffset&#34;: 0.123,
     &#34;fStop&#34;: 4.0,
     &#34;focalLength&#34;: 24.305,
-    &#34;focusDistance&#34;: 1000,
-    &#34;perspectiveShift&#34;: {
+    &#34;focusDistance&#34;: 10.0,
+    &#34;projectionOffset&#34;: {
       &#34;x&#34;: 0.1,
       &#34;y&#34;: 0.2
     }
   },
   &#34;protocol&#34;: {
     &#34;name&#34;: &#34;OpenTrackIO&#34;,
-    &#34;version&#34;: &#34;0.9.0&#34;
+    &#34;version&#34;: [
+      0,
+      9,
+      1
+    ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:512534d2-e6c4-4ef9-a1de-e9009a180160&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:4d2614f7-d315-44c6-b5c1-2677d2315b2b&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a31d30dd-0042-4e43-87d2-587e0e314faf&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:8741190f-ed60-4961-b047-f4d6bb12956f&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
-    &#34;frameRate&#34;: {
+    &#34;mode&#34;: &#34;external&#34;,
+    &#34;sampleRate&#34;: {
       &#34;num&#34;: 24000,
       &#34;denom&#34;: 1001
     },
-    &#34;mode&#34;: &#34;external&#34;,
     &#34;timecode&#34;: {
       &#34;hours&#34;: 1,
       &#34;minutes&#34;: 2,
@@ -100,8 +106,7 @@
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
         },
-        &#34;dropFrame&#34;: true,
-        &#34;oddField&#34;: true
+        &#34;subFrame&#34;: 0
       }
     }
   },
@@ -123,7 +128,7 @@
         &#34;tilt&#34;: 90.0,
         &#34;roll&#34;: 45.0
       },
-      &#34;transformId&#34;: &#34;Camera&#34;
+      &#34;id&#34;: &#34;Camera&#34;
     }
   ]
 }</code></pre>
@@ -149,17 +154,19 @@
     }
   },
   &#34;lens&#34;: {
-    &#34;distortion&#34;: {
-      &#34;radial&#34;: [
-        1.0,
-        2.0,
-        3.0
-      ],
-      &#34;tangential&#34;: [
-        1.0,
-        2.0
-      ]
-    },
+    &#34;distortion&#34;: [
+      {
+        &#34;radial&#34;: [
+          1.0,
+          2.0,
+          3.0
+        ],
+        &#34;tangential&#34;: [
+          1.0,
+          2.0
+        ]
+      }
+    ],
     &#34;encoders&#34;: {
       &#34;focus&#34;: 0.1,
       &#34;iris&#34;: 0.2,
@@ -168,25 +175,29 @@
     &#34;entrancePupilOffset&#34;: 0.123,
     &#34;fStop&#34;: 4.0,
     &#34;focalLength&#34;: 24.305,
-    &#34;focusDistance&#34;: 1000,
-    &#34;perspectiveShift&#34;: {
+    &#34;focusDistance&#34;: 10.0,
+    &#34;projectionOffset&#34;: {
       &#34;x&#34;: 0.1,
       &#34;y&#34;: 0.2
     }
   },
   &#34;protocol&#34;: {
     &#34;name&#34;: &#34;OpenTrackIO&#34;,
-    &#34;version&#34;: &#34;0.9.0&#34;
+    &#34;version&#34;: [
+      0,
+      9,
+      1
+    ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:7558e53b-c32c-4523-9e9b-c371e7a0d429&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:4282b3af-7d26-4f86-8201-afdcd0260a69&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:965acbf9-6618-462e-a23b-bf916a0c6040&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:368a00c5-72ac-4797-b379-cd17e36eea48&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
-    &#34;frameRate&#34;: {
+    &#34;mode&#34;: &#34;external&#34;,
+    &#34;sampleRate&#34;: {
       &#34;num&#34;: 24000,
       &#34;denom&#34;: 1001
     },
-    &#34;mode&#34;: &#34;external&#34;,
     &#34;timecode&#34;: {
       &#34;hours&#34;: 1,
       &#34;minutes&#34;: 2,
@@ -197,8 +208,7 @@
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
         },
-        &#34;dropFrame&#34;: true,
-        &#34;oddField&#34;: true
+        &#34;subFrame&#34;: 0
       }
     }
   },
@@ -220,7 +230,7 @@
         &#34;tilt&#34;: 90.0,
         &#34;roll&#34;: 45.0
       },
-      &#34;transformId&#34;: &#34;Camera&#34;
+      &#34;id&#34;: &#34;Camera&#34;
     }
   ]
 }</code></pre>
@@ -255,7 +265,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:12f872ac-693d-4eaf-bc65-d29ddabb5447&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:931c56d4-5790-4370-9db5-43aa83dc583c&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -264,11 +274,13 @@
       &#34;denom&#34;: 25
     },
     &#34;lens&#34;: {
+      &#34;distortionProjection&#34;: true,
       &#34;distortionOverscanMax&#34;: 1.2,
       &#34;make&#34;: &#34;LensMaker&#34;,
       &#34;model&#34;: &#34;Model15&#34;,
       &#34;nominalFocalLength&#34;: 14,
-      &#34;serialNumber&#34;: &#34;1234567890A&#34;
+      &#34;serialNumber&#34;: &#34;1234567890A&#34;,
+      &#34;undistortionOverscanMax&#34;: 1.3
     },
     &#34;tracker&#34;: {
       &#34;firmwareVersion&#34;: &#34;1.2.3&#34;,
@@ -290,25 +302,43 @@
       1.0,
       2.0
     ],
-    &#34;distortion&#34;: {
-      &#34;radial&#34;: [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      &#34;tangential&#34;: [
-        1.0,
-        2.0
-      ]
-    },
-    &#34;distortionOverscan&#34;: 1.0,
-    &#34;distortionShift&#34;: {
+    &#34;distortionOffset&#34;: {
       &#34;x&#34;: 1.0,
       &#34;y&#34;: 2.0
     },
+    &#34;distortionOverscan&#34;: 1.1,
+    &#34;distortion&#34;: [
+      {
+        &#34;radial&#34;: [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        &#34;tangential&#34;: [
+          1.0,
+          2.0
+        ],
+        &#34;model&#34;: &#34;Brown-Conrady D-U&#34;
+      },
+      {
+        &#34;radial&#34;: [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        &#34;tangential&#34;: [
+          1.0,
+          2.0
+        ],
+        &#34;model&#34;: &#34;Brown-Conrady U-D&#34;
+      }
+    ],
     &#34;encoders&#34;: {
       &#34;focus&#34;: 0.1,
       &#34;iris&#34;: 0.2,
@@ -323,7 +353,7 @@
     &#34;fStop&#34;: 4.0,
     &#34;focalLength&#34;: 24.305,
     &#34;focusDistance&#34;: 10.0,
-    &#34;perspectiveShift&#34;: {
+    &#34;projectionOffset&#34;: {
       &#34;x&#34;: 0.1,
       &#34;y&#34;: 0.2
     },
@@ -333,53 +363,39 @@
       &#34;zoom&#34;: 3000
     },
     &#34;tStop&#34;: 4.1,
-    &#34;undistortion&#34;: {
-      &#34;radial&#34;: [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      &#34;tangential&#34;: [
-        1.0,
-        2.0
-      ]
-    }
+    &#34;undistortionOverscan&#34;: 1.2
   },
   &#34;protocol&#34;: {
     &#34;name&#34;: &#34;OpenTrackIO&#34;,
-    &#34;version&#34;: &#34;0.9.0&#34;
+    &#34;version&#34;: [
+      0,
+      9,
+      1
+    ]
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:677aac81-9e97-4c51-a41e-e1f897bbc8c2&#34;,
-    &#34;urn:uuid:740b2e26-e327-4ceb-96d0-1a581f00a790&#34;
+    &#34;urn:uuid:a93a3e61-9577-4e99-a50b-e69933cb863e&#34;,
+    &#34;urn:uuid:3e809ba5-6024-425e-85cb-9d0664fd3dd7&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:06a7a705-e466-4563-a9c7-e3cd0f29c3e7&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:419cedb8-b8c3-4adc-893f-fe2293664b45&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:aa0490ae-27e6-4bb4-83be-5d5d1336d53f&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:1f7b88bc-25c5-41d7-9d14-30a071ca4871&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
-    &#34;frameRate&#34;: {
-      &#34;num&#34;: 24000,
-      &#34;denom&#34;: 1001
-    },
     &#34;mode&#34;: &#34;internal&#34;,
     &#34;recordedTimestamp&#34;: {
       &#34;seconds&#34;: 1718806000,
       &#34;nanoseconds&#34;: 500000000
     },
+    &#34;sampleRate&#34;: {
+      &#34;num&#34;: 24000,
+      &#34;denom&#34;: 1001
+    },
     &#34;sampleTimestamp&#34;: {
       &#34;seconds&#34;: 1718806554,
-      &#34;nanoseconds&#34;: 500000000,
-      &#34;attoseconds&#34;: 0
+      &#34;nanoseconds&#34;: 500000000
     },
     &#34;sequenceNumber&#34;: 0,
     &#34;synchronization&#34;: {
-      &#34;frequency&#34;: {
-        &#34;num&#34;: 24000,
-        &#34;denom&#34;: 1001
-      },
       &#34;locked&#34;: true,
       &#34;source&#34;: &#34;ptp&#34;,
       &#34;offsets&#34;: {
@@ -404,8 +420,7 @@
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
         },
-        &#34;dropFrame&#34;: true,
-        &#34;oddField&#34;: true
+        &#34;subFrame&#34;: 0
       }
     }
   },
@@ -427,7 +442,7 @@
         &#34;tilt&#34;: 90.0,
         &#34;roll&#34;: 45.0
       },
-      &#34;transformId&#34;: &#34;Dolly&#34;
+      &#34;id&#34;: &#34;Dolly&#34;
     },
     {
       &#34;translation&#34;: {
@@ -445,8 +460,8 @@
         &#34;y&#34;: 2.0,
         &#34;z&#34;: 3.0
       },
-      &#34;transformId&#34;: &#34;Crane Arm&#34;,
-      &#34;parentTransformId&#34;: &#34;Dolly&#34;
+      &#34;id&#34;: &#34;Crane Arm&#34;,
+      &#34;parentId&#34;: &#34;Dolly&#34;
     },
     {
       &#34;translation&#34;: {
@@ -464,8 +479,8 @@
         &#34;y&#34;: 2.0,
         &#34;z&#34;: 3.0
       },
-      &#34;transformId&#34;: &#34;Camera&#34;,
-      &#34;parentTransformId&#34;: &#34;Crane Arm&#34;
+      &#34;id&#34;: &#34;Camera&#34;,
+      &#34;parentId&#34;: &#34;Crane Arm&#34;
     }
   ],
   &#34;custom&#34;: {
@@ -611,17 +626,34 @@
     The tuple can be empty
     </td></tr>
                     
-                    <tr><td>distortion</td><td>lens</td><td>Regular</td><td>Coefficients for calculating the distortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
-  </td><td>None</td><td>The radial and tangential coefficients shall each be real numbers.</td></tr>
+                    <tr><td>distortionProjection</td><td>lens</td><td>Static</td><td>The OpenLensIO distortion model is the Projection Characterization,
+  not the Field-Of-View Characterization. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  </td><td>None</td><td>The parameter shall be a boolean.</td></tr>
                     
-                    <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
-                    
-                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
-                    
-                    <tr><td>distortionShift</td><td>lens</td><td>Regular</td><td>Shift in x and y of the centre of distortion of the virtual camera
+                    <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera
   </td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
+                    
+                    <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
+                    
+                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
+                    
+                    <tr><td>distortion</td><td>lens</td><td>Regular</td><td>A list of Distortion objects that each define the coefficients for
+  calculating the distortion characteristics of a lens comprising radial
+  distortion coefficients of the spherical distortion (k1-N) and the
+  tangential distortion (p1-N). An optional key &#39;model&#39; can be used that
+  describes the distortion model. The default is Brown-Conrady D-U (that
+  maps Distorted to Undistorted coordinates).
+  </td><td>None</td><td>The list shall contain at least one Distortion object, and in each
+    object the radial and tangential coefficients shall each be real numbers.
+    </td></tr>
                     
                     <tr><td>encoders</td><td>lens</td><td>Regular</td><td>
   Normalised real numbers (0-1) for focus, iris and zoom.
@@ -673,9 +705,9 @@
   of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
   </td><td>millimeter</td><td>The parameter shall be a non-negative real number.</td></tr>
                     
-                    <tr><td>perspectiveShift</td><td>lens</td><td>Regular</td><td>Shift in x and y of the centre of perspective projection of the
+                    <tr><td>projectionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of perspective projection of the
   virtual camera
-  </td><td>millimeter</td><td>X and Y perspective shift shall each be real numbers.</td></tr>
+  </td><td>millimeter</td><td>X and Y projection offset shall each be real numbers.</td></tr>
                     
                     <tr><td>rawEncoders</td><td>lens</td><td>Regular</td><td>
   Raw encoder values for focus, iris and zoom.
@@ -693,10 +725,15 @@
   divided by the square root of the transmittance of the lens.
   </td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
                     
-                    <tr><td>undistortion</td><td>lens</td><td>Regular</td><td>Coefficients for calculating the undistortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
-  </td><td>None</td><td>The radial and tangential coefficients shall each be real numbers.</td></tr>
+                    <tr><td>undistortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens undistortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
+                    
+                    <tr><td>undistortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens undistortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
                     <tr><td>protocol</td><td>None</td><td>Regular</td><td>Name of the protocol in which the sample is being employed, and
   version of that protocol
@@ -735,14 +772,6 @@
   </td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].
     </td></tr>
                     
-                    <tr><td>frameRate</td><td>timing</td><td>Regular</td><td>Sample frame rate as a rational number. Drop frame rates such as
-  29.97 should be represented as e.g. 30000/1001. In a variable rate
-  system this should is estimated from the last sample delta time.
-  </td><td>None</td><td>The parameter shall be a rational number whose numerator
-    is in the range [0..2,147,483,647] and denominator in the range
-    (0..4,294,967,295].
-    </td></tr>
-                    
                     <tr><td>mode</td><td>timing</td><td>Regular</td><td>Enumerated value indicating whether the sample transport mechanism
     provides inherent (&#39;external&#39;) timing, or whether the transport
     mechanism lacks inherent timing and so the sample must contain a PTP
@@ -753,19 +782,25 @@
   PTP timestamp of the data recording instant, provided for convenience
     during playback of e.g. pre-recorded tracking data. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   </td><td>second</td><td>The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
+    </td></tr>
+                    
+                    <tr><td>sampleRate</td><td>timing</td><td>Regular</td><td>Sample frame rate as a rational number. Drop frame rates such as
+  29.97 should be represented as e.g. 30000/1001. In a variable rate
+  system this should is estimated from the last sample delta time.
+  </td><td>None</td><td>The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..4,294,967,295].
     </td></tr>
                     
                     <tr><td>sampleTimestamp</td><td>timing</td><td>Regular</td><td>PTP timestamp of the data capture instant. Note this may differ
     from the packet&#39;s transmission PTP timestamp. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   </td><td>second</td><td>The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
     </td></tr>
                     
                     <tr><td>sequenceNumber</td><td>timing</td><td>Regular</td><td>Integer incrementing with each sample.</td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].
@@ -774,8 +809,9 @@
                     <tr><td>synchronization</td><td>timing</td><td>Regular</td><td>Object describing how the tracking device is synchronized for this
   sample.
 
-  frequency: The frequency of the synchronisation. This may differ from
-  the sample frame rate for example in a genlocked tracking device.
+  frequency: The frequency of a synchronization signal.This may differ from
+  the sample frame rate for example in a genlocked tracking device. This is
+  not required if the synchronization source is PTP or NTP.
   locked: Is the tracking device locked to the synchronization source
   offsets: Offsets in seconds between sync and sample. Critical for e.g.
   frame remapping, or when using different data sources for
@@ -805,8 +841,9 @@
                     <tr><td>timecode</td><td>timing</td><td>Regular</td><td>SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
-   - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
+   - format.frameRate: The frame rate as a rational number. Drop frame
+  rates such as 29.97 should be represented as e.g. 30000/1001. The
+  timecode frame rate may differ from the sample frequency.
   </td><td>None</td><td>The parameter shall contain a valid format and hours, minutes,
     seconds and frames with appropriate min/max values.
     </td></tr>
@@ -842,9 +879,9 @@
     </td></tr>
                     
                     <tr><td>transforms</td><td>None</td><td>Regular</td><td>A list of transforms.
-  Transforms can have a transformId and parentTransformId that can be used
-  to compose a transform hierarchy. In the case of multiple children their
-  transforms should be processed in their order in the array.
+  Transforms can have a id and parentId that can be used to compose a
+  transform hierarchy. In the case of multiple children their transforms
+  should be processed in their order in the array.
   X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
@@ -1045,10 +1082,14 @@
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
           &#34;properties&#34;: {
+            &#34;distortionProjection&#34;: {
+              &#34;type&#34;: &#34;boolean&#34;,
+              &#34;description&#34;: &#34;The OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
+            },
             &#34;distortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
-              &#34;minimum&#34;: 0.0,
-              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion&#34;
+              &#34;minimum&#34;: 1.0,
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
             },
             &#34;firmwareVersion&#34;: {
               &#34;type&#34;: &#34;string&#34;,
@@ -1079,6 +1120,11 @@
               &#34;minLength&#34;: 1,
               &#34;maxLength&#34;: 1023,
               &#34;description&#34;: &#34;Non-blank string uniquely identifying the lens&#34;
+            },
+            &#34;undistortionOverscanMax&#34;: {
+              &#34;type&#34;: &#34;number&#34;,
+              &#34;minimum&#34;: 1.0,
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens undistortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
             }
           }
         },
@@ -1159,36 +1205,7 @@
           },
           &#34;description&#34;: &#34;Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model e.g. undistortion, anamorphic etc &#34;
         },
-        &#34;distortion&#34;: {
-          &#34;type&#34;: &#34;object&#34;,
-          &#34;additionalProperties&#34;: false,
-          &#34;required&#34;: [
-            &#34;radial&#34;
-          ],
-          &#34;properties&#34;: {
-            &#34;radial&#34;: {
-              &#34;type&#34;: &#34;array&#34;,
-              &#34;items&#34;: {
-                &#34;type&#34;: &#34;number&#34;
-              },
-              &#34;minLength&#34;: 1
-            },
-            &#34;tangential&#34;: {
-              &#34;type&#34;: &#34;array&#34;,
-              &#34;items&#34;: {
-                &#34;type&#34;: &#34;number&#34;
-              },
-              &#34;minLength&#34;: 1
-            }
-          },
-          &#34;description&#34;: &#34;Coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). &#34;
-        },
-        &#34;distortionOverscan&#34;: {
-          &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 0.0,
-          &#34;description&#34;: &#34;Overscan factor on lens distortion&#34;
-        },
-        &#34;distortionShift&#34;: {
+        &#34;distortionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
           &#34;required&#34;: [
@@ -1203,8 +1220,44 @@
               &#34;type&#34;: &#34;number&#34;
             }
           },
-          &#34;description&#34;: &#34;Shift in x and y of the centre of distortion of the virtual camera &#34;,
+          &#34;description&#34;: &#34;Offset in x and y of the centre of distortion of the virtual camera &#34;,
           &#34;units&#34;: &#34;millimeter&#34;
+        },
+        &#34;distortionOverscan&#34;: {
+          &#34;type&#34;: &#34;number&#34;,
+          &#34;minimum&#34;: 1.0,
+          &#34;description&#34;: &#34;Overscan factor on lens distortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
+        },
+        &#34;distortion&#34;: {
+          &#34;type&#34;: &#34;array&#34;,
+          &#34;minItems&#34;: 1,
+          &#34;items&#34;: {
+            &#34;type&#34;: &#34;object&#34;,
+            &#34;additionalProperties&#34;: false,
+            &#34;required&#34;: [
+              &#34;radial&#34;
+            ],
+            &#34;properties&#34;: {
+              &#34;model&#34;: {
+                &#34;type&#34;: &#34;string&#34;
+              },
+              &#34;radial&#34;: {
+                &#34;type&#34;: &#34;array&#34;,
+                &#34;items&#34;: {
+                  &#34;type&#34;: &#34;number&#34;
+                },
+                &#34;minLength&#34;: 1
+              },
+              &#34;tangential&#34;: {
+                &#34;type&#34;: &#34;array&#34;,
+                &#34;items&#34;: {
+                  &#34;type&#34;: &#34;number&#34;
+                },
+                &#34;minLength&#34;: 1
+              }
+            }
+          },
+          &#34;description&#34;: &#34;A list of Distortion objects that each define the coefficients for calculating the distortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). An optional key &#39;model&#39; can be used that describes the distortion model. The default is Brown-Conrady D-U (that maps Distorted to Undistorted coordinates). &#34;
         },
         &#34;encoders&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1286,7 +1339,7 @@
           &#34;description&#34;: &#34;Focus distance/position of the lens&#34;,
           &#34;units&#34;: &#34;meter&#34;
         },
-        &#34;perspectiveShift&#34;: {
+        &#34;projectionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
           &#34;required&#34;: [
@@ -1301,7 +1354,7 @@
               &#34;type&#34;: &#34;number&#34;
             }
           },
-          &#34;description&#34;: &#34;Shift in x and y of the centre of perspective projection of the virtual camera &#34;,
+          &#34;description&#34;: &#34;Offset in x and y of the centre of perspective projection of the virtual camera &#34;,
           &#34;units&#34;: &#34;millimeter&#34;
         },
         &#34;rawEncoders&#34;: {
@@ -1345,29 +1398,10 @@
           &#34;minimum&#34;: 0.0,
           &#34;description&#34;: &#34;Linear t-number of the lens, equal to the F-number of the lens divided by the square root of the transmittance of the lens. &#34;
         },
-        &#34;undistortion&#34;: {
-          &#34;type&#34;: &#34;object&#34;,
-          &#34;additionalProperties&#34;: false,
-          &#34;required&#34;: [
-            &#34;radial&#34;
-          ],
-          &#34;properties&#34;: {
-            &#34;radial&#34;: {
-              &#34;type&#34;: &#34;array&#34;,
-              &#34;items&#34;: {
-                &#34;type&#34;: &#34;number&#34;
-              },
-              &#34;minLength&#34;: 1
-            },
-            &#34;tangential&#34;: {
-              &#34;type&#34;: &#34;array&#34;,
-              &#34;items&#34;: {
-                &#34;type&#34;: &#34;number&#34;
-              },
-              &#34;minLength&#34;: 1
-            }
-          },
-          &#34;description&#34;: &#34;Coefficients for calculating the undistortion characteristics of a lens comprising radial distortion coefficients of the spherical distortion (k1-N) and the tangential distortion (p1-N). &#34;
+        &#34;undistortionOverscan&#34;: {
+          &#34;type&#34;: &#34;number&#34;,
+          &#34;minimum&#34;: 1.0,
+          &#34;description&#34;: &#34;Overscan factor on lens undistortion. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
         }
       }
     },
@@ -1381,8 +1415,14 @@
           &#34;maxLength&#34;: 1023
         },
         &#34;version&#34;: {
-          &#34;type&#34;: &#34;string&#34;,
-          &#34;pattern&#34;: &#34;^[0-9]+.[0-9]+.[0-9]+$&#34;
+          &#34;type&#34;: &#34;array&#34;,
+          &#34;items&#34;: {
+            &#34;type&#34;: &#34;integer&#34;,
+            &#34;minValue&#34;: 0,
+            &#34;maxValue&#34;: 9
+          },
+          &#34;minItems&#34;: 3,
+          &#34;maxItems&#34;: 3
         }
       },
       &#34;description&#34;: &#34;Name of the protocol in which the sample is being employed, and version of that protocol &#34;
@@ -1415,27 +1455,6 @@
       &#34;type&#34;: &#34;object&#34;,
       &#34;additionalProperties&#34;: false,
       &#34;properties&#34;: {
-        &#34;frameRate&#34;: {
-          &#34;type&#34;: &#34;object&#34;,
-          &#34;properties&#34;: {
-            &#34;num&#34;: {
-              &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0,
-              &#34;maximum&#34;: 2147483647
-            },
-            &#34;denom&#34;: {
-              &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 1,
-              &#34;maximum&#34;: 4294967295
-            }
-          },
-          &#34;required&#34;: [
-            &#34;num&#34;,
-            &#34;denom&#34;
-          ],
-          &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time. &#34;
-        },
         &#34;mode&#34;: {
           &#34;type&#34;: &#34;string&#34;,
           &#34;enum&#34;: [
@@ -1457,19 +1476,35 @@
               &#34;type&#34;: &#34;integer&#34;,
               &#34;minimum&#34;: 0,
               &#34;maximum&#34;: 4294967295
-            },
-            &#34;attoseconds&#34;: {
-              &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0,
-              &#34;maximum&#34;: 4294967295
             }
           },
           &#34;required&#34;: [
             &#34;seconds&#34;,
             &#34;nanoseconds&#34;
           ],
-          &#34;description&#34;: &#34; PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds), and an optional 32-bit unsigned integer   (attoseconds) &#34;,
+          &#34;description&#34;: &#34; PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) &#34;,
           &#34;units&#34;: &#34;second&#34;
+        },
+        &#34;sampleRate&#34;: {
+          &#34;type&#34;: &#34;object&#34;,
+          &#34;properties&#34;: {
+            &#34;num&#34;: {
+              &#34;type&#34;: &#34;integer&#34;,
+              &#34;minimum&#34;: 0,
+              &#34;maximum&#34;: 2147483647
+            },
+            &#34;denom&#34;: {
+              &#34;type&#34;: &#34;integer&#34;,
+              &#34;minimum&#34;: 1,
+              &#34;maximum&#34;: 4294967295
+            }
+          },
+          &#34;required&#34;: [
+            &#34;num&#34;,
+            &#34;denom&#34;
+          ],
+          &#34;additionalProperties&#34;: false,
+          &#34;description&#34;: &#34;Sample frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. In a variable rate system this should is estimated from the last sample delta time. &#34;
         },
         &#34;sampleTimestamp&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1484,18 +1519,13 @@
               &#34;type&#34;: &#34;integer&#34;,
               &#34;minimum&#34;: 0,
               &#34;maximum&#34;: 4294967295
-            },
-            &#34;attoseconds&#34;: {
-              &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0,
-              &#34;maximum&#34;: 4294967295
             }
           },
           &#34;required&#34;: [
             &#34;seconds&#34;,
             &#34;nanoseconds&#34;
           ],
-          &#34;description&#34;: &#34;PTP timestamp of the data capture instant. Note this may differ   from the packet&#39;s transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds), and an optional 32-bit unsigned integer   (attoseconds) &#34;,
+          &#34;description&#34;: &#34;PTP timestamp of the data capture instant. Note this may differ   from the packet&#39;s transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) &#34;,
           &#34;units&#34;: &#34;second&#34;
         },
         &#34;sequenceNumber&#34;: {
@@ -1507,7 +1537,7 @@
         &#34;synchronization&#34;: {
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of the synchronisation. This may differ from the sample frame rate for example in a genlocked tracking device. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \&#34;master\&#34;: The MAC address of the PTP master - \&#34;offset\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;domain\&#34;: The PTP domain number source: The source of synchronization must be defined as one of the following: - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP master - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
+          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \&#34;master\&#34;: The MAC address of the PTP master - \&#34;offset\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;domain\&#34;: The PTP domain number source: The source of synchronization must be defined as one of the following: - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP master - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
           &#34;properties&#34;: {
             &#34;frequency&#34;: {
               &#34;type&#34;: &#34;object&#34;,
@@ -1563,7 +1593,8 @@
                 },
                 &#34;domain&#34;: {
                   &#34;type&#34;: &#34;integer&#34;,
-                  &#34;minimum&#34;: 0
+                  &#34;minimum&#34;: 0,
+                  &#34;maximum&#34;: 127
                 }
               }
             },
@@ -1578,7 +1609,6 @@
             }
           },
           &#34;required&#34;: [
-            &#34;frequency&#34;,
             &#34;locked&#34;,
             &#34;source&#34;
           ]
@@ -1612,14 +1642,13 @@
             &#34;frames&#34;: {
               &#34;type&#34;: &#34;integer&#34;,
               &#34;minimum&#34;: 0,
-              &#34;maximum&#34;: 29
+              &#34;maximum&#34;: 119
             },
             &#34;format&#34;: {
               &#34;type&#34;: &#34;object&#34;,
-              &#34;description&#34;: &#34;The timecode format is defined as a rational frame rate and drop frame flag. Where an interlaced signal is described, the oddField flag indicates which field (odd or even) is referred to by the timecode. &#34;,
+              &#34;description&#34;: &#34;The timecode format is defined as a rational frame rate and - where a signal with sub-frames is described, such as an interlaced signal - an index of which sub-frame is referred to by the timecode. &#34;,
               &#34;required&#34;: [
-                &#34;frameRate&#34;,
-                &#34;dropFrame&#34;
+                &#34;frameRate&#34;
               ],
               &#34;additionalProperties&#34;: false,
               &#34;properties&#34;: {
@@ -1643,16 +1672,15 @@
                     }
                   }
                 },
-                &#34;dropFrame&#34;: {
-                  &#34;type&#34;: &#34;boolean&#34;
-                },
-                &#34;oddField&#34;: {
-                  &#34;type&#34;: &#34;boolean&#34;
+                &#34;sub_frame&#34;: {
+                  &#34;type&#34;: &#34;integer&#34;,
+                  &#34;minimum&#34;: 0,
+                  &#34;maximum&#34;: 4294967295
                 }
               }
             }
           },
-          &#34;description&#34;: &#34;SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency. &#34;
+          &#34;description&#34;: &#34;SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. &#34;
         }
       }
     },
@@ -1739,12 +1767,12 @@
               }
             }
           },
-          &#34;transformId&#34;: {
+          &#34;id&#34;: {
             &#34;type&#34;: &#34;string&#34;,
             &#34;minLength&#34;: 1,
             &#34;maxLength&#34;: 1023
           },
-          &#34;parentTransformId&#34;: {
+          &#34;parentId&#34;: {
             &#34;type&#34;: &#34;string&#34;,
             &#34;minLength&#34;: 1,
             &#34;maxLength&#34;: 1023
@@ -1755,7 +1783,7 @@
           &#34;rotation&#34;
         ]
       },
-      &#34;description&#34;: &#34;A list of transforms. Transforms can have a transformId and parentTransformId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles &gt;360 or &lt;0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision &#34;,
+      &#34;description&#34;: &#34;A list of transforms. Transforms can have a id and parentId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles &gt;360 or &lt;0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision &#34;,
       &#34;units&#34;: &#34;meter / degree&#34;
     }
   }

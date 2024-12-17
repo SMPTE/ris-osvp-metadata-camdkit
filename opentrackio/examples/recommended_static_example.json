@@ -13,17 +13,19 @@
     }
   },
   "lens": {
-    "distortion": {
-      "radial": [
-        1.0,
-        2.0,
-        3.0
-      ],
-      "tangential": [
-        1.0,
-        2.0
-      ]
-    },
+    "distortion": [
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      }
+    ],
     "encoders": {
       "focus": 0.1,
       "iris": 0.2,
@@ -32,25 +34,29 @@
     "entrancePupilOffset": 0.123,
     "fStop": 4.0,
     "focalLength": 24.305,
-    "focusDistance": 1000,
-    "perspectiveShift": {
+    "focusDistance": 10.0,
+    "projectionOffset": {
       "x": 0.1,
       "y": 0.2
     }
   },
   "protocol": {
     "name": "OpenTrackIO",
-    "version": "0.9.0"
+    "version": [
+      0,
+      9,
+      1
+    ]
   },
-  "sampleId": "urn:uuid:7558e53b-c32c-4523-9e9b-c371e7a0d429",
-  "sourceId": "urn:uuid:4282b3af-7d26-4f86-8201-afdcd0260a69",
+  "sampleId": "urn:uuid:965acbf9-6618-462e-a23b-bf916a0c6040",
+  "sourceId": "urn:uuid:368a00c5-72ac-4797-b379-cd17e36eea48",
   "sourceNumber": 1,
   "timing": {
-    "frameRate": {
+    "mode": "external",
+    "sampleRate": {
       "num": 24000,
       "denom": 1001
     },
-    "mode": "external",
     "timecode": {
       "hours": 1,
       "minutes": 2,
@@ -61,8 +67,7 @@
           "num": 24000,
           "denom": 1001
         },
-        "dropFrame": true,
-        "oddField": true
+        "subFrame": 0
       }
     }
   },
@@ -84,7 +89,7 @@
         "tilt": 90.0,
         "roll": 45.0
       },
-      "transformId": "Camera"
+      "id": "Camera"
     }
   ]
 }

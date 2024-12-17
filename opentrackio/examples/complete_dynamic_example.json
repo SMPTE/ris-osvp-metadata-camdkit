@@ -12,25 +12,43 @@
       1.0,
       2.0
     ],
-    "distortion": {
-      "radial": [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      "tangential": [
-        1.0,
-        2.0
-      ]
-    },
-    "distortionOverscan": 1.0,
-    "distortionShift": {
+    "distortionOffset": {
       "x": 1.0,
       "y": 2.0
     },
+    "distortionOverscan": 1.1,
+    "distortion": [
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady D-U"
+      },
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady U-D"
+      }
+    ],
     "encoders": {
       "focus": 0.1,
       "iris": 0.2,
@@ -45,7 +63,7 @@
     "fStop": 4.0,
     "focalLength": 24.305,
     "focusDistance": 10.0,
-    "perspectiveShift": {
+    "projectionOffset": {
       "x": 0.1,
       "y": 0.2
     },
@@ -55,53 +73,39 @@
       "zoom": 3000
     },
     "tStop": 4.1,
-    "undistortion": {
-      "radial": [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      "tangential": [
-        1.0,
-        2.0
-      ]
-    }
+    "undistortionOverscan": 1.2
   },
   "protocol": {
     "name": "OpenTrackIO",
-    "version": "0.9.0"
+    "version": [
+      0,
+      9,
+      1
+    ]
   },
   "relatedSampleIds": [
-    "urn:uuid:fd98e79b-feb9-4b97-8f4a-dcc179c68cdf",
-    "urn:uuid:1c704bf9-e967-48f0-89eb-faf5cc695425"
+    "urn:uuid:70a5bca5-776c-4b91-97c9-83ff4090728c",
+    "urn:uuid:bcc17b3d-4f25-4345-871f-30c1320263c8"
   ],
-  "sampleId": "urn:uuid:abc20091-4579-4d69-a5d2-62326b68e354",
-  "sourceId": "urn:uuid:bf98b165-b437-4061-80a6-b21001428861",
+  "sampleId": "urn:uuid:4cf9ea5d-c222-45b2-9a12-41147ab12097",
+  "sourceId": "urn:uuid:a92b9fdc-5dd9-4db7-b0c3-4cddb5e2a05c",
   "sourceNumber": 1,
   "timing": {
-    "frameRate": {
-      "num": 24000,
-      "denom": 1001
-    },
     "mode": "internal",
     "recordedTimestamp": {
       "seconds": 1718806000,
       "nanoseconds": 500000000
     },
+    "sampleRate": {
+      "num": 24000,
+      "denom": 1001
+    },
     "sampleTimestamp": {
       "seconds": 1718806554,
-      "nanoseconds": 500000000,
-      "attoseconds": 0
+      "nanoseconds": 500000000
     },
     "sequenceNumber": 0,
     "synchronization": {
-      "frequency": {
-        "num": 24000,
-        "denom": 1001
-      },
       "locked": true,
       "source": "ptp",
       "offsets": {
@@ -126,8 +130,7 @@
           "num": 24000,
           "denom": 1001
         },
-        "dropFrame": true,
-        "oddField": true
+        "subFrame": 0
       }
     }
   },
@@ -149,7 +152,7 @@
         "tilt": 90.0,
         "roll": 45.0
       },
-      "transformId": "Dolly"
+      "id": "Dolly"
     },
     {
       "translation": {
@@ -167,8 +170,8 @@
         "y": 2.0,
         "z": 3.0
       },
-      "transformId": "Crane Arm",
-      "parentTransformId": "Dolly"
+      "id": "Crane Arm",
+      "parentId": "Dolly"
     },
     {
       "translation": {
@@ -186,8 +189,8 @@
         "y": 2.0,
         "z": 3.0
       },
-      "transformId": "Camera",
-      "parentTransformId": "Crane Arm"
+      "id": "Camera",
+      "parentId": "Crane Arm"
     }
   ],
   "custom": {

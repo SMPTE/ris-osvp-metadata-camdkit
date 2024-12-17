@@ -22,7 +22,7 @@
         "num": 24000,
         "denom": 1001
       },
-      "fdlLink": "urn:uuid:12f872ac-693d-4eaf-bc65-d29ddabb5447",
+      "fdlLink": "urn:uuid:931c56d4-5790-4370-9db5-43aa83dc583c",
       "isoSpeed": 4000,
       "shutterAngle": 45.0
     },
@@ -31,11 +31,13 @@
       "denom": 25
     },
     "lens": {
+      "distortionProjection": true,
       "distortionOverscanMax": 1.2,
       "make": "LensMaker",
       "model": "Model15",
       "nominalFocalLength": 14,
-      "serialNumber": "1234567890A"
+      "serialNumber": "1234567890A",
+      "undistortionOverscanMax": 1.3
     },
     "tracker": {
       "firmwareVersion": "1.2.3",
@@ -57,25 +59,43 @@
       1.0,
       2.0
     ],
-    "distortion": {
-      "radial": [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      "tangential": [
-        1.0,
-        2.0
-      ]
-    },
-    "distortionOverscan": 1.0,
-    "distortionShift": {
+    "distortionOffset": {
       "x": 1.0,
       "y": 2.0
     },
+    "distortionOverscan": 1.1,
+    "distortion": [
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady D-U"
+      },
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady U-D"
+      }
+    ],
     "encoders": {
       "focus": 0.1,
       "iris": 0.2,
@@ -90,7 +110,7 @@
     "fStop": 4.0,
     "focalLength": 24.305,
     "focusDistance": 10.0,
-    "perspectiveShift": {
+    "projectionOffset": {
       "x": 0.1,
       "y": 0.2
     },
@@ -100,53 +120,39 @@
       "zoom": 3000
     },
     "tStop": 4.1,
-    "undistortion": {
-      "radial": [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0
-      ],
-      "tangential": [
-        1.0,
-        2.0
-      ]
-    }
+    "undistortionOverscan": 1.2
   },
   "protocol": {
     "name": "OpenTrackIO",
-    "version": "0.9.0"
+    "version": [
+      0,
+      9,
+      1
+    ]
   },
   "relatedSampleIds": [
-    "urn:uuid:677aac81-9e97-4c51-a41e-e1f897bbc8c2",
-    "urn:uuid:740b2e26-e327-4ceb-96d0-1a581f00a790"
+    "urn:uuid:a93a3e61-9577-4e99-a50b-e69933cb863e",
+    "urn:uuid:3e809ba5-6024-425e-85cb-9d0664fd3dd7"
   ],
-  "sampleId": "urn:uuid:06a7a705-e466-4563-a9c7-e3cd0f29c3e7",
-  "sourceId": "urn:uuid:419cedb8-b8c3-4adc-893f-fe2293664b45",
+  "sampleId": "urn:uuid:aa0490ae-27e6-4bb4-83be-5d5d1336d53f",
+  "sourceId": "urn:uuid:1f7b88bc-25c5-41d7-9d14-30a071ca4871",
   "sourceNumber": 1,
   "timing": {
-    "frameRate": {
-      "num": 24000,
-      "denom": 1001
-    },
     "mode": "internal",
     "recordedTimestamp": {
       "seconds": 1718806000,
       "nanoseconds": 500000000
     },
+    "sampleRate": {
+      "num": 24000,
+      "denom": 1001
+    },
     "sampleTimestamp": {
       "seconds": 1718806554,
-      "nanoseconds": 500000000,
-      "attoseconds": 0
+      "nanoseconds": 500000000
     },
     "sequenceNumber": 0,
     "synchronization": {
-      "frequency": {
-        "num": 24000,
-        "denom": 1001
-      },
       "locked": true,
       "source": "ptp",
       "offsets": {
@@ -171,8 +177,7 @@
           "num": 24000,
           "denom": 1001
         },
-        "dropFrame": true,
-        "oddField": true
+        "subFrame": 0
       }
     }
   },
@@ -194,7 +199,7 @@
         "tilt": 90.0,
         "roll": 45.0
       },
-      "transformId": "Dolly"
+      "id": "Dolly"
     },
     {
       "translation": {
@@ -212,8 +217,8 @@
         "y": 2.0,
         "z": 3.0
       },
-      "transformId": "Crane Arm",
-      "parentTransformId": "Dolly"
+      "id": "Crane Arm",
+      "parentId": "Dolly"
     },
     {
       "translation": {
@@ -231,8 +236,8 @@
         "y": 2.0,
         "z": 3.0
       },
-      "transformId": "Camera",
-      "parentTransformId": "Crane Arm"
+      "id": "Camera",
+      "parentId": "Crane Arm"
     }
   ],
   "custom": {
