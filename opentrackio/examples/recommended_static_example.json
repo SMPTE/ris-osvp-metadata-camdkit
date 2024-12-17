@@ -42,8 +42,8 @@
     "name": "OpenTrackIO",
     "version": "0.9.0"
   },
-  "sampleId": "urn:uuid:509d37e6-9809-4ddd-8365-9f21c07334a2",
-  "sourceId": "urn:uuid:8bc3da2b-f120-4b49-95b2-2eae29585fd3",
+  "sampleId": "urn:uuid:7558e53b-c32c-4523-9e9b-c371e7a0d429",
+  "sourceId": "urn:uuid:4282b3af-7d26-4f86-8201-afdcd0260a69",
   "sourceNumber": 1,
   "timing": {
     "frameRate": {
