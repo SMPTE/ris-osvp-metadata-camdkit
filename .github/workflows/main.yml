@@ -83,6 +83,12 @@ jobs:
           aws s3 sync ./build/ s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
 
+      - name: Publish documentation
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -93,7 +99,6 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
-          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}
           aws s3 sync ./build/opentrackio s3://${{ env.AWS_OPENTRACKIO_BUCKET }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
