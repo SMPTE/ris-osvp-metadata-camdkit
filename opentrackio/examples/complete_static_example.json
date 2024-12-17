@@ -22,7 +22,7 @@
         "num": 24000,
         "denom": 1001
       },
-      "fdlLink": "urn:uuid:15f461ed-43e7-435c-8a4c-fc1db343e6a4",
+      "fdlLink": "urn:uuid:ae7beda4-f01f-4317-98bf-988aa7f15a9f",
       "isoSpeed": 4000,
       "shutterAngle": 45.0
     },
@@ -131,11 +131,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:368fc3e4-6709-410f-8c2d-bf8e28e3fbf9",
-    "urn:uuid:d5f8cc9d-8c17-4fc6-91c2-d10fec85424d"
+    "urn:uuid:01328cf8-e902-4daf-8ed3-117af27f9773",
+    "urn:uuid:56e71d79-20a8-4549-8a09-ec9f6c43140a"
   ],
-  "sampleId": "urn:uuid:739c565f-df3e-4c1c-8db8-71eb88dfb2e5",
-  "sourceId": "urn:uuid:a94a8663-ba1e-4e7e-b7f7-8282890a1f81",
+  "sampleId": "urn:uuid:4f8f1ca3-3bfb-42c2-a3e6-e820b5339aeb",
+  "sourceId": "urn:uuid:4f96a991-3af4-4931-ba61-574a74d070c0",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",

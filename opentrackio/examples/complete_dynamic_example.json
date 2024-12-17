@@ -84,11 +84,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:73c7ca73-dd65-4590-88b2-c6cc5b49be92",
-    "urn:uuid:bf76755e-2845-4c85-9451-599f754283c7"
+    "urn:uuid:e9824657-dc6c-4468-b32f-83c8d909e025",
+    "urn:uuid:34b92210-01a9-498e-82c0-312a4daea349"
   ],
-  "sampleId": "urn:uuid:fca47fa7-91b6-4db9-a751-639e08d9838b",
-  "sourceId": "urn:uuid:4473578b-326f-46be-99a7-c0e07e78f84c",
+  "sampleId": "urn:uuid:0be899e6-5111-451a-8145-c7c9e1539690",
+  "sourceId": "urn:uuid:6b79d019-889c-4ec0-9457-a88233d15535",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
