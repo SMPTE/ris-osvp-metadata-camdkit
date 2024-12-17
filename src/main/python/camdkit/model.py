@@ -13,7 +13,7 @@ from jsonschema import validate
 from camdkit.framework import *
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = "0.9.0"
+OPENTRACKIO_PROTOCOL_VERSION = (0,9,1)
 
 class ActiveSensorPhysicalDimensions(DimensionsParameter):
   """Height and width of the active area of the camera sensor in microns
@@ -262,15 +262,15 @@ class Protocol(Parameter):
     if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
       return False
 
-    if not isinstance(value.version, str):
+    if not isinstance(value.version, tuple):
       return False
-    if not len(value.version):
+    if len(value.version) != 3:
       return False
-    version_number_components = value.version.split(".")
-    if len(version_number_components) != 3:
-      return False
-    return all([version_number_component.isdigit()
-                for version_number_component in version_number_components])
+    return all([
+      isinstance(version_number_component, int) \
+                and version_number_component >= 0 \
+                and version_number_component <= 9 \
+                for version_number_component in value.version])
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -292,8 +292,14 @@ class Protocol(Parameter):
             "maxLength": 1023
         },
         "version": {
-          "type": "string",
-            "pattern": r'^[0-9]+.[0-9]+.[0-9]+$'
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minValue": 0,
+            "maxValue": 9
+          },
+          "minItems": 3,
+          "maxItems": 3
         }
       }
     }
@@ -390,9 +396,9 @@ class GlobalStagePosition(Parameter):
 
 class Transforms(Parameter):
   """A list of transforms.
-  Transforms can have a transformId and parentTransformId that can be used
-  to compose a transform hierarchy. In the case of multiple children their
-  transforms should be processed in their order in the array.
+  Transforms can have a id and parentId that can be used to compose a
+  transform hierarchy. In the case of multiple children their transforms
+  should be processed in their order in the array.
   X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
@@ -449,10 +455,10 @@ class Transforms(Parameter):
            or not isinstance(transform.scale.y, numbers.Real) \
            or not isinstance(transform.scale.z, numbers.Real):
           return False
-      # transformId and parentTransformId are optional
-      if transform.transformId != None and not isinstance(transform.transformId, str):
+      # id and parentId are optional
+      if transform.id != None and not isinstance(transform.id, str):
         return False
-      if transform.parentTransformId != None and not isinstance(transform.parentTransformId, str):
+      if transform.parentId != None and not isinstance(transform.parentId, str):
         return False
 
     return True
@@ -535,12 +541,12 @@ class Transforms(Parameter):
               }
             }
           },
-          "transformId": {
+          "id": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
           },
-          "parentTransformId": {
+          "parentId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
@@ -555,8 +561,9 @@ class TimingSynchronization(Parameter):
   """Object describing how the tracking device is synchronized for this
   sample.
 
-  frequency: The frequency of the synchronisation. This may differ from
-  the sample frame rate for example in a genlocked tracking device.
+  frequency: The frequency of a synchronization signal.This may differ from
+  the sample frame rate for example in a genlocked tracking device. This is
+  not required if the synchronization source is PTP or NTP.
   locked: Is the tracking device locked to the synchronization source
   offsets: Offsets in seconds between sync and sample. Critical for e.g.
   frame remapping, or when using different data sources for
@@ -593,12 +600,13 @@ class TimingSynchronization(Parameter):
     """
     if not isinstance(value, Synchronization):
       return False
-    if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
-      return False
     if not isinstance(value.locked, bool):
       return False
     if not isinstance(value.source, SynchronizationSourceEnum):
       return False
+    if value.frequency != None:
+      if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
+        return False
     if value.ptp != None:
       # Validate MAC address
       if value.ptp.master != None and not (isinstance(value.ptp.master,str) and 
@@ -607,7 +615,9 @@ class TimingSynchronization(Parameter):
         return False
       if value.ptp.offset != None and not isinstance(value.ptp.offset, float):
         return False
-      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) and value.ptp.domain >= 0):
+      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) \
+                                           and value.ptp.domain < 128 \
+                                           and value.ptp.domain >= 0):
         return False
       if value.offsets != None and not value.offsets.validate():
         return False
@@ -620,7 +630,8 @@ class TimingSynchronization(Parameter):
   def to_json(value: typing.Any) -> typing.Any:
     d = {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
     d["source"] = str(d["source"])
-    d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
+    if "frequency" in d:
+      d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
     if value.offsets is not None:
         d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
     return d
@@ -677,12 +688,12 @@ class TimingSynchronization(Parameter):
           "properties": {
             "master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
             "offset": { "type": "number" },
-            "domain": { "type": "integer", "minimum": 0 }
+            "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
           }
         },
         "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
       },
-      "required": ["frequency", "locked", "source"]
+      "required": ["locked", "source"]
     }
 
 class LensEncoders(Parameter):
@@ -823,8 +834,7 @@ class TimingTimestamp(TimestampParameter):
   """PTP timestamp of the data capture instant. Note this may differ
     from the packet's transmission PTP timestamp. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
@@ -836,8 +846,7 @@ class RecordedTimestamp(TimestampParameter):
   PTP timestamp of the data recording instant, provided for convenience
     during playback of e.g. pre-recorded tracking data. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds), and an optional 32-bit unsigned integer
-    (attoseconds)
+    integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
@@ -851,13 +860,13 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
   section = "timing"
   units = None
 
-class TimingFrameRate(StrictlyPositiveRationalParameter):
+class TimingSampleRate(StrictlyPositiveRationalParameter):
   """Sample frame rate as a rational number. Drop frame rates such as
   29.97 should be represented as e.g. 30000/1001. In a variable rate
   system this should is estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
-  canonical_name = "frameRate"
+  canonical_name = "sampleRate"
   section = "timing"
   units = None
 
@@ -865,8 +874,9 @@ class TimingTimecode(Parameter):
   """SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.dropFrame: True if the frame rate is a drop-frame format such as 29.97 fps.
-   - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. Note the timecode frame rate may differ from the sample frequency.
+   - format.frameRate: The frame rate as a rational number. Drop frame
+  rates such as 29.97 should be represented as e.g. 30000/1001. The
+  timecode frame rate may differ from the sample frequency.
   """
   sampling = Sampling.REGULAR
   canonical_name = "timecode"
@@ -889,7 +899,8 @@ class TimingTimecode(Parameter):
       return False
     if not (isinstance(value.seconds, int) and value.seconds >= 0 and value.seconds < 60):
       return False
-    if not (isinstance(value.frames, int) and value.frames >= 0 and value.frames < value.format.to_int()):
+    if not (isinstance(value.frames, int) and value.frames >= 0 and \
+            value.frames < value.format.to_int() and value.format.frame_rate <= 120):
       return False
     return True
 
@@ -901,8 +912,7 @@ class TimingTimecode(Parameter):
         "num": d["format"].frame_rate.numerator,
         "denom": d["format"].frame_rate.denominator
       },
-      "dropFrame": d["format"].drop_frame,
-      "oddField": d["format"].odd_field,
+      "subFrame": d["format"].sub_frame,
     }
     return d
 
@@ -911,8 +921,7 @@ class TimingTimecode(Parameter):
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
                                                           value["format"]["frameRate"]["denom"]),
-                                   in_drop_frame=value["format"]["dropFrame"],
-                                   in_odd_field=value["format"]["oddField"]))
+                                   in_sub_frame=value["format"]["subFrame"]))
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -939,12 +948,12 @@ class TimingTimecode(Parameter):
         "frames": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 29
+          "maximum": 119
         },
         "format": {
           "type": "object",
           "description": TimecodeFormat.__doc__.replace("\n ", ""),
-          "required": [ "frameRate", "dropFrame" ],
+          "required": [ "frameRate" ],
           "additionalProperties": False,
           "properties": {
             "frameRate": {
@@ -964,11 +973,10 @@ class TimingTimecode(Parameter):
                 }
               }
             },
-            "dropFrame": {
-              "type": "boolean"
-            },
-            "oddField": {
-              "type": "boolean"
+            "sub_frame": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": UINT_MAX
             }
           }
         }
@@ -1034,22 +1042,62 @@ class EntrancePupilOffset(RealParameter):
   units = "meter"
   section = "lens"
 
-class DistortionOverscan(NonNegativeRealParameter):
-  """Overscan factor on lens distortion"""
+class DistortionOverscan(GreaterEqualOneRealParameter):
+  """Overscan factor on lens distortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
 
   sampling = Sampling.REGULAR
   canonical_name = "distortionOverscan"
   section = "lens"
   units = None
 
-class DistortionOverscanMaximum(NonNegativeRealParameter):
-  """Static maximum overscan factor on lens distortion"""
+class UndistortionOverscan(GreaterEqualOneRealParameter):
+  """Overscan factor on lens undistortion. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
+
+  sampling = Sampling.REGULAR
+  canonical_name = "undistortionOverscan"
+  section = "lens"
+  units = None
+
+class DistortionOverscanMaximum(GreaterEqualOneRealParameter):
+  """Static maximum overscan factor on lens distortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  """
 
   sampling = Sampling.STATIC
   canonical_name = "distortionOverscanMax"
   section = "lens"
   units = None
   
+class UndistortionOverscanMaximum(GreaterEqualOneRealParameter):
+  """Static maximum overscan factor on lens undistortion. This is primarily
+  relevant when storing overscan values, not in transmission as the
+  overscan should be calculated by the consumer.
+  """
+
+  sampling = Sampling.STATIC
+  canonical_name = "undistortionOverscanMax"
+  section = "lens"
+  units = None
+
+class DistortionIsProjection(BooleanParameter):
+  """The OpenLensIO distortion model is the Projection Characterization,
+  not the Field-Of-View Characterization. This is primarily relevant when
+  storing overscan values, not in transmission as the overscan should be
+  calculated by the consumer.
+  """
+
+  sampling = Sampling.STATIC
+  canonical_name = "distortionProjection"
+  section = "lens"
+  units = None
+
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
   a lens
@@ -1103,10 +1151,13 @@ class LensExposureFalloff(Parameter):
       }
     }
   
-class LensDistortion(Parameter):
-  """Coefficients for calculating the distortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
+class LensDistortions(Parameter):
+  """A list of Distortion objects that each define the coefficients for
+  calculating the distortion characteristics of a lens comprising radial
+  distortion coefficients of the spherical distortion (k1-N) and the
+  tangential distortion (p1-N). An optional key 'model' can be used that
+  describes the distortion model. The default is Brown-Conrady D-U (that
+  maps Distorted to Undistorted coordinates).
   """
   sampling = Sampling.REGULAR
   canonical_name = "distortion"
@@ -1115,76 +1166,96 @@ class LensDistortion(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The radial and tangential coefficients shall each be real numbers."""
+    """The list shall contain at least one Distortion object, and in each
+    object the radial and tangential coefficients shall each be real numbers.
+    """
 
-    if not isinstance(value, Distortion):
+    if not isinstance(value, tuple):
       return False
- 
-    # At least one radial coefficient is required
-    if value.radial == None or len(value.radial) == 0:
+    
+    if len(value) == 0:
       return False
-
-    for k in value.radial:
-      if k is not None and not isinstance(k, numbers.Real):
+    
+    for v in value:
+      if not isinstance(v, Distortion):
         return False
-    if value.tangential is not None:
-      for p in value.tangential:
-        if p is not None and not isinstance(p, numbers.Real):
+      
+      # If model is provided check the length
+      if v.model != None and len(v.model) == 0:
+        return False
+  
+      # At least one radial coefficient is required
+      if v.radial == None or len(v.radial) == 0:
+        return False
+
+      for k in v.radial:
+        if k is not None and not isinstance(k, numbers.Real):
           return False
+      if v.tangential is not None:
+        if len(v.tangential) == 0:
+          return False
+        for p in v.tangential:
+          if p is not None and not isinstance(p, numbers.Real):
+            return False
 
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    d = dataclasses.asdict(value)
-    if d["tangential"] == None:
-      del d["tangential"]
-    return d
+    a = []
+    for element in value:
+      d = dataclasses.asdict(element)
+      if d["model"] == None:
+        del d["model"]
+      if d["tangential"] == None:
+        del d["tangential"]
+      a.append(d)
+    return a
 
   @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return Distortion(**value)
+  def from_json(value: typing.Any) -> typing.Tuple[Distortion]:
+    a = ()
+    for element in value:
+      a += (Distortion(**element),)
+    return a
 
   @staticmethod
   def make_json_schema() -> dict:
     return {
-      "type": "object",
-      "additionalProperties": False,
-      "required": ["radial"],
-      "properties": {
-        "radial": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["radial"],
+        "properties": {
+          "model": {
+            "type": "string",
+          },
+          "radial": {
             "type": "array",
             "items": {
               "type": "number"
             },
             "minLength": 1
-        },
-        "tangential": {
+          },
+          "tangential": {
             "type": "array",
             "items": {
               "type": "number"
             },
             "minLength": 1
-        },
+          },
+        }
       }
     }
   
-class LensUndistortion(LensDistortion):
-  """Coefficients for calculating the undistortion characteristics of a
-  lens comprising radial distortion coefficients of the spherical
-  distortion (k1-N) and the tangential distortion (p1-N).
-  """
-  sampling = Sampling.REGULAR
-  canonical_name = "undistortion"
-  section = "lens"
-  units = None
-  
-class LensDistortionShift(Parameter):
-  """Shift in x and y of the centre of distortion of the virtual camera
+class LensDistortionOffset(Parameter):
+  """Offset in x and y of the centre of distortion of the virtual camera
   """
 
   sampling = Sampling.REGULAR
-  canonical_name = "distortionShift"
+  canonical_name = "distortionOffset"
   section = "lens"
   units = "millimeter"
 
@@ -1192,7 +1263,7 @@ class LensDistortionShift(Parameter):
   def validate(value) -> bool:
     """X and Y centre shift shall each be real numbers."""
 
-    if not isinstance(value, DistortionShift):
+    if not isinstance(value, DistortionOffset):
       return False
  
     if value.x is None or not isinstance(value.x, numbers.Real):
@@ -1208,7 +1279,7 @@ class LensDistortionShift(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return DistortionShift(**value)
+    return DistortionOffset(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -1226,20 +1297,20 @@ class LensDistortionShift(Parameter):
       }
     }
   
-class LensPerspectiveShift(Parameter):
-  """Shift in x and y of the centre of perspective projection of the
+class LensProjectionOffset(Parameter):
+  """Offset in x and y of the centre of perspective projection of the
   virtual camera
   """
   sampling = Sampling.REGULAR
-  canonical_name = "perspectiveShift"
+  canonical_name = "projectionOffset"
   section = "lens"
   units = "millimeter"
 
   @staticmethod
   def validate(value) -> bool:
-    """X and Y perspective shift shall each be real numbers."""
+    """X and Y projection offset shall each be real numbers."""
 
-    if not isinstance(value, PerspectiveShift):
+    if not isinstance(value, ProjectionOffset):
       return False
  
     if value.x is None or not isinstance(value.x, numbers.Real):
@@ -1255,7 +1326,7 @@ class LensPerspectiveShift(Parameter):
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
-    return PerspectiveShift(**value)
+    return ProjectionOffset(**value)
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -1305,7 +1376,9 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
+  lens_distortion_is_projection: typing.Optional[typing.Tuple[bool]] = DistortionIsProjection()
   lens_distortion_overscan_max: typing.Optional[numbers.Real] = DistortionOverscanMaximum()
+  lens_undistortion_overscan_max: typing.Optional[numbers.Real] = UndistortionOverscanMaximum()
   lens_firmware: typing.Optional[str] = LensFirmware()
   lens_make: typing.Optional[str] = LensMake()
   lens_model: typing.Optional[str] = LensModel()
@@ -1319,27 +1392,27 @@ class Clip(ParameterContainer):
   tracker_status: typing.Optional[typing.Tuple[str]] = Status()
   global_stage: typing.Optional[typing.Tuple[GlobalPosition]] = GlobalStagePosition()
   lens_custom: typing.Optional[typing.Tuple[tuple]] = LensCustom()
-  lens_distortion: typing.Optional[typing.Tuple[Distortion]] = LensDistortion()
+  lens_distortions: typing.Optional[typing.Tuple[typing.Tuple[Distortion]]] = LensDistortions()
   lens_distortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = DistortionOverscan()
-  lens_distortion_shift: typing.Optional[typing.Tuple[DistortionShift]] = LensDistortionShift()
+  lens_distortion_offset: typing.Optional[typing.Tuple[DistortionOffset]] = LensDistortionOffset()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
   lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Real]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
   lens_focus_distance: typing.Optional[typing.Tuple[numbers.Real]] = FocusDistance()
-  lens_perspective_shift: typing.Optional[typing.Tuple[PerspectiveShift]] = LensPerspectiveShift()
+  lens_projection_offset: typing.Optional[typing.Tuple[ProjectionOffset]] = LensProjectionOffset()
   lens_raw_encoders: typing.Optional[typing.Tuple[LensRawEncoders]] = LensRawEncoders()
   lens_t_number: typing.Optional[typing.Tuple[numbers.Real]] = TStop()
-  lens_undistortion: typing.Optional[typing.Tuple[Distortion]] = LensUndistortion()
+  lens_undistortion_overscan: typing.Optional[typing.Tuple[numbers.Real]] = UndistortionOverscan()
   protocol: typing.Optional[typing.Tuple[VersionedProtocol]] = Protocol()
   related_sample_ids: typing.Optional[typing.Tuple[tuple]] = RelatedSampleIds()
   sample_id: typing.Optional[typing.Tuple[str]] = SampleId()
   source_id: typing.Optional[typing.Tuple[str]] = SourceId()
   source_number: typing.Optional[typing.Tuple[int]] = SourceNumber()
-  timing_frame_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingFrameRate()
   timing_mode: typing.Optional[typing.Tuple[TimingMode]] = TimingMode()
   timing_recorded_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = RecordedTimestamp()
+  timing_sample_rate: typing.Optional[typing.Tuple[StrictlyPositiveRationalParameter]] = TimingSampleRate()
   timing_sample_timestamp: typing.Optional[typing.Tuple[TimestampParameter]] = TimingTimestamp()
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()

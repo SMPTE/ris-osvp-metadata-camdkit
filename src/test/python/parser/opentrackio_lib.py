@@ -96,7 +96,7 @@ class OpenTrackIOProtocol:
         """Return a single axis of camera translation, such as: x,y, or z"""
         if "transforms" in self.pd.keys():
             for tr in self.pd["transforms"]:
-                if ("Camera" in tr["transformId"]):
+                if ("Camera" in tr["id"]):
                     if self.verbose:
                         print("found camera, dim = {}, mult factor: {}".format(dimension,self.trans_mult))
                     if (dimension == 'x'):
@@ -113,7 +113,7 @@ class OpenTrackIOProtocol:
         Valid arguments are: p, t, r"""
         if "transforms" in self.pd.keys():
            for tr in self.pd["transforms"]:
-               if ("Camera" in tr["transformId"]):
+               if ("Camera" in tr["id"]):
                    if (dimension == 'p'):
                        return tr["rotation"]["pan"] * self.rot_mult
                    elif (dimension == 't'):
@@ -143,7 +143,6 @@ class OpenTrackIOProtocol:
         if self.validate_dict_elements(self.pd,["timing","sampleTimestamp","seconds"]):
             ssec = int(self.pd["timing"]["sampleTimestamp"]["seconds"])
             nsec = int(self.pd["timing"]["sampleTimestamp"]["nanoseconds"])
-            asec = int(self.pd["timing"]["sampleTimestamp"]["attoseconds"])
             # Constants
             epoch = 1970                        # PTP is since this epoch
             spm = 60                            # seconds per minute. Common knowledge, but consistency is important
@@ -161,7 +160,7 @@ class OpenTrackIOProtocol:
             st = int(std - (hr * sph) - (mn * spm))  # remainder seconds
         if not part:
             if self.sample_time_format == "sec":
-                return ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001)
+                return ssec + (nsec * 0.000000001)
             elif self.sample_time_format == "timecode":             # since midnight
                 frm = int((nsec * 0.000000001) * self.get_timecode_framerate())
                 return '{:02}'.format(hr) + ":" + '{:02}'.format(mn) + ":" + '{:02}'.format(st) + ":" + '{:02}'.format(frm)
@@ -184,9 +183,9 @@ class OpenTrackIOProtocol:
 
     def get_timecode_framerate(self):
         """Frame rate which the house timecode represents"""
-        if self.validate_dict_elements(self.pd,["timing","frameRate","num"]):
-            numerator = float(self.pd["timing"]["frameRate"]["num"])  
-            denominator = float(self.pd["timing"]["frameRate"]["denom"]) 
+        if self.validate_dict_elements(self.pd,["timing","sampleRate","num"]):
+            numerator = float(self.pd["timing"]["sampleRate"]["num"])  
+            denominator = float(self.pd["timing"]["sampleRate"]["denom"]) 
             return float(numerator / denominator)
         else:
             return None
@@ -265,7 +264,7 @@ class OpenTrackIOProtocol:
     def get_protocol_version(self):
         """Version of the protocol to which this sample conforms"""
         if self.validate_dict_elements(self.pd,["protocol","version"]):
-            return str(self.pd["protocol"]["version"])
+            return ".".join(map(str, self.pd["protocol"]["version"]))
         else:
             return None
 

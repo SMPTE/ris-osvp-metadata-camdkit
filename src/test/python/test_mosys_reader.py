@@ -10,7 +10,7 @@ import unittest
 import uuid
 
 from camdkit.framework import Vector3, Rotator3, Synchronization, SynchronizationSourceEnum, \
-                              Timecode, TimecodeFormat, FizEncoders, Distortion, PerspectiveShift
+                              Timecode, TimecodeFormat, FizEncoders, Distortion, ProjectionOffset
 from camdkit.model import OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.mosys import reader
 
@@ -25,7 +25,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(len(clip.sample_id[1]), len(uuid.uuid4().urn))
     self.assertEqual(clip.tracker_recording[2], True)
     self.assertEqual(clip.tracker_status[3], "Optical Good")
-    self.assertEqual(clip.timing_frame_rate[4], 25.0)
+    self.assertEqual(clip.timing_sample_rate[4], 25.0)
     self.assertEqual(clip.timing_mode[5], "internal")
     self.assertEqual(clip.timing_sequence_number[6], 13)
     self.assertEqual(clip.timing_synchronization[7],
@@ -34,7 +34,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(clip.transforms[9][0].translation, Vector3(x=-8.121, y=-185.368, z=119.806))
     self.assertEqual(clip.transforms[10][0].rotation, Rotator3(pan=-2.969, tilt=-28.03, roll=3.1))
     self.assertEqual(clip.lens_encoders[11], FizEncoders(focus=0.7643280029296875, zoom=0.0014190673828125))
-    self.assertEqual(clip.lens_distortion[12], Distortion([0.15680991113185883, -0.0881580114364624]))
-    self.assertEqual(clip.lens_perspective_shift[13], PerspectiveShift(-7.783590793609619, 6.896144866943359))
+    self.assertEqual(clip.lens_distortions[12], (Distortion([0.15680991113185883, -0.0881580114364624],None,None),))
+    self.assertEqual(clip.lens_projection_offset[13], ProjectionOffset(-7.783590793609619, 6.896144866943359))
     self.assertAlmostEqual(clip.lens_focal_length[14], 22.35, 2)
     self.assertEqual(int(clip.lens_focus_distance[15]*1000), 2313)

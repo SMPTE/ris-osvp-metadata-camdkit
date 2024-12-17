@@ -256,7 +256,7 @@ class F4PacketParser:
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
             frame_rate = frame.timing_timecode[0].format.frame_rate
-            frame.timing_frame_rate = (frame_rate,)
+            frame.timing_sample_rate = (frame_rate,)
             frequency = frame_rate
             pass
           case F4.TRACKING_STATUS:
@@ -275,14 +275,14 @@ class F4PacketParser:
       frame.timing_synchronization = (sync,)
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)
-      transform.transformId = f'Camera {self._packet.camera_id}'
+      transform.id = f'Camera {self._packet.camera_id}'
       frame.transforms = ((transform,),)
       # Assuming a full frame 35mm active sensor 36x24mm
       # f = 36/[2*tand(FoV/2)]
       fov_radians = fov_h * math.pi / 180.0
       frame.lens_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
       frame.lens_encoders = (FizEncoders(focus, iris, zoom),)
-      frame.lens_distortion = (Distortion([k1, k2]),)
-      frame.lens_perspective_shift = (PerspectiveShift(cx, cy),)
+      frame.lens_distortions = ((Distortion([k1, k2],),),)
+      frame.lens_projection_offset = (ProjectionOffset(cx, cy),)
     return frame
   
