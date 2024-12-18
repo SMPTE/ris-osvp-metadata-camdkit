@@ -1087,10 +1087,10 @@ class UndistortionOverscanMaximum(GreaterEqualOneRealParameter):
   units = None
 
 class DistortionIsProjection(BooleanParameter):
-  """The OpenLensIO distortion model is the Projection Characterization,
-  not the Field-Of-View Characterization. This is primarily relevant when
-  storing overscan values, not in transmission as the overscan should be
-  calculated by the consumer.
+  """Indicator that the OpenLensIO distortion model is the Projection
+  Characterization, not the Field-Of-View Characterization. This is 
+  primarily relevant when storing overscan values, not in transmission
+  as the overscan should be calculated by the consumer.
   """
 
   sampling = Sampling.STATIC
