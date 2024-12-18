@@ -973,7 +973,7 @@ class TimingTimecode(Parameter):
                 }
               }
             },
-            "sub_frame": {
+            "subFrame": {
               "type": "integer",
               "minimum": 0,
               "maximum": UINT_MAX
@@ -1376,7 +1376,7 @@ class Clip(ParameterContainer):
   duration: typing.Optional[numbers.Rational] = Duration()
   fdl_link: typing.Optional[str] = FDLLink()
   iso: typing.Optional[numbers.Integral] = ISO()
-  lens_distortion_is_projection: typing.Optional[typing.Tuple[bool]] = DistortionIsProjection()
+  lens_distortion_is_projection: typing.Optional[bool] = DistortionIsProjection()
   lens_distortion_overscan_max: typing.Optional[numbers.Real] = DistortionOverscanMaximum()
   lens_undistortion_overscan_max: typing.Optional[numbers.Real] = UndistortionOverscanMaximum()
   lens_firmware: typing.Optional[str] = LensFirmware()
