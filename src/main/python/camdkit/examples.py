@@ -67,25 +67,29 @@ def get_complete_dynamic_example():
   }
   return clip_json
 
+def _example_transform_components() -> tuple[Vector3, Rotator3]:
+  return Vector3(x=1.0, y=2.0, z=3.0), Rotator3(pan=180.0, tilt=90.0, roll=45.0)
+
 def _get_recommended_dynamic_clip():
   clip = Clip()
+  # identity
   clip.sample_id = (uuid.uuid4().urn,)
   clip.source_id = (uuid.uuid4().urn,)
   clip.source_number = (1,)
-  clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION,),)
-
+  clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME,OPENTRACKIO_PROTOCOL_VERSION),)
+  # tracking
   clip.tracker_status = ("Optical Good",)
   clip.tracker_recording = (False,)
   clip.tracker_slate = ("A101_A_4",)
   clip.tracker_notes = ("Example generated sample.",)
-
+  # timing
   clip.timing_mode = (TimingModeEnum.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
-  
-  v = Vector3(x=1.0, y=2.0, z=3.0)
-  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
+  # transforms
+  v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
+  # lens
   clip.lens_f_number = (4.0,)
   clip.lens_focal_length = (24.305,)
   clip.lens_focus_distance = (10.0,)
@@ -96,25 +100,26 @@ def _get_recommended_dynamic_clip():
   return clip
 
 def _get_complete_dynamic_clip():
-  clip = Clip()
-  clip.sample_id = (uuid.uuid4().urn,)
-  clip.source_id = (uuid.uuid4().urn,)
-  clip.source_number = (1,)
-  clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION),)
-  clip.related_sample_ids = ((uuid.uuid4().urn,uuid.uuid4().urn),)
-  clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
-
-  clip.tracker_status = ("Optical Good",)
-  clip.tracker_recording = (False,)
-  clip.tracker_slate = ("A101_A_4",)
-  clip.tracker_notes = ("Example generated sample.",)
-
+  clip = _get_recommended_dynamic_clip()
+  # augmenting recommended values
+  #   timing
   clip.timing_mode = (TimingModeEnum.INTERNAL,)
+  #   transforms
+  v, r = _example_transform_components()
+  clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm", parentId="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, id="Camera", parentId="Crane Arm")
+                      ),)
+  #   lens
+  clip.lens_distortions = ((Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady D-U"), Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady U-D"),),)
+
+  # additions
+  #   identity
+  clip.related_sample_ids = ((uuid.uuid4().urn,uuid.uuid4().urn),)
+  #   timing
   clip.timing_sample_timestamp = (Timestamp(1718806554, 500000000),)
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 500000000),)
   clip.timing_sequence_number = (0,)
-  clip.timing_sample_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
   clip.timing_synchronization = (Synchronization(
     present=True,
     locked=True,
@@ -126,26 +131,14 @@ def _get_complete_dynamic_clip():
     ),
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)
-  
-  v = Vector3(x=1.0, y=2.0, z=3.0)
-  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
-  clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm", parentId="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Camera", parentId="Crane Arm")
-                      ),)
-
-  clip.lens_f_number = (4.0,)
+  #   transforms
+  clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
+  #   lens
   clip.lens_t_number = (4.1,)
-  clip.lens_focal_length = (24.305,)
-  clip.lens_focus_distance = (10.0,)
-  clip.lens_entrance_pupil_offset = (0.123,)
-  clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
   clip.lens_raw_encoders = (RawFizEncoders(focus=1000, iris=2000, zoom=3000),)
   clip.lens_distortion_overscan = (1.1,)
   clip.lens_undistortion_overscan = (1.2,)
   clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),)
-  clip.lens_distortions = ((Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady D-U"), Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady U-D"),),)
   clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),)
-  clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),)
   clip.lens_custom = ((1.0,2.0),)
   return clip
