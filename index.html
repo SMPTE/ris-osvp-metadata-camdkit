@@ -1272,10 +1272,10 @@ etc</p>
 The tuple can be empty</p>
 <h3 id="distortionprojection" tabindex="-1"><a class="anchor" href="#distortionprojection" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionProjection</code></h3>
 <h4 id="description-14" tabindex="-1"><a class="anchor" href="#description-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>The OpenLensIO distortion model is the Projection Characterization,
-not the Field-Of-View Characterization. This is primarily relevant when
-storing overscan values, not in transmission as the overscan should be
-calculated by the consumer.</p>
+<p>Indicator that the OpenLensIO distortion model is the Projection
+Characterization, not the Field-Of-View Characterization. This is
+primarily relevant when storing overscan values, not in transmission
+as the overscan should be calculated by the consumer.</p>
 <h4 id="units-14" tabindex="-1"><a class="anchor" href="#units-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-14" tabindex="-1"><a class="anchor" href="#sampling-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -2278,7 +2278,7 @@ of precision</p>
           "properties": {
             "distortionProjection": {
               "type": "boolean",
-              "description": "The OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
+              "description": "Indicator that the OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is  primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             },
             "distortionOverscanMax": {
               "type": "number",
@@ -2866,7 +2866,7 @@ of precision</p>
                     }
                   }
                 },
-                "sub_frame": {
+                "subFrame": {
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 4294967295

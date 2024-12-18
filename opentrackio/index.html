@@ -87,8 +87,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:b76d83e1-2814-4b20-9663-aa5b68724b3f&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:49278aae-3b1e-4ba5-a9bf-a9d7db1df397&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:45aaf05e-dcce-4b3b-8ddc-219637d3002e&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:a93fb845-a11c-4fe8-81bf-a83d8688739a&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -189,8 +189,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:e9cbb44a-aeb5-474f-9ae2-b42d65643071&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:7d96a426-4b5f-4522-87e2-98196f5aaafc&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:8f84731f-f6d9-411d-ac15-a1484c298fca&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:082ff5dc-9fa3-4cd4-9141-34e13b721733&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -265,7 +265,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:bcf9694b-c488-484e-8517-e4d038b4a4d2&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:3568752a-1538-47d7-bc16-40f07723decb&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -374,11 +374,11 @@
     ]
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:b6ad1d9a-5f52-41f0-b953-8a64a9107581&#34;,
-    &#34;urn:uuid:01e5c42e-f703-45d0-b32d-10dca235223e&#34;
+    &#34;urn:uuid:80927c31-ca7f-436d-bc27-9991a05245fb&#34;,
+    &#34;urn:uuid:0c72bcaa-45aa-4388-83ca-fc9923a7e760&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:7a829d5c-0e4e-47a5-9fd2-dfbd61071b5c&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:b4ad202a-ea18-4dd1-a7b6-cb16d4fdde33&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:8a52e9d2-7d26-4b3d-bb1a-f467e5b8ed0e&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:98181b32-2da2-4d47-9e87-61a74f327558&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;internal&#34;,
@@ -626,10 +626,10 @@
     The tuple can be empty
     </td></tr>
                     
-                    <tr><td>distortionProjection</td><td>lens</td><td>Static</td><td>The OpenLensIO distortion model is the Projection Characterization,
-  not the Field-Of-View Characterization. This is primarily relevant when
-  storing overscan values, not in transmission as the overscan should be
-  calculated by the consumer.
+                    <tr><td>distortionProjection</td><td>lens</td><td>Static</td><td>Indicator that the OpenLensIO distortion model is the Projection
+  Characterization, not the Field-Of-View Characterization. This is 
+  primarily relevant when storing overscan values, not in transmission
+  as the overscan should be calculated by the consumer.
   </td><td>None</td><td>The parameter shall be a boolean.</td></tr>
                     
                     <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera
@@ -1084,7 +1084,7 @@
           &#34;properties&#34;: {
             &#34;distortionProjection&#34;: {
               &#34;type&#34;: &#34;boolean&#34;,
-              &#34;description&#34;: &#34;The OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
+              &#34;description&#34;: &#34;Indicator that the OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is  primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. &#34;
             },
             &#34;distortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
@@ -1672,7 +1672,7 @@
                     }
                   }
                 },
-                &#34;sub_frame&#34;: {
+                &#34;subFrame&#34;: {
                   &#34;type&#34;: &#34;integer&#34;,
                   &#34;minimum&#34;: 0,
                   &#34;maximum&#34;: 4294967295

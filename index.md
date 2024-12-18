@@ -317,10 +317,10 @@ The parameter shall be a tuple of items of the class itemClass.
 
 #### Description
 
-The OpenLensIO distortion model is the Projection Characterization,
-  not the Field-Of-View Characterization. This is primarily relevant when
-  storing overscan values, not in transmission as the overscan should be
-  calculated by the consumer.
+Indicator that the OpenLensIO distortion model is the Projection
+  Characterization, not the Field-Of-View Characterization. This is 
+  primarily relevant when storing overscan values, not in transmission
+  as the overscan should be calculated by the consumer.
   
 
 #### Units
@@ -1465,7 +1465,7 @@ The following table indicates the camera parameters supported by each of the rea
           "properties": {
             "distortionProjection": {
               "type": "boolean",
-              "description": "The OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
+              "description": "Indicator that the OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is  primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             },
             "distortionOverscanMax": {
               "type": "number",
@@ -2053,7 +2053,7 @@ The following table indicates the camera parameters supported by each of the rea
                     }
                   }
                 },
-                "sub_frame": {
+                "subFrame": {
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 4294967295
