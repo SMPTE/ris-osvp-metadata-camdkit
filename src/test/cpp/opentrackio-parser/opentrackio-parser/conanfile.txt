@@ -1,0 +1,7 @@
+[requires]
+nlohmann_json/3.11.3
+opentrackio-cpp/1.0.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
