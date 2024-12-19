@@ -1094,7 +1094,7 @@ class DistortionIsProjection(BooleanParameter):
   """
 
   sampling = Sampling.STATIC
-  canonical_name = "distortionProjection"
+  canonical_name = "distortionIsProjection"
   section = "lens"
   units = None
 
@@ -1345,9 +1345,9 @@ class LensProjectionOffset(Parameter):
     }
 
 class LensCustom(ArrayParameter):
-  """Until the OpenLensIO model is finalised, this list provides custom
-  coefficients for a particular lens model e.g. undistortion, anamorphic
-  etc
+  """This list provides optional custom additonal coefficients for a
+  particular lens model. The meaning of which would require negotiation
+  between a particular producer and consumer. 
   """
   sampling = Sampling.REGULAR
   canonical_name = "custom"

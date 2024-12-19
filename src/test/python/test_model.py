@@ -132,7 +132,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
-    self.assertEqual(d["static"]["lens"]["distortionProjection"], False)
+    self.assertEqual(d["static"]["lens"]["distortionIsProjection"], False)
     self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
