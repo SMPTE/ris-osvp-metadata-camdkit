@@ -116,6 +116,7 @@ def _get_complete_dynamic_clip():
   clip.timing_sample_rate = (Fraction(24000, 1001),)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
   clip.timing_synchronization = (Synchronization(
+    frequency=Fraction(24000,1001),
     present=True,
     locked=True,
     source=SynchronizationSourceEnum.PTP,
