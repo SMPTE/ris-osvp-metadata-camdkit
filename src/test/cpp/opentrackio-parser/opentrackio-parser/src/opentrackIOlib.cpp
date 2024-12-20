@@ -258,6 +258,7 @@ void OTProtocol::Set_focus_distance_units(const std::string& unit_str) {
 
 // The protocol to which this sample conforms
 std::string OTProtocol::Get_protocol() {
+    // TODO becomes [int,int,int] in 0.9.1
     return sample.protocol->name + " v" + sample.protocol->version;
 }
 

@@ -1,3 +1,12 @@
+/*
+ * opentrackIO_parser.cpp
+ *
+ * Reference code for decoding OpenTrackIO samples
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ * Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>

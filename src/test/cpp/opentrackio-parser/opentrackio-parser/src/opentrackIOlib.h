@@ -1,18 +1,11 @@
-// opentrackIOlib.h
-//
-// Reference code for decoding opentrackIO messages
-// Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
-//
-// License: this code is open-source under the FreeBSD License
-//
-// nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
-
-// PROBLEMS: 
-// return tr["translation"]["z"].get<double>() * trans_mult; 
-// std::string hh = std::to_string(pd["timing"]["timecode"]["hours"].get<int>());
-// is template necessary? I think I should just cast
-// std::tuple<double, double, double> Get_camera_translations() {
-// omit tuple or the template?
+/*
+ * opentrackIOlib.h
+ *
+ * Reference code for decoding OpenTrackIO samples
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ * Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+ */
 
 #ifndef OPENTRACKIO_H
 #define OPENTRACKIO_H
