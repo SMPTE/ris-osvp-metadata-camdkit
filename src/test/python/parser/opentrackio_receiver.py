@@ -18,7 +18,7 @@ from cbor2 import loads
 from opentrackio_lib import *
 
 MULTICAST_PORT = 55555
-IDENTIFIER = b'OTrk'  # ASCII "OTrIO"
+IDENTIFIER = b'OTrk' 
 IDENTIFIER_LENGTH = len(IDENTIFIER) 
 HEADER_LENGTH = 16
 VERBOSE = False

@@ -126,6 +126,8 @@ def get_local_timestamp():
 		timestamp = time.time() + ref_offset_s
 		#print(f"Local time: {timestamp}")
 		return timestamp
+	else:
+		return time.time()
 
 def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0, total_segments=1):
 	current_time = datetime.now()
@@ -139,7 +141,7 @@ def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0
 	payload_data = {
 		"protocol": {
 			"name": "OpenTrackIO",
-			"version": "0.9.0"
+			"version": "0.9.1"
 		},
 		"sourceId": f"urn:uuid:{MY_UUID}",
 		"sourceNumber": SOURCE_NUMBER,
