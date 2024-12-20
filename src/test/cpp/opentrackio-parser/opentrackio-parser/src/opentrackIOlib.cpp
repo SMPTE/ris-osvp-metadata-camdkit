@@ -90,7 +90,7 @@ double Conversion_factor_from_meters(const std::string& unit_str) {
 
 double OTProtocol::Get_camera_trans(const std::string& dimension) {
     for (auto transform : sample.transforms->transforms) {
-        if (transform.transformId == "Camera") {
+        if (transform.id == "Camera") {
             if (verbose) {
                 std::cout << "found camera, dim = " << dimension << ", mult factor: " << trans_mult << std::endl;
             }
@@ -109,7 +109,7 @@ double OTProtocol::Get_camera_trans(const std::string& dimension) {
 
 double OTProtocol::Get_camera_rot(const std::string& dimension) {
     for (auto transform : sample.transforms->transforms) {
-        if (transform.transformId == "Camera") {
+        if (transform.id == "Camera") {
             if (dimension == "p") {
                 return transform.rotation.pan * rot_mult;
             } else if (dimension == "t") {
@@ -141,7 +141,6 @@ std::string OTProtocol::Get_timecode(void) {
 std::string OTProtocol::Get_sample_time(const std::string& part) {
     int ssec = sample.timing->sampleTimestamp->seconds;
     int nsec = sample.timing->sampleTimestamp->nanoseconds;
-    int asec = sample.timing->sampleTimestamp->attoseconds;
     // Constants
     const int epoch = 1970; // PTP is since this epoch
     const int spm = 60;     // seconds per minute. Common knowledge, but consistency is important
@@ -160,7 +159,7 @@ std::string OTProtocol::Get_sample_time(const std::string& part) {
 
     if (part.empty()) {
         if (sample_time_format == "sec") {
-            return std::to_string(ssec + (nsec * 0.000000001) + (asec * 0.000000000000000001));
+            return std::to_string(ssec + (nsec * 0.000000001));
         } else if (sample_time_format == "timecode") {
             int frm = static_cast<int>((nsec * 0.000000001) * Get_timecode_framerate());
             return std::to_string(hr) + ":" + std::to_string(mn) + ":" + std::to_string(st) + ":" + std::to_string(frm);

@@ -74,7 +74,8 @@ jobs:
           role-to-assume: ${{ env.AWS_RIS_PUB_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to RIS pub
+      - name: Create review copy
+        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
         id: deployRISpub
         shell: bash
         run: |
@@ -82,13 +83,19 @@ jobs:
           aws s3 sync ./build/ s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
 
+      - name: Publish documentation
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_OPENTRACKIO_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to www.opentrackio.org
+      - name: Publish documentation
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |

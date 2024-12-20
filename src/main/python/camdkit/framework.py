@@ -51,14 +51,14 @@ class Rotator3:
 
 @dataclasses.dataclass
 class Transform:
-  """A translation, rotation and scale. 'transformId' and
-  'parentTransformId' fields enable geometry chains
+  """A translation, rotation and scale. 'id' and 'parentId' fields enable
+  geometry chains
   """
   translation: Vector3
   rotation: Rotator3
   scale: typing.Optional[Vector3] = None
-  transformId: typing.Optional[str] = None
-  parentTransformId: typing.Optional[str] = None
+  id: typing.Optional[str] = None
+  parentId: typing.Optional[str] = None
 
 @dataclasses.dataclass
 class FizEncoders:
@@ -84,22 +84,25 @@ class ExposureFalloff:
 @dataclasses.dataclass
 class Distortion:
   """Coefficients for the calculation of radial and (optionally)
-  tangential lens distortion
+  tangential lens distortion. Model is an optional string that describes
+  the distortion model. The default is Brown-Conrady D-U (that maps
+  Distorted to Undistorted coordinates).
   """
-  radial: typing.Tuple[float]
-  tangential: typing.Optional[typing.Tuple[float]] = None
+  radial: typing.Tuple[float, ...]
+  tangential: typing.Optional[typing.Tuple[float, ...]] = None
+  model: typing.Optional[str] = None
 
 @dataclasses.dataclass
-class PerspectiveShift:
-  """Shift in x and y of the centre of perspective projection of the
+class ProjectionOffset:
+  """Offset in x and y of the centre of perspective projection of the
   virtual camera
   """
   x: float
   y: float
   
 @dataclasses.dataclass
-class DistortionShift:
-  """Shift in x and y of the centre of distortion of the virtual camera
+class DistortionOffset:
+  """Offset in x and y of the centre of distortion of the virtual camera
   """
   x: float
   y: float
@@ -117,26 +120,22 @@ class GlobalPosition:
 @dataclasses.dataclass
 class Timestamp:
   """48-bit integer representing seconds, 32-bit integer representing
-  nanoseconds, and (optionally) an optional 32-bit integer representing
-  attoseconds elapsed since 00:00 January 1st 1970 epoch.
+  nanoseconds elapsed since 00:00 January 1st 1970 epoch.
   Reference: https://datatracker.ietf.org/doc/html/rfc8877
   """
 
   seconds: int
   nanoseconds: int
-  attoseconds: typing.Optional[int] = None
 
 @dataclasses.dataclass
 class VersionedProtocol:
-  """A pair of protocol name and protocol version number (though
-  'number' should not be seen as a restriction to a numeric character
-  set. Both must be specified as strings with strictly positive length.
-  The version must be specified as three integers separated by '.'
-  characters, and embody the major, minor and patch meanings of
-  semantic versioning.
+  """A pair of protocol name and protocol version number. The name must be
+  specified as a string with a strictly positive length. The version should
+  be specified as three integers separated that embody the major, minor and
+  patch meanings of semantic versioning.
   """
   name: str
-  version: str
+  version: typing.Tuple[int, int, int]
 
 class BaseEnum(Enum):
   """Base class for enumerations"""
@@ -203,30 +202,27 @@ class TimingModeEnum(BaseEnum):
   EXTERNAL = "external"
 
 class TimecodeFormat:
-  """The timecode format is defined as a rational frame rate and drop
-  frame flag. Where an interlaced signal is described, the oddField flag
-  indicates which field (odd or even) is referred to by the timecode.
+  """The timecode format is defined as a rational frame rate and - where a
+  signal with sub-frames is described, such as an interlaced signal - an
+  index of which sub-frame is referred to by the timecode.
   """
 
   frame_rate: numbers.Rational
-  drop_frame: bool = False
-  odd_field: bool = True
+  sub_frame: int = 0
 
   def __init__(self, in_frame_rate: numbers.Rational,
-               in_drop_frame: bool = False,
-               in_odd_field: bool = True):
+               in_sub_frame: int = 0):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
     self.frame_rate = in_frame_rate
-    self.drop_frame = in_drop_frame
-    self.odd_field = in_odd_field
+    self.sub_frame = in_sub_frame
 
   def to_int(self):
     return self.frame_rate.__ceil__()
   
   def __str__(self):
-    return f"{str(self.frame_rate)}{'D' if self.drop_frame else ''}"
+    return f"{str(self.frame_rate)}/{str(self.sub_frame)}"
   
   def __eq__(self, other):
       if isinstance(other, self.__class__):
@@ -257,9 +253,9 @@ class Timecode:
 class Synchronization:
   """Data structure for synchronization data"""
 
-  frequency: numbers.Rational
   locked: bool
   source: SynchronizationSourceEnum
+  frequency: typing.Optional[numbers.Rational] = None
   offsets: typing.Optional[SynchronizationOffsets] = None
   present: typing.Optional[bool] = None
   ptp: typing.Optional[SynchronizationPTP] = None
@@ -669,6 +665,22 @@ class NonNegativeRealParameter(RealParameter):
       "minimum": 0.0,
     }
 
+class GreaterEqualOneRealParameter(RealParameter):
+  
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a real number >= 1."""
+
+    return isinstance(value, numbers.Real) and value >= 1.0
+  
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+      "minimum": 1.0,
+    }
+
+
 class EnumParameter(StringParameter):
   allowedValues = []
 
@@ -699,13 +711,13 @@ class EnumParameter(StringParameter):
 
 class TimestampParameter(Parameter):
   """PTP timestamp: 48-bit unsigned integer (seconds), 32-bit unsigned
-  integer (nanoseconds), optional 32-bit unsigned integer (attoseconds)
+  integer (nanoseconds)
   """
 
   @staticmethod
   def validate(value) -> bool:
     """The parameter shall contain valid number of seconds, nanoseconds
-    and optionally attoseconds elapsed since the start of the epoch.
+    elapsed since the start of the epoch.
     """
     if not isinstance(value, Timestamp):
       return False
@@ -715,17 +727,11 @@ class TimestampParameter(Parameter):
     if (not (isinstance(value.nanoseconds, int)
              and 0 <= value.nanoseconds <= UINT_MAX)):
       return False
-    if value.attoseconds != None:
-      if (not (isinstance(value.attoseconds, int)
-               and 0 <= value.attoseconds <= UINT_MAX)):
-        return False
     return True
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
     d = dataclasses.asdict(value)
-    if d["attoseconds"] == None:
-      del d["attoseconds"]
     return d
 
   @staticmethod
@@ -744,11 +750,6 @@ class TimestampParameter(Parameter):
           "maximum": UINT48_MAX
         },
         "nanoseconds": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": UINT_MAX
-        },
-        "attoseconds": {
           "type": "integer",
           "minimum": 0,
           "maximum": UINT_MAX

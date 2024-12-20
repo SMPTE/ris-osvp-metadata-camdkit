@@ -45,6 +45,8 @@ class ModelTest(unittest.TestCase):
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
     clip.lens_distortion_overscan_max = 1.2
+    clip.lens_distortion_is_projection = False
+    clip.lens_undistortion_overscan_max = 1.2
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
     clip.lens_firmware = "1-dev.1"
@@ -77,7 +79,7 @@ class ModelTest(unittest.TestCase):
     clip.timing_recorded_timestamp = (Timestamp(1718806000, 0),
                                       Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
-    clip.timing_frame_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
+    clip.timing_sample_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
     clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(24)),
                             Timecode(1,2,3,5,TimecodeFormat(24)))
     sync = Synchronization(
@@ -107,15 +109,15 @@ class ModelTest(unittest.TestCase):
     clip.lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
                               RawFizEncoders(focus=1, iris=2, zoom=3))
     clip.lens_distortion_overscan = (1.0, 1.0)
+    clip.lens_undistortion_overscan = (1.0, 1.0)
     clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                   ExposureFalloff(1.0, 2.0, 3.0))
-    clip.lens_distortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                            Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_undistortion = (Distortion([1.0,2.0,3.0], [1.0,2.0]),
-                              Distortion([1.0,2.0,3.0], [1.0,2.0]))
-    clip.lens_distortion_shift = (DistortionShift(1.0, 2.0),DistortionShift(1.0, 2.0))
-    clip.lens_perspective_shift = (PerspectiveShift(0.1, 0.2),
-                                   PerspectiveShift(0.1, 0.2))
+    clip.lens_distortions = ((Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D")),
+                             (Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady D-U"),
+                              Distortion([1.0,2.0,3.0], [1.0,2.0], "Brown-Conrady U-D")))
+    clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),DistortionOffset(1.0, 2.0))
+    clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),ProjectionOffset(0.1, 0.2))
 
     d = clip.to_json()
 
@@ -130,6 +132,8 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
+    self.assertEqual(d["static"]["lens"]["distortionProjection"], False)
+    self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
@@ -154,9 +158,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
                                           {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
     self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
-                                                ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                                                 "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
+                                                  ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
     self.assertTupleEqual(d["globalStage"], ({ "E":100.0, "N":200.0, "U":300.0,
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 },
                                              { "E":100.0, "N":200.0, "U":300.0,
@@ -172,9 +176,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["recordedTimestamp"], ({ "seconds": 1718806000, "nanoseconds": 0 },
                                                              { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
-    self.assertTupleEqual(d["timing"]["frameRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
-    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False, "oddField": True } },
-                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "dropFrame": False, "oddField": True } }))
+    self.assertTupleEqual(d["timing"]["sampleRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
+    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "subFrame": 0 } },
+                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "subFrame": 0 } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
                   "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
@@ -192,14 +196,15 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
                                                      { "focus":1, "iris":2, "zoom":3 }))
     self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
+    self.assertTupleEqual(d["lens"]["undistortionOverscan"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
-                                                     { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                    { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["undistortion"], ({ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] },
-                                                      { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0] }))
-    self.assertTupleEqual(d["lens"]["distortionShift"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
-    self.assertTupleEqual(d["lens"]["perspectiveShift"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
+                                                         { "a1":1.0,"a2":2.0,"a3":3.0 }))
+    self.assertTupleEqual(d["lens"]["distortion"], ([{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
+                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}],
+                                                    [{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
+                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}]))
+    self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
+    self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
     d_clip = Clip()
     d_clip.from_json(d)
@@ -474,21 +479,21 @@ class ModelTest(unittest.TestCase):
     self.assertIsNone(clip.protocol)
 
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol("", "1.2.3"),)
+      clip.protocol = (VersionedProtocol("", (1,2,3)),)
     with self.assertRaises(ValueError):
       # For now, we require the protocol name to be OPENTRACKIO_PROTOCOL_NAME
-      clip.protocol = (VersionedProtocol("AnyString", "1.2.3"),)
+      clip.protocol = (VersionedProtocol("AnyString", (1,2,3)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(123, "1.2.3"),)
+      clip.protocol = (VersionedProtocol(123, (1,2,3)),)
 
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ""),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, ()),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1,2)),)
     with self.assertRaises(ValueError):
-      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, "1.2.3.4"),)
+      clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, (1,2,3,4)),)
     with self.assertRaises(ValueError):
       clip.protocol = (VersionedProtocol(OPENTRACKIO_PROTOCOL_NAME, 123),)
     with self.assertRaises(ValueError):
@@ -569,17 +574,17 @@ class ModelTest(unittest.TestCase):
     clip.timing_mode = value
     self.assertEqual(clip.timing_mode, value)
 
-  def test_timing_frame_rate_model(self):
+  def test_timing_sample_rate_model(self):
     clip = Clip()
 
-    self.assertIsNone(clip.timing_frame_rate)
+    self.assertIsNone(clip.timing_sample_rate)
 
     with self.assertRaises(ValueError):
-      clip.timing_frame_rate = -1.0
+      clip.timing_sample_rate = -1.0
 
     value = (Fraction(24000, 1001),)
-    clip.timing_frame_rate = value
-    self.assertEqual(clip.timing_frame_rate, value)
+    clip.timing_sample_rate = value
+    self.assertEqual(clip.timing_sample_rate, value)
 
   def test_timing_sample_timestamp_model(self):
     clip = Clip()
@@ -697,14 +702,10 @@ class ModelTest(unittest.TestCase):
       Timestamp(0)
     self.assertTrue(TimingTimestamp.validate(Timestamp(0,0)))
     self.assertTrue(TimingTimestamp.validate(Timestamp(1,2)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(0,0,0)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(1,2,3)))
-    self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295,4294967295)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2,3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2,3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(1,2,-3)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655,0)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(0,0,281474976710655)))
+    self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2)))
+    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655)))
 
   def test_timecode_format(self):
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
@@ -741,6 +742,9 @@ class ModelTest(unittest.TestCase):
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, True))))
+    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(120))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(121))))
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
@@ -753,8 +757,7 @@ class ModelTest(unittest.TestCase):
           "num": 24,
           "denom": 1
         },
-        "dropFrame": False,
-        "oddField": True,
+        "subFrame": 0,
       }
     })
     self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(24))))
@@ -771,8 +774,7 @@ class ModelTest(unittest.TestCase):
           "num": 24,
           "denom": 1
         },
-        "dropFrame": False,
-        "oddField": True,
+        "subFrame": 0,
       }
     })
 
@@ -852,6 +854,19 @@ class ModelTest(unittest.TestCase):
       "iris": 5,
       "zoom": 5,
     })
+  def test_lens_distortion_is_projection(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_distortion_is_projection)
+
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_is_projection = ""
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_is_projection = -1.0
+
+    value = True
+    clip.lens_distortion_is_projection = value
+    self.assertEqual(clip.lens_distortion_is_projection, value)
 
   def test_lens_distortion_overscan(self):
     clip = Clip()
@@ -862,6 +877,10 @@ class ModelTest(unittest.TestCase):
       clip.lens_distortion_overscan = ""
     with self.assertRaises(ValueError):
       clip.lens_distortion_overscan = (-1.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = (1.0,)
     clip.lens_distortion_overscan = value
@@ -876,11 +895,51 @@ class ModelTest(unittest.TestCase):
       clip.lens_distortion_overscan_max = ""
     with self.assertRaises(ValueError):
       clip.lens_distortion_overscan_max = -1.0
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
 
     value = 1.2
     clip.lens_distortion_overscan_max = value
     self.assertEqual(clip.lens_distortion_overscan_max, value)
     
+  def test_lens_undistortion_overscan(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_undistortion_overscan)
+
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = ""
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (-1.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
+
+    value = (1.0,)
+    clip.lens_undistortion_overscan = value
+    self.assertTupleEqual(clip.lens_undistortion_overscan, value)
+    
+  def test_lens_undistortion_overscan_max(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_undistortion_overscan_max)
+
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan_max = ""
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan_max = -1.0
+    with self.assertRaises(ValueError):
+      clip.lens_undistortion_overscan = (0.0,)
+    with self.assertRaises(ValueError):
+      clip.lens_distortion_overscan = (0.99,)
+
+    value = 1.2
+    clip.lens_undistortion_overscan_max = value
+    self.assertEqual(clip.lens_undistortion_overscan_max, value)
+
   def test_lens_exposure_falloff(self):
     clip = Clip()
 
@@ -915,102 +974,126 @@ class ModelTest(unittest.TestCase):
       "a3": 0.5
     })
     
-  def test_lens_distortion(self):
+  def test_lens_distortions(self):
     clip = Clip()
 
-    self.assertIsNone(clip.lens_distortion)
+    self.assertIsNone(clip.lens_distortions)
 
     with self.assertRaises(ValueError):
-      clip.lens_distortion = ""
+      clip.lens_distortions = ""
     with self.assertRaises(ValueError):
-      clip.lens_distortion = Distortion([1.0])
+      clip.lens_distortions = []
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([]),)
+      clip.lens_distortions = ((),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([],[]),)
+      clip.lens_distortions = (Distortion([1.0]),)
     with self.assertRaises(ValueError):
-      clip.lens_exposure_falloff = (Distortion([1.0],[]),)
+      clip.lens_distortions = (Distortion([1.0, 2.0], [], "TestModel"),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([]),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([],[]),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([1.0],[]),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([1.0, 2.0], None, ""),),)
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = ((Distortion([1.0, 2.0], [1.0, 2.0], ""),),)
 
-    value = (Distortion([1.0]),)
-    value = (Distortion([1.0,2.0]),)
-    value = (Distortion([-1.0,1.0,-1.0]),)
-    value = (Distortion([1.0],[0.0]),)
-    value = (Distortion([1.0,2.0],[1.0,2.0]),)
-    value = (Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),)
-    clip.lens_distortion = value
-    self.assertTupleEqual(clip.lens_distortion, value)
+    value = ((Distortion([1.0]),),)
+    value = ((Distortion([1.0,2.0]),),)
+    value = ((Distortion([-1.0,1.0,-1.0]),),)
+    value = ((Distortion([1.0],[0.0]),),)
+    value = ((Distortion([1.0,2.0],[1.0,2.0]),),)
+    value = ((Distortion([-1.0,1.0,-1.0],[1.0,2.0,3.0]),),)
+    clip.lens_distortions = value
+    self.assertTupleEqual(clip.lens_distortions, value)
     
-  def test_lens_distortion_from_dict(self):
-    r = LensDistortion.from_json({
+  def test_lens_distortions_from_dict(self):
+    r = LensDistortions.from_json(({
       "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3]
-    })
-    self.assertEqual(r,Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
+    },))
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3]),))
+    r = LensDistortions.from_json([{
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel",
+    }])
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),))
     
   def test_lens_distortion_to_dict(self):
-    j = LensDistortion.to_json(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3]))
-    self.assertDictEqual(j, {
+    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
+    self.assertListEqual(j, [{
       "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3]
-    })
+    }])
+    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel2")))
+    self.assertListEqual(j, [{
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel",
+    }, {
+      "radial": [0.1,0.2,0.3],
+      "tangential": [0.1,0.2,0.3],
+      "model": "TestModel2",
+    }])
     
-  def test_lens_distortion_shift(self):
+  def test_lens_distortion_offset(self):
     clip = Clip()
-    self.assertIsNone(clip.lens_distortion_shift)
+    self.assertIsNone(clip.lens_distortion_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_distortion_shift = ""
+      clip.lens_distortion_offset = ""
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (DistortionShift(),)
+      clip.lens_distortion_offset = (DistortionOffset(),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = (DistortionShift(1.0),)
+      clip.lens_distortion_offset = (DistortionOffset(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_distortion_shift = DistortionShift(1.0)
+      clip.lens_distortion_offset = DistortionOffset(1.0)
 
-    value = (DistortionShift(-1.0,1.0),)
-    clip.lens_distortion_shift = value
-    self.assertTupleEqual(clip.lens_distortion_shift, value)
+    value = (DistortionOffset(-1.0,1.0),)
+    clip.lens_distortion_offset = value
+    self.assertTupleEqual(clip.lens_distortion_offset, value)
     
   def test_lens_distortion_shift_from_dict(self):
-    r = LensDistortionShift.from_json({
+    r = LensDistortionOffset.from_json({
       "x": -1.0,
       "y": 1.0
     })
-    self.assertEqual(r,DistortionShift(-1.0,1.0))
+    self.assertEqual(r,DistortionOffset(-1.0,1.0))
     
   def test_lens_distortion_shift_to_dict(self):
-    j = LensDistortionShift.to_json(DistortionShift(-1.0,1.0))
+    j = LensDistortionOffset.to_json(DistortionOffset(-1.0,1.0))
     self.assertDictEqual(j, {
       "x": -1.0,
       "y": 1.0
     })
     
-  def test_lens_perspective_shift(self):
+  def test_lens_projection_offset(self):
     clip = Clip()
-    self.assertIsNone(clip.lens_perspective_shift)
+    self.assertIsNone(clip.lens_projection_offset)
 
     with self.assertRaises(ValueError):
-      clip.lens_perspective_shift = ""
+      clip.lens_projection_offset = ""
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (PerspectiveShift(),)
+      clip.lens_projection_offset = (ProjectionOffset(),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = (PerspectiveShift(1.0),)
+      clip.lens_projection_offset = (ProjectionOffset(1.0),)
     with self.assertRaises(TypeError):
-      clip.lens_perspective_shift = PerspectiveShift(1.0)
+      clip.lens_projection_offset = ProjectionOffset(1.0)
 
-    value = (PerspectiveShift(-1.0,1.0),)
-    clip.lens_perspective_shift = value
-    self.assertTupleEqual(clip.lens_perspective_shift, value)
+    value = (ProjectionOffset(-1.0,1.0),)
+    clip.lens_projection_offset = value
+    self.assertTupleEqual(clip.lens_projection_offset, value)
     
-  def test_lens_perspective_shift_from_dict(self):
-    r = LensPerspectiveShift.from_json({
+  def test_lens_projection_offset_from_dict(self):
+    r = LensProjectionOffset.from_json({
       "x": -1.0,
       "y": 1.0
     })
-    self.assertEqual(r,PerspectiveShift(-1.0,1.0))
+    self.assertEqual(r,ProjectionOffset(-1.0,1.0))
     
-  def test_lens_perspective_shift_to_dict(self):
-    j = LensPerspectiveShift.to_json(PerspectiveShift(-1.0,1.0))
+  def test_lens_projection_offset_to_dict(self):
+    j = LensProjectionOffset.to_json(ProjectionOffset(-1.0,1.0))
     self.assertDictEqual(j, {
       "x": -1.0,
       "y": 1.0
@@ -1038,8 +1121,6 @@ class ModelTest(unittest.TestCase):
       Synchronization(locked=True, frequency=0.0)
     with self.assertRaises(TypeError):
       Synchronization(locked=True, frequency=-1.0)
-    with self.assertRaises(TypeError):
-      Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK)
     
     clip = Clip()
     self.assertIsNone(clip.timing_synchronization)
@@ -1048,8 +1129,8 @@ class ModelTest(unittest.TestCase):
     clip.timing_synchronization = value
     self.assertTupleEqual(clip.timing_synchronization, value)
 
-  def test_synchronization_mac(self):
-    sync = Synchronization(locked=True, source=SynchronizationSourceEnum.GENLOCK, frequency=25)
+  def test_synchronization_ptp(self):
+    sync = Synchronization(locked=True, source=SynchronizationSourceEnum.PTP, frequency=25)
     clip = Clip()
     sync.ptp = SynchronizationPTP()
     with self.assertRaises(ValueError):
@@ -1073,7 +1154,21 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.master = "WE:TE:AS:TE:GD:DS"
       clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.offset = "1"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = "1"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = -1
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.domain = 128
+      clip.timing_synchronization = (sync, )
 
+    sync.ptp.domain = 0
+    sync.ptp.offset = 0.0
     sync.ptp.master = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
     sync.ptp.master = "ab:CD:eF:23:45:67"
