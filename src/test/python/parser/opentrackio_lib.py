@@ -8,12 +8,24 @@
 import json
 import os
 import math
+import struct
 from datetime import datetime, timedelta
 from enum import Enum
 from cbor2 import dumps, loads, load
 from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 
+OTRK_VERSION = "0.9.2"
+OTRK_IDENTIFIER = b'OTrk' 
+OTRK_IDENTIFIER_LENGTH = 4
+OTRK_HEADER_LENGTH = 16
+OTRK_SOURCE_NUMBER = 1
+OTRK_MULTICAST_PREFIX =  f"235.135.1."
+OTRK_MULTICAST_PORT = 55555
+OTRK_MTU = 1500  # Maximum Transmission Unit (bytes)
+OTRK_MAX_PAYLOAD_SIZE = OTRK_MTU - OTRK_HEADER_LENGTH
+
+NTPSERVER = "pool.ntp.org"
 
 class Translation(Enum):
     X = "x"
@@ -81,6 +93,24 @@ class TimeSource(Enum):
 class PayloadFormat(Enum):
     JSON = 0x01
     CBOR = 0x02
+
+def fletcher16(data: bytes) -> bytes:
+    """
+    Compute the Fletcher-16 checksum for the given data.
+    
+    Args:
+        data (bytes): Input data for which the checksum is calculated.
+    
+    Returns:
+        bytes: A 2-byte Fletcher-16 checksum.
+    """
+    sum1 = 0
+    sum2 = 0
+    for byte in data:
+        sum1 = (sum1 + byte) % 255
+        sum2 = (sum2 + sum1) % 255
+    checksum = (sum2 << 8) | sum1
+    return struct.pack('!H', checksum)
 
 
 class OpenTrackIOProtocol:

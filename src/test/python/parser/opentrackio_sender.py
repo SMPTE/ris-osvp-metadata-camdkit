@@ -20,29 +20,23 @@ from datetime import datetime
 from cbor2 import dumps
 from opentrackio_lib import *
 
+opentrackiolib = None
+
 ntpclient = ntplib.NTPClient()
 
 # Static configuration
 UINT32_MAX = 4294967295
-SOURCE_NUMBER = 150
-MULTICAST_GROUP =  f"235.135.1.{SOURCE_NUMBER}"
-MULTICAST_PORT = 55555
-MULTICAST_TTL = 2 
 BASE_FREQUENCY = 24000
 FREQUENCY_DENOM = 1001
 FREQUENCY = BASE_FREQUENCY / FREQUENCY_DENOM 
 INTERVAL = 1 / FREQUENCY
 MY_UUID = "" # UUID to be set in the main() function
 
-MTU = 1500  # Maximum Transmission Unit (bytes)
-HEADER_SIZE = 16  # Fixed header size (bytes)
-MAX_PAYLOAD_SIZE = MTU - HEADER_SIZE
-
 payloadformat = None
 
 timesource = ''
 
-NTPSERVER = "time.originalsyndicate.com"
+NTPSERVER = "pool.ntp.org"
 ntpclient = ntplib.NTPClient()
 
 ref_offset_s = 0.0
@@ -129,7 +123,7 @@ def get_local_timestamp():
 	else:
 		return time.time()
 
-def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0, total_segments=1):
+def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0, total_segments=1, source_number=OTRK_SOURCE_NUMBER):
 	current_time = datetime.now()
 	increment_frame(current_time)
 	ref_timestamp = get_local_timestamp()
@@ -141,10 +135,10 @@ def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0
 	payload_data = {
 		"protocol": {
 			"name": "OpenTrackIO",
-			"version": "0.9.1"
+			"version": OTRK_VERSION
 		},
 		"sourceId": f"urn:uuid:{MY_UUID}",
-		"sourceNumber": SOURCE_NUMBER,
+		"sourceNumber": source_number,
 		"timing": {
 			"frameRate": {
 			  "num": BASE_FREQUENCY,
@@ -202,8 +196,7 @@ def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0
 		
 		payload_data["timing"]["sampleTimestamp"] = {
 		  "seconds": seconds,
-		  "nanoseconds": nanoseconds,
-		  "attoseconds" : 0
+		  "nanoseconds": nanoseconds
 		}
 	
 	if payloadformat == PayloadFormat.CBOR:
@@ -212,25 +205,8 @@ def create_opentrackio_packet(use_cbor=False, sequence_number=1, segment_index=0
 		payload = json.dumps(payload_data).encode('utf-8')
 	
 	udp_segments = construct_udp_segments(sequence_number, payload, payloadformat.value)
-	return udp_segments
 	
-def fletcher16(data: bytes) -> bytes:
-	"""
-	Compute the Fletcher-16 checksum for the given data.
-
-	Args:
-		data (bytes): Input data for which the checksum is calculated.
-
-	Returns:
-		bytes: A 2-byte Fletcher-16 checksum.
-	"""
-	sum1 = 0
-	sum2 = 0
-	for byte in data:
-		sum1 = (sum1 + byte) % 255
-		sum2 = (sum2 + sum1) % 255
-	checksum = (sum2 << 8) | sum1
-	return struct.pack('!H', checksum)
+	return udp_segments
 
 def construct_udp_header(sequence_number: int, segment_offset: int, payload: bytes, encoding: int = 0, last_segment: bool = False) -> bytes:
 	"""
@@ -246,7 +222,6 @@ def construct_udp_header(sequence_number: int, segment_offset: int, payload: byt
 	Returns:
 		bytes: The constructed UDP header and payload.
 	"""
-	identifier = b'OTrk'  # 4-byte identifier
 	reserved = 0          # Reserved field (1 byte)
 	encoding_byte = struct.pack('!B', encoding)  # Encoding (1 byte)
 	sequence_number_bytes = struct.pack('!H', sequence_number)  # Sequence number (2 bytes)
@@ -258,7 +233,7 @@ def construct_udp_header(sequence_number: int, segment_offset: int, payload: byt
 	l_and_payload_length_bytes = struct.pack('!H', l_and_payload_length)
 	
 	header = (
-		identifier +
+		OTRK_IDENTIFIER +
 		struct.pack('!B', reserved) +
 		encoding_byte +
 		sequence_number_bytes +
@@ -286,9 +261,9 @@ def construct_udp_segments(sequence_number: int, payload: bytes, encoding: int =
 		segments = []  # List to store individual segments
 		total_length = len(payload)
 	
-		for offset in range(0, total_length, MAX_PAYLOAD_SIZE):
-			segment_payload = payload[offset : offset + MAX_PAYLOAD_SIZE]
-			last_segment = (offset + MAX_PAYLOAD_SIZE >= total_length)  # Is this the last segment?
+		for offset in range(0, total_length, OTRK_MAX_PAYLOAD_SIZE):
+			segment_payload = payload[offset : offset + OTRK_MAX_PAYLOAD_SIZE]
+			last_segment = (offset + OTRK_MAX_PAYLOAD_SIZE >= total_length)  # Is this the last segment?
 			
 			header = construct_udp_header(
 				sequence_number=sequence_number,
@@ -306,21 +281,21 @@ def construct_udp_segments(sequence_number: int, payload: bytes, encoding: int =
 	
 		return segments
 	
-def send_multicast_packets():
+def send_multicast_packets(multicast_group, multicast_port, source_number):
 	global sequence_number
 	
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-	sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, MULTICAST_TTL)
+	sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 	
 	sequence_number = 1  # Initial sequence number
 
-	print(f"Sending packets to {MULTICAST_GROUP}:{MULTICAST_PORT} at {FREQUENCY} packets per second")
+	print(f"Sending packets to {multicast_group}:{multicast_port} at {FREQUENCY} packets per second")
 
 	while True:
-		segments = create_opentrackio_packet(use_cbor = (payloadformat == PayloadFormat.CBOR), sequence_number=sequence_number)
+		segments = create_opentrackio_packet(use_cbor = (payloadformat == PayloadFormat.CBOR), sequence_number=sequence_number, source_number=source_number)
 	
 		for i, segment in enumerate(segments):
-			sock.sendto(segment, (MULTICAST_GROUP, MULTICAST_PORT))
+			sock.sendto(segment, (multicast_group, multicast_port))
 		
 		increment_sequence_number()
 		move_camera()
@@ -328,12 +303,17 @@ def send_multicast_packets():
 
 def main():
 	
-	global SOURCE_NUMBER, MULTICAST_GROUP, timesource, payloadformat
+	global timesource, payloadformat
 	
-	parser = argparse.ArgumentParser(description='OpenTrackIO protocol sender')
-	parser.add_argument('-n', '--source', type=int, help='The Source Number (1-200) to send to.', default=None)
-	parser.add_argument('-f', '--format', help='The format [JSON, CBOR] to use.', default=None)
-	parser.add_argument('-r', '--ref', help='The time source [genlock, PTP, NTP] to use.', default=None)
+	source_number = OTRK_SOURCE_NUMBER
+	multicast_port = OTRK_MULTICAST_PORT
+	multicast_group = f"{OTRK_MULTICAST_PREFIX}{OTRK_SOURCE_NUMBER}"
+	
+	parser = argparse.ArgumentParser(description=f'OpenTrackIO {OTRK_VERSION} protocol sender')
+	parser.add_argument('-s', '--source', type=int, help='The Source Number (1-200) to send to.', default=1)
+	parser.add_argument('-p', '--port', type=int, help=f'The port number (49152–65535) to send to. Default: {OTRK_MULTICAST_PORT}', default=OTRK_MULTICAST_PORT)
+	parser.add_argument('-f', '--format', help='The format [JSON, CBOR] to use.', default='CBOR')
+	parser.add_argument('-r', '--ref', help='The time source [genlock, PTP, NTP] to use.', default='NTP')
 	args = parser.parse_args()
 	
 	if (args.ref):
@@ -351,11 +331,18 @@ def main():
 			print("Error: Source Number must be between 1 and 200.")
 			exit(-1)
 		else:
-			SOURCE_NUMBER = args.source
-			MULTICAST_GROUP =  f"235.135.1.{SOURCE_NUMBER}"
+			source_number = args.source
+			multicast_group = f"{OTRK_MULTICAST_PREFIX}{source_number}"
 	else:
 		print("Error: Source Number must be between 1 and 200.")
 		exit(-1)
+	
+	if (args.port):
+		if not (49152 <= args.port <= 65535):
+			print("Error: port number must be between 49152 and 65535.")
+			exit(-1)
+		else:
+			multicast_port = args.port	
 	
 	if (args.format):
 		if args.format.upper() == 'CBOR':
@@ -370,7 +357,7 @@ def main():
 		exit(-1)
 	
 	MY_UUID = generate_stable_uuid()
-	send_multicast_packets()
+	send_multicast_packets(multicast_group, multicast_port, source_number)
 	
 
 if __name__ == "__main__":

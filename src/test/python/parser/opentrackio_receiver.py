@@ -17,21 +17,15 @@ import ntplib
 from cbor2 import loads
 from opentrackio_lib import *
 
-MULTICAST_PORT = 55555
-IDENTIFIER = b'OTrk' 
-IDENTIFIER_LENGTH = len(IDENTIFIER) 
-HEADER_LENGTH = 16
 VERBOSE = False
 
 opentrackiolib = None
-
 sequence_number = 0
 prev_sequence_number = 0
 segment_buffer = {}
 
 timesource = ''
 
-NTPSERVER = "time.originalsyndicate.com"
 ntpclient = ntplib.NTPClient()
 ntpresponse = None 
 ntpoffset = 0.0
@@ -48,33 +42,15 @@ def init_time_source():
 	else:
 		return
 
-def fletcher16(data: bytes) -> bytes:
-	"""
-	Compute the Fletcher-16 checksum for the given data.
-	
-	Args:
-		data (bytes): Input data for which the checksum is calculated.
-	
-	Returns:
-		bytes: A 2-byte Fletcher-16 checksum.
-	"""
-	sum1 = 0
-	sum2 = 0
-	for byte in data:
-		sum1 = (sum1 + byte) % 255
-		sum2 = (sum2 + sum1) % 255
-	checksum = (sum2 << 8) | sum1
-	return struct.pack('!H', checksum)
-
 def parse_opentrackio_packet(data):
 	global sequence_number, prev_sequence_number, opentrackiolib, timesource, segment_buffer
 	
-	if len(data) < HEADER_LENGTH:
+	if len(data) < OTRK_HEADER_LENGTH:
 		print("Invalid packet: Packet is too short.")
 		return False
 
-	identifier = data[:IDENTIFIER_LENGTH]
-	if identifier != IDENTIFIER:
+	identifier = data[:OTRK_IDENTIFIER_LENGTH]
+	if identifier != OTRK_IDENTIFIER:
 		print("Invalid packet: Identifier mismatch.")
 		return False
 
@@ -174,17 +150,17 @@ def get_local_timestamp():
 def main():
 	global VERBOSE, opentrackiolib
 	
-	parser = argparse.ArgumentParser(description='OpenTrackIO protocol receiver')
-	parser.add_argument('-n', '--source', type=int, help='The Source Number (1-200) to listen for.', default=None)
-	parser.add_argument('-p', '--port', type=int, help='The port number to listen on. Default: 55555.', default=None)
+	parser = argparse.ArgumentParser(description=f'OpenTrackIO {OTRK_VERSION} protocol receiver')
+	parser.add_argument('-n', '--source', type=int, help='The Source Number (1-200) to listen for.', default=OTRK_SOURCE_NUMBER)
+	parser.add_argument('-p', '--port', type=int, help=f'The port number (49152–65535) to listen on. Default: {OTRK_MULTICAST_PORT}', default=OTRK_MULTICAST_PORT)
 	parser.add_argument('-s', '--schema', help='The schema (JSON) input file. Default: opentrackio_schema.json', default='opentrackio_schema.json')
 	parser.add_argument('-v', '--verbose', help='Make script more verbose', action='store_true')
 	args = parser.parse_args()
 	
 	schematext = ''
 	schemapath = None
-	source_number = None
-	multicast_port = MULTICAST_PORT
+	source_number = OTRK_SOURCE_NUMBER
+	multicast_port = OTRK_MULTICAST_PORT
 
 	if (args.schema):
 		if os.path.exists(args.schema):
@@ -206,7 +182,7 @@ def main():
 	
 	if (args.port):
 		if not (49152 <= args.port <= 65535):
-			print("Error: port number must be between 49153 and 65535.")
+			print("Error: port number must be between 49152 and 65535.")
 			exit(-1)
 		else:
 			multicast_port = args.port	
@@ -215,25 +191,25 @@ def main():
 		VERBOSE = True
 	
 	if not source_number or not schematext:
-		print("Usage: python3 opentrackio_receiver.py --source=[1-200] --schema=opentrackio_schema.json --verbose")
+		parser.print_help()
 		exit(-1)		
 	
 	opentrackiolib = OpenTrackIOProtocol(schematext, False)	
 
-	multicast_group = f"235.135.1.{source_number}"
+	multicast_group = f"{OTRK_MULTICAST_PREFIX}{source_number}"
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 	sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	sock.bind(("", MULTICAST_PORT))
+	sock.bind(("", multicast_port))
 	mreq = struct.pack("4sl", socket.inet_aton(multicast_group), socket.INADDR_ANY)
 	sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 	
-	print(f"Listening for OpenTrackIO packets on {multicast_group}:{MULTICAST_PORT}")
+	print(f"Listening for OpenTrackIO packets on {multicast_group}:{multicast_port}")
 
 	last_time = None
 	packets = 0
 	
 	while True:
-		data, addr = sock.recvfrom(1024)
+		data, addr = sock.recvfrom(OTRK_MTU)
 		packets = packets + 1
 		
 		current_time = time.time()
