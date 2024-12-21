@@ -131,8 +131,8 @@ def _get_complete_dynamic_clip():
   v = Vector3(x=1.0, y=2.0, z=3.0)
   r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
   clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm", parentId="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Camera", parentId="Crane Arm")
+                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm"),
+                      Transform(translation=v, rotation=r, scale=v, id="Camera")
                       ),)
 
   clip.lens_f_number = (4.0,)

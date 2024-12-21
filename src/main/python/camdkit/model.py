@@ -396,10 +396,8 @@ class GlobalStagePosition(Parameter):
 
 class Transforms(Parameter):
   """A list of transforms.
-  Transforms can have a id and parentId that can be used to compose a
-  transform hierarchy. In the case of multiple children their transforms
-  should be processed in their order in the array.
-  X,Y,Z in meters of camera sensor relative to stage origin.
+  Transforms are composed in order with the last in the list representing
+  the X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
   zero).
@@ -416,7 +414,7 @@ class Transforms(Parameter):
   gimbal lock does not present the physical challenges of a robotic
   system.
   Conversion to and from quarternions is trivial with an acceptable loss
-  of precision
+  of precision.
   """
   sampling = Sampling.REGULAR
   canonical_name = "transforms"
@@ -455,10 +453,8 @@ class Transforms(Parameter):
            or not isinstance(transform.scale.y, numbers.Real) \
            or not isinstance(transform.scale.z, numbers.Real):
           return False
-      # id and parentId are optional
+      # id is optional
       if transform.id != None and not isinstance(transform.id, str):
-        return False
-      if transform.parentId != None and not isinstance(transform.parentId, str):
         return False
 
     return True
@@ -542,11 +538,6 @@ class Transforms(Parameter):
             }
           },
           "id": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          },
-          "parentId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
@@ -1417,7 +1408,7 @@ class Clip(ParameterContainer):
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
   timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
-  transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
+  transforms: typing.Optional[typing.Tuple[Transform]] = Transforms()
 
   def validate(self):
     """Validate a single static data set against the schema. Return the
