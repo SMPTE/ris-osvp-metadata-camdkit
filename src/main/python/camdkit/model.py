@@ -1388,7 +1388,7 @@ class Clip(ParameterContainer):
   lens_distortion_offset: typing.Optional[typing.Tuple[DistortionOffset]] = LensDistortionOffset()
   lens_encoders: typing.Optional[typing.Tuple[LensEncoders]] = LensEncoders()
   lens_entrance_pupil_offset: typing.Optional[typing.Tuple[numbers.Real]] = EntrancePupilOffset()
-  lens_exposure_falloff: typing.Optional[typing.Tuple[Orientations]] = LensExposureFalloff()
+  lens_exposure_falloff: typing.Optional[typing.Tuple[ExposureFalloff]] = LensExposureFalloff()
   lens_f_number: typing.Optional[typing.Tuple[numbers.Real]] = FStop()
   lens_focal_length: typing.Optional[typing.Tuple[numbers.Real]] = FocalLength()
   lens_focus_distance: typing.Optional[typing.Tuple[numbers.Real]] = FocusDistance()
