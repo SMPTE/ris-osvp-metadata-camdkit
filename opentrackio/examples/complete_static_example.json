@@ -22,7 +22,7 @@
         "num": 24000,
         "denom": 1001
       },
-      "fdlLink": "urn:uuid:3568752a-1538-47d7-bc16-40f07723decb",
+      "fdlLink": "urn:uuid:3198e9d1-811d-4eaa-9702-e1912df2e9a4",
       "isoSpeed": 4000,
       "shutterAngle": 45.0
     },
@@ -31,7 +31,7 @@
       "denom": 25
     },
     "lens": {
-      "distortionProjection": true,
+      "distortionIsProjection": true,
       "distortionOverscanMax": 1.2,
       "make": "LensMaker",
       "model": "Model15",
@@ -131,11 +131,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:80927c31-ca7f-436d-bc27-9991a05245fb",
-    "urn:uuid:0c72bcaa-45aa-4388-83ca-fc9923a7e760"
+    "urn:uuid:b37884e5-90d2-4c7e-915b-97a792b71484",
+    "urn:uuid:bc1bb5e6-9f42-4af6-a588-2187d896bb62"
   ],
-  "sampleId": "urn:uuid:8a52e9d2-7d26-4b3d-bb1a-f467e5b8ed0e",
-  "sourceId": "urn:uuid:98181b32-2da2-4d47-9e87-61a74f327558",
+  "sampleId": "urn:uuid:a528dec2-973f-4266-a95e-94cfa586668a",
+  "sourceId": "urn:uuid:290064e1-9bfa-4f3a-a871-98a3cfed75e9",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -155,6 +155,10 @@
     "synchronization": {
       "locked": true,
       "source": "ptp",
+      "frequency": {
+        "num": 24000,
+        "denom": 1001
+      },
       "offsets": {
         "translation": 1.0,
         "rotation": 2.0,
@@ -217,8 +221,7 @@
         "y": 2.0,
         "z": 3.0
       },
-      "id": "Crane Arm",
-      "parentId": "Dolly"
+      "id": "Crane Arm"
     },
     {
       "translation": {
@@ -236,8 +239,7 @@
         "y": 2.0,
         "z": 3.0
       },
-      "id": "Camera",
-      "parentId": "Crane Arm"
+      "id": "Camera"
     }
   ],
   "custom": {

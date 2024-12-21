@@ -84,11 +84,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:9eeb0c53-f4e7-4fc1-b739-b3c69c5dbd5a",
-    "urn:uuid:1404472a-01bd-4021-bfd1-b0d59ad96ae3"
+    "urn:uuid:7360e07a-0c9f-4c92-8572-41f41b03db18",
+    "urn:uuid:259be37b-0242-4c52-b521-ee848b0e7ff2"
   ],
-  "sampleId": "urn:uuid:207b1ae7-0b39-4ab6-bf5c-5beccb47f43e",
-  "sourceId": "urn:uuid:2d040569-39c0-4fd8-aa52-15f0100c4fd8",
+  "sampleId": "urn:uuid:f7b1bfd9-c8b9-4928-8a41-d7d2a507c1a8",
+  "sourceId": "urn:uuid:8ecc72a8-4314-4220-9a0c-a98930fe78af",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -108,6 +108,10 @@
     "synchronization": {
       "locked": true,
       "source": "ptp",
+      "frequency": {
+        "num": 24000,
+        "denom": 1001
+      },
       "offsets": {
         "translation": 1.0,
         "rotation": 2.0,
@@ -170,8 +174,7 @@
         "y": 2.0,
         "z": 3.0
       },
-      "id": "Crane Arm",
-      "parentId": "Dolly"
+      "id": "Crane Arm"
     },
     {
       "translation": {
@@ -189,8 +192,7 @@
         "y": 2.0,
         "z": 3.0
       },
-      "id": "Camera",
-      "parentId": "Crane Arm"
+      "id": "Camera"
     }
   ],
   "custom": {

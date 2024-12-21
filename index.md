@@ -294,9 +294,10 @@ The parameter shall be a integer in the range (1..4,294,967,295].
 
 #### Description
 
-Until the OpenLensIO model is finalised, this list provides custom
-  coefficients for a particular lens model e.g. undistortion, anamorphic
-  etc
+This list provides optional additonal custom coefficients that can 
+  extend the existing lens model. The meaning of and how these characeristics
+  are to be applied to a virtual camera would require negotiation between a
+  particular producer and consumer.
   
 
 #### Units
@@ -313,7 +314,7 @@ The parameter shall be a tuple of items of the class itemClass.
     The tuple can be empty
     
 
-### `distortionProjection`
+### `distortionIsProjection`
 
 #### Description
 
@@ -1242,10 +1243,8 @@ The parameter shall be a Unicode string betwee 0 and 1023
 #### Description
 
 A list of transforms.
-  Transforms can have a id and parentId that can be used to compose a
-  transform hierarchy. In the case of multiple children their transforms
-  should be processed in their order in the array.
-  X,Y,Z in meters of camera sensor relative to stage origin.
+  Transforms are composed in order with the last in the list representing
+  the X,Y,Z in meters of camera sensor relative to stage origin.
   The Z axis points upwards and the coordinate system is right-handed.
   Y points in the forward camera direction (when pan, tilt and roll are
   zero).
@@ -1262,7 +1261,7 @@ A list of transforms.
   gimbal lock does not present the physical challenges of a robotic
   system.
   Conversion to and from quarternions is trivial with an acceptable loss
-  of precision
+  of precision.
   
 
 #### Units
@@ -1281,7 +1280,7 @@ Each component of each transform shall contain Real numbers.
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortionProjection | distortionOffset | distortionOverscan | distortionOverscanMax | distortion | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | projectionOffset | rawEncoders | serialNumber | tStop | undistortionOverscan | undistortionOverscanMax | protocol | relatedSampleIds | sampleId | shutterAngle | sourceId | sourceNumber | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
+| Reader      | activeSensorPhysicalDimensions | activeSensorResolution | anamorphicSqueeze | firmwareVersion | label | make | model | serialNumber | captureFrameRate | duration | fdlLink | globalStage | isoSpeed | custom | distortionIsProjection | distortionOffset | distortionOverscan | distortionOverscanMax | distortion | encoders | entrancePupilOffset | exposureFalloff | fStop | firmwareVersion | focalLength | focusDistance | make | model | nominalFocalLength | projectionOffset | rawEncoders | serialNumber | tStop | undistortionOverscan | undistortionOverscanMax | protocol | relatedSampleIds | sampleId | shutterAngle | sourceId | sourceNumber | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | firmwareVersion | make | model | notes | recording | serialNumber | slate | status | transforms |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
 | RED | + | | + | + | | + | + | + | + | + | | | + | | | | | | | | + | | | + | + | + | + | + | | | | + | + | | | | | | + | | | | | | | | | | | | | | | | | | |
 | ARRI | + | | + | | | + | + | + | + | + | | | + | | | | | | | | | | | | + | + | + | + | | | | + | + | | | | | | + | | | | | | | | | | | | | | | | | | |
@@ -1349,7 +1348,7 @@ The following table indicates the camera parameters supported by each of the rea
               "properties": {
                 "num": {
                   "type": "integer",
-                  "minimum": 0,
+                  "minimum": 1,
                   "maximum": 2147483647
                 },
                 "denom": {
@@ -1400,7 +1399,7 @@ The following table indicates the camera parameters supported by each of the rea
               "properties": {
                 "num": {
                   "type": "integer",
-                  "minimum": 0,
+                  "minimum": 1,
                   "maximum": 2147483647
                 },
                 "denom": {
@@ -1442,7 +1441,7 @@ The following table indicates the camera parameters supported by each of the rea
           "properties": {
             "num": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": 1,
               "maximum": 2147483647
             },
             "denom": {
@@ -1463,7 +1462,7 @@ The following table indicates the camera parameters supported by each of the rea
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "distortionProjection": {
+            "distortionIsProjection": {
               "type": "boolean",
               "description": "Indicator that the OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is  primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             },
@@ -1584,7 +1583,7 @@ The following table indicates the camera parameters supported by each of the rea
           "items": {
             "type": "number"
           },
-          "description": "Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model e.g. undistortion, anamorphic etc "
+          "description": "This list provides optional additonal custom coefficients that can  extend the existing lens model. The meaning of and how these characeristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
         },
         "distortionOffset": {
           "type": "object",
@@ -1871,7 +1870,7 @@ The following table indicates the camera parameters supported by each of the rea
           "properties": {
             "num": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": 1,
               "maximum": 2147483647
             },
             "denom": {
@@ -2152,11 +2151,6 @@ The following table indicates the camera parameters supported by each of the rea
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
-          },
-          "parentId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
           }
         },
         "required": [
@@ -2164,7 +2158,7 @@ The following table indicates the camera parameters supported by each of the rea
           "rotation"
         ]
       },
-      "description": "A list of transforms. Transforms can have a id and parentId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision ",
+      "description": "A list of transforms. Transforms are composed in order with the last in the list representing the X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles >360 or <0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision. ",
       "units": "meter / degree"
     }
   }

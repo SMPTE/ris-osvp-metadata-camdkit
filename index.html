@@ -1260,9 +1260,10 @@ inside a moving vehicle.</p>
 <p>The parameter shall be a integer in the range (1..4,294,967,295].</p>
 <h3 id="custom" tabindex="-1"><a class="anchor" href="#custom" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>custom</code></h3>
 <h4 id="description-13" tabindex="-1"><a class="anchor" href="#description-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Until the OpenLensIO model is finalised, this list provides custom
-coefficients for a particular lens model e.g. undistortion, anamorphic
-etc</p>
+<p>This list provides optional additonal custom coefficients that can
+extend the existing lens model. The meaning of and how these characeristics
+are to be applied to a virtual camera would require negotiation between a
+particular producer and consumer.</p>
 <h4 id="units-13" tabindex="-1"><a class="anchor" href="#units-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>n/a</p>
 <h4 id="sampling-13" tabindex="-1"><a class="anchor" href="#sampling-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1270,7 +1271,7 @@ etc</p>
 <h4 id="constraints-13" tabindex="-1"><a class="anchor" href="#constraints-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a tuple of items of the class itemClass.
 The tuple can be empty</p>
-<h3 id="distortionprojection" tabindex="-1"><a class="anchor" href="#distortionprojection" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionProjection</code></h3>
+<h3 id="distortionisprojection" tabindex="-1"><a class="anchor" href="#distortionisprojection" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionIsProjection</code></h3>
 <h4 id="description-14" tabindex="-1"><a class="anchor" href="#description-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Indicator that the OpenLensIO distortion model is the Projection
 Characterization, not the Field-Of-View Characterization. This is
@@ -1767,10 +1768,8 @@ codepoints.</p>
 <h3 id="transforms" tabindex="-1"><a class="anchor" href="#transforms" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>transforms</code></h3>
 <h4 id="description-56" tabindex="-1"><a class="anchor" href="#description-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>A list of transforms.
-Transforms can have a id and parentId that can be used to compose a
-transform hierarchy. In the case of multiple children their transforms
-should be processed in their order in the array.
-X,Y,Z in meters of camera sensor relative to stage origin.
+Transforms are composed in order with the last in the list representing
+the X,Y,Z in meters of camera sensor relative to stage origin.
 The Z axis points upwards and the coordinate system is right-handed.
 Y points in the forward camera direction (when pan, tilt and roll are
 zero).
@@ -1787,7 +1786,7 @@ Where a tracking system is providing the pose of a virtual camera,
 gimbal lock does not present the physical challenges of a robotic
 system.
 Conversion to and from quarternions is trivial with an acceptable loss
-of precision</p>
+of precision.</p>
 <h4 id="units-56" tabindex="-1"><a class="anchor" href="#units-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>meter / degree</p>
 <h4 id="sampling-56" tabindex="-1"><a class="anchor" href="#sampling-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1814,7 +1813,7 @@ of precision</p>
 <th>globalStage</th>
 <th>isoSpeed</th>
 <th>custom</th>
-<th>distortionProjection</th>
+<th>distortionIsProjection</th>
 <th>distortionOffset</th>
 <th>distortionOverscan</th>
 <th>distortionOverscanMax</th>
@@ -2162,7 +2161,7 @@ of precision</p>
               "properties": {
                 "num": {
                   "type": "integer",
-                  "minimum": 0,
+                  "minimum": 1,
                   "maximum": 2147483647
                 },
                 "denom": {
@@ -2213,7 +2212,7 @@ of precision</p>
               "properties": {
                 "num": {
                   "type": "integer",
-                  "minimum": 0,
+                  "minimum": 1,
                   "maximum": 2147483647
                 },
                 "denom": {
@@ -2255,7 +2254,7 @@ of precision</p>
           "properties": {
             "num": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": 1,
               "maximum": 2147483647
             },
             "denom": {
@@ -2276,7 +2275,7 @@ of precision</p>
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "distortionProjection": {
+            "distortionIsProjection": {
               "type": "boolean",
               "description": "Indicator that the OpenLensIO distortion model is the Projection Characterization, not the Field-Of-View Characterization. This is  primarily relevant when storing overscan values, not in transmission as the overscan should be calculated by the consumer. "
             },
@@ -2397,7 +2396,7 @@ of precision</p>
           "items": {
             "type": "number"
           },
-          "description": "Until the OpenLensIO model is finalised, this list provides custom coefficients for a particular lens model e.g. undistortion, anamorphic etc "
+          "description": "This list provides optional additonal custom coefficients that can  extend the existing lens model. The meaning of and how these characeristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
         },
         "distortionOffset": {
           "type": "object",
@@ -2684,7 +2683,7 @@ of precision</p>
           "properties": {
             "num": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": 1,
               "maximum": 2147483647
             },
             "denom": {
@@ -2965,11 +2964,6 @@ of precision</p>
             "type": "string",
             "minLength": 1,
             "maxLength": 1023
-          },
-          "parentId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
           }
         },
         "required": [
@@ -2977,7 +2971,7 @@ of precision</p>
           "rotation"
         ]
       },
-      "description": "A list of transforms. Transforms can have a id and parentId that can be used to compose a transform hierarchy. In the case of multiple children their transforms should be processed in their order in the array. X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles &gt;360 or &lt;0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision ",
+      "description": "A list of transforms. Transforms are composed in order with the last in the list representing the X,Y,Z in meters of camera sensor relative to stage origin. The Z axis points upwards and the coordinate system is right-handed. Y points in the forward camera direction (when pan, tilt and roll are zero). For example in an LED volume Y would point towards the centre of the LED wall and so X would point to camera-right. Rotation expressed as euler angles in degrees of the camera sensor relative to stage origin Rotations are intrinsic and are measured around the axes ZXY, commonly referred to as [pan, tilt, roll] Notes on Euler angles: Euler angles are human readable and unlike quarternions, provide the ability for cycles (with angles &gt;360 or &lt;0 degrees). Where a tracking system is providing the pose of a virtual camera, gimbal lock does not present the physical challenges of a robotic system. Conversion to and from quarternions is trivial with an acceptable loss of precision. ",
       "units": "meter / degree"
     }
   }
