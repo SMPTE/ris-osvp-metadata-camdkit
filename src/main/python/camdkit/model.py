@@ -1336,9 +1336,10 @@ class LensProjectionOffset(Parameter):
     }
 
 class LensCustom(ArrayParameter):
-  """This list provides optional custom additonal coefficients for a
-  particular lens model. The meaning of which would require negotiation
-  between a particular producer and consumer. 
+  """This list provides optional additonal custom coefficients that can 
+  extend the existing lens model. The meaning of and how these characeristics
+  are to be applied to a virtual camera would require negotiation between a
+  particular producer and consumer.
   """
   sampling = Sampling.REGULAR
   canonical_name = "custom"
