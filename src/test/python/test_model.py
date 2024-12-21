@@ -132,7 +132,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
-    self.assertEqual(d["static"]["lens"]["distortionProjection"], False)
+    self.assertEqual(d["static"]["lens"]["distortionIsProjection"], False)
     self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
@@ -709,10 +709,10 @@ class ModelTest(unittest.TestCase):
 
   def test_timecode_format(self):
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, True)), 24)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, 1)), 24)
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(25)), 25)
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30)), 30)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, True)), 30)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, 1)), 30)
     with self.assertRaises(TypeError):
       TimecodeFormat()
     with self.assertRaises(ValueError):
@@ -738,10 +738,10 @@ class ModelTest(unittest.TestCase):
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,60,4,TimecodeFormat(24))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,-1,TimecodeFormat(24))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, True))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, 1))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, True))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, 1))))
     self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(120))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(121))))
