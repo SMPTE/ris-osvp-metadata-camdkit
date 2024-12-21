@@ -518,7 +518,7 @@ class StrictlyPositiveRationalParameter(Parameter):
       "properties": {
         "num" : {
           "type": "integer",
-          "minimum": 0,
+          "minimum": 1,
           "maximum": INT_MAX
         },
         "denom" : {
