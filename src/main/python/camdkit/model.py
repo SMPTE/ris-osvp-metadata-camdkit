@@ -1408,7 +1408,7 @@ class Clip(ParameterContainer):
   timing_sequence_number: typing.Optional[typing.Tuple[NonNegativeIntegerParameter]] = TimingSequenceNumber()
   timing_synchronization: typing.Optional[typing.Tuple[Synchronization]] = TimingSynchronization()
   timing_timecode: typing.Optional[typing.Tuple[TimingTimecode]] = TimingTimecode()
-  transforms: typing.Optional[typing.Tuple[Transform]] = Transforms()
+  transforms: typing.Optional[typing.Tuple[Transforms]] = Transforms()
 
   def validate(self):
     """Validate a single static data set against the schema. Return the
