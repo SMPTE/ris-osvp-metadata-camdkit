@@ -57,7 +57,7 @@ def main():
 
     sample.set_translation_units(TranslationUnit.CENTIMETER)              # end-user preferred units
     sample.set_sample_time_format(TimeFormat.SECONDS)
-    sample.set_focus_distance_units(FocusDistanceUnit.MILLIMETER)
+    sample.set_focus_distance_units(FocusDistanceUnit.CENTIMETER)
     sample.set_rotation_units(RotationUnit.DEGREE)
     print()
 
@@ -70,9 +70,7 @@ def main():
     print("At a camera frame rate of: {:.5}".format(framerate))
     print()
     print("Sample time PTP time is: {} sec".format(sample.get_sample_time()))
-    #sample.set_sample_time_format("string")        # end-user preferred units.
     print("Sample time PTP as a string: {}".format(sample.get_sample_time(TimeFormat.STRING)))
-    #sample.set_sample_time_format("timecode")        # end-user preferred units.
     print("Sample time PTP as timecode: {}".format(sample.get_sample_time(TimeFormat.TIMECODE)))
     print("Sample time PTP elements: {} {} {} {} {} {}".format(sample.get_sample_time('yy'),
         sample.get_sample_time('dd'),
