@@ -677,7 +677,7 @@ class TimingSynchronization(Parameter):
           "type": "object",
           "additionalProperties": False,
           "properties": {
-            "master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
+            "master": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
             "offset": { "type": "number" },
             "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
           }
