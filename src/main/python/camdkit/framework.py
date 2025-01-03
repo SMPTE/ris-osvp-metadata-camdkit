@@ -397,7 +397,7 @@ class StringParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a Unicode string betwee 0 and 1023
+    """The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     """
     return isinstance(value, str) and len(value) < 1024
