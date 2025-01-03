@@ -249,8 +249,8 @@ class Protocol(Parameter):
   @staticmethod
   def validate(value) -> bool:
     """Protocol name is nonblank string; protocol version is basic x.y.z
-     semantic versioning string
-     """
+    semantic versioning string
+    """
 
     if not isinstance(value, VersionedProtocol):
       return False
@@ -691,14 +691,14 @@ class LensEncoders(Parameter):
   """
   Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
-    values) to ensure values remain independent of encoder resolution,
-    mininum and maximum (at an acceptable loss of precision).
+  values) to ensure values remain independent of encoder resolution,
+  mininum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
-    demarcate the 0 and 1 range.
+  demarcate the 0 and 1 range.
   Value should be provided in the following directions (if known):
-    Focus:   0=infinite     1=closest
-    Iris:    0=open         1=closed
-    Zoom:    0=wide angle   1=telephoto
+  Focus:   0=infinite     1=closest
+  Iris:    0=open         1=closed
+  Zoom:    0=wide angle   1=telephoto
   """
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
@@ -754,10 +754,9 @@ class LensEncoders(Parameter):
     }
   
 class LensRawEncoders(Parameter):
-  """
-  Raw encoder values for focus, iris and zoom.
+  """Raw encoder values for focus, iris and zoom.
   These values are dependent on encoder resolution and before any
-    homing / ranging has taken place.
+  homing / ranging has taken place.
   """
   sampling = Sampling.REGULAR
   canonical_name = "rawEncoders"
@@ -812,9 +811,9 @@ class LensRawEncoders(Parameter):
   
 class TimingMode(EnumParameter):
   """Enumerated value indicating whether the sample transport mechanism
-    provides inherent ('external') timing, or whether the transport
-    mechanism lacks inherent timing and so the sample must contain a PTP
-    timestamp itself ('internal') to carry timing information.
+  provides inherent ('external') timing, or whether the transport
+  mechanism lacks inherent timing and so the sample must contain a PTP
+  timestamp itself ('internal') to carry timing information.
   """
   sampling = Sampling.REGULAR
   canonical_name = "mode"
@@ -823,9 +822,9 @@ class TimingMode(EnumParameter):
 
 class TimingTimestamp(TimestampParameter):
   """PTP timestamp of the data capture instant. Note this may differ
-    from the packet's transmission PTP timestamp. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  from the packet's transmission PTP timestamp. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
@@ -835,9 +834,9 @@ class TimingTimestamp(TimestampParameter):
 class RecordedTimestamp(TimestampParameter):
   """
   PTP timestamp of the data recording instant, provided for convenience
-    during playback of e.g. pre-recorded tracking data. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  during playback of e.g. pre-recorded tracking data. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
@@ -865,7 +864,7 @@ class TimingTimecode(Parameter):
   """SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.frameRate: The frame rate as a rational number. Drop frame
+  - format.frameRate: The frame rate as a rational number. Drop frame
   rates such as 29.97 should be represented as e.g. 30000/1001. The
   timecode frame rate may differ from the sample frequency.
   """
