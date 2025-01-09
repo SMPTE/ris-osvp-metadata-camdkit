@@ -1173,3 +1173,24 @@ class ModelTest(unittest.TestCase):
     clip.timing_synchronization = (sync, )
     sync.ptp.master = "ab:CD:eF:23:45:67"
     clip.timing_synchronization = (sync, )
+
+  # def test_make_documentation(self):
+  #
+  #   def print_doc_entry(entry, fp) -> None:
+  #     for key in ("python_name",
+  #                 "canonical_name",
+  #                 "description",
+  #                 "constraints",
+  #                 "sampling",
+  #                 "section",
+  #                 "units"):
+  #       print(f"{key}: {entry[key]}", file=fp)
+  #
+  #   doc: list[dict[str, str]] = Clip.make_documentation()
+  #   sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
+  #   print(f"sorted_doc has {len(sorted_doc)} items")
+  #   with open("/tmp/classic-doc.txt", "w") as fp:
+  #     for doc_entry in sorted_doc:
+  #       print_doc_entry(doc_entry, fp)
+  #
+  #   self.assertTrue(len(doc) > 0)
