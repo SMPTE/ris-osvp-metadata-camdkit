@@ -793,15 +793,18 @@ class LensRawEncoders(Parameter):
       "properties": {
         "focus": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         },
         "iris": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         },
         "zoom": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         }
       },
       "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
