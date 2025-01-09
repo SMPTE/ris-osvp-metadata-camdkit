@@ -1214,6 +1214,8 @@ class LensDistortions(Parameter):
         "properties": {
           "model": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
           },
           "radial": {
             "type": "array",
