@@ -16,8 +16,7 @@ OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
 OPENTRACKIO_PROTOCOL_VERSION = (0,9,1)
 
 class ActiveSensorPhysicalDimensions(DimensionsParameter):
-  """Height and width of the active area of the camera sensor in microns
-  """
+  """Height and width of the active area of the camera sensor in microns"""
 
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
@@ -25,9 +24,7 @@ class ActiveSensorPhysicalDimensions(DimensionsParameter):
   section = "camera"
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
-  """Photosite resolution of the active area of the camera sensor in
-  pixels
-  """
+  """Photosite resolution of the active area of the camera sensor in pixels"""
 
   canonical_name = "activeSensorResolution"
   sampling = Sampling.STATIC
@@ -177,8 +174,7 @@ class AnamorphicSqueeze(StrictlyPositiveRationalParameter):
   section = "camera"
 
 class FDLLink(UUIDURNParameter):
-  """URN identifying the ASC Framing Decision List used by the camera.
-  """
+  """URN identifying the ASC Framing Decision List used by the camera."""
 
   canonical_name = "fdlLink"
   sampling = Sampling.STATIC
@@ -358,9 +354,7 @@ class GlobalStagePosition(Parameter):
   
   @staticmethod
   def validate(value) -> bool:
-    """
-    Each field in the GlobalPosition shall be a real number
-    """
+    """Each field in the GlobalPosition shall be a real number"""
     if not isinstance(value, GlobalPosition):
       return False
     
@@ -586,9 +580,7 @@ class TimingSynchronization(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    The parameter shall contain the required valid fields.
-    """
+    """The parameter shall contain the required valid fields."""
     if not isinstance(value, Synchronization):
       return False
     if not isinstance(value.locked, bool):
@@ -688,8 +680,7 @@ class TimingSynchronization(Parameter):
     }
 
 class LensEncoders(Parameter):
-  """
-  Normalised real numbers (0-1) for focus, iris and zoom.
+  """Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
   values) to ensure values remain independent of encoder resolution,
   minimum and maximum (at an acceptable loss of precision).
@@ -1243,8 +1234,7 @@ class LensDistortions(Parameter):
     }
   
 class LensDistortionOffset(Parameter):
-  """Offset in x and y of the centre of distortion of the virtual camera
-  """
+  """Offset in x and y of the centre of distortion of the virtual camera"""
 
   sampling = Sampling.REGULAR
   canonical_name = "distortionOffset"

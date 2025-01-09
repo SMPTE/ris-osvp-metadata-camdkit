@@ -282,8 +282,7 @@ class DimensionsParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The height and width shall be each be real non-negative numbers.
-    """
+    """The height and width shall be each be real non-negative numbers."""
 
     if not isinstance(value, Dimensions):
       return False
@@ -597,8 +596,7 @@ class NonNegativeIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (0..4,294,967,295].
-    """
+    """The parameter shall be a integer in the range (0..4,294,967,295]."""
 
     return isinstance(value, numbers.Integral) and value >= 0
 
@@ -614,8 +612,7 @@ class StrictlyPositiveIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (1..4,294,967,295].
-    """
+    """The parameter shall be a integer in the range (1..4,294,967,295]."""
 
     return isinstance(value, numbers.Integral) and value > 0
 
