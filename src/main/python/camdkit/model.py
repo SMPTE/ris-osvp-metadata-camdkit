@@ -1222,14 +1222,14 @@ class LensDistortions(Parameter):
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           },
           "tangential": {
             "type": "array",
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           },
         }
       }
