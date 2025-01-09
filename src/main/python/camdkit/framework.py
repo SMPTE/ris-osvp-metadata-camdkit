@@ -362,12 +362,12 @@ class IntegerDimensionsParameter(DimensionsParameter):
         "height": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 2147483647
+            "maximum": INT_MAX
         },
         "width": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 2147483647
+            "maximum": INT_MAX
         }
       }
     }
