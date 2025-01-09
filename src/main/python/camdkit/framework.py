@@ -661,6 +661,21 @@ class NonNegativeRealParameter(RealParameter):
       "minimum": 0.0,
     }
 
+class StrictlyPositiveRealParameter(RealParameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a real number greater than 0."""
+
+    return isinstance(value, numbers.Real) and value > 0.0
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+    }
+
 class GreaterEqualOneRealParameter(RealParameter):
   
   @staticmethod
