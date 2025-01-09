@@ -986,7 +986,7 @@ class FStop(NonNegativeRealParameter):
   units = None
   section = "lens"
 
-class NominalFocalLength(NonNegativeRealParameter):
+class NominalFocalLength(StrictlyPositiveRealParameter):
   """Nominal focal length of the lens. The number printed on the side
   of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
   """
@@ -1004,7 +1004,7 @@ class FocalLength(NonNegativeRealParameter):
   units = "millimeter"
   section = "lens"
 
-class FocusDistance(NonNegativeRealParameter):
+class FocusDistance(StrictlyPositiveRealParameter):
   """Focus distance/position of the lens"""
 
   canonical_name = "focusDistance"
