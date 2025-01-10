@@ -291,13 +291,17 @@ class Protocol(Parameter):
           "type": "array",
           "items": {
             "type": "integer",
-            "minValue": 0,
-            "maxValue": 9
+            "minimum": 0,
+            "maximum": 9
           },
           "minItems": 3,
           "maxItems": 3
         }
-      }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
     }
 
 
