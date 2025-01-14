@@ -901,6 +901,8 @@ class TimingTimecode(Parameter):
       },
       "subFrame": d["format"].sub_frame,
     }
+    if d["format"]["subFrame"] == DEFAULT_SUB_FRAME:
+      del d["format"]["subFrame"]
     return d
 
   @staticmethod

@@ -14,6 +14,7 @@ INT_MIN = -2147483648 # -2^31
 UINT_MAX = 4294967295 # 2^32 - 1
 UINT48_MAX = 281474976710655 # 2^48 - 1
 
+DEFAULT_SUB_FRAME = 0
 
 class Sampling(Enum):
   STATIC = "Static"   # Data that does not change for a Clip or across many Frames
@@ -210,7 +211,7 @@ class TimecodeFormat:
   sub_frame: int = 0
 
   def __init__(self, in_frame_rate: numbers.Rational,
-               in_sub_frame: int = 0):
+               in_sub_frame: int = DEFAULT_SUB_FRAME):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
