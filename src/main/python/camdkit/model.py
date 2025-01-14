@@ -692,7 +692,7 @@ class LensEncoders(Parameter):
   Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
     values) to ensure values remain independent of encoder resolution,
-    mininum and maximum (at an acceptable loss of precision).
+    minimum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
     demarcate the 0 and 1 range.
   Value should be provided in the following directions (if known):
@@ -1336,8 +1336,8 @@ class LensProjectionOffset(Parameter):
     }
 
 class LensCustom(ArrayParameter):
-  """This list provides optional additonal custom coefficients that can 
-  extend the existing lens model. The meaning of and how these characeristics
+  """This list provides optional additional custom coefficients that can 
+  extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
   """
