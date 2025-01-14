@@ -634,7 +634,7 @@ class RealParameter(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return value
+    return float(value)
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
