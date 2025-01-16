@@ -1336,7 +1336,7 @@ class LensProjectionOffset(Parameter):
     }
 
 class LensCustom(ArrayParameter):
-  """This list provides optional additional custom coefficients that can
+  """This list provides optional additional custom coefficients that can 
   extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.

@@ -34,7 +34,7 @@ public:
     OTProtocol(std::string msg_text = "", std::string schema_text = "", bool verbose = false)
         { Init(msg_text,schema_text,verbose); }
  
-    void Init(std::string msg_text, std::string schema_text, bool verbose); // Initailize objects
+    void Init(std::string msg_text, std::string schema_text, bool verbose); // Initialize objects
     int Import_schema(void);                                            // Read the schema which governs the interpretation of the protocol
     int Parse(void);                                                    // Ingest the text and store the JSON items in a dictionary
     double Get_camera_trans(const std::string& dimension);

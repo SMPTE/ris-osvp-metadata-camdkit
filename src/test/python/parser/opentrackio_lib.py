@@ -22,7 +22,7 @@ class OpenTrackIOProtocol:
         self.schema_text = None             # the Schema raw JSON
         self.trans_mult = 1.0                               # user-preferred units multiplier
         self.rot_mult = 1.0
-        self.pd = None          # the parsed procotol dictionary
+        self.pd = None          # the parsed protocol dictionary
         self.sd = None          # the parsed schema dictionary
         self.sample_time_format = "sec"
         self.sample_time_formats = ["sec","timecode","string"]

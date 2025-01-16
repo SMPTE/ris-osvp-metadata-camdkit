@@ -11,7 +11,7 @@ import argparse
 import camdkit.red.reader
 
 def main():
-  parser = argparse.ArgumentParser(description="Conver RED camera metadata to JSON according to the OSVP Camera Metadata Model.")
+  parser = argparse.ArgumentParser(description="Convert RED camera metadata to JSON according to the OSVP Camera Metadata Model.")
   parser.add_argument(
     'meta_3_file_path',
     type=str,
