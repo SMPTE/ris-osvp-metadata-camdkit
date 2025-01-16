@@ -24,7 +24,7 @@ def main():
     "examples": {},
     "fields": Clip.make_documentation(),
     "schema": json.dumps(Clip.make_json_schema(), indent=2),
-    "version": OPENTRACKIO_PROTOCOL_VERSION
+    "version": ".".join(str(v) for v in OPENTRACKIO_PROTOCOL_VERSION)
   }
   # Generate all the examples
   for function_name, function in getmembers(camdkit.examples, isfunction):

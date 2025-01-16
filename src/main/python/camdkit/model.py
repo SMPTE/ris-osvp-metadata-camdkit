@@ -13,7 +13,7 @@ from jsonschema import validate
 from camdkit.framework import *
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = (0,9,1)
+OPENTRACKIO_PROTOCOL_VERSION = (1,0,0)
 
 class ActiveSensorPhysicalDimensions(DimensionsParameter):
   """Height and width of the active area of the camera sensor in microns"""
@@ -850,7 +850,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
 class TimingSampleRate(StrictlyPositiveRationalParameter):
   """Sample frame rate as a rational number. Drop frame rates such as
   29.97 should be represented as e.g. 30000/1001. In a variable rate
-  system this should is estimated from the last sample delta time.
+  system this should be estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleRate"
