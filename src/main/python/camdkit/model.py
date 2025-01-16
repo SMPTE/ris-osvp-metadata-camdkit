@@ -13,11 +13,10 @@ from jsonschema import validate
 from camdkit.framework import *
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = (1,0,0)
+OPENTRACKIO_PROTOCOL_VERSION = (0,9,1)
 
 class ActiveSensorPhysicalDimensions(DimensionsParameter):
-  """Height and width of the active area of the camera sensor in microns
-  """
+  """Height and width of the active area of the camera sensor in microns"""
 
   canonical_name = "activeSensorPhysicalDimensions"
   sampling = Sampling.STATIC
@@ -25,9 +24,7 @@ class ActiveSensorPhysicalDimensions(DimensionsParameter):
   section = "camera"
   
 class ActiveSensorResolution(IntegerDimensionsParameter):
-  """Photosite resolution of the active area of the camera sensor in
-  pixels
-  """
+  """Photosite resolution of the active area of the camera sensor in pixels"""
 
   canonical_name = "activeSensorResolution"
   sampling = Sampling.STATIC
@@ -177,8 +174,7 @@ class AnamorphicSqueeze(StrictlyPositiveRationalParameter):
   section = "camera"
 
 class FDLLink(UUIDURNParameter):
-  """URN identifying the ASC Framing Decision List used by the camera.
-  """
+  """URN identifying the ASC Framing Decision List used by the camera."""
 
   canonical_name = "fdlLink"
   sampling = Sampling.STATIC
@@ -249,8 +245,8 @@ class Protocol(Parameter):
   @staticmethod
   def validate(value) -> bool:
     """Protocol name is nonblank string; protocol version is basic x.y.z
-     semantic versioning string
-     """
+    semantic versioning string
+    """
 
     if not isinstance(value, VersionedProtocol):
       return False
@@ -295,13 +291,17 @@ class Protocol(Parameter):
           "type": "array",
           "items": {
             "type": "integer",
-            "minValue": 0,
-            "maxValue": 9
+            "minimum": 0,
+            "maximum": 9
           },
           "minItems": 3,
           "maxItems": 3
         }
-      }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
     }
 
 
@@ -358,9 +358,7 @@ class GlobalStagePosition(Parameter):
   
   @staticmethod
   def validate(value) -> bool:
-    """
-    Each field in the GlobalPosition shall be a real number
-    """
+    """Each field in the GlobalPosition shall be a real number"""
     if not isinstance(value, GlobalPosition):
       return False
     
@@ -586,9 +584,7 @@ class TimingSynchronization(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """
-    The parameter shall contain the required valid fields.
-    """
+    """The parameter shall contain the required valid fields."""
     if not isinstance(value, Synchronization):
       return False
     if not isinstance(value.locked, bool):
@@ -653,7 +649,7 @@ class TimingSynchronization(Parameter):
             "num": {
               "type": "integer",
               "minimum": 1,
-              "maximum": UINT_MAX
+              "maximum": INT_MAX
             },
             "denom": {
               "type": "integer",
@@ -677,7 +673,7 @@ class TimingSynchronization(Parameter):
           "type": "object",
           "additionalProperties": False,
           "properties": {
-            "master": { "type": "string", "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$" },
+            "master": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
             "offset": { "type": "number" },
             "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
           }
@@ -688,17 +684,16 @@ class TimingSynchronization(Parameter):
     }
 
 class LensEncoders(Parameter):
-  """
-  Normalised real numbers (0-1) for focus, iris and zoom.
+  """Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
-    values) to ensure values remain independent of encoder resolution,
-    mininum and maximum (at an acceptable loss of precision).
+  values) to ensure values remain independent of encoder resolution,
+  minimum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
-    demarcate the 0 and 1 range.
+  demarcate the 0 and 1 range.
   Value should be provided in the following directions (if known):
-    Focus:   0=infinite     1=closest
-    Iris:    0=open         1=closed
-    Zoom:    0=wide angle   1=telephoto
+  Focus:   0=infinite     1=closest
+  Iris:    0=open         1=closed
+  Zoom:    0=wide angle   1=telephoto
   """
   sampling = Sampling.REGULAR
   canonical_name = "encoders"
@@ -754,10 +749,9 @@ class LensEncoders(Parameter):
     }
   
 class LensRawEncoders(Parameter):
-  """
-  Raw encoder values for focus, iris and zoom.
+  """Raw encoder values for focus, iris and zoom.
   These values are dependent on encoder resolution and before any
-    homing / ranging has taken place.
+  homing / ranging has taken place.
   """
   sampling = Sampling.REGULAR
   canonical_name = "rawEncoders"
@@ -794,15 +788,18 @@ class LensRawEncoders(Parameter):
       "properties": {
         "focus": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         },
         "iris": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         },
         "zoom": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": UINT_MAX
         }
       },
       "anyOf": [ {"required": ["focus"]}, {"required": ["iris"]}, {"required": ["zoom"]}
@@ -812,9 +809,9 @@ class LensRawEncoders(Parameter):
   
 class TimingMode(EnumParameter):
   """Enumerated value indicating whether the sample transport mechanism
-    provides inherent ('external') timing, or whether the transport
-    mechanism lacks inherent timing and so the sample must contain a PTP
-    timestamp itself ('internal') to carry timing information.
+  provides inherent ('external') timing, or whether the transport
+  mechanism lacks inherent timing and so the sample must contain a PTP
+  timestamp itself ('internal') to carry timing information.
   """
   sampling = Sampling.REGULAR
   canonical_name = "mode"
@@ -823,9 +820,9 @@ class TimingMode(EnumParameter):
 
 class TimingTimestamp(TimestampParameter):
   """PTP timestamp of the data capture instant. Note this may differ
-    from the packet's transmission PTP timestamp. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  from the packet's transmission PTP timestamp. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleTimestamp"
@@ -833,11 +830,10 @@ class TimingTimestamp(TimestampParameter):
   units = "second"
 
 class RecordedTimestamp(TimestampParameter):
-  """
-  PTP timestamp of the data recording instant, provided for convenience
-    during playback of e.g. pre-recorded tracking data. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  """PTP timestamp of the data recording instant, provided for convenience
+  during playback of e.g. pre-recorded tracking data. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   """
   sampling = Sampling.REGULAR
   canonical_name = "recordedTimestamp"
@@ -854,7 +850,7 @@ class TimingSequenceNumber(NonNegativeIntegerParameter):
 class TimingSampleRate(StrictlyPositiveRationalParameter):
   """Sample frame rate as a rational number. Drop frame rates such as
   29.97 should be represented as e.g. 30000/1001. In a variable rate
-  system this should be estimated from the last sample delta time.
+  system this should is estimated from the last sample delta time.
   """
   sampling = Sampling.REGULAR
   canonical_name = "sampleRate"
@@ -865,7 +861,7 @@ class TimingTimecode(Parameter):
   """SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.frameRate: The frame rate as a rational number. Drop frame
+  - format.frameRate: The frame rate as a rational number. Drop frame
   rates such as 29.97 should be represented as e.g. 30000/1001. The
   timecode frame rate may differ from the sample frequency.
   """
@@ -905,6 +901,8 @@ class TimingTimecode(Parameter):
       },
       "subFrame": d["format"].sub_frame,
     }
+    if d["format"]["subFrame"] == DEFAULT_SUB_FRAME:
+      del d["format"]["subFrame"]
     return d
 
   @staticmethod
@@ -912,7 +910,8 @@ class TimingTimecode(Parameter):
     return Timecode(value["hours"], value["minutes"], value["seconds"], value["frames"],
                     TimecodeFormat(in_frame_rate=Fraction(value["format"]["frameRate"]["num"],
                                                           value["format"]["frameRate"]["denom"]),
-                                   in_sub_frame=value["format"]["subFrame"]))
+                                   in_sub_frame=(0 if "subFrame" not in value["format"]
+                                                 else value["format"]["subFrame"])))
 
   @staticmethod
   def make_json_schema() -> dict:
@@ -955,7 +954,7 @@ class TimingTimecode(Parameter):
                 "num": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": UINT_MAX
+                  "maximum": INT_MAX
                 },
                 "denom": {
                   "type": "integer",
@@ -994,7 +993,7 @@ class FStop(NonNegativeRealParameter):
   units = None
   section = "lens"
 
-class NominalFocalLength(NonNegativeRealParameter):
+class NominalFocalLength(StrictlyPositiveRealParameter):
   """Nominal focal length of the lens. The number printed on the side
   of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
   """
@@ -1012,7 +1011,7 @@ class FocalLength(NonNegativeRealParameter):
   units = "millimeter"
   section = "lens"
 
-class FocusDistance(NonNegativeRealParameter):
+class FocusDistance(StrictlyPositiveRealParameter):
   """Focus distance/position of the lens"""
 
   canonical_name = "focusDistance"
@@ -1222,28 +1221,29 @@ class LensDistortions(Parameter):
         "properties": {
           "model": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
           },
           "radial": {
             "type": "array",
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           },
           "tangential": {
             "type": "array",
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           },
         }
       }
     }
   
 class LensDistortionOffset(Parameter):
-  """Offset in x and y of the centre of distortion of the virtual camera
-  """
+  """Offset in x and y of the centre of distortion of the virtual camera"""
 
   sampling = Sampling.REGULAR
   canonical_name = "distortionOffset"
@@ -1336,8 +1336,8 @@ class LensProjectionOffset(Parameter):
     }
 
 class LensCustom(ArrayParameter):
-  """This list provides optional additonal custom coefficients that can 
-  extend the existing lens model. The meaning of and how these characeristics
+  """This list provides optional additional custom coefficients that can 
+  extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
   """
