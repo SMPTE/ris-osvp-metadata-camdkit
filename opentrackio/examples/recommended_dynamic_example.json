@@ -35,8 +35,8 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:ad98ffcc-aaa8-4e55-b4d4-b5615834db60",
-  "sourceId": "urn:uuid:df57435a-fccd-4fb4-aa27-082c11c0be15",
+  "sampleId": "urn:uuid:9c4cc414-eaa2-4374-b9fb-917271ecd63f",
+  "sourceId": "urn:uuid:a1cae44c-dcb7-48e8-a75f-f43d214b911d",
   "sourceNumber": 1,
   "timing": {
     "mode": "external",
@@ -53,8 +53,7 @@
         "frameRate": {
           "num": 24000,
           "denom": 1001
-        },
-        "subFrame": 0
+        }
       }
     }
   },

@@ -28,7 +28,7 @@
                   "minimum": 0.0
                 }
               },
-              "description": "Height and width of the active area of the camera sensor in microns ",
+              "description": "Height and width of the active area of the camera sensor in microns",
               "units": "millimeter"
             },
             "activeSensorResolution": {
@@ -50,7 +50,7 @@
                   "maximum": 2147483647
                 }
               },
-              "description": "Photosite resolution of the active area of the camera sensor in pixels ",
+              "description": "Photosite resolution of the active area of the camera sensor in pixels",
               "units": "pixel"
             },
             "anamorphicSqueeze": {
@@ -129,7 +129,7 @@
             "fdlLink": {
               "type": "string",
               "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-              "description": "URN identifying the ASC Framing Decision List used by the camera. "
+              "description": "URN identifying the ASC Framing Decision List used by the camera."
             },
             "isoSpeed": {
               "type": "integer",
@@ -201,7 +201,7 @@
             },
             "nominalFocalLength": {
               "type": "number",
-              "minimum": 0.0,
+              "exclusiveMinimum": 0.0,
               "description": "Nominal focal length of the lens. The number printed on the side of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens. ",
               "units": "millimeter"
             },
@@ -293,7 +293,7 @@
           "items": {
             "type": "number"
           },
-          "description": "This list provides optional additonal custom coefficients that can  extend the existing lens model. The meaning of and how these characeristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
+          "description": "This list provides optional additional custom coefficients that can extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
         },
         "distortionOffset": {
           "type": "object",
@@ -310,7 +310,7 @@
               "type": "number"
             }
           },
-          "description": "Offset in x and y of the centre of distortion of the virtual camera ",
+          "description": "Offset in x and y of the centre of distortion of the virtual camera",
           "units": "millimeter"
         },
         "distortionOverscan": {
@@ -329,21 +329,23 @@
             ],
             "properties": {
               "model": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
               },
               "radial": {
                 "type": "array",
                 "items": {
                   "type": "number"
                 },
-                "minLength": 1
+                "minItems": 1
               },
               "tangential": {
                 "type": "array",
                 "items": {
                   "type": "number"
                 },
-                "minLength": 1
+                "minItems": 1
               }
             }
           },
@@ -386,7 +388,7 @@
               ]
             }
           ],
-          "description": " Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer   values) to ensure values remain independent of encoder resolution,   mininum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that   demarcate the 0 and 1 range. Value should be provided in the following directions (if known):   Focus:   0=infinite     1=closest   Iris:    0=open         1=closed   Zoom:    0=wide angle   1=telephoto "
+          "description": "Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent of encoder resolution, minimum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that demarcate the 0 and 1 range. Value should be provided in the following directions (if known): Focus:   0=infinite     1=closest Iris:    0=open         1=closed Zoom:    0=wide angle   1=telephoto "
         },
         "entrancePupilOffset": {
           "type": "number",
@@ -425,7 +427,7 @@
         },
         "focusDistance": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Focus distance/position of the lens",
           "units": "meter"
         },
@@ -453,15 +455,18 @@
           "properties": {
             "focus": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             },
             "iris": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             },
             "zoom": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             }
           },
           "anyOf": [
@@ -481,7 +486,7 @@
               ]
             }
           ],
-          "description": " Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any   homing / ranging has taken place. "
+          "description": "Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any homing / ranging has taken place. "
         },
         "tStop": {
           "type": "number",
@@ -508,13 +513,17 @@
           "type": "array",
           "items": {
             "type": "integer",
-            "minValue": 0,
-            "maxValue": 9
+            "minimum": 0,
+            "maximum": 9
           },
           "minItems": 3,
           "maxItems": 3
         }
       },
+      "required": [
+        "name",
+        "version"
+      ],
       "description": "Name of the protocol in which the sample is being employed, and version of that protocol "
     },
     "relatedSampleIds": {
@@ -551,7 +560,7 @@
             "internal",
             "external"
           ],
-          "description": "Enumerated value indicating whether the sample transport mechanism   provides inherent ('external') timing, or whether the transport   mechanism lacks inherent timing and so the sample must contain a PTP   timestamp itself ('internal') to carry timing information. "
+          "description": "Enumerated value indicating whether the sample transport mechanism provides inherent ('external') timing, or whether the transport mechanism lacks inherent timing and so the sample must contain a PTP timestamp itself ('internal') to carry timing information. "
         },
         "recordedTimestamp": {
           "type": "object",
@@ -572,7 +581,7 @@
             "seconds",
             "nanoseconds"
           ],
-          "description": " PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
+          "description": "PTP timestamp of the data recording instant, provided for convenience during playback of e.g. pre-recorded tracking data. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) ",
           "units": "second"
         },
         "sampleRate": {
@@ -615,7 +624,7 @@
             "seconds",
             "nanoseconds"
           ],
-          "description": "PTP timestamp of the data capture instant. Note this may differ   from the packet's transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
+          "description": "PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) ",
           "units": "second"
         },
         "sequenceNumber": {
@@ -640,7 +649,7 @@
                 "num": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 4294967295
+                  "maximum": 2147483647
                 },
                 "denom": {
                   "type": "integer",
@@ -676,7 +685,7 @@
               "properties": {
                 "master": {
                   "type": "string",
-                  "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+                  "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
                 },
                 "offset": {
                   "type": "number"
@@ -753,7 +762,7 @@
                     "num": {
                       "type": "integer",
                       "minimum": 1,
-                      "maximum": 4294967295
+                      "maximum": 2147483647
                     },
                     "denom": {
                       "type": "integer",
@@ -770,7 +779,7 @@
               }
             }
           },
-          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. "
+          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization. - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. "
         }
       }
     },

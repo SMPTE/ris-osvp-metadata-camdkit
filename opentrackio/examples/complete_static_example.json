@@ -22,7 +22,7 @@
         "num": 24000,
         "denom": 1001
       },
-      "fdlLink": "urn:uuid:a6c4753d-17b8-40c1-9c41-7a52a2c1c545",
+      "fdlLink": "urn:uuid:d79c2542-0e2c-4abe-bef7-c778a9373a80",
       "isoSpeed": 4000,
       "shutterAngle": 45.0
     },
@@ -35,7 +35,7 @@
       "distortionOverscanMax": 1.2,
       "make": "LensMaker",
       "model": "Model15",
-      "nominalFocalLength": 14,
+      "nominalFocalLength": 14.0,
       "serialNumber": "1234567890A",
       "undistortionOverscanMax": 1.3
     },
@@ -131,11 +131,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:e83377b4-5896-4fd3-96b3-cc277c419086",
-    "urn:uuid:d195ff05-e56f-4556-a47c-5f4600d09300"
+    "urn:uuid:91fe114a-1dab-4ef7-959d-bdfc4e3a9788",
+    "urn:uuid:d58eee1e-cacf-4198-83ba-75142f8fc303"
   ],
-  "sampleId": "urn:uuid:54044f97-fe81-47ec-9243-b3a0dba5746e",
-  "sourceId": "urn:uuid:44b0741e-c0fc-49b3-b1ac-724caecd67ed",
+  "sampleId": "urn:uuid:d4e74189-ca63-4072-9795-005fc04cf450",
+  "sourceId": "urn:uuid:ba402556-9838-4003-99a0-cafc0567c4ba",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -180,8 +180,7 @@
         "frameRate": {
           "num": 24000,
           "denom": 1001
-        },
-        "subFrame": 0
+        }
       }
     }
   },

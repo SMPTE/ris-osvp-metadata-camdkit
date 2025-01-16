@@ -87,8 +87,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:ad98ffcc-aaa8-4e55-b4d4-b5615834db60&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:df57435a-fccd-4fb4-aa27-082c11c0be15&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:9c4cc414-eaa2-4374-b9fb-917271ecd63f&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:a1cae44c-dcb7-48e8-a75f-f43d214b911d&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -105,8 +105,7 @@
         &#34;frameRate&#34;: {
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
-        },
-        &#34;subFrame&#34;: 0
+        }
       }
     }
   },
@@ -189,8 +188,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:8507730e-ba6d-4f2e-8934-af9005fb6097&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:73737844-8c93-4034-bb51-e2883455c9d4&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:e3effa66-40cb-4630-ac72-c9ce7a9068bf&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:2b3de806-aebd-4e0e-9c6b-cda1fd6156e2&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -207,8 +206,7 @@
         &#34;frameRate&#34;: {
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
-        },
-        &#34;subFrame&#34;: 0
+        }
       }
     }
   },
@@ -265,7 +263,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:a6c4753d-17b8-40c1-9c41-7a52a2c1c545&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:d79c2542-0e2c-4abe-bef7-c778a9373a80&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -278,7 +276,7 @@
       &#34;distortionOverscanMax&#34;: 1.2,
       &#34;make&#34;: &#34;LensMaker&#34;,
       &#34;model&#34;: &#34;Model15&#34;,
-      &#34;nominalFocalLength&#34;: 14,
+      &#34;nominalFocalLength&#34;: 14.0,
       &#34;serialNumber&#34;: &#34;1234567890A&#34;,
       &#34;undistortionOverscanMax&#34;: 1.3
     },
@@ -374,11 +372,11 @@
     ]
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:e83377b4-5896-4fd3-96b3-cc277c419086&#34;,
-    &#34;urn:uuid:d195ff05-e56f-4556-a47c-5f4600d09300&#34;
+    &#34;urn:uuid:91fe114a-1dab-4ef7-959d-bdfc4e3a9788&#34;,
+    &#34;urn:uuid:d58eee1e-cacf-4198-83ba-75142f8fc303&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:54044f97-fe81-47ec-9243-b3a0dba5746e&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:44b0741e-c0fc-49b3-b1ac-724caecd67ed&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:d4e74189-ca63-4072-9795-005fc04cf450&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:ba402556-9838-4003-99a0-cafc0567c4ba&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;internal&#34;,
@@ -423,8 +421,7 @@
         &#34;frameRate&#34;: {
           &#34;num&#34;: 24000,
           &#34;denom&#34;: 1001
-        },
-        &#34;subFrame&#34;: 0
+        }
       }
     }
   },
@@ -556,13 +553,9 @@
                 <table>
                     <tr><th>Parameter</th><th>Section</th><th>Sampling</th><th>Description</th><th>Units</th><th>Constraints</th></tr>
                     
-                    <tr><td>activeSensorPhysicalDimensions</td><td>camera</td><td>Static</td><td>Height and width of the active area of the camera sensor in microns
-  </td><td>millimeter</td><td>The height and width shall be each be real non-negative numbers.
-    </td></tr>
+                    <tr><td>activeSensorPhysicalDimensions</td><td>camera</td><td>Static</td><td>Height and width of the active area of the camera sensor in microns</td><td>millimeter</td><td>The height and width shall be each be real non-negative numbers.</td></tr>
                     
-                    <tr><td>activeSensorResolution</td><td>camera</td><td>Static</td><td>Photosite resolution of the active area of the camera sensor in
-  pixels
-  </td><td>pixel</td><td>The height and width shall be each be an integer in the range
+                    <tr><td>activeSensorResolution</td><td>camera</td><td>Static</td><td>Photosite resolution of the active area of the camera sensor in pixels</td><td>pixel</td><td>The height and width shall be each be an integer in the range
     [0..2,147,483,647].
     </td></tr>
                     
@@ -575,23 +568,23 @@
     (0..4,294,967,295].
     </td></tr>
                     
-                    <tr><td>firmwareVersion</td><td>camera</td><td>Static</td><td>Non-blank string identifying camera firmware version</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>firmwareVersion</td><td>camera</td><td>Static</td><td>Non-blank string identifying camera firmware version</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>label</td><td>camera</td><td>Static</td><td>Non-blank string containing user-determined camera identifier</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>label</td><td>camera</td><td>Static</td><td>Non-blank string containing user-determined camera identifier</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>make</td><td>camera</td><td>Static</td><td>Non-blank string naming camera manufacturer</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>make</td><td>camera</td><td>Static</td><td>Non-blank string naming camera manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>model</td><td>camera</td><td>Static</td><td>Non-blank string identifying camera model</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>model</td><td>camera</td><td>Static</td><td>Non-blank string identifying camera model</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>serialNumber</td><td>camera</td><td>Static</td><td>Non-blank string uniquely identifying the camera</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>serialNumber</td><td>camera</td><td>Static</td><td>Non-blank string uniquely identifying the camera</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
@@ -605,8 +598,7 @@
     (0..4,294,967,295].
     </td></tr>
                     
-                    <tr><td>fdlLink</td><td>camera</td><td>Static</td><td>URN identifying the ASC Framing Decision List used by the camera.
-  </td><td>None</td><td>The parameter shall be a UUID URN as specified in IETF RFC 4122.
+                    <tr><td>fdlLink</td><td>camera</td><td>Static</td><td>URN identifying the ASC Framing Decision List used by the camera.</td><td>None</td><td>The parameter shall be a UUID URN as specified in IETF RFC 4122.
     Only lowercase characters shall be used.
     Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
     </td></tr>
@@ -614,15 +606,12 @@
                     <tr><td>globalStage</td><td>None</td><td>Regular</td><td>Position of stage origin in global ENU and geodetic coordinates
   (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
   inside a moving vehicle.
-  </td><td>meter</td><td>
-    Each field in the GlobalPosition shall be a real number
-    </td></tr>
+  </td><td>meter</td><td>Each field in the GlobalPosition shall be a real number</td></tr>
                     
-                    <tr><td>isoSpeed</td><td>camera</td><td>Static</td><td>Arithmetic ISO scale as defined in ISO 12232</td><td>None</td><td>The parameter shall be a integer in the range (1..4,294,967,295].
-    </td></tr>
+                    <tr><td>isoSpeed</td><td>camera</td><td>Static</td><td>Arithmetic ISO scale as defined in ISO 12232</td><td>None</td><td>The parameter shall be a integer in the range (1..4,294,967,295].</td></tr>
                     
-                    <tr><td>custom</td><td>lens</td><td>Regular</td><td>This list provides optional additonal custom coefficients that can 
-  extend the existing lens model. The meaning of and how these characeristics
+                    <tr><td>custom</td><td>lens</td><td>Regular</td><td>This list provides optional additional custom coefficients that can
+  extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
   </td><td>None</td><td>The parameter shall be a tuple of items of the class itemClass.
@@ -635,8 +624,7 @@
   as the overscan should be calculated by the consumer.
   </td><td>None</td><td>The parameter shall be a boolean.</td></tr>
                     
-                    <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera
-  </td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
+                    <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera</td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
                     
                     <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion. This is primarily relevant when
   storing overscan values, not in transmission as the overscan should be
@@ -658,17 +646,16 @@
     object the radial and tangential coefficients shall each be real numbers.
     </td></tr>
                     
-                    <tr><td>encoders</td><td>lens</td><td>Regular</td><td>
-  Normalised real numbers (0-1) for focus, iris and zoom.
+                    <tr><td>encoders</td><td>lens</td><td>Regular</td><td>Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
-    values) to ensure values remain independent of encoder resolution,
-    mininum and maximum (at an acceptable loss of precision).
+  values) to ensure values remain independent of encoder resolution,
+  minimum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
-    demarcate the 0 and 1 range.
+  demarcate the 0 and 1 range.
   Value should be provided in the following directions (if known):
-    Focus:   0=infinite     1=closest
-    Iris:    0=open         1=closed
-    Zoom:    0=wide angle   1=telephoto
+  Focus:   0=infinite     1=closest
+  Iris:    0=open         1=closed
+  Zoom:    0=wide angle   1=telephoto
   </td><td>None</td><td>
     The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
     </td></tr>
@@ -688,39 +675,38 @@
   by the diameter of the entrance pupil.
   </td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
                     
-                    <tr><td>firmwareVersion</td><td>lens</td><td>Static</td><td>Non-blank string identifying lens firmware version</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>firmwareVersion</td><td>lens</td><td>Static</td><td>Non-blank string identifying lens firmware version</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
                     <tr><td>focalLength</td><td>lens</td><td>Regular</td><td>Focal length of the lens.</td><td>millimeter</td><td>The parameter shall be a non-negative real number.</td></tr>
                     
-                    <tr><td>focusDistance</td><td>lens</td><td>Regular</td><td>Focus distance/position of the lens</td><td>meter</td><td>The parameter shall be a non-negative real number.</td></tr>
+                    <tr><td>focusDistance</td><td>lens</td><td>Regular</td><td>Focus distance/position of the lens</td><td>meter</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
-                    <tr><td>make</td><td>lens</td><td>Static</td><td>Non-blank string naming lens manufacturer</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>make</td><td>lens</td><td>Static</td><td>Non-blank string naming lens manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>model</td><td>lens</td><td>Static</td><td>Non-blank string identifying lens model</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>model</td><td>lens</td><td>Static</td><td>Non-blank string identifying lens model</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
                     <tr><td>nominalFocalLength</td><td>lens</td><td>Static</td><td>Nominal focal length of the lens. The number printed on the side
   of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
-  </td><td>millimeter</td><td>The parameter shall be a non-negative real number.</td></tr>
+  </td><td>millimeter</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
                     <tr><td>projectionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of perspective projection of the
   virtual camera
   </td><td>millimeter</td><td>X and Y projection offset shall each be real numbers.</td></tr>
                     
-                    <tr><td>rawEncoders</td><td>lens</td><td>Regular</td><td>
-  Raw encoder values for focus, iris and zoom.
+                    <tr><td>rawEncoders</td><td>lens</td><td>Regular</td><td>Raw encoder values for focus, iris and zoom.
   These values are dependent on encoder resolution and before any
-    homing / ranging has taken place.
+  homing / ranging has taken place.
   </td><td>None</td><td>
     The parameter shall contain at least one integer value for the FIZ encoders.
     </td></tr>
                     
-                    <tr><td>serialNumber</td><td>lens</td><td>Static</td><td>Non-blank string uniquely identifying the lens</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>serialNumber</td><td>lens</td><td>Static</td><td>Non-blank string uniquely identifying the lens</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
@@ -741,8 +727,8 @@
                     <tr><td>protocol</td><td>None</td><td>Regular</td><td>Name of the protocol in which the sample is being employed, and
   version of that protocol
   </td><td>None</td><td>Protocol name is nonblank string; protocol version is basic x.y.z
-     semantic versioning string
-     </td></tr>
+    semantic versioning string
+    </td></tr>
                     
                     <tr><td>relatedSampleIds</td><td>None</td><td>Regular</td><td>List of sampleId properties of samples related to this sample. The
   existence of a sample with a given sampleId is not guaranteed.
@@ -772,20 +758,18 @@
                     <tr><td>sourceNumber</td><td>None</td><td>Regular</td><td>Number that identifies the index of the stream from a source from which
   data is being transported. This is most important in the case where a source
   is producing multiple streams of samples.
-  </td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].
-    </td></tr>
+  </td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].</td></tr>
                     
                     <tr><td>mode</td><td>timing</td><td>Regular</td><td>Enumerated value indicating whether the sample transport mechanism
-    provides inherent (&#39;external&#39;) timing, or whether the transport
-    mechanism lacks inherent timing and so the sample must contain a PTP
-    timestamp itself (&#39;internal&#39;) to carry timing information.
+  provides inherent (&#39;external&#39;) timing, or whether the transport
+  mechanism lacks inherent timing and so the sample must contain a PTP
+  timestamp itself (&#39;internal&#39;) to carry timing information.
   </td><td>None</td><td>The parameter shall be one of the allowed values.</td></tr>
                     
-                    <tr><td>recordedTimestamp</td><td>timing</td><td>Regular</td><td>
-  PTP timestamp of the data recording instant, provided for convenience
-    during playback of e.g. pre-recorded tracking data. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+                    <tr><td>recordedTimestamp</td><td>timing</td><td>Regular</td><td>PTP timestamp of the data recording instant, provided for convenience
+  during playback of e.g. pre-recorded tracking data. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   </td><td>second</td><td>The parameter shall contain valid number of seconds, nanoseconds
     elapsed since the start of the epoch.
     </td></tr>
@@ -799,15 +783,14 @@
     </td></tr>
                     
                     <tr><td>sampleTimestamp</td><td>timing</td><td>Regular</td><td>PTP timestamp of the data capture instant. Note this may differ
-    from the packet&#39;s transmission PTP timestamp. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  from the packet&#39;s transmission PTP timestamp. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   </td><td>second</td><td>The parameter shall contain valid number of seconds, nanoseconds
     elapsed since the start of the epoch.
     </td></tr>
                     
-                    <tr><td>sequenceNumber</td><td>timing</td><td>Regular</td><td>Integer incrementing with each sample.</td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].
-    </td></tr>
+                    <tr><td>sequenceNumber</td><td>timing</td><td>Regular</td><td>Integer incrementing with each sample.</td><td>None</td><td>The parameter shall be a integer in the range (0..4,294,967,295].</td></tr>
                     
                     <tr><td>synchronization</td><td>timing</td><td>Regular</td><td>Object describing how the tracking device is synchronized for this
   sample.
@@ -837,47 +820,45 @@
   triggering the capture of tracking samples
   - &#34;ptp&#34;: The tracking device is locked to a PTP master
   - &#34;ntp&#34;: The tracking device is locked to an NTP server
-  </td><td>None</td><td>
-    The parameter shall contain the required valid fields.
-    </td></tr>
+  </td><td>None</td><td>The parameter shall contain the required valid fields.</td></tr>
                     
                     <tr><td>timecode</td><td>timing</td><td>Regular</td><td>SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.frameRate: The frame rate as a rational number. Drop frame
+  - format.frameRate: The frame rate as a rational number. Drop frame
   rates such as 29.97 should be represented as e.g. 30000/1001. The
   timecode frame rate may differ from the sample frequency.
   </td><td>None</td><td>The parameter shall contain a valid format and hours, minutes,
     seconds and frames with appropriate min/max values.
     </td></tr>
                     
-                    <tr><td>firmwareVersion</td><td>tracker</td><td>Static</td><td>Non-blank string identifying tracking device firmware version</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>firmwareVersion</td><td>tracker</td><td>Static</td><td>Non-blank string identifying tracking device firmware version</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>make</td><td>tracker</td><td>Static</td><td>Non-blank string naming tracking device manufacturer</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>make</td><td>tracker</td><td>Static</td><td>Non-blank string naming tracking device manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>model</td><td>tracker</td><td>Static</td><td>Non-blank string identifying tracking device model</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>model</td><td>tracker</td><td>Static</td><td>Non-blank string identifying tracking device model</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>notes</td><td>tracker</td><td>Regular</td><td>Non-blank string containing notes about tracking system</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>notes</td><td>tracker</td><td>Regular</td><td>Non-blank string containing notes about tracking system</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
                     <tr><td>recording</td><td>tracker</td><td>Regular</td><td>Boolean indicating whether tracking system is recording data</td><td>None</td><td>The parameter shall be a boolean.</td></tr>
                     
-                    <tr><td>serialNumber</td><td>tracker</td><td>Static</td><td>Non-blank string uniquely identifying the tracking device</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>serialNumber</td><td>tracker</td><td>Static</td><td>Non-blank string uniquely identifying the tracking device</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>slate</td><td>tracker</td><td>Regular</td><td>Non-blank string describing the recording slate</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>slate</td><td>tracker</td><td>Regular</td><td>Non-blank string describing the recording slate</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
-                    <tr><td>status</td><td>tracker</td><td>Regular</td><td>Non-blank string describing status of tracking system</td><td>None</td><td>The parameter shall be a Unicode string betwee 0 and 1023
+                    <tr><td>status</td><td>tracker</td><td>Regular</td><td>Non-blank string describing status of tracking system</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     </td></tr>
                     
@@ -939,7 +920,7 @@
                   &#34;minimum&#34;: 0.0
                 }
               },
-              &#34;description&#34;: &#34;Height and width of the active area of the camera sensor in microns &#34;,
+              &#34;description&#34;: &#34;Height and width of the active area of the camera sensor in microns&#34;,
               &#34;units&#34;: &#34;millimeter&#34;
             },
             &#34;activeSensorResolution&#34;: {
@@ -961,7 +942,7 @@
                   &#34;maximum&#34;: 2147483647
                 }
               },
-              &#34;description&#34;: &#34;Photosite resolution of the active area of the camera sensor in pixels &#34;,
+              &#34;description&#34;: &#34;Photosite resolution of the active area of the camera sensor in pixels&#34;,
               &#34;units&#34;: &#34;pixel&#34;
             },
             &#34;anamorphicSqueeze&#34;: {
@@ -1040,7 +1021,7 @@
             &#34;fdlLink&#34;: {
               &#34;type&#34;: &#34;string&#34;,
               &#34;pattern&#34;: &#34;^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&#34;,
-              &#34;description&#34;: &#34;URN identifying the ASC Framing Decision List used by the camera. &#34;
+              &#34;description&#34;: &#34;URN identifying the ASC Framing Decision List used by the camera.&#34;
             },
             &#34;isoSpeed&#34;: {
               &#34;type&#34;: &#34;integer&#34;,
@@ -1112,7 +1093,7 @@
             },
             &#34;nominalFocalLength&#34;: {
               &#34;type&#34;: &#34;number&#34;,
-              &#34;minimum&#34;: 0.0,
+              &#34;exclusiveMinimum&#34;: 0.0,
               &#34;description&#34;: &#34;Nominal focal length of the lens. The number printed on the side of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens. &#34;,
               &#34;units&#34;: &#34;millimeter&#34;
             },
@@ -1204,7 +1185,7 @@
           &#34;items&#34;: {
             &#34;type&#34;: &#34;number&#34;
           },
-          &#34;description&#34;: &#34;This list provides optional additonal custom coefficients that can  extend the existing lens model. The meaning of and how these characeristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. &#34;
+          &#34;description&#34;: &#34;This list provides optional additional custom coefficients that can extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. &#34;
         },
         &#34;distortionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1221,7 +1202,7 @@
               &#34;type&#34;: &#34;number&#34;
             }
           },
-          &#34;description&#34;: &#34;Offset in x and y of the centre of distortion of the virtual camera &#34;,
+          &#34;description&#34;: &#34;Offset in x and y of the centre of distortion of the virtual camera&#34;,
           &#34;units&#34;: &#34;millimeter&#34;
         },
         &#34;distortionOverscan&#34;: {
@@ -1240,21 +1221,23 @@
             ],
             &#34;properties&#34;: {
               &#34;model&#34;: {
-                &#34;type&#34;: &#34;string&#34;
+                &#34;type&#34;: &#34;string&#34;,
+                &#34;minLength&#34;: 1,
+                &#34;maxLength&#34;: 1023
               },
               &#34;radial&#34;: {
                 &#34;type&#34;: &#34;array&#34;,
                 &#34;items&#34;: {
                   &#34;type&#34;: &#34;number&#34;
                 },
-                &#34;minLength&#34;: 1
+                &#34;minItems&#34;: 1
               },
               &#34;tangential&#34;: {
                 &#34;type&#34;: &#34;array&#34;,
                 &#34;items&#34;: {
                   &#34;type&#34;: &#34;number&#34;
                 },
-                &#34;minLength&#34;: 1
+                &#34;minItems&#34;: 1
               }
             }
           },
@@ -1297,7 +1280,7 @@
               ]
             }
           ],
-          &#34;description&#34;: &#34; Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer   values) to ensure values remain independent of encoder resolution,   mininum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that   demarcate the 0 and 1 range. Value should be provided in the following directions (if known):   Focus:   0=infinite     1=closest   Iris:    0=open         1=closed   Zoom:    0=wide angle   1=telephoto &#34;
+          &#34;description&#34;: &#34;Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent of encoder resolution, minimum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that demarcate the 0 and 1 range. Value should be provided in the following directions (if known): Focus:   0=infinite     1=closest Iris:    0=open         1=closed Zoom:    0=wide angle   1=telephoto &#34;
         },
         &#34;entrancePupilOffset&#34;: {
           &#34;type&#34;: &#34;number&#34;,
@@ -1336,7 +1319,7 @@
         },
         &#34;focusDistance&#34;: {
           &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 0.0,
+          &#34;exclusiveMinimum&#34;: 0.0,
           &#34;description&#34;: &#34;Focus distance/position of the lens&#34;,
           &#34;units&#34;: &#34;meter&#34;
         },
@@ -1364,15 +1347,18 @@
           &#34;properties&#34;: {
             &#34;focus&#34;: {
               &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0
+              &#34;minimum&#34;: 0,
+              &#34;maximum&#34;: 4294967295
             },
             &#34;iris&#34;: {
               &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0
+              &#34;minimum&#34;: 0,
+              &#34;maximum&#34;: 4294967295
             },
             &#34;zoom&#34;: {
               &#34;type&#34;: &#34;integer&#34;,
-              &#34;minimum&#34;: 0
+              &#34;minimum&#34;: 0,
+              &#34;maximum&#34;: 4294967295
             }
           },
           &#34;anyOf&#34;: [
@@ -1392,7 +1378,7 @@
               ]
             }
           ],
-          &#34;description&#34;: &#34; Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any   homing / ranging has taken place. &#34;
+          &#34;description&#34;: &#34;Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any homing / ranging has taken place. &#34;
         },
         &#34;tStop&#34;: {
           &#34;type&#34;: &#34;number&#34;,
@@ -1419,13 +1405,17 @@
           &#34;type&#34;: &#34;array&#34;,
           &#34;items&#34;: {
             &#34;type&#34;: &#34;integer&#34;,
-            &#34;minValue&#34;: 0,
-            &#34;maxValue&#34;: 9
+            &#34;minimum&#34;: 0,
+            &#34;maximum&#34;: 9
           },
           &#34;minItems&#34;: 3,
           &#34;maxItems&#34;: 3
         }
       },
+      &#34;required&#34;: [
+        &#34;name&#34;,
+        &#34;version&#34;
+      ],
       &#34;description&#34;: &#34;Name of the protocol in which the sample is being employed, and version of that protocol &#34;
     },
     &#34;relatedSampleIds&#34;: {
@@ -1462,7 +1452,7 @@
             &#34;internal&#34;,
             &#34;external&#34;
           ],
-          &#34;description&#34;: &#34;Enumerated value indicating whether the sample transport mechanism   provides inherent (&#39;external&#39;) timing, or whether the transport   mechanism lacks inherent timing and so the sample must contain a PTP   timestamp itself (&#39;internal&#39;) to carry timing information. &#34;
+          &#34;description&#34;: &#34;Enumerated value indicating whether the sample transport mechanism provides inherent (&#39;external&#39;) timing, or whether the transport mechanism lacks inherent timing and so the sample must contain a PTP timestamp itself (&#39;internal&#39;) to carry timing information. &#34;
         },
         &#34;recordedTimestamp&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1483,7 +1473,7 @@
             &#34;seconds&#34;,
             &#34;nanoseconds&#34;
           ],
-          &#34;description&#34;: &#34; PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) &#34;,
+          &#34;description&#34;: &#34;PTP timestamp of the data recording instant, provided for convenience during playback of e.g. pre-recorded tracking data. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) &#34;,
           &#34;units&#34;: &#34;second&#34;
         },
         &#34;sampleRate&#34;: {
@@ -1526,7 +1516,7 @@
             &#34;seconds&#34;,
             &#34;nanoseconds&#34;
           ],
-          &#34;description&#34;: &#34;PTP timestamp of the data capture instant. Note this may differ   from the packet&#39;s transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) &#34;,
+          &#34;description&#34;: &#34;PTP timestamp of the data capture instant. Note this may differ from the packet&#39;s transmission PTP timestamp. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) &#34;,
           &#34;units&#34;: &#34;second&#34;
         },
         &#34;sequenceNumber&#34;: {
@@ -1551,7 +1541,7 @@
                 &#34;num&#34;: {
                   &#34;type&#34;: &#34;integer&#34;,
                   &#34;minimum&#34;: 1,
-                  &#34;maximum&#34;: 4294967295
+                  &#34;maximum&#34;: 2147483647
                 },
                 &#34;denom&#34;: {
                   &#34;type&#34;: &#34;integer&#34;,
@@ -1587,7 +1577,7 @@
               &#34;properties&#34;: {
                 &#34;master&#34;: {
                   &#34;type&#34;: &#34;string&#34;,
-                  &#34;pattern&#34;: &#34;^([A-F0-9]{2}:){5}[A-F0-9]{2}$&#34;
+                  &#34;pattern&#34;: &#34;(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)&#34;
                 },
                 &#34;offset&#34;: {
                   &#34;type&#34;: &#34;number&#34;
@@ -1664,7 +1654,7 @@
                     &#34;num&#34;: {
                       &#34;type&#34;: &#34;integer&#34;,
                       &#34;minimum&#34;: 1,
-                      &#34;maximum&#34;: 4294967295
+                      &#34;maximum&#34;: 2147483647
                     },
                     &#34;denom&#34;: {
                       &#34;type&#34;: &#34;integer&#34;,
@@ -1681,7 +1671,7 @@
               }
             }
           },
-          &#34;description&#34;: &#34;SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. &#34;
+          &#34;description&#34;: &#34;SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization. - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. &#34;
         }
       }
     },

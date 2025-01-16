@@ -22,7 +22,6 @@ camera position ('tracking') and lens data.
 #### Description
 
 Height and width of the active area of the camera sensor in microns
-  
 
 #### Units
 
@@ -35,15 +34,12 @@ Static
 #### Constraints
 
 The height and width shall be each be real non-negative numbers.
-    
 
 ### `activeSensorResolution`
 
 #### Description
 
-Photosite resolution of the active area of the camera sensor in
-  pixels
-  
+Photosite resolution of the active area of the camera sensor in pixels
 
 #### Units
 
@@ -100,7 +96,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -120,7 +116,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -140,7 +136,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -160,7 +156,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -180,7 +176,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -231,7 +227,6 @@ The parameter shall be a rational number whose numerator
 #### Description
 
 URN identifying the ASC Framing Decision List used by the camera.
-  
 
 #### Units
 
@@ -267,9 +262,7 @@ Regular
 
 #### Constraints
 
-
-    Each field in the GlobalPosition shall be a real number
-    
+Each field in the GlobalPosition shall be a real number
 
 ### `isoSpeed`
 
@@ -288,14 +281,13 @@ Static
 #### Constraints
 
 The parameter shall be a integer in the range (1..4,294,967,295].
-    
 
 ### `custom`
 
 #### Description
 
-This list provides optional additonal custom coefficients that can 
-  extend the existing lens model. The meaning of and how these characeristics
+This list provides optional additional custom coefficients that can
+  extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
   
@@ -341,7 +333,6 @@ The parameter shall be a boolean.
 #### Description
 
 Offset in x and y of the centre of distortion of the virtual camera
-  
 
 #### Units
 
@@ -427,17 +418,16 @@ The list shall contain at least one Distortion object, and in each
 
 #### Description
 
-
-  Normalised real numbers (0-1) for focus, iris and zoom.
+Normalised real numbers (0-1) for focus, iris and zoom.
   Encoders are represented in this way (as opposed to raw integer
-    values) to ensure values remain independent of encoder resolution,
-    mininum and maximum (at an acceptable loss of precision).
+  values) to ensure values remain independent of encoder resolution,
+  minimum and maximum (at an acceptable loss of precision).
   These values are only relevant in lenses with end-stops that
-    demarcate the 0 and 1 range.
+  demarcate the 0 and 1 range.
   Value should be provided in the following directions (if known):
-    Focus:   0=infinite     1=closest
-    Iris:    0=open         1=closed
-    Zoom:    0=wide angle   1=telephoto
+  Focus:   0=infinite     1=closest
+  Iris:    0=open         1=closed
+  Zoom:    0=wide angle   1=telephoto
   
 
 #### Units
@@ -533,7 +523,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -571,7 +561,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a real number greater than 0.
 
 ### `make`
 
@@ -589,7 +579,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -609,7 +599,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -631,7 +621,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a real number greater than 0.
 
 ### `projectionOffset`
 
@@ -657,10 +647,9 @@ X and Y projection offset shall each be real numbers.
 
 #### Description
 
-
-  Raw encoder values for focus, iris and zoom.
+Raw encoder values for focus, iris and zoom.
   These values are dependent on encoder resolution and before any
-    homing / ranging has taken place.
+  homing / ranging has taken place.
   
 
 #### Units
@@ -693,7 +682,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -778,8 +767,8 @@ Regular
 #### Constraints
 
 Protocol name is nonblank string; protocol version is basic x.y.z
-     semantic versioning string
-     
+    semantic versioning string
+    
 
 ### `relatedSampleIds`
 
@@ -890,16 +879,15 @@ Regular
 #### Constraints
 
 The parameter shall be a integer in the range (0..4,294,967,295].
-    
 
 ### `mode`
 
 #### Description
 
 Enumerated value indicating whether the sample transport mechanism
-    provides inherent ('external') timing, or whether the transport
-    mechanism lacks inherent timing and so the sample must contain a PTP
-    timestamp itself ('internal') to carry timing information.
+  provides inherent ('external') timing, or whether the transport
+  mechanism lacks inherent timing and so the sample must contain a PTP
+  timestamp itself ('internal') to carry timing information.
   
 
 #### Units
@@ -918,11 +906,10 @@ The parameter shall be one of the allowed values.
 
 #### Description
 
-
-  PTP timestamp of the data recording instant, provided for convenience
-    during playback of e.g. pre-recorded tracking data. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+PTP timestamp of the data recording instant, provided for convenience
+  during playback of e.g. pre-recorded tracking data. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   
 
 #### Units
@@ -968,9 +955,9 @@ The parameter shall be a rational number whose numerator
 #### Description
 
 PTP timestamp of the data capture instant. Note this may differ
-    from the packet's transmission PTP timestamp. The timestamp
-    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
-    integer (nanoseconds)
+  from the packet's transmission PTP timestamp. The timestamp
+  comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+  integer (nanoseconds)
   
 
 #### Units
@@ -1004,7 +991,6 @@ Regular
 #### Constraints
 
 The parameter shall be a integer in the range (0..4,294,967,295].
-    
 
 ### `synchronization`
 
@@ -1050,9 +1036,7 @@ Regular
 
 #### Constraints
 
-
-    The parameter shall contain the required valid fields.
-    
+The parameter shall contain the required valid fields.
 
 ### `timecode`
 
@@ -1061,7 +1045,7 @@ Regular
 SMPTE timecode of the sample. Timecode is a standard for labeling
   individual frames of data in media systems and is useful for
   inter-frame synchronization.
-   - format.frameRate: The frame rate as a rational number. Drop frame
+  - format.frameRate: The frame rate as a rational number. Drop frame
   rates such as 29.97 should be represented as e.g. 30000/1001. The
   timecode frame rate may differ from the sample frequency.
   
@@ -1096,7 +1080,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1116,7 +1100,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1136,7 +1120,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1156,7 +1140,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1194,7 +1178,7 @@ Static
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1214,7 +1198,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1234,7 +1218,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a Unicode string betwee 0 and 1023
+The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     
 
@@ -1318,7 +1302,7 @@ The following table indicates the camera parameters supported by each of the rea
                   "minimum": 0.0
                 }
               },
-              "description": "Height and width of the active area of the camera sensor in microns ",
+              "description": "Height and width of the active area of the camera sensor in microns",
               "units": "millimeter"
             },
             "activeSensorResolution": {
@@ -1340,7 +1324,7 @@ The following table indicates the camera parameters supported by each of the rea
                   "maximum": 2147483647
                 }
               },
-              "description": "Photosite resolution of the active area of the camera sensor in pixels ",
+              "description": "Photosite resolution of the active area of the camera sensor in pixels",
               "units": "pixel"
             },
             "anamorphicSqueeze": {
@@ -1419,7 +1403,7 @@ The following table indicates the camera parameters supported by each of the rea
             "fdlLink": {
               "type": "string",
               "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-              "description": "URN identifying the ASC Framing Decision List used by the camera. "
+              "description": "URN identifying the ASC Framing Decision List used by the camera."
             },
             "isoSpeed": {
               "type": "integer",
@@ -1491,7 +1475,7 @@ The following table indicates the camera parameters supported by each of the rea
             },
             "nominalFocalLength": {
               "type": "number",
-              "minimum": 0.0,
+              "exclusiveMinimum": 0.0,
               "description": "Nominal focal length of the lens. The number printed on the side of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens. ",
               "units": "millimeter"
             },
@@ -1583,7 +1567,7 @@ The following table indicates the camera parameters supported by each of the rea
           "items": {
             "type": "number"
           },
-          "description": "This list provides optional additonal custom coefficients that can  extend the existing lens model. The meaning of and how these characeristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
+          "description": "This list provides optional additional custom coefficients that can extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
         },
         "distortionOffset": {
           "type": "object",
@@ -1600,7 +1584,7 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "number"
             }
           },
-          "description": "Offset in x and y of the centre of distortion of the virtual camera ",
+          "description": "Offset in x and y of the centre of distortion of the virtual camera",
           "units": "millimeter"
         },
         "distortionOverscan": {
@@ -1619,21 +1603,23 @@ The following table indicates the camera parameters supported by each of the rea
             ],
             "properties": {
               "model": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
               },
               "radial": {
                 "type": "array",
                 "items": {
                   "type": "number"
                 },
-                "minLength": 1
+                "minItems": 1
               },
               "tangential": {
                 "type": "array",
                 "items": {
                   "type": "number"
                 },
-                "minLength": 1
+                "minItems": 1
               }
             }
           },
@@ -1676,7 +1662,7 @@ The following table indicates the camera parameters supported by each of the rea
               ]
             }
           ],
-          "description": " Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer   values) to ensure values remain independent of encoder resolution,   mininum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that   demarcate the 0 and 1 range. Value should be provided in the following directions (if known):   Focus:   0=infinite     1=closest   Iris:    0=open         1=closed   Zoom:    0=wide angle   1=telephoto "
+          "description": "Normalised real numbers (0-1) for focus, iris and zoom. Encoders are represented in this way (as opposed to raw integer values) to ensure values remain independent of encoder resolution, minimum and maximum (at an acceptable loss of precision). These values are only relevant in lenses with end-stops that demarcate the 0 and 1 range. Value should be provided in the following directions (if known): Focus:   0=infinite     1=closest Iris:    0=open         1=closed Zoom:    0=wide angle   1=telephoto "
         },
         "entrancePupilOffset": {
           "type": "number",
@@ -1715,7 +1701,7 @@ The following table indicates the camera parameters supported by each of the rea
         },
         "focusDistance": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Focus distance/position of the lens",
           "units": "meter"
         },
@@ -1743,15 +1729,18 @@ The following table indicates the camera parameters supported by each of the rea
           "properties": {
             "focus": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             },
             "iris": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             },
             "zoom": {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 4294967295
             }
           },
           "anyOf": [
@@ -1771,7 +1760,7 @@ The following table indicates the camera parameters supported by each of the rea
               ]
             }
           ],
-          "description": " Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any   homing / ranging has taken place. "
+          "description": "Raw encoder values for focus, iris and zoom. These values are dependent on encoder resolution and before any homing / ranging has taken place. "
         },
         "tStop": {
           "type": "number",
@@ -1798,13 +1787,17 @@ The following table indicates the camera parameters supported by each of the rea
           "type": "array",
           "items": {
             "type": "integer",
-            "minValue": 0,
-            "maxValue": 9
+            "minimum": 0,
+            "maximum": 9
           },
           "minItems": 3,
           "maxItems": 3
         }
       },
+      "required": [
+        "name",
+        "version"
+      ],
       "description": "Name of the protocol in which the sample is being employed, and version of that protocol "
     },
     "relatedSampleIds": {
@@ -1841,7 +1834,7 @@ The following table indicates the camera parameters supported by each of the rea
             "internal",
             "external"
           ],
-          "description": "Enumerated value indicating whether the sample transport mechanism   provides inherent ('external') timing, or whether the transport   mechanism lacks inherent timing and so the sample must contain a PTP   timestamp itself ('internal') to carry timing information. "
+          "description": "Enumerated value indicating whether the sample transport mechanism provides inherent ('external') timing, or whether the transport mechanism lacks inherent timing and so the sample must contain a PTP timestamp itself ('internal') to carry timing information. "
         },
         "recordedTimestamp": {
           "type": "object",
@@ -1862,7 +1855,7 @@ The following table indicates the camera parameters supported by each of the rea
             "seconds",
             "nanoseconds"
           ],
-          "description": " PTP timestamp of the data recording instant, provided for convenience   during playback of e.g. pre-recorded tracking data. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
+          "description": "PTP timestamp of the data recording instant, provided for convenience during playback of e.g. pre-recorded tracking data. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) ",
           "units": "second"
         },
         "sampleRate": {
@@ -1905,7 +1898,7 @@ The following table indicates the camera parameters supported by each of the rea
             "seconds",
             "nanoseconds"
           ],
-          "description": "PTP timestamp of the data capture instant. Note this may differ   from the packet's transmission PTP timestamp. The timestamp   comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned   integer (nanoseconds) ",
+          "description": "PTP timestamp of the data capture instant. Note this may differ from the packet's transmission PTP timestamp. The timestamp comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned integer (nanoseconds) ",
           "units": "second"
         },
         "sequenceNumber": {
@@ -1930,7 +1923,7 @@ The following table indicates the camera parameters supported by each of the rea
                 "num": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 4294967295
+                  "maximum": 2147483647
                 },
                 "denom": {
                   "type": "integer",
@@ -1966,7 +1959,7 @@ The following table indicates the camera parameters supported by each of the rea
               "properties": {
                 "master": {
                   "type": "string",
-                  "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+                  "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
                 },
                 "offset": {
                   "type": "number"
@@ -2043,7 +2036,7 @@ The following table indicates the camera parameters supported by each of the rea
                     "num": {
                       "type": "integer",
                       "minimum": 1,
-                      "maximum": 4294967295
+                      "maximum": 2147483647
                     },
                     "denom": {
                       "type": "integer",
@@ -2060,7 +2053,7 @@ The following table indicates the camera parameters supported by each of the rea
               }
             }
           },
-          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization.  - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. "
+          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling individual frames of data in media systems and is useful for inter-frame synchronization. - format.frameRate: The frame rate as a rational number. Drop frame rates such as 29.97 should be represented as e.g. 30000/1001. The timecode frame rate may differ from the sample frequency. "
         }
       }
     },

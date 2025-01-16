@@ -84,11 +84,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:60dbc9ec-a645-4992-872e-e50f3be386b3",
-    "urn:uuid:441fc8bb-1953-4091-8bd2-e0828bde0cde"
+    "urn:uuid:d22ad490-835d-40b8-89bc-974461ada6a7",
+    "urn:uuid:8881ae79-d919-4ba3-ba59-53e53c2822c5"
   ],
-  "sampleId": "urn:uuid:e816fa3a-4822-4d84-8978-8daefd900743",
-  "sourceId": "urn:uuid:291eb9c2-3558-40c2-a5c0-b4131146321b",
+  "sampleId": "urn:uuid:16af72ab-4e72-4cb0-939b-6a2b72786058",
+  "sourceId": "urn:uuid:67ce4a2d-43aa-4213-9018-6a45bcb0f94b",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -133,8 +133,7 @@
         "frameRate": {
           "num": 24000,
           "denom": 1001
-        },
-        "subFrame": 0
+        }
       }
     }
   },
