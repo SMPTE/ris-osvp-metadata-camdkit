@@ -14,6 +14,7 @@ INT_MIN = -2147483648 # -2^31
 UINT_MAX = 4294967295 # 2^32 - 1
 UINT48_MAX = 281474976710655 # 2^48 - 1
 
+DEFAULT_SUB_FRAME = 0
 
 class Sampling(Enum):
   STATIC = "Static"   # Data that does not change for a Clip or across many Frames
@@ -51,14 +52,13 @@ class Rotator3:
 
 @dataclasses.dataclass
 class Transform:
-  """A translation, rotation and scale. 'id' and 'parentId' fields enable
-  geometry chains
+  """A translation, rotation and scale. 'id' optionally provides a
+  user-friendly name to help identify the transform in a chain.
   """
   translation: Vector3
   rotation: Rotator3
   scale: typing.Optional[Vector3] = None
   id: typing.Optional[str] = None
-  parentId: typing.Optional[str] = None
 
 @dataclasses.dataclass
 class FizEncoders:
@@ -211,7 +211,7 @@ class TimecodeFormat:
   sub_frame: int = 0
 
   def __init__(self, in_frame_rate: numbers.Rational,
-               in_sub_frame: int = 0):
+               in_sub_frame: int = DEFAULT_SUB_FRAME):
     # Constructor for convenience
     if in_frame_rate <= 0:
       raise ValueError
@@ -283,8 +283,7 @@ class DimensionsParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The height and width shall be each be real non-negative numbers.
-    """
+    """The height and width shall be each be real non-negative numbers."""
 
     if not isinstance(value, Dimensions):
       return False
@@ -363,12 +362,12 @@ class IntegerDimensionsParameter(DimensionsParameter):
         "height": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 2147483647
+            "maximum": INT_MAX
         },
         "width": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 2147483647
+            "maximum": INT_MAX
         }
       }
     }
@@ -398,7 +397,7 @@ class StringParameter(Parameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a Unicode string betwee 0 and 1023
+    """The parameter shall be a Unicode string between 0 and 1023
     codepoints.
     """
     return isinstance(value, str) and len(value) < 1024
@@ -519,7 +518,7 @@ class StrictlyPositiveRationalParameter(Parameter):
       "properties": {
         "num" : {
           "type": "integer",
-          "minimum": 0,
+          "minimum": 1,
           "maximum": INT_MAX
         },
         "denom" : {
@@ -598,8 +597,7 @@ class NonNegativeIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (0..4,294,967,295].
-    """
+    """The parameter shall be a integer in the range (0..4,294,967,295]."""
 
     return isinstance(value, numbers.Integral) and value >= 0
 
@@ -615,8 +613,7 @@ class StrictlyPositiveIntegerParameter(IntegerParameter):
 
   @staticmethod
   def validate(value) -> bool:
-    """The parameter shall be a integer in the range (1..4,294,967,295].
-    """
+    """The parameter shall be a integer in the range (1..4,294,967,295]."""
 
     return isinstance(value, numbers.Integral) and value > 0
 
@@ -638,7 +635,7 @@ class RealParameter(Parameter):
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return value
+    return float(value)
 
   @staticmethod
   def from_json(value: typing.Any) -> typing.Any:
@@ -663,6 +660,21 @@ class NonNegativeRealParameter(RealParameter):
     return {
       "type": "number",
       "minimum": 0.0,
+    }
+
+class StrictlyPositiveRealParameter(RealParameter):
+
+  @staticmethod
+  def validate(value) -> bool:
+    """The parameter shall be a real number greater than 0."""
+
+    return isinstance(value, numbers.Real) and value > 0.0
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
     }
 
 class GreaterEqualOneRealParameter(RealParameter):

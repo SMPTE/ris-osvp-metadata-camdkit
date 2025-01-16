@@ -132,7 +132,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
-    self.assertEqual(d["static"]["lens"]["distortionProjection"], False)
+    self.assertEqual(d["static"]["lens"]["distortionIsProjection"], False)
     self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
@@ -177,8 +177,8 @@ class ModelTest(unittest.TestCase):
                                                              { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
     self.assertTupleEqual(d["timing"]["sampleRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
-    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 }, "subFrame": 0 } },
-                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 }, "subFrame": 0 } }))
+    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 } } },
+                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 } } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
                   "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
@@ -709,10 +709,10 @@ class ModelTest(unittest.TestCase):
 
   def test_timecode_format(self):
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, True)), 24)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, 1)), 24)
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(25)), 25)
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30)), 30)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, True)), 30)
+    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, 1)), 30)
     with self.assertRaises(TypeError):
       TimecodeFormat()
     with self.assertRaises(ValueError):
@@ -738,10 +738,10 @@ class ModelTest(unittest.TestCase):
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,60,4,TimecodeFormat(24))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,-1,TimecodeFormat(24))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, True))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, 1))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, True))))
+    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, 1))))
     self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(120))))
     self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(121))))
@@ -773,8 +773,7 @@ class ModelTest(unittest.TestCase):
         "frameRate": {
           "num": 24,
           "denom": 1
-        },
-        "subFrame": 0,
+        }
       }
     })
 
@@ -1173,3 +1172,24 @@ class ModelTest(unittest.TestCase):
     clip.timing_synchronization = (sync, )
     sync.ptp.master = "ab:CD:eF:23:45:67"
     clip.timing_synchronization = (sync, )
+
+  # def test_make_documentation(self):
+  #
+  #   def print_doc_entry(entry, fp) -> None:
+  #     for key in ("python_name",
+  #                 "canonical_name",
+  #                 "description",
+  #                 "constraints",
+  #                 "sampling",
+  #                 "section",
+  #                 "units"):
+  #       print(f"{key}: {entry[key]}", file=fp)
+  #
+  #   doc: list[dict[str, str]] = Clip.make_documentation()
+  #   sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
+  #   print(f"sorted_doc has {len(sorted_doc)} items")
+  #   with open("/tmp/classic-doc.txt", "w") as fp:
+  #     for doc_entry in sorted_doc:
+  #       print_doc_entry(doc_entry, fp)
+  #
+  #   self.assertTrue(len(doc) > 0)

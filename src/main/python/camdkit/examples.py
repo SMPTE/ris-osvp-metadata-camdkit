@@ -131,6 +131,7 @@ def _get_complete_dynamic_clip():
   clip.timing_recorded_timestamp = (Timestamp(1718806000, 500000000),)
   clip.timing_sequence_number = (0,)
   clip.timing_synchronization = (Synchronization(
+    frequency=Fraction(24000,1001),
     present=True,
     locked=True,
     source=SynchronizationSourceEnum.PTP,
@@ -143,7 +144,14 @@ def _get_complete_dynamic_clip():
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
+  v = Vector3(x=1.0, y=2.0, z=3.0)
+  r = Rotator3(pan=180.0, tilt=90.0, roll=45.0)
+  clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
+                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm"),
+                      Transform(translation=v, rotation=r, scale=v, id="Camera")
+                      ),)
   #   lens
+  clip.lens_f_number = (4.0,)
   clip.lens_t_number = (4.1,)
   clip.lens_raw_encoders = (RawFizEncoders(focus=1000, iris=2000, zoom=3000),)
   clip.lens_distortion_overscan = (1.1,)

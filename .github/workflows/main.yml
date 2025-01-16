@@ -69,6 +69,7 @@ jobs:
           publish_dir: build/
 
       - name: Configure AWS Credentials
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_RIS_PUB_ROLE }}
@@ -90,6 +91,7 @@ jobs:
           aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}
 
       - name: Configure AWS Credentials
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_OPENTRACKIO_ROLE }}
