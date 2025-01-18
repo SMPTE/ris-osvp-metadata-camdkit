@@ -106,7 +106,7 @@
                 <li>Consumers to receive multiple data streams over a single network interface.</li>
             </ul>
             
-            <h5>Example 1</h5>
+            <h5>Example</h5>
             <p>In the example above, using a Producer with Source Number 14:</p>
             <ul>
                 <li><strong>IP Octet 1:</strong> 235</li>
@@ -145,7 +145,7 @@
             </p>
             
             <h4>Packet Header</h4>
-            <p>When using UDP transport, each packet should include the header below:</p>
+            <p>When using UDP or serial transport, each packet should include the header below:</p>
             <p>
                 <table>
                   <thead>
@@ -204,15 +204,6 @@
                   </tbody>
                 </table>
             </p>
-            
-            <h3>Real-time Transport Protocol (RTP)</h3>
-            
-            <p>In addition to UDP, OpenTrackIO also supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
-            <img src="img/RTP_Transport.svg">
-            <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
-            <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO Producer.</p>
-            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>sourceIds / sourceNumbers</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
-            <p>Specification and reference examples of session and transport will be included in future releases.</p>
             
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
