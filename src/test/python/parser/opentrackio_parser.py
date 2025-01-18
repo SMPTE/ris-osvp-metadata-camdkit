@@ -52,14 +52,13 @@ def main():
         print("Usage: python3 opentrackio_parser.py --file=opentrackio_sample.json --schema=opentrackio_schema.json")
         exit (-1)
 
-    sample = OpenTrackIOProtocol(sample_text,schematext,verbose) # a "Sample" is a de-serialized JSON object containing the protocol
-    sample.parse()                # parse the actual JSON of the protocol
-    sample.import_schema()        # read the schema which governs the interpretation of the protocol
+    sample = OpenTrackIOProtocol(schematext,verbose) # a "Sample" is a de-serialized JSON object containing the protocol
+    sample.parse_json(sample_text)                # parse the actual JSON of the protocol
 
-    sample.set_translation_units("cm")              # end-user preferred units
-    sample.set_sample_time_format("sec")
-    sample.set_focus_distance_units("cm")
-    sample.set_rotation_units("deg")
+    sample.set_translation_units(TranslationUnit.CENTIMETER)              # end-user preferred units
+    sample.set_sample_time_format(TimeFormat.SECONDS)
+    sample.set_focus_distance_units(FocusDistanceUnit.CENTIMETER)
+    sample.set_rotation_units(RotationUnit.DEGREE)
     print()
 
     print("Detected protocol: {} version: {}".format(sample.get_protocol_name(), sample.get_protocol_version()))
@@ -71,10 +70,8 @@ def main():
     print("At a camera frame rate of: {:.5}".format(framerate))
     print()
     print("Sample time PTP time is: {} sec".format(sample.get_sample_time()))
-    sample.set_sample_time_format("string")        # end-user preferred units.
-    print("Sample time PTP as a string: {}".format(sample.get_sample_time()))
-    sample.set_sample_time_format("timecode")        # end-user preferred units.
-    print("Sample time PTP as timecode: {}".format(sample.get_sample_time()))
+    print("Sample time PTP as a string: {}".format(sample.get_sample_time(TimeFormat.STRING)))
+    print("Sample time PTP as timecode: {}".format(sample.get_sample_time(TimeFormat.TIMECODE)))
     print("Sample time PTP elements: {} {} {} {} {} {}".format(sample.get_sample_time('yy'),
         sample.get_sample_time('dd'),
         sample.get_sample_time('hh'),
@@ -88,18 +85,18 @@ def main():
         print("Tracking device serial number: {}".format(snum))
     else:
         print("Unknown tracking device, wait for static sample to come in...")
-    posX = sample.get_camera_translation('x')
-    posY = sample.get_camera_translation('y')
-    posZ =sample.get_camera_translation('z')
+    posX = sample.get_camera_translation(Translation.X)
+    posY = sample.get_camera_translation(Translation.Y)
+    posZ =sample.get_camera_translation(Translation.Z)
     print("Camera position is: ({},{},{}) cm".format(posX, posY, posZ))
-    rotX = sample.get_camera_rotation('p')
-    rotY = sample.get_camera_rotation('t')
-    rotZ = sample.get_camera_rotation('r')
+    rotX = sample.get_camera_rotation(Rotation.PAN)
+    rotY = sample.get_camera_rotation(Rotation.TILT)
+    rotZ = sample.get_camera_rotation(Rotation.ROLL)
     print("Camera rotation is: ({},{},{}) deg".format(rotX, rotY, rotZ))
-    sample.set_rotation_units("rad")
-    rotX = sample.get_camera_rotation('p')
-    rotY = sample.get_camera_rotation('t')
-    rotZ = sample.get_camera_rotation('r')
+    sample.set_rotation_units(RotationUnit.RADIAN)
+    rotX = sample.get_camera_rotation(Rotation.PAN)
+    rotY = sample.get_camera_rotation(Rotation.TILT)
+    rotZ = sample.get_camera_rotation(Rotation.ROLL)
     print("Camera rotation is: ({:.5},{:.5},{:.5}) radians".format(rotX, rotY, rotZ))
     print()
 

@@ -180,7 +180,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 } } },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 } } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
-                  "ptp": {"offset":0.0,"domain":1,"master": "00:11:22:33:44:55"},
+                  "ptp": {"offset":0.0,"domain":1,"leader": "00:11:22:33:44:55"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
@@ -1133,25 +1133,25 @@ class ModelTest(unittest.TestCase):
     clip = Clip()
     sync.ptp = SynchronizationPTP()
     with self.assertRaises(ValueError):
-      sync.ptp.master = ""
+      sync.ptp.leader = ""
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = "00:"
+      sync.ptp.leader = "00:"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = "00:00:00:00:00"
+      sync.ptp.leader = "00:00:00:00:00"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = ":00:00:00:00:00:00"
+      sync.ptp.leader = ":00:00:00:00:00:00"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = "12:12:12:12:12:12:12"
+      sync.ptp.leader = "12:12:12:12:12:12:12"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = "we:te:as:te:gd:ds"
+      sync.ptp.leader = "we:te:as:te:gd:ds"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
-      sync.ptp.master = "WE:TE:AS:TE:GD:DS"
+      sync.ptp.leader = "WE:TE:AS:TE:GD:DS"
       clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
       sync.ptp.offset = "1"
@@ -1168,9 +1168,9 @@ class ModelTest(unittest.TestCase):
 
     sync.ptp.domain = 0
     sync.ptp.offset = 0.0
-    sync.ptp.master = "00:00:00:00:00:00"
+    sync.ptp.leader = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
-    sync.ptp.master = "ab:CD:eF:23:45:67"
+    sync.ptp.leader = "ab:CD:eF:23:45:67"
     clip.timing_synchronization = (sync, )
 
   # def test_make_documentation(self):

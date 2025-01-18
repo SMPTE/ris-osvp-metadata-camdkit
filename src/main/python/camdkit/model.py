@@ -560,9 +560,9 @@ class TimingSynchronization(Parameter):
   present: Is the synchronization source present (a synchronization
   source can be present but not locked if frame rates differ for
   example)
-  ptp: If the synchronization source is a PTP master, then this object
+  ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - "master": The MAC address of the PTP master
+  - "leader": The MAC address of the PTP leader
   - "offset": The timing offset in seconds from the sample timestamp to
   the PTP timestamp
   - "domain": The PTP domain number
@@ -573,7 +573,7 @@ class TimingSynchronization(Parameter):
   tracking samples
   - "videoIn": The tracking device has an external video signal that is
   triggering the capture of tracking samples
-  - "ptp": The tracking device is locked to a PTP master
+  - "ptp": The tracking device is locked to a PTP leader
   - "ntp": The tracking device is locked to an NTP server
   """
   
@@ -596,9 +596,9 @@ class TimingSynchronization(Parameter):
         return False
     if value.ptp != None:
       # Validate MAC address
-      if value.ptp.master != None and not (isinstance(value.ptp.master,str) and 
+      if value.ptp.leader != None and not (isinstance(value.ptp.leader,str) and 
                                            re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$",
-                                           value.ptp.master.lower())):
+                                           value.ptp.leader.lower())):
         return False
       if value.ptp.offset != None and not isinstance(value.ptp.offset, float):
         return False
@@ -673,7 +673,7 @@ class TimingSynchronization(Parameter):
           "type": "object",
           "additionalProperties": False,
           "properties": {
-            "master": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
+            "leader": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
             "offset": { "type": "number" },
             "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
           }

@@ -138,7 +138,7 @@ def _get_complete_dynamic_clip():
     ptp=SynchronizationPTP(
       offset=0.0,
       domain=1,
-      master="00:11:22:33:44:55"
+      leader="00:11:22:33:44:55"
     ),
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)
