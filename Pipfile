@@ -11,3 +11,5 @@ jinja2 = "*"
 
 [requires]
 python_version = "3.11"
+pydantic = "*"
+jsonref = "*"
