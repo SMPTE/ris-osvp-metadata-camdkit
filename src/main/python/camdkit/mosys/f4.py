@@ -215,7 +215,7 @@ class F4PacketParser:
           case F4.FIELD_ID_HEIGHT:
             translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_ENTRANCE_PUPIL:
-            frame.lens_entrance_pupil_distance = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
+            frame.lens_entrance_pupil_offset = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K1:
             k1 = self._axis_block_to_lens_param(axis_block)

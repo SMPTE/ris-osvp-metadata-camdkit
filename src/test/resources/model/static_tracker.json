@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "firmwareVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string identifying tracking device firmware version"
+    },
+    "make": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string naming tracking device manufacturer"
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string identifying tracking device model"
+    },
+    "serialNumber": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string uniquely identifying the tracking device"
+    }
+  }
+}

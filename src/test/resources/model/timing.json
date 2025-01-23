@@ -1,0 +1,233 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external"
+      ],
+      "description": "Enumerated value indicating whether the sample transport mechanism\nprovides inherent ('external') timing, or whether the transport\nmechanism lacks inherent timing and so the sample must contain a PTP\ntimestamp itself ('internal') to carry timing information.\n"
+    },
+    "recordedTimestamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 281474976710655
+        },
+        "nanoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "seconds",
+        "nanoseconds"
+      ],
+      "description": "PTP timestamp of the data recording instant, provided for convenience\nduring playback of e.g. pre-recorded tracking data. The timestamp\ncomprises a 48-bit unsigned integer (seconds), a 32-bit unsigned\ninteger (nanoseconds)\n",
+      "units": "second"
+    },
+    "sampleRate": {
+      "type": "object",
+      "properties": {
+        "num": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "denom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "num",
+        "denom"
+      ],
+      "additionalProperties": false,
+      "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should is estimated from the last sample delta time.\n"
+    },
+    "sampleTimestamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 281474976710655
+        },
+        "nanoseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "seconds",
+        "nanoseconds"
+      ],
+      "description": "PTP timestamp of the data capture instant. Note this may differ\nfrom the packet's transmission PTP timestamp. The timestamp\ncomprises a 48-bit unsigned integer (seconds), a 32-bit unsigned\ninteger (nanoseconds)\n",
+      "units": "second"
+    },
+    "sequenceNumber": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Integer incrementing with each sample."
+    },
+    "synchronization": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP leader, then this object\ncontains:\n- \"leader\": The MAC address of the PTP leader\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP leader\n- \"ntp\": The tracking device is locked to an NTP server\n",
+      "properties": {
+        "frequency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "num",
+            "denom"
+          ],
+          "properties": {
+            "num": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "denom": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          }
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "offsets": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "translation": {
+              "type": "number"
+            },
+            "rotation": {
+              "type": "number"
+            },
+            "lensEncoders": {
+              "type": "number"
+            }
+          }
+        },
+        "present": {
+          "type": "boolean"
+        },
+        "ptp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "leader": {
+              "type": "string",
+              "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
+            },
+            "offset": {
+              "type": "number"
+            },
+            "domain": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 127
+            }
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "genlock",
+            "videoIn",
+            "ptp",
+            "ntp"
+          ]
+        }
+      },
+      "required": [
+        "locked",
+        "source"
+      ]
+    },
+    "timecode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hours",
+        "minutes",
+        "seconds",
+        "frames",
+        "format"
+      ],
+      "properties": {
+        "hours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "frames": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 119
+        },
+        "format": {
+          "type": "object",
+          "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
+          "required": [
+            "frameRate"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "frameRate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "num",
+                "denom"
+              ],
+              "properties": {
+                "num": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                },
+                "denom": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                }
+              }
+            },
+            "subFrame": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          }
+        }
+      },
+      "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.\n- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n"
+    }
+  }
+}
