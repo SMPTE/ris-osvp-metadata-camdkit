@@ -117,8 +117,8 @@ def _get_complete_dynamic_clip():
   #   transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm", parentId="Dolly"),
-                      Transform(translation=v, rotation=r, scale=v, id="Camera", parentId="Crane Arm")
+                      Transform(translation=v, rotation=r, scale=v, id="Crane Arm"),
+                      Transform(translation=v, rotation=r, scale=v, id="Camera")
                       ),)
   #   lens
   clip.lens_distortions = ((Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady D-U"), Distortion([1.0,2.0,3.0,4.0,5.0,6.0], [1.0,2.0], "Brown-Conrady U-D"),),)
@@ -138,7 +138,7 @@ def _get_complete_dynamic_clip():
     ptp=SynchronizationPTP(
       offset=0.0,
       domain=1,
-      master="00:11:22:33:44:55"
+      leader="00:11:22:33:44:55"
     ),
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)
