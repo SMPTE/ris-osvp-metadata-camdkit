@@ -89,7 +89,7 @@ In classic `camdkit` this requirement is not expressed by the `make_json_schema(
 
 This conforms to what we require of other string parameters as well.
 
-### PTP master regex allows lower and upper case hex, and '-' separators
+### PTP leader regex allows lower and upper case hex, and '-' separators
 
 I am having trouble finding my references here, but I believe I've seen normative use of both upper-case and lower-case
 hex letters (_i.e._ both A-F and a-f) and both colon and hyphen separators.
