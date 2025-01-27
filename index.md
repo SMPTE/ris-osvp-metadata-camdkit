@@ -286,7 +286,7 @@ The parameter shall be a integer in the range (1..4,294,967,295].
 
 #### Description
 
-This list provides optional additional custom coefficients that can
+This list provides optional additional custom coefficients that can 
   extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
@@ -1009,9 +1009,9 @@ Object describing how the tracking device is synchronized for this
   present: Is the synchronization source present (a synchronization
   source can be present but not locked if frame rates differ for
   example)
-  ptp: If the synchronization source is a PTP master, then this object
+  ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - "master": The MAC address of the PTP master
+  - "leader": The MAC address of the PTP leader
   - "offset": The timing offset in seconds from the sample timestamp to
   the PTP timestamp
   - "domain": The PTP domain number
@@ -1022,7 +1022,7 @@ Object describing how the tracking device is synchronized for this
   tracking samples
   - "videoIn": The tracking device has an external video signal that is
   triggering the capture of tracking samples
-  - "ptp": The tracking device is locked to a PTP master
+  - "ptp": The tracking device is locked to a PTP leader
   - "ntp": The tracking device is locked to an NTP server
   
 
@@ -1567,7 +1567,7 @@ The following table indicates the camera parameters supported by each of the rea
           "items": {
             "type": "number"
           },
-          "description": "This list provides optional additional custom coefficients that can extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
+          "description": "This list provides optional additional custom coefficients that can  extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. "
         },
         "distortionOffset": {
           "type": "object",
@@ -1910,7 +1910,7 @@ The following table indicates the camera parameters supported by each of the rea
         "synchronization": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \"master\": The MAC address of the PTP master - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP master - \"ntp\": The tracking device is locked to an NTP server ",
+          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \"leader\": The MAC address of the PTP leader - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP leader - \"ntp\": The tracking device is locked to an NTP server ",
           "properties": {
             "frequency": {
               "type": "object",
@@ -1957,7 +1957,7 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "master": {
+                "leader": {
                   "type": "string",
                   "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
                 },

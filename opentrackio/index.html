@@ -35,7 +35,7 @@
             <p>In Virtual Production it is critical that the camera capture, the tracking data, and the lens data are synchronized in space and time to accurately reproduce the visual effect. A sample of the OpenTrackIO protocol contains all the required data in the appropriate formats to achieve this.</p>
             
             <h2>The OpenTrackIO protocol</h2>
-            <p>This documentation is designed for those producing and consuming tracking data. Components that generate and transmit tracking data are referred to as Producers. Components that receive and act upon tracking data are referred to as Consumers. Multiple Producers and Consumers may coexist on the same network at the same time, and a Producer can send multiple concurrent Streams of data. There may also be multiple Consumers of a single Producer's data. In the AR example above, the camera tracking system is the Producer and the render engine is the Consumer.</p>
+            <p>This documentation is designed for those producing and consuming tracking data. Components that generate and transmit tracking data are referred to as Producers. Components that receive and act upon tracking data are referred to as Consumers. Multiple Producers and Consumers may coexist on the same network at the same time, and a Producer can send multiple concurrent streams of data. There may also be multiple Consumers of a single Producer's data. In the AR example above, the camera tracking system is the Producer and the render engine is the Consumer.</p>
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the Consumer (although for high-quality tracking for Virtual Production see the recommended set of fields in the samples <a href="#recommended">below</a>).</p>
             <p>OpenTrackIO employs a right-handed coordinate system where the Z-axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example, in an LED volume Y would point towards the centre of the LED wall and X would point towards camera-right.</p>
@@ -87,8 +87,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:9c4cc414-eaa2-4374-b9fb-917271ecd63f&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:a1cae44c-dcb7-48e8-a75f-f43d214b911d&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:45c4d3bd-c444-4b22-8d05-9498b2961084&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:d7ebe9d2-e610-453b-bab4-aba52c34bb58&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -135,7 +135,7 @@
             </div>
 
             <h2>Providing additional static data</h2>
-            <p>It is recommended that a static metadata object is added to a sample approximately every 2 seconds. This additional metadata describes the context of the samples in the stream, with data that may change - for example - every take, but will not change every frame.</p>
+            <p>It is recommended that a static metadata object is added to a sample approximately every 2 seconds. This additional metadata describes the context of the samples in the source, with data that may change - for example - every take, but will not change every frame.</p>
             <button class="collapsible">Recommended minimum VP example with static data</button>
             <div class="content">
                 <pre><code>{
@@ -188,8 +188,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:e3effa66-40cb-4630-ac72-c9ce7a9068bf&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:2b3de806-aebd-4e0e-9c6b-cda1fd6156e2&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:aadd65f1-9c1e-49cf-b2ce-f5535cb7ae0e&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:f474dec9-c2a4-4c72-81f1-5a65620f8fe3&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -263,7 +263,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:d79c2542-0e2c-4abe-bef7-c778a9373a80&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:f422c420-db6e-48b9-87c0-3cce054a14d6&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -372,11 +372,11 @@
     ]
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:91fe114a-1dab-4ef7-959d-bdfc4e3a9788&#34;,
-    &#34;urn:uuid:d58eee1e-cacf-4198-83ba-75142f8fc303&#34;
+    &#34;urn:uuid:21b04865-5f47-4837-a585-5e946411f0f3&#34;,
+    &#34;urn:uuid:a64139cb-801b-40f0-af1f-218de4775282&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:d4e74189-ca63-4072-9795-005fc04cf450&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:ba402556-9838-4003-99a0-cafc0567c4ba&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:e518b5db-0b6f-42f2-8288-435989ec4598&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:e02e3150-8f69-430c-acce-2c8db25eebea&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;internal&#34;,
@@ -408,7 +408,7 @@
       &#34;present&#34;: true,
       &#34;ptp&#34;: {
         &#34;domain&#34;: 1,
-        &#34;master&#34;: &#34;00:11:22:33:44:55&#34;,
+        &#34;leader&#34;: &#34;00:11:22:33:44:55&#34;,
         &#34;offset&#34;: 0.0
       }
     },
@@ -491,10 +491,10 @@
             </div>
             
             <h2>Transport recommendations</h2>
-            <h3>UDP Multicast</h3>
-            <p>When not used in combination with RTP or SMPTE 2110-41/42, OpenTrackIO can operate over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
-            <h4>Multicast Addressing</h4>
-            <p>OpenTrackIO Producers use multicast addressing to deliver messages  to Consumers. The use of unicast addressing is not recommended.</p>
+            <h3>UDP</h3>
+            <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
+            <h4>IP Addressing</h4>
+            <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed, but implementation details are currently outside the scope of this document.</p>
             
             <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
                 
@@ -512,15 +512,22 @@
                         <td>235</td>
                         <td>135</td>
                         <td>1</td>
-                        <td>Stream Number</td>
+                        <td>Source Number</td>
                     </tr>
                 </tbody>
             </table>
                 
-            <p>Stream Number is a user-configurable 8-bit value between 1 and 200 that is used to generate the multicast IP address for a specific Stream from a specific Producer. This ensures that Producers and Consumers can send and receive data for a specific Stream Number without requiring prior knowledge of the network topology, or without knowing the specific IP address of a Producer or Consumer. It also ensures that a single Producer can send out multiple Streams to different Consumers. The Stream Number is used to form the 4th octet of the IP address.</p>
+            <p>
+                The <strong>Source Number</strong> is a user-configurable 8-bit value (1–200) that determines the multicast IP address for a specific Source from a Producer. By embedding the Source Number in the 4th octet of the multicast IP address, this mechanism enables Producers and Consumers to exchange data for a given Source without requiring prior knowledge of the network topology or specific IP addresses.
+            </p>
+            <p>This design allows:</p>
+            <ul>
+                <li>A single Producer to transmit multiple Sources to multiple Consumers.</li>
+                <li>Consumers to receive multiple data streams over a single network interface.</li>
+            </ul>
             
-            <h5>Example 1</h5>
-            <p>In the example above, using a Producer with Stream Number 14:</p>
+            <h5>Example</h5>
+            <p>In the example above, using a Producer with Source Number 14:</p>
             <ul>
                 <li><strong>IP Octet 1:</strong> 235</li>
                 <li><strong>IP Octet 2:</strong> 135</li>
@@ -528,24 +535,95 @@
                 <li><strong>IP Octet 4:</strong> 14</li>
             </ul>
             
-            <p>The Stream Number identifies a Stream of data from a specific Producer and should <strong>not</strong> be inferred from the multicast address. Stream Numbers above 200 are reserved for future expansion of the OpenTrackIO protocol and may not be used.</p>
-            
-            <p>The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary based on local network requirements.</p> 
-            
-            <p>Consumers must handle identical multicast messages consistently. If a Consumers receives the same message multiple times, it should process only one instance.</p>
-            <p>OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included in a future version.</p>
+            <p>
+                The <strong>Source Number</strong> is a configurable, user-assignable value that is unique within an OpenTrackIO network. 
+                It identifies a specific Source of data from a particular Producer. The Source Number must be explicitly configured and 
+                should <strong>not</strong> be inferred from the multicast address. Source Numbers above <strong>200</strong> are reserved 
+                for future expansion of the OpenTrackIO protocol and may not be used. Consumers shall discard any messages containing a 
+                Source Number of <strong>0</strong> or <strong>201–255</strong>.
+            </p>
+            <p>
+                The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary 
+                based on local network requirements.
+            </p>
+            <p>
+                Consumers must handle identical multicast messages consistently. If a Consumer receives the same message multiple times, 
+                it should process only one instance.
+            </p>
+            <p>
+                OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply 
+                should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines 
+                for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included 
+                in a future version.
+            </p>
             
             <h4>Multicast Subscription</h4>
-            <p>Components must implement IGMP V2 or any subsequent version that supports its functionality. This protocol communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across large and complex networks.</p>
+            <p>
+                Components must implement <strong>IGMP V2</strong> or any subsequent version that supports its functionality. This protocol 
+                communicates multicast address usage to the network infrastructure, ensuring correct delivery of multicast traffic across 
+                large and complex networks.
+            </p>
             
-            <h3>Real-time Transport Protocol (RTP)</h3>
-            
-            <p>OpenTrackIO supports encapsulation of samples in RTP for ease of wired or wireless transmission in a production environment. A sample is a JSON object that can be encoded in CBOR (a lossless binary JSON compression format) and then wrapped in an RTP packet for transmission over UDP.</p>
-            <img src="img/RTP_Transport.svg">
-            <p>Note that the RTP header need not be relied upon as all the required data is inside the content of the OpenTrackIO sample</p>
-            <p>Further encapsulation is then possible if required with SMPTE 2110-41 and packets can be timestamped with PTP. Unicast or multicast transmission should be supported by an OpenTrackIO Producer.</p>
-            <p>In the case where a device has multiple sensors with different frequencies or timing offsets, it is recommended that these be sent in separate samples indicating with different <i>sourceIds / sourceNumbers</i>, and utilizing the <i>relatedSamples</i> parameter.</p>
-            <p>Specification and reference examples of session and transport will be included in future releases.</p>
+            <h4>Packet Header</h4>
+            <p>When using raw UDP or serial transport, each packet should include the header below:</p>
+            <p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Bit Offset</th>
+                      <th>Field</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0-31</td>
+                      <td>Identifier</td>
+                      <td>4 bytes: Static value to indicate OpenTrackIO packet, set to ASCII "OTrk" (<code>0x4F54726B</code>)</td>
+                    </tr>
+                    <tr>
+                      <td>32-39</td>
+                      <td>Reserved</td>
+                      <td>1 byte: This field is reserved for future use and should be ignored by both Producers and Consumers.</td>
+                    </tr>
+                    <tr>
+                      <td>40-47</td>
+                      <td>Encoding</td>
+                      <td>1 byte: Indicates the payload format (e.g., JSON = <code>0x01</code>, CBOR = <code>0x02</code>, OTP = <code>0x02</code>). <code>0x80</code> and above are reserved for vendor specific protocols.</td>
+                    </tr>
+                    <tr>
+                      <td>48-63</td>
+                      <td>Sequence number</td>
+                      <td>1 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
+                    </tr>
+                    <tr>
+                      <td>64–95</td>
+                      <td>Segment offset</td>
+                      <td>4 bytes: A 32-bit field indicating the byte offset of this payload segment when the overall payload length necessitates segmentation. Must be set to <code>0x00</code> for single-segment payloads.</td>
+                    </tr>
+                    <tr>
+                      <td>96</td>
+                      <td>Last segment flag</td>
+                      <td>This bit shall be set to <code>1</code> if this is the only segment or the last segment in a segmented payload, or<code>0</code> if more segments are expected.</td>
+                    </tr>
+                    <tr>
+                      <td>97–111</td>
+                      <td>Payload Length</td>
+                      <td>15 bits: Total length of the payload for the current packet (in bytes).</td>
+                    </tr>
+                    <tr>
+                      <td>112–127</td>
+                      <td>Checksum (Fletcher16)</td>
+                      <td>2 bytes: A 16-bit checksum computed using the Fletcher-16 algorithm, covering the header (excluding checksum bytes) and payload.</td>
+                    </tr>
+                    <tr>
+                      <td>128+</td>
+                      <td>Payload</td>
+                      <td>The actual JSON or CBOR OpenTrackIO packet (or a segment thereof)  data starts here</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </p>
             
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
@@ -610,7 +688,7 @@
                     
                     <tr><td>isoSpeed</td><td>camera</td><td>Static</td><td>Arithmetic ISO scale as defined in ISO 12232</td><td>None</td><td>The parameter shall be a integer in the range (1..4,294,967,295].</td></tr>
                     
-                    <tr><td>custom</td><td>lens</td><td>Regular</td><td>This list provides optional additional custom coefficients that can
+                    <tr><td>custom</td><td>lens</td><td>Regular</td><td>This list provides optional additional custom coefficients that can 
   extend the existing lens model. The meaning of and how these characteristics
   are to be applied to a virtual camera would require negotiation between a
   particular producer and consumer.
@@ -805,9 +883,9 @@
   present: Is the synchronization source present (a synchronization
   source can be present but not locked if frame rates differ for
   example)
-  ptp: If the synchronization source is a PTP master, then this object
+  ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - &#34;master&#34;: The MAC address of the PTP master
+  - &#34;leader&#34;: The MAC address of the PTP leader
   - &#34;offset&#34;: The timing offset in seconds from the sample timestamp to
   the PTP timestamp
   - &#34;domain&#34;: The PTP domain number
@@ -818,7 +896,7 @@
   tracking samples
   - &#34;videoIn&#34;: The tracking device has an external video signal that is
   triggering the capture of tracking samples
-  - &#34;ptp&#34;: The tracking device is locked to a PTP master
+  - &#34;ptp&#34;: The tracking device is locked to a PTP leader
   - &#34;ntp&#34;: The tracking device is locked to an NTP server
   </td><td>None</td><td>The parameter shall contain the required valid fields.</td></tr>
                     
@@ -1185,7 +1263,7 @@
           &#34;items&#34;: {
             &#34;type&#34;: &#34;number&#34;
           },
-          &#34;description&#34;: &#34;This list provides optional additional custom coefficients that can extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. &#34;
+          &#34;description&#34;: &#34;This list provides optional additional custom coefficients that can  extend the existing lens model. The meaning of and how these characteristics are to be applied to a virtual camera would require negotiation between a particular producer and consumer. &#34;
         },
         &#34;distortionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1528,7 +1606,7 @@
         &#34;synchronization&#34;: {
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP master, then this object contains: - \&#34;master\&#34;: The MAC address of the PTP master - \&#34;offset\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;domain\&#34;: The PTP domain number source: The source of synchronization must be defined as one of the following: - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP master - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
+          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \&#34;leader\&#34;: The MAC address of the PTP leader - \&#34;offset\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;domain\&#34;: The PTP domain number source: The source of synchronization must be defined as one of the following: - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP leader - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
           &#34;properties&#34;: {
             &#34;frequency&#34;: {
               &#34;type&#34;: &#34;object&#34;,
@@ -1575,7 +1653,7 @@
               &#34;type&#34;: &#34;object&#34;,
               &#34;additionalProperties&#34;: false,
               &#34;properties&#34;: {
-                &#34;master&#34;: {
+                &#34;leader&#34;: {
                   &#34;type&#34;: &#34;string&#34;,
                   &#34;pattern&#34;: &#34;(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)&#34;
                 },
@@ -1790,7 +1868,14 @@
             <p><strong>Authored by SMPTE RIS OSVP</strong></p>
             <img src="img/RISLogoFinalwhiteColor.png" class="footerLogo" />
             <p>The OpenTrackIO documentation is generated by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a></p>
-            <p>Lead author: <a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</p>
+            <p>Authors: 
+                <ul>
+                    <li><a href="mailto:info@mo-sys.com">James Uren</a>, Mo-Sys</li>
+                    <li><a href="mailto:marcus@originalsyndicate.com">Marcus Bengtsson</a>, Original Syndicate</li>
+                    <li><a href="mailto:steve@conceptoverdrive.com">Steve Rosenbluth</a>, Concept Overdrive</li>
+                    <li><a href="ailto:info@trackmen.de">Hendrik Fehlis</a>, TrackMen</li>
+                </ul>
+            </p>
         </div>
     </div>
     

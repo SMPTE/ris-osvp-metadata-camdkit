@@ -48,8 +48,8 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:e3effa66-40cb-4630-ac72-c9ce7a9068bf",
-  "sourceId": "urn:uuid:2b3de806-aebd-4e0e-9c6b-cda1fd6156e2",
+  "sampleId": "urn:uuid:aadd65f1-9c1e-49cf-b2ce-f5535cb7ae0e",
+  "sourceId": "urn:uuid:f474dec9-c2a4-4c72-81f1-5a65620f8fe3",
   "sourceNumber": 1,
   "timing": {
     "mode": "external",
