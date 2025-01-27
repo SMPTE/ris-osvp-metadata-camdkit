@@ -1,7 +1,7 @@
 // opentrackIOlib.h
 //
 // Reference code for decoding opentrackIO messages
-// Copyright (c) 2024 Steve Rosenbluth, RiS OSVP camera tracking committee
+// Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 //
 // License: this code is open-source under the FreeBSD License
 //
