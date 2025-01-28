@@ -1212,6 +1212,12 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.leader_priorities = SynchronizationPTPPriorities("1","1")
       clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = SynchronizationPTPPriorities(256,1)
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = SynchronizationPTPPriorities(1,256)
+      clip.timing_synchronization = (sync, )
     sync.ptp.leader_priorities = SynchronizationPTPPriorities(128,128)
     with self.assertRaises(ValueError):
       sync.ptp.leader_accuracy = ""

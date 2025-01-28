@@ -186,8 +186,10 @@ class SynchronizationPTPPriorities:
   priority2: typing.Optional[int]
   
   def validate(self):
-    return all([isinstance(self.priority1, int) and self.priority1 >= 0,
-                isinstance(self.priority2, int) and self.priority2 >= 0])
+    return all([isinstance(self.priority1, int) and 
+                self.priority1 >= 0 and self.priority1 < 256,
+                isinstance(self.priority2, int) and
+                self.priority2 >= 0 and self.priority2 < 256])
 
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
@@ -262,8 +264,8 @@ class SynchronizationPTP:
           "type": "object",
           "additionalProperties": False,
           "properties": {
-            "priority1": { "type": "integer", "minimum": 0 },
-            "priority2": { "type": "integer", "minimum": 0 },
+            "priority1": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "priority2": { "type": "integer", "minimum": 0, "maximum": 255 },
           },
           "required": ["priority1", "priority2"]
         },
