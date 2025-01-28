@@ -1011,12 +1011,28 @@ Object describing how the tracking device is synchronized for this
   example)
   ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - "leader": The MAC address of the PTP leader
-  - "offset": The timing offset in seconds from the sample timestamp to
-  the PTP timestamp
-  - "domain": The PTP domain number
+  - "profile": Specifies the PTP profile in use. This defines the operational
+  rules and parameters for synchronization. For example "SMPTE ST2059-2:2021"
+  for SMPTE 2110 based systems, or "IEEE Std 1588-2019" or
+  "IEEE Std 802.1AS-2020" for industrial applications
+  - "domain": Identifies the PTP domain the device belongs to. Devices in the
+  same domain can synchronize with each other
+  - "leaderIdentity": The unique identifier (usually MAC address) of the
+  current PTP leader (grandmaster)
+  - "leaderPriorities": The priority values of the leader used in the Best
+  Master Clock Algorithm (BMCA). Lower values indicate higher priority
+  - "priority1": Static priority set by the administrator
+  - "priority2": Dynamic priority based on the leader's role or clock quality
+  - "leaderAccuracy": The timing offset in seconds from the sample timestamp
+  to the PTP timestamp
+  - "meanPathDelay": The average round-trip delay between the device and the
+  PTP leader, measured in seconds
   source: The source of synchronization must be defined as one of the
   following:
+  - "vlan": Integer representing the VLAN ID for PTP traffic (e.g., 100 for
+  VLAN 100)
+  - "timeSource": Indicates the leader's source of time, such as GNSS, atomic
+  clock, or NTP
   - "genlock": The tracking device has an external black/burst or
   tri-level analog sync signal that is triggering the capture of
   tracking samples
@@ -1910,7 +1926,7 @@ The following table indicates the camera parameters supported by each of the rea
         "synchronization": {
           "type": "object",
           "additionalProperties": false,
-          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \"leader\": The MAC address of the PTP leader - \"offset\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"domain\": The PTP domain number source: The source of synchronization must be defined as one of the following: - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP leader - \"ntp\": The tracking device is locked to an NTP server ",
+          "description": "Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \"profile\": Specifies the PTP profile in use. This defines the operational rules and parameters for synchronization. For example \"SMPTE ST2059-2:2021\" for SMPTE 2110 based systems, or \"IEEE Std 1588-2019\" or \"IEEE Std 802.1AS-2020\" for industrial applications - \"domain\": Identifies the PTP domain the device belongs to. Devices in the same domain can synchronize with each other - \"leaderIdentity\": The unique identifier (usually MAC address) of the current PTP leader (grandmaster) - \"leaderPriorities\": The priority values of the leader used in the Best Master Clock Algorithm (BMCA). Lower values indicate higher priority - \"priority1\": Static priority set by the administrator - \"priority2\": Dynamic priority based on the leader's role or clock quality - \"leaderAccuracy\": The timing offset in seconds from the sample timestamp to the PTP timestamp - \"meanPathDelay\": The average round-trip delay between the device and the PTP leader, measured in seconds source: The source of synchronization must be defined as one of the following: - \"vlan\": Integer representing the VLAN ID for PTP traffic (e.g., 100 for VLAN 100) - \"timeSource\": Indicates the leader's source of time, such as GNSS, atomic clock, or NTP - \"genlock\": The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \"videoIn\": The tracking device has an external video signal that is triggering the capture of tracking samples - \"ptp\": The tracking device is locked to a PTP leader - \"ntp\": The tracking device is locked to an NTP server ",
           "properties": {
             "frequency": {
               "type": "object",
@@ -1957,19 +1973,68 @@ The following table indicates the camera parameters supported by each of the rea
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "leader": {
+                "profile": {
                   "type": "string",
-                  "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
-                },
-                "offset": {
-                  "type": "number"
+                  "enum": [
+                    "IEEE Std 1588-2019",
+                    "IEEE Std 802.1AS-2020",
+                    "SMPTE ST2059-2:2021"
+                  ]
                 },
                 "domain": {
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 127
+                },
+                "leaderIdentity": {
+                  "type": "string",
+                  "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
+                },
+                "leaderPriorities": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "priority1": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 255
+                    },
+                    "priority2": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 255
+                    }
+                  },
+                  "required": [
+                    "priority1",
+                    "priority2"
+                  ]
+                },
+                "leaderAccuracy": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "meanPathDelay": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "vlan": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "timeSource": {
+                  "type": "string",
+                  "minLength": 1
                 }
-              }
+              },
+              "required": [
+                "profile",
+                "domain",
+                "leaderIdentity",
+                "leaderPriorities",
+                "leaderAccuracy",
+                "meanPathDelay"
+              ]
             },
             "source": {
               "type": "string",

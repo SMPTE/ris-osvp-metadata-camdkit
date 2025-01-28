@@ -22,7 +22,7 @@
         "num": 24000,
         "denom": 1001
       },
-      "fdlLink": "urn:uuid:1e18a320-3491-48cb-afee-62be9463d880",
+      "fdlLink": "urn:uuid:578180e9-b2f5-4147-983d-e6d8ea33f058",
       "isoSpeed": 4000,
       "shutterAngle": 45.0
     },
@@ -131,11 +131,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:aeb47fb0-7d91-45f5-bb2f-d7e69b2d506c",
-    "urn:uuid:7a8743d5-40d5-4d8d-bfee-c14d85debee7"
+    "urn:uuid:5a48998b-ee04-4d5b-8251-76dcedd81842",
+    "urn:uuid:0c7f09ec-f77f-484f-a35a-ac4332a114f4"
   ],
-  "sampleId": "urn:uuid:7e94a3fd-7cc5-4a26-822b-da0f1b7217e1",
-  "sourceId": "urn:uuid:bb59a551-a417-4a7d-be0b-66f5bf32f855",
+  "sampleId": "urn:uuid:e7cdb71b-b913-4d0f-bbdd-81ec4f8b877c",
+  "sourceId": "urn:uuid:681239ff-ff2c-4d35-a448-0de43f2e6ed2",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -159,16 +159,19 @@
         "num": 24000,
         "denom": 1001
       },
-      "offsets": {
-        "translation": 1.0,
-        "rotation": 2.0,
-        "lensEncoders": 3.0
-      },
       "present": true,
       "ptp": {
+        "profile": "SMPTE ST2059-2:2021",
         "domain": 1,
-        "leader": "00:11:22:33:44:55",
-        "offset": 0.0
+        "leaderIdentity": "00:11:22:33:44:55",
+        "leaderPriorities": {
+          "priority1": 128,
+          "priority2": 128
+        },
+        "leaderAccuracy": 5e-08,
+        "meanPathDelay": 0.000123,
+        "vlan": 100,
+        "timeSource": "GNSS"
       }
     },
     "timecode": {

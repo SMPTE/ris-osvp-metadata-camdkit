@@ -84,11 +84,11 @@
     ]
   },
   "relatedSampleIds": [
-    "urn:uuid:d3e5407e-ad58-4df8-94f8-b103062343a6",
-    "urn:uuid:e1716365-424f-4ef7-8cad-7575a87da627"
+    "urn:uuid:a9605385-0fb1-4ab8-8a90-eca8d56acbf0",
+    "urn:uuid:deba6df9-049b-4e7f-9acd-9970fc104cd7"
   ],
-  "sampleId": "urn:uuid:316977e1-829c-4daa-82fd-13d453708fb9",
-  "sourceId": "urn:uuid:c838d7e0-0cdc-4093-99ea-8ec1d605d185",
+  "sampleId": "urn:uuid:d3a0a313-1fcb-4418-b53a-6958586a0fb3",
+  "sourceId": "urn:uuid:4e8f7f8b-54f9-4e96-871c-74d6e68cb864",
   "sourceNumber": 1,
   "timing": {
     "mode": "internal",
@@ -112,16 +112,19 @@
         "num": 24000,
         "denom": 1001
       },
-      "offsets": {
-        "translation": 1.0,
-        "rotation": 2.0,
-        "lensEncoders": 3.0
-      },
       "present": true,
       "ptp": {
+        "profile": "SMPTE ST2059-2:2021",
         "domain": 1,
-        "leader": "00:11:22:33:44:55",
-        "offset": 0.0
+        "leaderIdentity": "00:11:22:33:44:55",
+        "leaderPriorities": {
+          "priority1": 128,
+          "priority2": 128
+        },
+        "leaderAccuracy": 5e-08,
+        "meanPathDelay": 0.000123,
+        "vlan": 100,
+        "timeSource": "GNSS"
       }
     },
     "timecode": {

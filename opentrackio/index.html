@@ -87,8 +87,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:414b25e4-c1f9-4af9-afce-45dcff13f3ca&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:926aa330-e5e3-4e6c-89b5-8c64e73beb48&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:0a36bf19-71ac-4a94-90ea-2ea8579c3b8b&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:a92efae6-06ae-4c1a-989a-3b31fcf7a3d5&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -188,8 +188,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:d0a1e1b7-ce48-4ecf-9760-d31232609239&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:f426ccb4-0081-40da-ba15-65068ce7a98e&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a9883020-abea-4b96-bdcd-ad1adf1e92e3&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:7a054c93-db7e-4eb2-a0ed-0b3751aea5bb&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;external&#34;,
@@ -263,7 +263,7 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;fdlLink&#34;: &#34;urn:uuid:1e18a320-3491-48cb-afee-62be9463d880&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:578180e9-b2f5-4147-983d-e6d8ea33f058&#34;,
       &#34;isoSpeed&#34;: 4000,
       &#34;shutterAngle&#34;: 45.0
     },
@@ -372,11 +372,11 @@
     ]
   },
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:aeb47fb0-7d91-45f5-bb2f-d7e69b2d506c&#34;,
-    &#34;urn:uuid:7a8743d5-40d5-4d8d-bfee-c14d85debee7&#34;
+    &#34;urn:uuid:5a48998b-ee04-4d5b-8251-76dcedd81842&#34;,
+    &#34;urn:uuid:0c7f09ec-f77f-484f-a35a-ac4332a114f4&#34;
   ],
-  &#34;sampleId&#34;: &#34;urn:uuid:7e94a3fd-7cc5-4a26-822b-da0f1b7217e1&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:bb59a551-a417-4a7d-be0b-66f5bf32f855&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:e7cdb71b-b913-4d0f-bbdd-81ec4f8b877c&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:681239ff-ff2c-4d35-a448-0de43f2e6ed2&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;timing&#34;: {
     &#34;mode&#34;: &#34;internal&#34;,
@@ -400,16 +400,19 @@
         &#34;num&#34;: 24000,
         &#34;denom&#34;: 1001
       },
-      &#34;offsets&#34;: {
-        &#34;translation&#34;: 1.0,
-        &#34;rotation&#34;: 2.0,
-        &#34;lensEncoders&#34;: 3.0
-      },
       &#34;present&#34;: true,
       &#34;ptp&#34;: {
+        &#34;profile&#34;: &#34;SMPTE ST2059-2:2021&#34;,
         &#34;domain&#34;: 1,
-        &#34;leader&#34;: &#34;00:11:22:33:44:55&#34;,
-        &#34;offset&#34;: 0.0
+        &#34;leaderIdentity&#34;: &#34;00:11:22:33:44:55&#34;,
+        &#34;leaderPriorities&#34;: {
+          &#34;priority1&#34;: 128,
+          &#34;priority2&#34;: 128
+        },
+        &#34;leaderAccuracy&#34;: 5e-08,
+        &#34;meanPathDelay&#34;: 0.000123,
+        &#34;vlan&#34;: 100,
+        &#34;timeSource&#34;: &#34;GNSS&#34;
       }
     },
     &#34;timecode&#34;: {
@@ -885,12 +888,28 @@
   example)
   ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - &#34;leader&#34;: The MAC address of the PTP leader
-  - &#34;offset&#34;: The timing offset in seconds from the sample timestamp to
-  the PTP timestamp
-  - &#34;domain&#34;: The PTP domain number
+  - &#34;profile&#34;: Specifies the PTP profile in use. This defines the operational
+  rules and parameters for synchronization. For example &#34;SMPTE ST2059-2:2021&#34;
+  for SMPTE 2110 based systems, or &#34;IEEE Std 1588-2019&#34; or
+  &#34;IEEE Std 802.1AS-2020&#34; for industrial applications
+  - &#34;domain&#34;: Identifies the PTP domain the device belongs to. Devices in the
+  same domain can synchronize with each other
+  - &#34;leaderIdentity&#34;: The unique identifier (usually MAC address) of the
+  current PTP leader (grandmaster)
+  - &#34;leaderPriorities&#34;: The priority values of the leader used in the Best
+  Master Clock Algorithm (BMCA). Lower values indicate higher priority
+  - &#34;priority1&#34;: Static priority set by the administrator
+  - &#34;priority2&#34;: Dynamic priority based on the leader&#39;s role or clock quality
+  - &#34;leaderAccuracy&#34;: The timing offset in seconds from the sample timestamp
+  to the PTP timestamp
+  - &#34;meanPathDelay&#34;: The average round-trip delay between the device and the
+  PTP leader, measured in seconds
   source: The source of synchronization must be defined as one of the
   following:
+  - &#34;vlan&#34;: Integer representing the VLAN ID for PTP traffic (e.g., 100 for
+  VLAN 100)
+  - &#34;timeSource&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic
+  clock, or NTP
   - &#34;genlock&#34;: The tracking device has an external black/burst or
   tri-level analog sync signal that is triggering the capture of
   tracking samples
@@ -1606,7 +1625,7 @@
         &#34;synchronization&#34;: {
           &#34;type&#34;: &#34;object&#34;,
           &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \&#34;leader\&#34;: The MAC address of the PTP leader - \&#34;offset\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;domain\&#34;: The PTP domain number source: The source of synchronization must be defined as one of the following: - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP leader - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
+          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this sample.\n frequency: The frequency of a synchronization signal.This may differ from the sample frame rate for example in a genlocked tracking device. This is not required if the synchronization source is PTP or NTP. locked: Is the tracking device locked to the synchronization source offsets: Offsets in seconds between sync and sample. Critical for e.g. frame remapping, or when using different data sources for position/rotation and lens encoding present: Is the synchronization source present (a synchronization source can be present but not locked if frame rates differ for example) ptp: If the synchronization source is a PTP leader, then this object contains: - \&#34;profile\&#34;: Specifies the PTP profile in use. This defines the operational rules and parameters for synchronization. For example \&#34;SMPTE ST2059-2:2021\&#34; for SMPTE 2110 based systems, or \&#34;IEEE Std 1588-2019\&#34; or \&#34;IEEE Std 802.1AS-2020\&#34; for industrial applications - \&#34;domain\&#34;: Identifies the PTP domain the device belongs to. Devices in the same domain can synchronize with each other - \&#34;leaderIdentity\&#34;: The unique identifier (usually MAC address) of the current PTP leader (grandmaster) - \&#34;leaderPriorities\&#34;: The priority values of the leader used in the Best Master Clock Algorithm (BMCA). Lower values indicate higher priority - \&#34;priority1\&#34;: Static priority set by the administrator - \&#34;priority2\&#34;: Dynamic priority based on the leader&#39;s role or clock quality - \&#34;leaderAccuracy\&#34;: The timing offset in seconds from the sample timestamp to the PTP timestamp - \&#34;meanPathDelay\&#34;: The average round-trip delay between the device and the PTP leader, measured in seconds source: The source of synchronization must be defined as one of the following: - \&#34;vlan\&#34;: Integer representing the VLAN ID for PTP traffic (e.g., 100 for VLAN 100) - \&#34;timeSource\&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic clock, or NTP - \&#34;genlock\&#34;: The tracking device has an external black/burst or tri-level analog sync signal that is triggering the capture of tracking samples - \&#34;videoIn\&#34;: The tracking device has an external video signal that is triggering the capture of tracking samples - \&#34;ptp\&#34;: The tracking device is locked to a PTP leader - \&#34;ntp\&#34;: The tracking device is locked to an NTP server &#34;,
           &#34;properties&#34;: {
             &#34;frequency&#34;: {
               &#34;type&#34;: &#34;object&#34;,
@@ -1653,19 +1672,68 @@
               &#34;type&#34;: &#34;object&#34;,
               &#34;additionalProperties&#34;: false,
               &#34;properties&#34;: {
-                &#34;leader&#34;: {
+                &#34;profile&#34;: {
                   &#34;type&#34;: &#34;string&#34;,
-                  &#34;pattern&#34;: &#34;(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)&#34;
-                },
-                &#34;offset&#34;: {
-                  &#34;type&#34;: &#34;number&#34;
+                  &#34;enum&#34;: [
+                    &#34;IEEE Std 1588-2019&#34;,
+                    &#34;IEEE Std 802.1AS-2020&#34;,
+                    &#34;SMPTE ST2059-2:2021&#34;
+                  ]
                 },
                 &#34;domain&#34;: {
                   &#34;type&#34;: &#34;integer&#34;,
                   &#34;minimum&#34;: 0,
                   &#34;maximum&#34;: 127
+                },
+                &#34;leaderIdentity&#34;: {
+                  &#34;type&#34;: &#34;string&#34;,
+                  &#34;pattern&#34;: &#34;(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)&#34;
+                },
+                &#34;leaderPriorities&#34;: {
+                  &#34;type&#34;: &#34;object&#34;,
+                  &#34;additionalProperties&#34;: false,
+                  &#34;properties&#34;: {
+                    &#34;priority1&#34;: {
+                      &#34;type&#34;: &#34;integer&#34;,
+                      &#34;minimum&#34;: 0,
+                      &#34;maximum&#34;: 255
+                    },
+                    &#34;priority2&#34;: {
+                      &#34;type&#34;: &#34;integer&#34;,
+                      &#34;minimum&#34;: 0,
+                      &#34;maximum&#34;: 255
+                    }
+                  },
+                  &#34;required&#34;: [
+                    &#34;priority1&#34;,
+                    &#34;priority2&#34;
+                  ]
+                },
+                &#34;leaderAccuracy&#34;: {
+                  &#34;type&#34;: &#34;number&#34;,
+                  &#34;minimum&#34;: 0
+                },
+                &#34;meanPathDelay&#34;: {
+                  &#34;type&#34;: &#34;number&#34;,
+                  &#34;minimum&#34;: 0
+                },
+                &#34;vlan&#34;: {
+                  &#34;type&#34;: &#34;integer&#34;,
+                  &#34;minimum&#34;: 0
+                },
+                &#34;timeSource&#34;: {
+                  &#34;type&#34;: &#34;string&#34;,
+                  &#34;minLength&#34;: 1
                 }
-              }
+              },
+              &#34;required&#34;: [
+                &#34;profile&#34;,
+                &#34;domain&#34;,
+                &#34;leaderIdentity&#34;,
+                &#34;leaderPriorities&#34;,
+                &#34;leaderAccuracy&#34;,
+                &#34;meanPathDelay&#34;
+              ]
             },
             &#34;source&#34;: {
               &#34;type&#34;: &#34;string&#34;,
