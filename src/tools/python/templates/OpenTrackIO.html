@@ -174,25 +174,25 @@
                     <tr>
                       <td>48-63</td>
                       <td>Sequence number</td>
-                      <td>1 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
+                      <td>2 bytes: Unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
                     </tr>
                     <tr>
-                      <td>64–95</td>
+                      <td>64-95</td>
                       <td>Segment offset</td>
                       <td>4 bytes: A 32-bit field indicating the byte offset of this payload segment when the overall payload length necessitates segmentation. Must be set to <code>0x00</code> for single-segment payloads.</td>
                     </tr>
                     <tr>
                       <td>96</td>
                       <td>Last segment flag</td>
-                      <td>This bit shall be set to <code>1</code> if this is the only segment or the last segment in a segmented payload, or<code>0</code> if more segments are expected.</td>
+                      <td>This bit shall be set to <code>1</code> if this is the only segment or the last segment in a segmented payload, or <code>0</code> if more segments are expected.</td>
                     </tr>
                     <tr>
-                      <td>97–111</td>
+                      <td>97-111</td>
                       <td>Payload Length</td>
                       <td>15 bits: Total length of the payload for the current packet (in bytes).</td>
                     </tr>
                     <tr>
-                      <td>112–127</td>
+                      <td>112-127</td>
                       <td>Checksum (Fletcher16)</td>
                       <td>2 bytes: A 16-bit checksum computed using the Fletcher-16 algorithm, covering the header (excluding checksum bytes) and payload.</td>
                     </tr>
