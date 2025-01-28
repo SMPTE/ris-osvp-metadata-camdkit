@@ -138,8 +138,8 @@ class OpenTrackIOProtocol:
         if self.schema_str:
             try:
                 self.sd = json.loads(self.schema_str)
-            except json.decoder.JSONDecodeError:
-                raise OpenTrackIOException(e.message)
+            except json.decoder.JSONDecodeError as e:
+                raise OpenTrackIOException(e.msg)
             if not self.sd:
                 raise OpenTrackIOException("Error: Failed to parse OpenTrackIO schema file.")
             else:                                   # we have a valid schema
@@ -286,9 +286,9 @@ class OpenTrackIOProtocol:
 
     def get_timecode_framerate(self):
         """Frame rate which the house timecode represents"""
-        if self.validate_dict_elements(self.pd,["timing","frameRate","num"]):
-            numerator = float(self.pd["timing"]["frameRate"]["num"])  
-            denominator = float(self.pd["timing"]["frameRate"]["denom"]) 
+        if self.validate_dict_elements(self.pd,["timing","sampleRate","num"]):
+            numerator = float(self.pd["timing"]["sampleRate"]["num"])  
+            denominator = float(self.pd["timing"]["sampleRate"]["denom"]) 
             return float(numerator / denominator)
         else:
             return None
