@@ -179,21 +179,101 @@ class SynchronizationOffsets:
     }
 
 @dataclasses.dataclass
+class SynchronizationPTPPriorities:
+  """Data structure for PTP synchronization priorities"""
+
+  priority1: typing.Optional[int]
+  priority2: typing.Optional[int]
+  
+  def validate(self):
+    return all([isinstance(self.priority1, int) and self.priority1 >= 0,
+                isinstance(self.priority2, int) and self.priority2 >= 0])
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {
+      "priority1": value.priority1,
+      "priority2": value.priority2,
+    }
+@dataclasses.dataclass
 class SynchronizationPTP:
   """Data structure for PTP synchronization"""
 
+  profile: typing.Optional[str] = None
   domain: typing.Optional[int] = None
-  leader: typing.Optional[str] = None
-  offset: typing.Optional[float] = None
+  leader_identity: typing.Optional[str] = None
+  leader_priorities: typing.Optional[SynchronizationPTPPriorities] = None
+  leader_accuracy: typing.Optional[float] = None
+  mean_path_delay: typing.Optional[float] = None
+  vlan: typing.Optional[int] = None
+  time_source: typing.Optional[str] = None
   
   def validate(self):
-    return all([isinstance(self.leader, str), 
-                isinstance(self.offset, float),
-                isinstance(self.domain, int)])
+    return all([isinstance(self.profile, str),
+                isinstance(self.domain, int),
+                isinstance(self.leader_priorities, SynchronizationPTPPriorities) and
+                self.leader_priorities.validate(),
+                isinstance(self.leader_accuracy, float),
+                isinstance(self.mean_path_delay, float)])
   
   @staticmethod
   def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
+    ret = {
+      "profile": value.profile,
+      "domain": value.domain,
+      "leaderIdentity": value.leader_identity,
+      "leaderPriorities": SynchronizationPTPPriorities.to_json(value.leader_priorities),
+      "leaderAccuracy": value.leader_accuracy,
+      "meanPathDelay": value.mean_path_delay,
+      "meanPathDelay": value.mean_path_delay,
+    }
+    if value.vlan != None:
+      ret["vlan"] = value.vlan
+    if value.time_source != None:
+      ret["timeSource"] = value.time_source
+    return ret
+  
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    ptp = SynchronizationPTP(value["profile"],
+                             value["domain"],
+                             value["leaderIdentity"],
+                             SynchronizationPTPPriorities(value["leaderPriorities"]["priority1"],
+                                                          value["leaderPriorities"]["priority2"]),
+                             value["leaderAccuracy"],
+                             value["meanPathDelay"],
+                             )
+    if "vlan" in value:
+      ptp.vlan = value["vlan"]
+    if "timeSource" in value:
+      ptp.time_source = value["timeSource"]
+    return ptp
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "profile": { "type": "string", "minLength": 1 },
+        "domain": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "leaderIdentity": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
+        "leaderPriorities": {
+          "type": "object",
+          "additionalProperties": False,
+          "properties": {
+            "priority1": { "type": "integer", "minimum": 0 },
+            "priority2": { "type": "integer", "minimum": 0 },
+          },
+          "required": ["priority1", "priority2"]
+        },
+        "leaderAccuracy": { "type": "number", "minimum": 0 },
+        "meanPathDelay": { "type": "number", "minimum": 0 },
+        "vlan": { "type": "integer", "minimum": 0 },
+        "timeSource": { "type": "string", "minLength": 1 },
+      },
+      "required": ["profile", "domain", "leaderIdentity", "leaderPriorities", "leaderAccuracy", "meanPathDelay"]
+    }
 
 class TimingModeEnum(BaseEnum):
   """Enumeration for sample timing modes"""

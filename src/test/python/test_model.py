@@ -87,7 +87,9 @@ class ModelTest(unittest.TestCase):
       locked=True,
       offsets=SynchronizationOffsets(1.0,2.0,3.0),
       present=True,
-      ptp=SynchronizationPTP(1,"00:11:22:33:44:55",0.0),
+      ptp=SynchronizationPTP("SMPTE-2059-2",1,"00:11:22:33:44:55",
+                             SynchronizationPTPPriorities(128, 128),
+                             0.00000005, 0.000123, 100, "GNSS"),
       source=SynchronizationSourceEnum.PTP
     )
     clip.timing_synchronization = (sync,sync)
@@ -180,7 +182,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 } } },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 } } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
-                  "ptp": {"offset":0.0,"domain":1,"leader": "00:11:22:33:44:55"},
+                  "ptp": {"profile":"SMPTE-2059-2","domain":1,"leaderIdentity": "00:11:22:33:44:55",
+                          "leaderPriorities": { "priority1": 128, "priority2": 128 },
+                          "leaderAccuracy": 0.00000005, "meanPathDelay": 0.000123, "vlan": 100, "timeSource": "GNSS"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
@@ -1132,30 +1136,36 @@ class ModelTest(unittest.TestCase):
     sync = Synchronization(locked=True, source=SynchronizationSourceEnum.PTP, frequency=25)
     clip = Clip()
     sync.ptp = SynchronizationPTP()
+    sync.ptp.profile = "SMPTE-2059-2"
+    sync.ptp.domain = 1
+    sync.ptp.leader_priorities = SynchronizationPTPPriorities(128,128)
+    sync.ptp.leader_accuracy = 0.00000005
+    sync.ptp.mean_path_delay = 0.000123
+    sync.ptp.vlan = 100
+    sync.ptp.time_source = "GNSS"
+    sync.ptp.leader_identity = "00:00:00:00:00:00"
+    clip.timing_synchronization = (sync, )
+    sync.ptp.leader_identity = "ab:CD:eF:23:45:67"
+    clip.timing_synchronization = (sync, )
+    sync.ptp.from_json({
+      "profile": "SMPTE-2059-2",
+      "domain": 1,
+      "leaderIdentity": "00:11:22:33:44:55",
+      "leaderPriorities": {
+        "priority1": 128,
+        "priority2": 128
+      },
+      "leaderAccuracy": 0.00000005,
+      "meanPathDelay": 0.000123,
+      "vlan": 100,
+      "timeSource": "GNSS"
+    })
+    clip.timing_synchronization = (sync, )
+    # Now unset some values to test validation
     with self.assertRaises(ValueError):
-      sync.ptp.leader = ""
+      sync.ptp.profile = ""
       clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = "00:"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = "00:00:00:00:00"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = ":00:00:00:00:00:00"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = "12:12:12:12:12:12:12"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = "we:te:as:te:gd:ds"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.leader = "WE:TE:AS:TE:GD:DS"
-      clip.timing_synchronization = (sync, )
-    with self.assertRaises(ValueError):
-      sync.ptp.offset = "1"
-      clip.timing_synchronization = (sync, )
+    sync.ptp.profile = "SMPTE-2059-2"
     with self.assertRaises(ValueError):
       sync.ptp.domain = "1"
       clip.timing_synchronization = (sync, )
@@ -1165,13 +1175,74 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.domain = 128
       clip.timing_synchronization = (sync, )
-
-    sync.ptp.domain = 0
-    sync.ptp.offset = 0.0
-    sync.ptp.leader = "00:00:00:00:00:00"
-    clip.timing_synchronization = (sync, )
-    sync.ptp.leader = "ab:CD:eF:23:45:67"
-    clip.timing_synchronization = (sync, )
+    sync.ptp.domain = 1
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = ""
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = "00:"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = "00:00:00:00:00"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = ":00:00:00:00:00:00"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = "12:12:12:12:12:12:12"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = "we:te:as:te:gd:ds"
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_identity = "WE:TE:AS:TE:GD:DS"
+      clip.timing_synchronization = (sync, )
+    sync.ptp.leader_identity = "00:11:22:33:44:55"
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = None
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = {}
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(TypeError):
+      sync.ptp.leader_priorities = SynchronizationPTPPriorities()
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = SynchronizationPTPPriorities(-1,-1)
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_priorities = SynchronizationPTPPriorities("1","1")
+      clip.timing_synchronization = (sync, )
+    sync.ptp.leader_priorities = SynchronizationPTPPriorities(128,128)
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_accuracy = ""
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_accuracy = 0
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.leader_accuracy = -1.0
+      clip.timing_synchronization = (sync, )
+    sync.ptp.leader_accuracy = 0.00000005
+    with self.assertRaises(ValueError):
+      sync.ptp.mean_path_delay = ""
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.mean_path_delay = 0
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.mean_path_delay = -1.0
+      clip.timing_synchronization = (sync, )
+    sync.ptp.mean_path_delay = 0.000123
+    with self.assertRaises(ValueError):
+      sync.ptp.vlan = ""
+      clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.vlan = -1
+      clip.timing_synchronization = (sync, )
+    sync.ptp.vlan = 100
+    with self.assertRaises(ValueError):
+      sync.ptp.time_source = ""
+      clip.timing_synchronization = (sync, )
 
   # def test_make_documentation(self):
   #

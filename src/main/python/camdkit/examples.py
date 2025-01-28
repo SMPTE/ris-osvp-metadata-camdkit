@@ -136,11 +136,15 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      offset=0.0,
-      domain=1,
-      leader="00:11:22:33:44:55"
-    ),
-    offsets=SynchronizationOffsets(1.0,2.0,3.0)
+      "SMPTE-2059-2",
+      1,
+      "00:11:22:33:44:55",
+      SynchronizationPTPPriorities(128, 128),
+      0.00000005,
+      0.000123,
+      100,
+      "GNSS"
+    )
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)

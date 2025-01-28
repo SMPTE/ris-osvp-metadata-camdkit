@@ -562,12 +562,27 @@ class TimingSynchronization(Parameter):
   example)
   ptp: If the synchronization source is a PTP leader, then this object
   contains:
-  - "leader": The MAC address of the PTP leader
-  - "offset": The timing offset in seconds from the sample timestamp to
-  the PTP timestamp
-  - "domain": The PTP domain number
+  - "profile": Specifies the PTP profile in use. This defines the operational
+  rules and parameters for synchronization. For example "SMPTE-2059-2" for
+  SMPTE 2110 based systems, or "IEEE-1588-Default" for industrial applications
+  - "domain": Identifies the PTP domain the device belongs to. Devices in the
+  same domain can synchronize with each other
+  - "leaderIdentity": The unique identifier (usually MAC address) of the
+  current PTP leader (grandmaster)
+  - "leaderPriorities": The priority values of the leader used in the Best
+  Master Clock Algorithm (BMCA). Lower values indicate higher priority
+  - "priority1": Static priority set by the administrator
+  - "priority2": Dynamic priority based on the leader's role or clock quality
+  - "leaderAccuracy": The timing offset in seconds from the sample timestamp
+  to the PTP timestamp
+  - "meanPathDelay": The average round-trip delay between the device and the
+  PTP leader, measured in seconds
   source: The source of synchronization must be defined as one of the
   following:
+  - "vlan": Integer representing the VLAN ID for PTP traffic (e.g., 100 for
+  VLAN 100)
+  - "timeSource": Indicates the leader's source of time, such as GNSS, atomic
+  clock, or NTP
   - "genlock": The tracking device has an external black/burst or
   tri-level analog sync signal that is triggering the capture of
   tracking samples
@@ -595,16 +610,29 @@ class TimingSynchronization(Parameter):
       if not (isinstance(value.frequency, numbers.Rational) and value.frequency > 0):
         return False
     if value.ptp != None:
+      if not value.ptp.validate():
+        return False
+      # Required PTP fields
+      if any([value.ptp.profile == None,
+              value.ptp.domain == None,
+              value.ptp.leader_identity == None,
+              value.ptp.leader_priorities == None,
+              value.ptp.leader_accuracy == None,
+              value.ptp.mean_path_delay == None,
+          ]):
+        return False
+      if value.ptp.profile == "":
+        return False
+      if not all([isinstance(value.ptp.domain, int), value.ptp.domain < 128, value.ptp.domain >= 0]):
+        return False
       # Validate MAC address
-      if value.ptp.leader != None and not (isinstance(value.ptp.leader,str) and 
-                                           re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$",
-                                           value.ptp.leader.lower())):
+      if not re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", value.ptp.leader_identity.lower()):
         return False
-      if value.ptp.offset != None and not isinstance(value.ptp.offset, float):
+      if value.ptp.leader_accuracy <= 0.0 or value.ptp.mean_path_delay <= 0.0:
         return False
-      if value.ptp.domain != None and not (isinstance(value.ptp.domain, int) \
-                                           and value.ptp.domain < 128 \
-                                           and value.ptp.domain >= 0):
+      if value.ptp.vlan != None and (not isinstance(value.ptp.vlan, int) or value.ptp.vlan <= 0):
+        return False
+      if value.ptp.time_source != None and (not isinstance(value.ptp.time_source, str) or value.ptp.time_source == ""):
         return False
       if value.offsets != None and not value.offsets.validate():
         return False
@@ -620,7 +648,9 @@ class TimingSynchronization(Parameter):
     if "frequency" in d:
       d["frequency"] = { "num": d["frequency"].numerator, "denom": d["frequency"].denominator }
     if value.offsets is not None:
-        d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
+      d["offsets"] = SynchronizationOffsets.to_json(value.offsets)
+    if value.ptp is not None:
+      d["ptp"] = SynchronizationPTP.to_json(value.ptp)
     return d
 
   @staticmethod
@@ -630,7 +660,7 @@ class TimingSynchronization(Parameter):
     sync.offsets = SynchronizationOffsets(translation=value["offsets"]["translation"],
                                           rotation=value["offsets"]["rotation"],
                                           lens_encoders=value["offsets"]["lensEncoders"])
-    sync.ptp = SynchronizationPTP(**value["ptp"])
+    sync.ptp = SynchronizationPTP.from_json(value["ptp"])
     sync.frequency = Fraction(value["frequency"]["num"], value["frequency"]["denom"])
     return sync
 
@@ -669,15 +699,7 @@ class TimingSynchronization(Parameter):
           }
         },
         "present": { "type": "boolean" },
-        "ptp": {
-          "type": "object",
-          "additionalProperties": False,
-          "properties": {
-            "leader": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
-            "offset": { "type": "number" },
-            "domain": { "type": "integer", "minimum": 0, "maximum": 127 }
-          }
-        },
+        "ptp": SynchronizationPTP.make_json_schema(),
         "source": { "type": "string", "enum": [e.value for e in SynchronizationSourceEnum] },
       },
       "required": ["locked", "source"]
