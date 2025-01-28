@@ -8,6 +8,7 @@ pylint = "==2.6.0"
 coverage = "*"
 jsonschema = "*"
 jinja2 = "*"
+cbor2 = "*"
 
 [requires]
 python_version = "3.11"
