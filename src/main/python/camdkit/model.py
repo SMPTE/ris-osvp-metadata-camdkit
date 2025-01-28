@@ -621,7 +621,7 @@ class TimingSynchronization(Parameter):
               value.ptp.mean_path_delay == None,
           ]):
         return False
-      if value.ptp.profile == "":
+      if value.ptp.profile not in PTP_PROFILES:
         return False
       if not all([isinstance(value.ptp.domain, int), value.ptp.domain < 128, value.ptp.domain >= 0]):
         return False

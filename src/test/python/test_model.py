@@ -1165,6 +1165,9 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.profile = ""
       clip.timing_synchronization = (sync, )
+    with self.assertRaises(ValueError):
+      sync.ptp.profile = "Invalid profile"
+      clip.timing_synchronization = (sync, )
     sync.ptp.profile = "SMPTE-2059-2"
     with self.assertRaises(ValueError):
       sync.ptp.domain = "1"

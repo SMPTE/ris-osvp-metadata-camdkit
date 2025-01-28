@@ -15,6 +15,7 @@ UINT_MAX = 4294967295 # 2^32 - 1
 UINT48_MAX = 281474976710655 # 2^48 - 1
 
 DEFAULT_SUB_FRAME = 0
+PTP_PROFILES = ["SMPTE-2059-2", "IEEE-1588-Default"]
 
 class Sampling(Enum):
   STATIC = "Static"   # Data that does not change for a Clip or across many Frames
@@ -257,7 +258,7 @@ class SynchronizationPTP:
       "type": "object",
       "additionalProperties": False,
       "properties": {
-        "profile": { "type": "string", "minLength": 1 },
+        "profile": { "type": "string", "enum": PTP_PROFILES },
         "domain": { "type": "integer", "minimum": 0, "maximum": 127 },
         "leaderIdentity": { "type": "string", "pattern": r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"},
         "leaderPriorities": {
