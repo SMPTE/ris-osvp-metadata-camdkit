@@ -15,7 +15,11 @@ UINT_MAX = 4294967295 # 2^32 - 1
 UINT48_MAX = 281474976710655 # 2^48 - 1
 
 DEFAULT_SUB_FRAME = 0
-PTP_PROFILES = ["SMPTE-2059-2", "IEEE-1588-Default"]
+PTP_PROFILES = [
+  "IEEE Std 1588-2019",
+  "IEEE Std 802.1AS-2020",
+  "SMPTE ST2059-2:2021",
+]
 
 class Sampling(Enum):
   STATIC = "Static"   # Data that does not change for a Clip or across many Frames

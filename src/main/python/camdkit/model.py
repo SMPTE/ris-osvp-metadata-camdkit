@@ -563,8 +563,9 @@ class TimingSynchronization(Parameter):
   ptp: If the synchronization source is a PTP leader, then this object
   contains:
   - "profile": Specifies the PTP profile in use. This defines the operational
-  rules and parameters for synchronization. For example "SMPTE-2059-2" for
-  SMPTE 2110 based systems, or "IEEE-1588-Default" for industrial applications
+  rules and parameters for synchronization. For example "SMPTE ST2059-2:2021"
+  for SMPTE 2110 based systems, or "IEEE Std 1588-2019" or
+  "IEEE Std 802.1AS-2020" for industrial applications
   - "domain": Identifies the PTP domain the device belongs to. Devices in the
   same domain can synchronize with each other
   - "leaderIdentity": The unique identifier (usually MAC address) of the

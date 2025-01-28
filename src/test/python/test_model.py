@@ -87,7 +87,7 @@ class ModelTest(unittest.TestCase):
       locked=True,
       offsets=SynchronizationOffsets(1.0,2.0,3.0),
       present=True,
-      ptp=SynchronizationPTP("SMPTE-2059-2",1,"00:11:22:33:44:55",
+      ptp=SynchronizationPTP(PTP_PROFILES[2],1,"00:11:22:33:44:55",
                              SynchronizationPTPPriorities(128, 128),
                              0.00000005, 0.000123, 100, "GNSS"),
       source=SynchronizationSourceEnum.PTP
@@ -182,7 +182,7 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 } } },
                                                     { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 } } }))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
-                  "ptp": {"profile":"SMPTE-2059-2","domain":1,"leaderIdentity": "00:11:22:33:44:55",
+                  "ptp": {"profile":PTP_PROFILES[2],"domain":1,"leaderIdentity": "00:11:22:33:44:55",
                           "leaderPriorities": { "priority1": 128, "priority2": 128 },
                           "leaderAccuracy": 0.00000005, "meanPathDelay": 0.000123, "vlan": 100, "timeSource": "GNSS"},
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
@@ -1136,7 +1136,7 @@ class ModelTest(unittest.TestCase):
     sync = Synchronization(locked=True, source=SynchronizationSourceEnum.PTP, frequency=25)
     clip = Clip()
     sync.ptp = SynchronizationPTP()
-    sync.ptp.profile = "SMPTE-2059-2"
+    sync.ptp.profile = PTP_PROFILES[2]
     sync.ptp.domain = 1
     sync.ptp.leader_priorities = SynchronizationPTPPriorities(128,128)
     sync.ptp.leader_accuracy = 0.00000005
@@ -1148,7 +1148,7 @@ class ModelTest(unittest.TestCase):
     sync.ptp.leader_identity = "ab:CD:eF:23:45:67"
     clip.timing_synchronization = (sync, )
     sync.ptp.from_json({
-      "profile": "SMPTE-2059-2",
+      "profile": PTP_PROFILES[2],
       "domain": 1,
       "leaderIdentity": "00:11:22:33:44:55",
       "leaderPriorities": {
@@ -1168,7 +1168,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       sync.ptp.profile = "Invalid profile"
       clip.timing_synchronization = (sync, )
-    sync.ptp.profile = "SMPTE-2059-2"
+    sync.ptp.profile = PTP_PROFILES[0]
     with self.assertRaises(ValueError):
       sync.ptp.domain = "1"
       clip.timing_synchronization = (sync, )

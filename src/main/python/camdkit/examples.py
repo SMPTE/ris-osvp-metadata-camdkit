@@ -136,7 +136,7 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      "SMPTE-2059-2",
+      PTP_PROFILES[2],
       1,
       "00:11:22:33:44:55",
       SynchronizationPTPPriorities(128, 128),
