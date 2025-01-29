@@ -1,11 +1,10 @@
 // opentrackIOlib.cpp
 //
 // Library reference code for decoding opentrackIO messages
-//
-// SPDX-License-Identifier: BSD-3-Clause
 // Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 //
-// nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
+// License: this code is open-source under the FreeBSD License
+// nlohmann JSON library licensed under the MIT License, Copyright � 2013-2022 Niels Lohmann
 
 #include "opentrackIOlib.h"
 #include <iostream>
