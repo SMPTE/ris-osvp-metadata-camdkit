@@ -1,14 +1,10 @@
 {
   "type": "array",
-  "minItems": 1,
-  "uniqueItems": false,
   "items": {
     "type": "object",
-    "additionalProperties": false,
     "properties": {
       "translation": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "x": {
             "type": "number"
@@ -20,11 +16,11 @@
             "type": "number"
           }
         },
+        "additionalProperties": false,
         "units": "meter"
       },
       "rotation": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "pan": {
             "type": "number"
@@ -36,11 +32,11 @@
             "type": "number"
           }
         },
+        "additionalProperties": false,
         "units": "degree"
       },
       "scale": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "x": {
             "type": "number"
@@ -51,7 +47,8 @@
           "z": {
             "type": "number"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "id": {
         "type": "string",
@@ -62,8 +59,11 @@
     "required": [
       "translation",
       "rotation"
-    ]
+    ],
+    "additionalProperties": false
   },
+  "minItems": 1,
   "description": "A list of transforms.\nTransforms are composed in order with the last in the list representing\nthe X,Y,Z in meters of camera sensor relative to stage origin.\nThe Z axis points upwards and the coordinate system is right-handed.\nY points in the forward camera direction (when pan, tilt and roll are\nzero).\nFor example in an LED volume Y would point towards the centre of the\nLED wall and so X would point to camera-right.\nRotation expressed as euler angles in degrees of the camera sensor\nrelative to stage origin\nRotations are intrinsic and are measured around the axes ZXY, commonly\nreferred to as [pan, tilt, roll]\nNotes on Euler angles:\nEuler angles are human readable and unlike quarternions, provide the\nability for cycles (with angles >360 or <0 degrees).\nWhere a tracking system is providing the pose of a virtual camera,\ngimbal lock does not present the physical challenges of a robotic\nsystem.\nConversion to and from quarternions is trivial with an acceptable loss\nof precision.\n",
-  "units": "meter / degree"
+  "units": "meter / degree",
+  "uniqueItems": false
 }

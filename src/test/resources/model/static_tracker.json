@@ -1,13 +1,6 @@
 {
   "type": "object",
-  "additionalProperties": false,
   "properties": {
-    "firmwareVersion": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string identifying tracking device firmware version"
-    },
     "make": {
       "type": "string",
       "minLength": 1,
@@ -25,6 +18,13 @@
       "minLength": 1,
       "maxLength": 1023,
       "description": "Non-blank string uniquely identifying the tracking device"
+    },
+    "firmwareVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string identifying tracking device firmware version"
     }
-  }
+  },
+  "additionalProperties": false
 }

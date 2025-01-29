@@ -1,61 +1,18 @@
 {
   "type": "object",
-  "additionalProperties": false,
   "properties": {
-    "activeSensorPhysicalDimensions": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "height",
-        "width"
-      ],
-      "properties": {
-        "height": {
-          "type": "number",
-          "minimum": 0.0
-        },
-        "width": {
-          "type": "number",
-          "minimum": 0.0
-        }
-      },
-      "description": "Height and width of the active area of the camera sensor in microns",
-      "units": "millimeter"
-    },
-    "activeSensorResolution": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "height",
-        "width"
-      ],
-      "properties": {
-        "height": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 2147483647
-        },
-        "width": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 2147483647
-        }
-      },
-      "description": "Photosite resolution of the active area of the camera sensor in pixels",
-      "units": "pixel"
-    },
-    "anamorphicSqueeze": {
+    "captureFrameRate": {
       "type": "object",
       "properties": {
         "num": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 2147483647
+          "maximum": 2147483647,
+          "minimum": 1
         },
         "denom": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 4294967295
+          "maximum": 4294967295,
+          "minimum": 1
         }
       },
       "required": [
@@ -63,19 +20,50 @@
         "denom"
       ],
       "additionalProperties": false,
-      "description": "Nominal ratio of height to width of the image of an axis-aligned\nsquare captured by the camera sensor. It can be used to de-squeeze\nimages but is not however an exact number over the entire captured\narea due to a lens' intrinsic analog nature.\n"
+      "description": "Capture frame rate of the camera",
+      "units": "hertz"
     },
-    "firmwareVersion": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string identifying camera firmware version"
+    "activeSensorPhysicalDimensions": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "width": {
+          "type": "number",
+          "minimum": 0.0
+        }
+      },
+      "required": [
+        "height",
+        "width"
+      ],
+      "description": "Height and width of the active area of the camera sensor in microns",
+      "additionalProperties": false,
+      "units": "millimeter"
     },
-    "label": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string containing user-determined camera identifier"
+    "activeSensorResolution": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": 0
+        }
+      },
+      "required": [
+        "height",
+        "width"
+      ],
+      "description": "Photosite resolution of the active area of the camera sensor in pixels",
+      "additionalProperties": false,
+      "units": "pixel"
     },
     "make": {
       "type": "string",
@@ -95,18 +83,30 @@
       "maxLength": 1023,
       "description": "Non-blank string uniquely identifying the camera"
     },
-    "captureFrameRate": {
+    "firmwareVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string identifying camera firmware version"
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string containing user-determined camera identifier"
+    },
+    "anamorphicSqueeze": {
       "type": "object",
       "properties": {
         "num": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 2147483647
+          "maximum": 2147483647,
+          "minimum": 1
         },
         "denom": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 4294967295
+          "maximum": 4294967295,
+          "minimum": 1
         }
       },
       "required": [
@@ -114,26 +114,26 @@
         "denom"
       ],
       "additionalProperties": false,
-      "description": "Capture frame rate of the camera",
-      "units": "hertz"
+      "description": "Nominal ratio of height to width of the image of an axis-aligned\nsquare captured by the camera sensor. It can be used to de-squeeze\nimages but is not however an exact number over the entire captured\narea due to a lens' intrinsic analog nature.\n"
+    },
+    "isoSpeed": {
+      "type": "integer",
+      "maximum": 4294967295,
+      "minimum": 1,
+      "description": "Arithmetic ISO scale as defined in ISO 12232"
     },
     "fdlLink": {
       "type": "string",
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
       "description": "URN identifying the ASC Framing Decision List used by the camera."
     },
-    "isoSpeed": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 4294967295,
-      "description": "Arithmetic ISO scale as defined in ISO 12232"
-    },
     "shutterAngle": {
       "type": "number",
-      "minimum": 0.0,
       "maximum": 360.0,
+      "minimum": 0.0,
       "description": "Shutter speed as a fraction of the capture frame rate. The shutter\nspeed (in units of 1/s) is equal to the value of the parameter divided\nby 360 times the capture frame rate.\n",
       "units": "degree"
     }
-  }
+  },
+  "additionalProperties": false
 }

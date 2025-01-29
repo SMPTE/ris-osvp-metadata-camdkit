@@ -1,6 +1,5 @@
 {
   "type": "object",
-  "additionalProperties": false,
   "properties": {
     "notes": {
       "type": "string",
@@ -24,5 +23,6 @@
       "maxLength": 1023,
       "description": "Non-blank string describing status of tracking system"
     }
-  }
+  },
+  "additionalProperties": false
 }
