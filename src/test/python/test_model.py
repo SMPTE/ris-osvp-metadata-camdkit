@@ -123,7 +123,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_distortion_offset = (DistortionOffset(1.0, 2.0),DistortionOffset(1.0, 2.0))
     clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),ProjectionOffset(0.1, 0.2))
 
-    d = clip.to_json()
+    d = Clip.to_json(clip)
 
     # Static parameters
     self.assertEqual(d["static"]["duration"], {"num": 3, "denom": 1})
@@ -213,9 +213,8 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
     self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
-    d_clip = Clip()
-    d_clip.from_json(d)
-    self.assertDictEqual(d_clip._values, clip._values)
+    d_clip = Clip.from_json(d)
+    self.assertEqual(d_clip, clip)
 
 
   def test_documentation(self):
