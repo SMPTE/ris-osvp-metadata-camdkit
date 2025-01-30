@@ -718,11 +718,11 @@ class ModelTest(unittest.TestCase):
         Timestamp(0,281474976710655)
 
   def test_timecode_format(self):
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24, 1)), 24)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(25)), 25)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30)), 30)
-    self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(30, 1)), 30)
+    self.assertEqual(TimecodeFormat(24).to_int(), 24)
+    self.assertEqual(TimecodeFormat(24, 1).to_int(), 24)
+    self.assertEqual(TimecodeFormat(25).to_int(), 25)
+    self.assertEqual(TimecodeFormat(30).to_int(), 30)
+    self.assertEqual(TimecodeFormat(30, 1).to_int(), 30)
     with self.assertRaises(TypeError):
       TimecodeFormat()
     with self.assertRaises(ValueError):
