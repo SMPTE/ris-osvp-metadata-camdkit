@@ -181,11 +181,14 @@ class ModelTest(unittest.TestCase):
                                                              { "seconds": 1718806001, "nanoseconds": 0 }))
     self.assertTupleEqual(d["timing"]["sequenceNumber"], (0, 1))
     self.assertTupleEqual(d["timing"]["sampleRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
-    self.assertTupleEqual(d["timing"]["timecode"], ({ "hours":1,"minutes":2,"seconds":3,"frames":4,"format": { "frameRate": { "num": 24, "denom": 1 } } },
-                                                    { "hours":1,"minutes":2,"seconds":3,"frames":5,"format": { "frameRate": { "num": 24, "denom": 1 } } }))
+    self.assertTupleEqual(d["timing"]["timecode"],
+                          ({ "hours":1,"minutes":2,"seconds":3,"frames":4,
+                             "format": { "frameRate": { "num": 24, "denom": 1 }}},
+                           { "hours":1,"minutes":2,"seconds":3,"frames":5,
+                             "format": { "frameRate": { "num": 24, "denom": 1 }}}))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
-                  "ptp": {"offset":0.0,"domain":1,"leader": "00:11:22:33:44:55"},
-                  "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
+                  "ptp": {"offset":0.0, "domain":1, "leaderIdentity": "00:11:22:33:44:55"},
+                  "offsets": {"translation":1.0, "rotation":2.0, "lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
     self.assertTupleEqual(d["transforms"], ((transform_dict, transform_dict), (transform_dict, transform_dict)))
@@ -659,7 +662,7 @@ class ModelTest(unittest.TestCase):
 
   def test_transforms_to_dict(self):
     j = Transforms.to_json((Transform(
-      translation=Vector3(1,2,3), \
+      translation=Vector3(1,2,3),
       rotation=Rotator3(1,2,3)), ))
     self.assertEqual(j, ({
       "translation": { "x": 1, "y": 2, "z": 3 },
