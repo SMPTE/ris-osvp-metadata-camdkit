@@ -12,6 +12,10 @@ from fractions import Fraction
 from camdkit.framework import *
 from camdkit.model import *
 
+from camdkit.camera_types import PhysicalDimensions, SenselDimensions
+from camdkit.numeric_types import StrictlyPositiveRational
+
+
 class ModelTest(unittest.TestCase):
 
   def test_duration(self):
@@ -28,8 +32,8 @@ class ModelTest(unittest.TestCase):
     clip = Clip()
 
     # Static parameters
-    clip.active_sensor_physical_dimensions = Dimensions(width=36.0, height=24.0)
-    clip.active_sensor_resolution = Dimensions(width=3840, height=2160)
+    clip.active_sensor_physical_dimensions = PhysicalDimensions(width=36.0, height=24.0)
+    clip.active_sensor_resolution = SenselDimensions(width=3840, height=2160)
     clip.anamorphic_squeeze = 1
     clip.capture_frame_rate = Fraction(24000, 1001)
     clip.duration = 3
@@ -214,7 +218,7 @@ class ModelTest(unittest.TestCase):
   def test_documentation(self):
     doc = Clip.make_documentation()
 
-    self.assertIn(ActiveSensorPhysicalDimensions.canonical_name, [e["canonical_name"] for e in doc])
+    self.assertIn("activeSensorPhysicalDimensions", [e["canonical_name"] for e in doc])
 
   def test_duration_fraction(self):
     clip = Clip()
@@ -233,7 +237,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertIsNone(clip.active_sensor_physical_dimensions)
 
-    dims = Dimensions(4, 5)
+    dims = PhysicalDimensions(4, 5)
 
     clip.active_sensor_physical_dimensions = dims
 
@@ -244,7 +248,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertIsNone(clip.active_sensor_resolution)
 
-    dims = Dimensions(4, 5)
+    dims = SenselDimensions(4, 5)
 
     clip.active_sensor_resolution = dims
 
