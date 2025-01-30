@@ -8,7 +8,7 @@ import uuid
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
-from camdkit.timing_types import SynchronizationPTPPriorities
+from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities
 
 
 def get_recommended_static_example():
@@ -95,7 +95,7 @@ def _get_recommended_dynamic_clip():
   clip.tracker_slate = ("A101_A_4",)
   clip.tracker_notes = ("Example generated sample.",)
   # timing
-  clip.timing_mode = (TimingModeEnum.EXTERNAL,)
+  clip.timing_mode = (TimingMode.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
   clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
   # transforms
@@ -115,7 +115,7 @@ def _get_complete_dynamic_clip():
   clip = _get_recommended_dynamic_clip()
   # augmenting recommended values
   #   timing
-  clip.timing_mode = (TimingModeEnum.INTERNAL,)
+  clip.timing_mode = (TimingMode.INTERNAL,)
   #   transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
@@ -146,8 +146,7 @@ def _get_complete_dynamic_clip():
       0.000123,
       100,
       "GNSS"
-    ),
-    offsets=SynchronizationOffsets(1.0,2.0,3.0)
+    )
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
