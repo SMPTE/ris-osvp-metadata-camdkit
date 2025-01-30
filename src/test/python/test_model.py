@@ -645,9 +645,6 @@ class ModelTest(unittest.TestCase):
     clip = Clip()
 
     self.assertIsNone(clip.transforms)
-
-    with self.assertRaises(TypeError):
-      clip.transforms = Transform()
     with self.assertRaises(ValueError):
       clip.timing_mode = "a"
     transform = Transform(
@@ -694,13 +691,16 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(t[0].scale, Vector3(1,2,3))
 
   def test_timing_mode_enum(self):
-    param = TimingMode()
-    self.assertTrue(param.validate(TimingModeEnum.INTERNAL))
-    self.assertTrue(param.validate(TimingModeEnum.EXTERNAL))
-    self.assertFalse(param.validate(""))
-    self.assertFalse(param.validate("a"))
-    self.assertFalse(param.validate(None))
-    self.assertFalse(param.validate(0))
+    self.assertEqual(TimingMode.INTERNAL, TimingMode(TimingMode.INTERNAL))
+    self.assertEqual(TimingMode.EXTERNAL, TimingMode(TimingMode.EXTERNAL))
+    with self.assertRaises(ValueError):
+      TimingMode("")
+    with self.assertRaises(ValueError):
+      TimingMode("a")
+    with self.assertRaises(ValueError):
+      TimingMode(None)
+    with self.assertRaises(ValueError):
+      TimingMode(0)
 
   def test_timestamp_limits(self):
     with self.assertRaises(TypeError):
@@ -710,9 +710,12 @@ class ModelTest(unittest.TestCase):
     self.assertTrue(TimingTimestamp.validate(Timestamp(0,0)))
     self.assertTrue(TimingTimestamp.validate(Timestamp(1,2)))
     self.assertTrue(TimingTimestamp.validate(Timestamp(281474976710655,4294967295)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(1,-2)))
-    self.assertFalse(TimingTimestamp.validate(Timestamp(0,281474976710655)))
+    with self.assertRaises(ValueError):
+        Timestamp(-1,2)
+    with self.assertRaises(ValueError):
+        Timestamp(1,-2)
+    with self.assertRaises(ValueError):
+        Timestamp(0,281474976710655)
 
   def test_timecode_format(self):
     self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
@@ -737,21 +740,35 @@ class ModelTest(unittest.TestCase):
     self.assertTrue(TimingTimecode.validate(Timecode(0,0,0,0,TimecodeFormat(24))))
     self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,4,TimecodeFormat(24))))
     self.assertTrue(TimingTimecode.validate(Timecode(23,59,59,23,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(-1,2,3,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(24,2,3,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,-1,3,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,60,3,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,-1,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,60,4,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,-1,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,24,TimecodeFormat(24, 1))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,25,TimecodeFormat(25))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,30,TimecodeFormat(30, 1))))
+    with self.assertRaises(ValueError):
+        Timecode(-1,2,3,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(24,2,3,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,-1,3,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,60,3,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,-1,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,60,4,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,-1,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,24,TimecodeFormat(24))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,24,TimecodeFormat(24, 1))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,25,TimecodeFormat(25))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,30,TimecodeFormat(30))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,30,TimecodeFormat(30, 1))
     self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(120))))
-    self.assertFalse(TimingTimecode.validate(Timecode(1,2,3,120,TimecodeFormat(121))))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,120,TimecodeFormat(120))
+    with self.assertRaises(ValueError):
+        Timecode(1,2,3,120,TimecodeFormat(121))
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
