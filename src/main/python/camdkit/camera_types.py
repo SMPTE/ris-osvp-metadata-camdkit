@@ -58,7 +58,7 @@ type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 class StaticCamera(CompatibleBaseModel):
     capture_frame_rate: Annotated[StrictlyPositiveRational | None,
-    Field(alias="captureFrameRate",
+      Field(alias="captureFrameRate",
           json_schema_extra={"units": HERTZ,
                              "clip_property": "capture_frame_rate",
                              "constraints": STRICTLY_POSITIVE_RATIONAL})] = None
@@ -121,16 +121,11 @@ class StaticCamera(CompatibleBaseModel):
                                "constraints": STRICTLY_POSITIVE_INTEGER})] = None
     """Arithmetic ISO scale as defined in ISO 12232"""
 
-    # fdl_link: Annotated[UUIDURN | None,
-    #   Field(alias="fdl_link",
-    #         json_schema_extra={"clip_property": "fdl_link",
-    #                            "constraints": "foo"})] = None
     fdl_link: Annotated[UUIDURN | None,
     Field(alias="fdlLink",
           json_schema_extra={"clip_property": "fdl_link",
                              "constraints": UUID_URN})] = None
-    """URN identifying the ASC Framing Decision List used by the camera.
-    """
+    """URN identifying the ASC Framing Decision List used by the camera."""
 
     shutter_angle: Annotated[ShutterAngle | None,
     Field(alias="shutterAngle",
