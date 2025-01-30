@@ -266,7 +266,9 @@ class ExternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
 class CompatibleBaseModel(BaseModel):
     """Base class for all camdkit parameters."""
 
-    model_config = ConfigDict(validate_assignment=True,
+    # TODO: look into using alias generator
+    model_config = ConfigDict(populate_by_name=True,
+                              validate_assignment=True,
                               use_enum_values=True,
                               extra="forbid",
                               use_attribute_docstrings=True)
