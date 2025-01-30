@@ -18,8 +18,10 @@ from camdkit.compatibility import (CompatibleBaseModel,
 from camdkit.numeric_types import (rationalize_strictly_and_positively,
                                    StrictlyPositiveRational,
                                    NonNegative8BitInt,
+                                   StrictlyPositive8BitInt,
                                    NonNegativeInt,
                                    NonNegative48BitInt)
+from camdkit.string_types import NonBlankUTF8String
 from camdkit.units import SECOND
 
 # This was in the classic implementation, but Pydantic doesn't currently
@@ -28,6 +30,23 @@ from camdkit.units import SECOND
 #
 # highly recommended: regex101.com in Python mode
 PTP_LEADER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
+
+class PTPProfile(StrEnum):
+    IEEE_1588_2019 = "IEEE Std 1588-2019"
+    IEEE_802_1AS_2020 = "IEEE Std 802.1AS-2020"
+    SMPTE_2059_2_2021 = "SMPTE ST2059-2:2021"
+
+
+class SynchronizationPTPPriorities(CompatibleBaseModel):
+    """Data structure for PTP synchronization priorities"""
+    priority1: Annotated[StrictlyPositive8BitInt | None, Field()] = None
+    priority2: Annotated[StrictlyPositive8BitInt | None, Field()] = None
+
+    def __init__(self, priority1: int, priority2: int):
+        super(SynchronizationPTPPriorities, self).__init__(priority1=priority1,
+                                                           priority2=priority2)
+        self.priority1 = priority1
+        self.priority2 = priority2
 
 class TimingMode(StrEnum):
     INTERNAL = "internal"
@@ -49,7 +68,7 @@ class TimecodeFormat(CompatibleBaseModel):
         return rationalize_strictly_and_positively(v)
 
     # TODO investigate the mismatch between the keyword arg and the field name;
-    #   isn't this one of those ugly cases wher ethe field name needs to be capitalCase?
+    #   isn't this one of those ugly cases where the field name needs to be capitalCase?
     def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
         super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
 
@@ -115,14 +134,43 @@ class SynchronizationOffsets(CompatibleBaseModel):
 
 class SynchronizationPTP(CompatibleBaseModel):
 
-    domain: NonNegative8BitInt | None = None
-    leader: Annotated[str | None, Field(pattern=PTP_LEADER_PATTERN)] = None
+    profile: Annotated[PTPProfile | None, Field()] = None
+
+    domain: Annotated[NonNegative8BitInt | None,
+      Field(strict=True)] = None
+
+    leader_identity: Annotated[NonBlankUTF8String | None,
+      Field(pattern=PTP_LEADER_PATTERN, alias="leaderIdentity")] = None
+
+    leader_priorities: Annotated[SynchronizationPTPPriorities | None,
+      Field(alias="leaderPriorities")]= None
+
+    leader_accuracy: Annotated[float | None,
+      Field(gt=0.0, alias="leaderAccuracy", strict=True)] = None
+
     offset: Annotated[float | None, Field(strict=True)] = None
 
-    def __init__(self, domain: Optional[int] = None,
-                 leader: Optional[str] = None,
-                 offset: Optional[float] = None) -> None:
-        super(SynchronizationPTP, self).__init__(domain=domain, leader=leader, offset=offset)
+    mean_path_delay: Annotated[float | None,
+      Field(gt=0.0, alias="meanPathDelay", strict=True)] = None
+
+    # TODO get upper bound on vlan value
+    vlan: Annotated[int | None, Field(gt=0, strict=True)] = None
+
+    # def __init__(self, profile: Optional[PTPProfile] = None,
+    #              domain: Optional[NonNegative8BitInt] = None,
+    #              leader_identity: Optional[NonBlankUTF8String] = None,
+    #              leader_priorities: Optional[SynchronizationPTPPriorities] = None,
+    #              leader_accuracy: Optional[float] = None,
+    #              offset: Optional[float] = None,
+    #              mean_path_delay: Optional[float] = None):
+    #
+    #     super(SynchronizationPTP, self).__init__(profile=profile,
+    #                                              domain=domain,
+    #                                              leader_identity=leader_identity,
+    #                                              leader_priorities=leader_priorities,
+    #                                              leader_accuracy=leader_accuracy,
+    #                                              offset=offset,
+    #                                              mean_path_delay=mean_path_delay)
 
 
 class Synchronization(CompatibleBaseModel):
@@ -220,12 +268,28 @@ elapsed since the start of the epoch.
     example)
     ptp: If the synchronization source is a PTP leader, then this object
     contains:
-    - "leader": The MAC address of the PTP leader
-    - "offset": The timing offset in seconds from the sample timestamp to
-    the PTP timestamp
-    - "domain": The PTP domain number
+    - "profile": Specifies the PTP profile in use. This defines the operational
+    rules and parameters for synchronization. For example "SMPTE ST2059-2:2021"
+    for SMPTE 2110 based systems, or "IEEE Std 1588-2019" or
+    "IEEE Std 802.1AS-2020" for industrial applications
+    - "domain": Identifies the PTP domain the device belongs to. Devices in the
+    same domain can synchronize with each other
+    - "leaderIdentity": The unique identifier (usually MAC address) of the
+    current PTP leader (grandmaster)
+    - "leaderPriorities": The priority values of the leader used in the Best
+    Master Clock Algorithm (BMCA). Lower values indicate higher priority
+    - "priority1": Static priority set by the administrator
+    - "priority2": Dynamic priority based on the leader's role or clock quality
+    - "leaderAccuracy": The timing offset in seconds from the sample timestamp
+    to the PTP timestamp
+    - "meanPathDelay": The average round-trip delay between the device and the
+    PTP leader, measured in seconds
     source: The source of synchronization must be defined as one of the
     following:
+    - "vlan": Integer representing the VLAN ID for PTP traffic (e.g., 100 for
+    VLAN 100)
+    - "timeSource": Indicates the leader's source of time, such as GNSS, atomic
+    clock, or NTP
     - "genlock": The tracking device has an external black/burst or
     tri-level analog sync signal that is triggering the capture of
     tracking samples

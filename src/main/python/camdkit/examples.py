@@ -8,6 +8,8 @@ import uuid
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
+from camdkit.timing_types import SynchronizationPTPPriorities
+
 
 def get_recommended_static_example():
   clip = _get_recommended_static_clip()
@@ -136,9 +138,14 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      offset=0.0,
-      domain=1,
-      leader="00:11:22:33:44:55"
+      PTPProfile.SMPTE_2059_2_2021,
+      1,
+      "00:11:22:33:44:55",
+      SynchronizationPTPPriorities(128, 128),
+      0.00000005,
+      0.000123,
+      100,
+      "GNSS"
     ),
     offsets=SynchronizationOffsets(1.0,2.0,3.0)
   ),)

@@ -87,7 +87,7 @@ class ModelTest(unittest.TestCase):
       locked=True,
       offsets=SynchronizationOffsets(1.0,2.0,3.0),
       present=True,
-      ptp=SynchronizationPTP(1,"00:11:22:33:44:55",0.0),
+      ptp=SynchronizationPTP(domain=1, leader_identity="00:11:22:33:44:55", offset=0.0),
       source=SynchronizationSourceEnum.PTP
     )
     clip.timing_synchronization = (sync,sync)
@@ -1168,28 +1168,7 @@ class ModelTest(unittest.TestCase):
 
     sync.ptp.domain = 0
     sync.ptp.offset = 0.0
-    sync.ptp.leader = "00:00:00:00:00:00"
+    sync.ptp.leader_identity = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
-    sync.ptp.leader = "ab:CD:eF:23:45:67"
-    clip.timing_synchronization = (sync, )
-
-  # def test_make_documentation(self):
-  #
-  #   def print_doc_entry(entry, fp) -> None:
-  #     for key in ("python_name",
-  #                 "canonical_name",
-  #                 "description",
-  #                 "constraints",
-  #                 "sampling",
-  #                 "section",
-  #                 "units"):
-  #       print(f"{key}: {entry[key]}", file=fp)
-  #
-  #   doc: list[dict[str, str]] = Clip.make_documentation()
-  #   sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
-  #   print(f"sorted_doc has {len(sorted_doc)} items")
-  #   with open("/tmp/classic-doc.txt", "w") as fp:
-  #     for doc_entry in sorted_doc:
-  #       print_doc_entry(doc_entry, fp)
-  #
-  #   self.assertTrue(len(doc) > 0)
+    with self.assertRaises(ValueError):
+      sync.ptp.leader = "ab:CD:eF:23:45:67"

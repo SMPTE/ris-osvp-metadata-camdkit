@@ -18,7 +18,7 @@ from camdkit.lens_types import (ExposureFalloff,
 from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
 from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, SynchronizationSource, \
-    SynchronizationOffsets, SynchronizationPTP, Synchronization
+    SynchronizationOffsets, SynchronizationPTP, Synchronization, PTPProfile, SynchronizationPTPPriorities
 from camdkit.transform_types import Vector3, Rotator3, Transform
 from camdkit.clip import Clip
 from camdkit.tracker_types import GlobalPosition
@@ -317,7 +317,13 @@ class ClipTestCases(unittest.TestCase):
                             TimecodeFormat(StrictlyPositiveRational(24, 1),
                                            1))
         timing_timecode = (timecode0, timecode1)
-        ptp = SynchronizationPTP(domain=1, leader="00:11:22:33:44:55", offset=0.0)
+        ptp = SynchronizationPTP(profile=PTPProfile.SMPTE_2059_2_2021,
+                                 domain=1,
+                                 leader_identity="00:11:22:33:44:55",
+                                 leader_priorities=SynchronizationPTPPriorities(1,2),
+                                 leader_accuracy=0.1,
+                                 offset=0.01,
+                                 mean_path_delay=0.001)
         sync_offsets = SynchronizationOffsets(translation=1.0, rotation=2.0, lensEncoders=3.0)
         synchronization = Synchronization(present=True,
                                           locked=True,
@@ -370,11 +376,19 @@ class ClipTestCases(unittest.TestCase):
              "format": {"frameRate": {"num": 24, "denom": 1},
                         "subFrame": 1}}))
         expected_synchronization_dict = {
-            "present": True, "locked": True,
-            "frequency": {"num": 24000, "denom": 1001},
+            "locked": True,
             "source": "ptp",
-            "ptp": {"offset": 0.0, "domain": 1, "leader": "00:11:22:33:44:55"},
-            "offsets": {"translation": 1.0, "rotation": 2.0, "lensEncoders": 3.0}}
+            "frequency": {"num": 24000, "denom": 1001},
+            "offsets": {"translation": 1.0, "rotation": 2.0, "lensEncoders": 3.0},
+            "present": True,
+            "ptp": {"profile": PTPProfile.SMPTE_2059_2_2021,
+                    "domain": 1,
+                    "leaderIdentity": "00:11:22:33:44:55",
+                    "leaderPriorities": {"priority1": 1, "priority2": 2},
+                    "leaderAccuracy": 0.1,
+                    "offset": 0.01,
+                    "meanPathDelay": 0.001}
+        }
         self.assertTupleEqual(clip_as_json["timing"]["synchronization"],
                               (expected_synchronization_dict,
                                expected_synchronization_dict))

@@ -14,17 +14,20 @@ from pydantic import Field
 from camdkit.compatibility import CompatibleBaseModel
 
 __all__ = ['MIN_INT_8', 'MAX_INT_8',
+           'MIN_UINT_8', 'MAX_UINT_8',
            'MIN_UINT_32', 'MAX_UINT_32',
            'MIN_INT_32', 'MAX_INT_32',
            'MAX_UINT_48',
            'SingleDigitInt',
-           'NonNegative8BitInt',
+           'NonNegative8BitInt', 'StrictlyPositive8BitInt',
            'NonNegativeInt', 'NonNegative48BitInt', 'StrictlyPositiveInt',
            'NonNegativeFloat', 'StrictlyPositiveFloat', 'NormalizedFloat', 'UnityOrGreaterFloat',
            'Rational', 'StrictlyPositiveRational', 'rationalize_strictly_and_positively']
 
 MIN_INT_8: Final[int] = -2**7
 MAX_INT_8: Final[int] = 2**7-1
+MIN_UINT_8: Final[int] = 0
+MAX_UINT_8: Final[int] = 2**8-1
 MIN_UINT_32: Final[int] = 0
 MAX_UINT_32: Final[int] = 2**32-1
 MIN_INT_32: Final[int] = -2**31
@@ -34,6 +37,8 @@ MAX_UINT_48: Final[int] = 2**48-1
 type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
 
 type NonNegative8BitInt = Annotated[int, Field(..., ge=0, le=MAX_INT_8, strict=True)]
+
+type StrictlyPositive8BitInt = Annotated[int, Field(..., ge=0, lt=MAX_UINT_8, strict=True)]
 
 type NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
 

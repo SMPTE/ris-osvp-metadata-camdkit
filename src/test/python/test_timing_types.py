@@ -21,9 +21,10 @@ from camdkit.timing_types import (TimingMode,
                                   Timestamp,
                                   SynchronizationSource,
                                   SynchronizationOffsets,
+                                  PTPProfile,
                                   SynchronizationPTP,
                                   Synchronization,
-                                  Timing)
+                                  Timing, SynchronizationPTPPriorities)
 
 
 
@@ -337,40 +338,112 @@ class TimingTestCases(unittest.TestCase):
     def test_synchronization_ptp(self):
         min_valid_domain: int = 0
         max_valid_domain: int = MAX_INT_8
+        valid_profile = PTPProfile.SMPTE_2059_2_2021
         valid_domain: int = 1
-        valid_leader: str = "00:11:22:33:44:55"
-        valid_offset: float = 1.0
+        valid_leader_identity: str = "00:11:22:33:44:55"
+        valid_leader_priorities = SynchronizationPTPPriorities(1, 2)
+        valid_leader_accuracy = 0.1
+        valid_offset: float = 0.01
+        valid_mean_path_delay = 0.001
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain="foo", leader=valid_leader, offset=valid_offset)
+            SynchronizationPTP(profile="foo",
+                               domain=valid_domain,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=min_valid_domain - 1, leader=valid_leader, offset=valid_offset)
+            SynchronizationPTP(profile=valid_profile,
+                               domain="foo",
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=max_valid_domain + 1, leader=valid_leader, offset=valid_offset)
+            SynchronizationPTP(profile=valid_profile,
+                               domain=min_valid_domain - 1,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=valid_domain, leader=0.0, offset=valid_offset)
+            SynchronizationPTP(profile=valid_profile,
+                               domain=max_valid_domain + 1,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=valid_domain, leader=valid_leader, offset="foo")
-        valid_ptp = SynchronizationPTP(domain=valid_domain, leader=valid_leader, offset=valid_offset)
+            SynchronizationPTP(profile=valid_profile,
+                               domain=valid_domain,
+                               leader_identity=0.0,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
+        with self.assertRaises(ValidationError):
+            SynchronizationPTP(profile=valid_profile,
+                               domain=valid_domain,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities="foo",
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
+        with self.assertRaises(ValidationError):
+            SynchronizationPTP(profile=valid_profile,
+                               domain=valid_domain,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy="foo",
+                               offset=valid_offset,
+                               mean_path_delay=valid_mean_path_delay)
+        with self.assertRaises(ValidationError):
+            SynchronizationPTP(profile=valid_profile,
+                               domain=valid_domain,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset="foo",
+                               mean_path_delay=valid_mean_path_delay)
+        with self.assertRaises(ValidationError):
+            SynchronizationPTP(profile=valid_profile,
+                               domain=valid_domain,
+                               leader_identity=valid_leader_identity,
+                               leader_priorities=valid_leader_priorities,
+                               leader_accuracy=valid_leader_accuracy,
+                               offset=valid_offset,
+                               mean_path_delay="foo")
+        valid_ptp = SynchronizationPTP(profile=valid_profile,
+                                       domain=valid_domain,
+                                       leader_identity=valid_leader_identity,
+                                       leader_priorities=valid_leader_priorities,
+                                       leader_accuracy=valid_leader_accuracy,
+                                       offset=valid_offset,
+                                       mean_path_delay=valid_mean_path_delay)
 
         updated_domain: int = valid_domain * 2
         updated_leader: str = "00:11:22:33:44:56"
         updated_offset: float = valid_offset * 2
         valid_ptp.domain = updated_domain
         self.assertEqual(updated_domain, valid_ptp.domain)
-        valid_ptp.leader = updated_leader
-        self.assertEqual(updated_leader, valid_ptp.leader)
+        valid_ptp.leader_identity = updated_leader
+        self.assertEqual(updated_leader, valid_ptp.leader_identity)
         valid_ptp.offset = updated_offset
         self.assertEqual(updated_offset, valid_ptp.offset)
         with self.assertRaises(ValidationError):
             valid_ptp.domain = "foo"
         with self.assertRaises(ValidationError):
-            valid_ptp.leader = 0.0
+            valid_ptp.leader_identity = 0.0
         with self.assertRaises(ValidationError):
             valid_ptp.offset = "foo"
 
         ptp_as_json = SynchronizationPTP.to_json(valid_ptp)
         self.assertEqual(ptp_as_json["domain"], updated_domain)
-        self.assertEqual(ptp_as_json["leader"], updated_leader)
+        self.assertEqual(ptp_as_json["leaderIdentity"], updated_leader)
         self.assertEqual(ptp_as_json["offset"], updated_offset)
 
         ptp_from_json = SynchronizationPTP.from_json(ptp_as_json)
@@ -398,12 +471,20 @@ class TimingTestCases(unittest.TestCase):
                                                rotation=valid_rotation_offset,
                                                lensEncoders=valid_lens_encoders_offset)
         valid_present: bool = True
+        valid_profile=PTPProfile.SMPTE_2059_2_2021
         valid_ptp_domain: int = 1
-        valid_ptp_leader: str = "00:11:22:33:44:55"
-        valid_ptp_offset: float = 3.0
-        valid_ptp = SynchronizationPTP(domain=valid_ptp_domain,
-                                       leader=valid_ptp_leader,
-                                       offset=valid_ptp_offset)
+        valid_ptp_leader_identity: str = "00:11:22:33:44:55"
+        valid_ptp_leader_priorities = SynchronizationPTPPriorities(1, 2)
+        valid_leader_accuracy: float = 0.1
+        valid_ptp_offset: float = 0.01
+        valid_mean_path_delay: float = 0.001
+        valid_ptp = SynchronizationPTP(profile=valid_profile,
+                                       domain=valid_ptp_domain,
+                                       leader_identity=valid_ptp_leader_identity,
+                                       leader_priorities=valid_ptp_leader_priorities,
+                                       leader_accuracy=valid_leader_accuracy,
+                                       offset=valid_ptp_offset,
+                                       mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
             Synchronization(valid_locked,
                             "foo",
@@ -467,7 +548,7 @@ class TimingTestCases(unittest.TestCase):
         updated_ptp_leader: str = "00:11:22:33:44:56"
         updated_ptp_offset: float = valid_ptp_offset * 2
         updated_ptp = SynchronizationPTP(domain=updated_ptp_domain,
-                                         leader=updated_ptp_leader,
+                                         leader_identity=updated_ptp_leader,
                                          offset=updated_ptp_offset)
         valid_sync.locked = updated_locked
         self.assertEqual(updated_locked, valid_sync.locked)
