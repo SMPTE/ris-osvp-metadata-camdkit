@@ -161,10 +161,10 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["sourceNumber"], (1, 2))
     self.assertTupleEqual(d["protocol"], ({"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION},
                                           {"name": OPENTRACKIO_PROTOCOL_NAME, "version": OPENTRACKIO_PROTOCOL_VERSION}))
-    self.assertTupleEqual(d["relatedSampleIds"], (["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"],
-                                                  ["urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
-                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"]))
+    self.assertTupleEqual(d["relatedSampleIds"], (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
+                                                  ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                                   "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9")))
     self.assertTupleEqual(d["globalStage"], ({ "E":100.0, "N":200.0, "U":300.0,
                                                "lat0":100.0, "lon0":200.0, "h0":300.0 },
                                              { "E":100.0, "N":200.0, "U":300.0,
@@ -188,7 +188,7 @@ class ModelTest(unittest.TestCase):
                   "offsets": {"translation":1.0,"rotation":2.0,"lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
-    self.assertTupleEqual(d["transforms"], ([transform_dict, transform_dict], [transform_dict, transform_dict]))
+    self.assertTupleEqual(d["transforms"], ((transform_dict, transform_dict), (transform_dict, transform_dict)))
 
     self.assertTupleEqual(d["lens"]["tStop"], (2000, 4000))
     self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
@@ -203,10 +203,10 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["undistortionOverscan"], (1.0, 1.0))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                          { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], ([{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
-                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}],
-                                                    [{ "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady D-U"},
-                                                     { "radial":[1.0,2.0,3.0], "tangential":[1.0,2.0], "model": "Brown-Conrady U-D"}]))
+    self.assertTupleEqual(d["lens"]["distortion"], (({ "radial":(1.0,2.0,3.0), "tangential":(1.0,2.0), "model": "Brown-Conrady D-U"},
+                                                     { "radial":(1.0,2.0,3.0), "tangential":(1.0,2.0), "model": "Brown-Conrady U-D"}),
+                                                    ({ "radial":(1.0,2.0,3.0), "tangential":(1.0,2.0), "model": "Brown-Conrady D-U"},
+                                                     { "radial":(1.0,2.0,3.0), "tangential":(1.0,2.0), "model": "Brown-Conrady U-D"})))
     self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
     self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
@@ -661,32 +661,32 @@ class ModelTest(unittest.TestCase):
     j = Transforms.to_json((Transform(
       translation=Vector3(1,2,3), \
       rotation=Rotator3(1,2,3)), ))
-    self.assertListEqual(j, [{
+    self.assertEqual(j, ({
       "translation": { "x": 1, "y": 2, "z": 3 },
-      "rotation": { "pan": 1, "tilt": 2, "roll": 3 } 
-    }])
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 }
+    },))
     j = Transforms.to_json((Transform(
       translation=Vector3(1,2,3),
       rotation=Rotator3(1,2,3),
       scale=Vector3(1,2,3)), ))
-    self.assertListEqual(j, [{
+    self.assertEqual(j, ({
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
       "scale": { "x": 1, "y": 2, "z": 3 }
-    }])
-  
+    },))
+
   def test_transforms_from_dict(self):
-    t = Transforms.from_json([{
+    t = Transforms.from_json(({
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 }
-    }])
+    },))
     self.assertEqual(t[0].translation, Vector3(1,2,3))
     self.assertEqual(t[0].rotation, Rotator3(1,2,3))
-    t = Transforms.from_json([{
+    t = Transforms.from_json(({
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
       "scale": { "x": 1, "y": 2, "z": 3 }
-    }])
+    },))
     self.assertEqual(t[0].translation, Vector3(1,2,3))
     self.assertEqual(t[0].rotation, Rotator3(1,2,3))
     self.assertEqual(t[0].scale, Vector3(1,2,3))
@@ -986,7 +986,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.lens_distortions = ""
     with self.assertRaises(ValueError):
-      clip.lens_distortions = []
+      clip.lens_distortions = tuple([])
     with self.assertRaises(ValueError):
       clip.lens_distortions = ((),)
     with self.assertRaises(ValueError):
@@ -1014,32 +1014,33 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(clip.lens_distortions, value)
     
   def test_lens_distortions_from_dict(self):
-    r = LensDistortions.from_json(({
-      "radial": [0.1,0.2,0.3],
-    },))
-    self.assertEqual(r,(Distortion([0.1,0.2,0.3]),))
-    r = LensDistortions.from_json([{
-      "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3],
-      "model": "TestModel",
-    }])
-    self.assertEqual(r,(Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),))
+    r = LensDistortions.from_json(({ "radial": [0.1,0.2,0.3]}, ))
+    self.assertEqual(r, (Distortion([0.1,0.2,0.3]), ))
+    r = LensDistortions.from_json(({ "radial": [0.1,0.2,0.3],
+                                     "tangential": [0.1,0.2,0.3],
+                                     "model": "TestModel", }, ))
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3],
+                                   [0.1,0.2,0.3],
+                                   "TestModel"),))
     
   def test_lens_distortion_to_dict(self):
-    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
-    self.assertListEqual(j, [{
-      "radial": [0.1,0.2,0.3],
-    }])
-    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel2")))
-    self.assertListEqual(j, [{
-      "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3],
+    j = LensDistortions.to_json((Distortion((0.1,0.2,0.3)),))
+    self.assertEqual(j, ({  "radial": (0.1,0.2,0.3),}, ))
+    j = LensDistortions.to_json((Distortion((0.1,0.2,0.3),
+                                            (0.1,0.2,0.3),
+                                            "TestModel"),
+                                 Distortion((0.1,0.2,0.3),
+                                            (0.1,0.2,0.3),
+                                            "TestModel2")))
+    self.assertEqual(j, ({
+      "radial": (0.1,0.2,0.3),
+      "tangential": (0.1,0.2,0.3),
       "model": "TestModel",
     }, {
-      "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3],
+      "radial": (0.1,0.2,0.3),
+      "tangential": (0.1,0.2,0.3),
       "model": "TestModel2",
-    }])
+    }))
     
   def test_lens_distortion_offset(self):
     clip = Clip()
