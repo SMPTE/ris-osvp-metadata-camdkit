@@ -797,9 +797,7 @@ class ModelTest(unittest.TestCase):
         "frameRate": {
           "num": 24,
           "denom": 1
-        }
-      }
-    })
+        }}})
 
   def test_lens_encoders_limits(self):
     clip = Clip()
