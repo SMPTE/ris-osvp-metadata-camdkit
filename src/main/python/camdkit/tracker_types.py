@@ -39,15 +39,6 @@ class StaticTracker(CompatibleBaseModel):
                                "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
     """Non-blank string identifying tracking device firmware version"""
 
-    # def __init__(self, make: NonBlankUTF8String | None,
-    #              modelName: NonBlankUTF8String | None,
-    #              serialNumber: NonBlankUTF8String | None,
-    #              firmwareVersion: NonBlankUTF8String | None):
-    #     super(StaticTracker, self).__init__(make=make,
-    #                                         modelName=modelName,
-    #                                         serialNumber=serialNumber,
-    #                                         firmwareVersion=firmwareVersion)
-
 
 class Tracker(CompatibleBaseModel):
     notes: Annotated[tuple[NonBlankUTF8String, ...] | None,

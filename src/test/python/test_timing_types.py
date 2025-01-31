@@ -46,11 +46,14 @@ class TimingTestCases(unittest.TestCase):
 
     def test_timecode_format(self):
         with self.assertRaises(ValidationError):
-            TimecodeFormat(0, 0)
+            TimecodeFormat(frame_rate=StrictlyPositiveRational(0,1),
+                           sub_frame=0)
         with self.assertRaises(ValidationError):
-            TimecodeFormat(Rational(-1, 1), 0)
+            TimecodeFormat(frame_rate=StrictlyPositiveRational(-1, 1),
+                           sub_frame=0)
         with self.assertRaises(ValidationError):
-            TimecodeFormat(Rational(0, 1), 0)
+            TimecodeFormat(frame_rate=StrictlyPositiveRational(0, 1),
+                           sub_frame=0)
         frame_rate_30fps_num = 30
         frame_rate_30fps_denom = 1
         frame_rate_30fps = StrictlyPositiveRational(frame_rate_30fps_num,
@@ -61,7 +64,8 @@ class TimingTestCases(unittest.TestCase):
                                                              frame_rate_ntsc_broadcast_denom)
         sub_frame_0: int = 0
         sub_frame_1: int = 1
-        tf = TimecodeFormat(frame_rate_30fps, sub_frame_0)
+        tf = TimecodeFormat(frame_rate=frame_rate_30fps,
+                            sub_frame=sub_frame_0)
         self.assertEqual(tf.frame_rate, frame_rate_30fps)
         self.assertEqual(tf.sub_frame, sub_frame_0)
 
@@ -70,11 +74,11 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             tf.frame_rate = 29.976
         with self.assertRaises(ValidationError):
-            tf.frame_rate = Rational(-1, 1)
+            tf.frame_rate = StrictlyPositiveRational(-1, 1)
         with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate_30fps, "foo")
+            TimecodeFormat(frame_rate=frame_rate_30fps, sub_frame="foo")
         with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate_30fps, 1.0)
+            TimecodeFormat(frame_rate=frame_rate_30fps, sub_frame=1.0)
         frame_rate_ntsc_broadcast = StrictlyPositiveRational(30000, 1001)
         tf.frame_rate = frame_rate_ntsc_broadcast
         self.assertEqual(tf.frame_rate, frame_rate_ntsc_broadcast)
@@ -107,7 +111,8 @@ class TimingTestCases(unittest.TestCase):
         thirty_fps_num = 30
         thirty_fps_denom = 1
         sub_frame = 0
-        valid_timecode_format = TimecodeFormat(StrictlyPositiveRational(thirty_fps_num, thirty_fps_denom), sub_frame)
+        valid_timecode_format = TimecodeFormat(frame_rate=StrictlyPositiveRational(thirty_fps_num, thirty_fps_denom),
+                                               sub_frame=sub_frame)
         with self.assertRaises(ValidationError):
             Timecode("foo", 0, 0, 0, valid_timecode_format)
         with self.assertRaises(ValidationError):
@@ -200,7 +205,8 @@ class TimingTestCases(unittest.TestCase):
         doubled_minutes: int = valid_minutes * 2
         doubled_seconds: int = valid_seconds * 2
         doubled_frames: int = valid_frames * 2
-        thirty_fps_drop_frame_format = TimecodeFormat(StrictlyPositiveRational(30000, 1001), 0)
+        thirty_fps_drop_frame_format = TimecodeFormat(frame_rate=StrictlyPositiveRational(30000, 1001),
+                                                      sub_frame=0)
         tc.hours = doubled_hours
         self.assertEqual(tc.hours, doubled_hours)
         tc.minutes = doubled_minutes
@@ -343,97 +349,94 @@ class TimingTestCases(unittest.TestCase):
         valid_leader_identity: str = "00:11:22:33:44:55"
         valid_leader_priorities = SynchronizationPTPPriorities(1, 2)
         valid_leader_accuracy = 0.1
-        valid_offset: float = 0.01
         valid_mean_path_delay = 0.001
+        valid_vlan = 50
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile="foo",
                                domain=valid_domain,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain="foo",
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=min_valid_domain - 1,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=max_valid_domain + 1,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=valid_domain,
                                leader_identity=0.0,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=valid_domain,
                                leader_identity=valid_leader_identity,
                                leader_priorities="foo",
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=valid_domain,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy="foo",
-                               offset=valid_offset,
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=valid_domain,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset="foo",
-                               mean_path_delay=valid_mean_path_delay)
+                               mean_path_delay="foo",
+                               vlan=valid_vlan)
         with self.assertRaises(ValidationError):
             SynchronizationPTP(profile=valid_profile,
                                domain=valid_domain,
                                leader_identity=valid_leader_identity,
                                leader_priorities=valid_leader_priorities,
                                leader_accuracy=valid_leader_accuracy,
-                               offset=valid_offset,
-                               mean_path_delay="foo")
+                               mean_path_delay=valid_mean_path_delay,
+                               vlan="foo")
         valid_ptp = SynchronizationPTP(profile=valid_profile,
                                        domain=valid_domain,
                                        leader_identity=valid_leader_identity,
                                        leader_priorities=valid_leader_priorities,
                                        leader_accuracy=valid_leader_accuracy,
-                                       offset=valid_offset,
-                                       mean_path_delay=valid_mean_path_delay)
+                                       mean_path_delay=valid_mean_path_delay,
+                                       vlan=valid_vlan)
 
         updated_domain: int = valid_domain * 2
         updated_leader: str = "00:11:22:33:44:56"
-        updated_offset: float = valid_offset * 2
         valid_ptp.domain = updated_domain
         self.assertEqual(updated_domain, valid_ptp.domain)
         valid_ptp.leader_identity = updated_leader
         self.assertEqual(updated_leader, valid_ptp.leader_identity)
-        valid_ptp.offset = updated_offset
-        self.assertEqual(updated_offset, valid_ptp.offset)
         with self.assertRaises(ValidationError):
             valid_ptp.domain = "foo"
         with self.assertRaises(ValidationError):
@@ -444,7 +447,6 @@ class TimingTestCases(unittest.TestCase):
         ptp_as_json = SynchronizationPTP.to_json(valid_ptp)
         self.assertEqual(ptp_as_json["domain"], updated_domain)
         self.assertEqual(ptp_as_json["leaderIdentity"], updated_leader)
-        self.assertEqual(ptp_as_json["offset"], updated_offset)
 
         ptp_from_json = SynchronizationPTP.from_json(ptp_as_json)
         self.assertEqual(valid_ptp, ptp_from_json)
@@ -476,14 +478,12 @@ class TimingTestCases(unittest.TestCase):
         valid_ptp_leader_identity: str = "00:11:22:33:44:55"
         valid_ptp_leader_priorities = SynchronizationPTPPriorities(1, 2)
         valid_leader_accuracy: float = 0.1
-        valid_ptp_offset: float = 0.01
         valid_mean_path_delay: float = 0.001
         valid_ptp = SynchronizationPTP(profile=valid_profile,
                                        domain=valid_ptp_domain,
                                        leader_identity=valid_ptp_leader_identity,
                                        leader_priorities=valid_ptp_leader_priorities,
                                        leader_accuracy=valid_leader_accuracy,
-                                       offset=valid_ptp_offset,
                                        mean_path_delay=valid_mean_path_delay)
         with self.assertRaises(ValidationError):
             Synchronization(valid_locked,
@@ -546,10 +546,8 @@ class TimingTestCases(unittest.TestCase):
         updated_present: bool = not valid_present
         updated_ptp_domain: int = valid_ptp_domain * 2
         updated_ptp_leader: str = "00:11:22:33:44:56"
-        updated_ptp_offset: float = valid_ptp_offset * 2
         updated_ptp = SynchronizationPTP(domain=updated_ptp_domain,
-                                         leader_identity=updated_ptp_leader,
-                                         offset=updated_ptp_offset)
+                                         leader_identity=updated_ptp_leader)
         valid_sync.locked = updated_locked
         self.assertEqual(updated_locked, valid_sync.locked)
         valid_sync.source = updated_synchronization_source

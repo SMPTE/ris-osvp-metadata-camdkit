@@ -176,8 +176,13 @@
               "type": "number",
               "exclusiveMinimum": 0.0
             },
-            "offset": {
-              "type": "number"
+            "leaderTimeSource": {
+              "enum": [
+                "GNSS",
+                "Atomic clock",
+                "NTP"
+              ],
+              "type": "string"
             },
             "meanPathDelay": {
               "type": "number",

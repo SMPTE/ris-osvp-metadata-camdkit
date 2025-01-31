@@ -69,11 +69,11 @@ class F4AxisBlock:
   def to_timecode(self) -> Timecode:
      match ((self.axis_status >> 5) & 0b11):
        case 0b00:
-         format = TimecodeFormat(24)
+         format = TimecodeFormat(frame_rate=24)
        case 0b01:
-         format = TimecodeFormat(25)
+         format = TimecodeFormat(frame_rate=25)
        case 0b10:
-         format = TimecodeFormat(30)
+         format = TimecodeFormat(frame_rate=30)
 
      hours = (self.data_bits1 >> 2) % 24
      minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)

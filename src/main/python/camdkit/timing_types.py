@@ -6,7 +6,7 @@
 
 """Types for modeling of time-related metadata"""
 
-from enum import Enum, verify, UNIQUE, StrEnum
+from enum import Enum, verify, UNIQUE, StrEnum, unique
 from typing import Annotated, Optional
 from fractions import Fraction
 
@@ -31,10 +31,17 @@ from camdkit.units import SECOND
 # highly recommended: regex101.com in Python mode
 PTP_LEADER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
 
+@unique
 class PTPProfile(StrEnum):
     IEEE_1588_2019 = "IEEE Std 1588-2019"
     IEEE_802_1AS_2020 = "IEEE Std 802.1AS-2020"
     SMPTE_2059_2_2021 = "SMPTE ST2059-2:2021"
+
+@unique
+class PTPLeaderTimeSource(StrEnum):
+    GNSS = "GNSS"
+    ATOMIC_CLOCK = "Atomic clock"
+    NTP = "NTP"
 
 
 class SynchronizationPTPPriorities(CompatibleBaseModel):
@@ -48,10 +55,11 @@ class SynchronizationPTPPriorities(CompatibleBaseModel):
         self.priority1 = priority1
         self.priority2 = priority2
 
+
+@unique
 class TimingMode(StrEnum):
     INTERNAL = "internal"
     EXTERNAL = "external"
-
 
 class TimecodeFormat(CompatibleBaseModel):
     """The timecode format is defined as a rational frame rate and - where a
@@ -66,11 +74,6 @@ class TimecodeFormat(CompatibleBaseModel):
     @classmethod
     def coerce_frame_rate_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
-
-    # TODO investigate the mismatch between the keyword arg and the field name;
-    #   isn't this one of those ugly cases where the field name needs to be capitalCase?
-    def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
-        super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
 
     def to_int(self) -> int:
         return Fraction(self.frame_rate.num, self.frame_rate.denom).__ceil__()
@@ -148,29 +151,14 @@ class SynchronizationPTP(CompatibleBaseModel):
     leader_accuracy: Annotated[float | None,
       Field(gt=0.0, alias="leaderAccuracy", strict=True)] = None
 
-    offset: Annotated[float | None, Field(strict=True)] = None
+    leader_time_source: Annotated[PTPLeaderTimeSource | None,
+      Field(alias="leaderTimeSource")] = None
 
     mean_path_delay: Annotated[float | None,
       Field(gt=0.0, alias="meanPathDelay", strict=True)] = None
 
     # TODO get upper bound on vlan value
     vlan: Annotated[int | None, Field(gt=0, strict=True)] = None
-
-    # def __init__(self, profile: Optional[PTPProfile] = None,
-    #              domain: Optional[NonNegative8BitInt] = None,
-    #              leader_identity: Optional[NonBlankUTF8String] = None,
-    #              leader_priorities: Optional[SynchronizationPTPPriorities] = None,
-    #              leader_accuracy: Optional[float] = None,
-    #              offset: Optional[float] = None,
-    #              mean_path_delay: Optional[float] = None):
-    #
-    #     super(SynchronizationPTP, self).__init__(profile=profile,
-    #                                              domain=domain,
-    #                                              leader_identity=leader_identity,
-    #                                              leader_priorities=leader_priorities,
-    #                                              leader_accuracy=leader_accuracy,
-    #                                              offset=offset,
-    #                                              mean_path_delay=mean_path_delay)
 
 
 class Synchronization(CompatibleBaseModel):
@@ -314,6 +302,7 @@ seconds and frames with appropriate min/max values.
         return rationalize_strictly_and_positively(vs)
 
 
+@unique
 class Sampling(Enum):
     STATIC = 'static'
     REGULAR = 'regular'

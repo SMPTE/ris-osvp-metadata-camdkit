@@ -30,7 +30,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(clip.timing_sequence_number[6], 13)
     self.assertEqual(clip.timing_synchronization[7],
                      Synchronization(frequency=25, locked=True, source=SynchronizationSourceEnum.GENLOCK, ptp=None, present=True))
-    self.assertEqual(str(clip.timing_timecode[8]), str(Timecode(15,3,47,10,TimecodeFormat(25))))
+    self.assertEqual(str(clip.timing_timecode[8]), str(Timecode(15,3,47,10,TimecodeFormat(frame_rate=25))))
     self.assertEqual(clip.transforms[9][0].translation, Vector3(x=-8.121, y=-185.368, z=119.806))
     self.assertEqual(clip.transforms[10][0].rotation, Rotator3(pan=-2.969, tilt=-28.03, roll=3.1))
     self.assertEqual(clip.lens_encoders[11], FizEncoders(focus=0.7643280029296875, zoom=0.0014190673828125))

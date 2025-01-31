@@ -311,18 +311,17 @@ class ClipTestCases(unittest.TestCase):
         sample_rate = StrictlyPositiveRational(24000, 1001)
         timing_sample_rate = (sample_rate, sample_rate)
         timecode0 = Timecode(1, 2, 3, 4,
-                            TimecodeFormat(StrictlyPositiveRational(24, 1),
-                                           0))
+                            TimecodeFormat(frame_rate=StrictlyPositiveRational(24, 1),
+                                           sub_frame=0))
         timecode1= Timecode(1, 2, 3, 5,
-                            TimecodeFormat(StrictlyPositiveRational(24, 1),
-                                           1))
+                            TimecodeFormat(frame_rate=StrictlyPositiveRational(24, 1),
+                                           sub_frame=1))
         timing_timecode = (timecode0, timecode1)
         ptp = SynchronizationPTP(profile=PTPProfile.SMPTE_2059_2_2021,
                                  domain=1,
                                  leader_identity="00:11:22:33:44:55",
                                  leader_priorities=SynchronizationPTPPriorities(1,2),
                                  leader_accuracy=0.1,
-                                 offset=0.01,
                                  mean_path_delay=0.001)
         sync_offsets = SynchronizationOffsets(translation=1.0, rotation=2.0, lensEncoders=3.0)
         synchronization = Synchronization(present=True,
@@ -381,14 +380,16 @@ class ClipTestCases(unittest.TestCase):
             "frequency": {"num": 24000, "denom": 1001},
             "offsets": {"translation": 1.0, "rotation": 2.0, "lensEncoders": 3.0},
             "present": True,
-            "ptp": {"profile": PTPProfile.SMPTE_2059_2_2021,
+            "ptp": {"profile": PTPProfile.SMPTE_2059_2_2021.value,
                     "domain": 1,
                     "leaderIdentity": "00:11:22:33:44:55",
                     "leaderPriorities": {"priority1": 1, "priority2": 2},
                     "leaderAccuracy": 0.1,
-                    "offset": 0.01,
                     "meanPathDelay": 0.001}
         }
+        self.assertEqual(clip_as_json["timing"]["synchronization"],
+                              (expected_synchronization_dict,
+                               expected_synchronization_dict))
         self.assertTupleEqual(clip_as_json["timing"]["synchronization"],
                               (expected_synchronization_dict,
                                expected_synchronization_dict))

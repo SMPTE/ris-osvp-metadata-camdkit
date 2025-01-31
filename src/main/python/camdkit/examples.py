@@ -8,7 +8,7 @@ import uuid
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
-from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities
+from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities, PTPLeaderTimeSource
 
 
 def get_recommended_static_example():
@@ -97,7 +97,7 @@ def _get_recommended_dynamic_clip():
   # timing
   clip.timing_mode = (TimingMode.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=Fraction(24000, 1001))),)
   # transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
@@ -138,15 +138,14 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      PTPProfile.SMPTE_2059_2_2021,
-      1,
-      "00:11:22:33:44:55",
-      SynchronizationPTPPriorities(128, 128),
-      0.00000005,
-      0.000123,
-      100,
-      "GNSS"
-    )
+      profile=PTPProfile.SMPTE_2059_2_2021,
+      domain=1,
+      leader_identity="00:11:22:33:44:55",
+      leader_priorities=SynchronizationPTPPriorities(128, 128),
+      leader_accuracy=0.00000005,
+      leader_time_source=PTPLeaderTimeSource.GNSS,
+      meanPathDelay=0,
+      vlan=100)
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)

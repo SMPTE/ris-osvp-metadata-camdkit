@@ -9,11 +9,14 @@
 import unittest
 from fractions import Fraction
 
+from pydantic import ValidationError
+
 from camdkit.framework import *
 from camdkit.model import *
 
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
 from camdkit.numeric_types import StrictlyPositiveRational
+from camdkit.timing_types import PTPLeaderTimeSource
 
 
 class ModelTest(unittest.TestCase):
@@ -84,16 +87,22 @@ class ModelTest(unittest.TestCase):
                                       Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
     clip.timing_sample_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
-    clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(24)),
-                            Timecode(1,2,3,5,TimecodeFormat(24)))
+    clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=24)),
+                            Timecode(1,2,3,5,TimecodeFormat(frame_rate=24)))
     sync = Synchronization(
       frequency=Fraction(24000, 1001),
       locked=True,
       offsets=SynchronizationOffsets(1.0,2.0,3.0),
       present=True,
-      ptp=SynchronizationPTP(domain=1, leader_identity="00:11:22:33:44:55", offset=0.0),
-      source=SynchronizationSourceEnum.PTP
-    )
+      ptp=SynchronizationPTP(profile=PTPProfile.SMPTE_2059_2_2021,
+                             domain=1,
+                             leader_identity="00:11:22:33:44:55",
+                             leader_priorities=SynchronizationPTPPriorities(128, 128),
+                             leader_accuracy=0.1,
+                             leader_time_source=PTPLeaderTimeSource.GNSS,
+                             mean_path_delay=0.2,
+                             vlan=100),
+      source=SynchronizationSourceEnum.PTP)
     clip.timing_synchronization = (sync,sync)
     
     translation = Vector3(x=1.0, y=2.0, z=3.0)
@@ -187,7 +196,14 @@ class ModelTest(unittest.TestCase):
                            { "hours":1,"minutes":2,"seconds":3,"frames":5,
                              "format": { "frameRate": { "num": 24, "denom": 1 }}}))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
-                  "ptp": {"offset":0.0, "domain":1, "leaderIdentity": "00:11:22:33:44:55"},
+                  "ptp": {"profile": PTPProfile.SMPTE_2059_2_2021.value,
+                          "domain":1,
+                          "leaderIdentity": "00:11:22:33:44:55",
+                          "leaderPriorities": {"priority1": 128, "priority2": 128},
+                          "leaderAccuracy": 0.1,
+                          "leaderTimeSource": PTPLeaderTimeSource.GNSS.value,
+                          "meanPathDelay": 0.2,
+                          "vlan": 100},
                   "offsets": {"translation":1.0, "rotation":2.0, "lensEncoders":3.0 } }
     self.assertTupleEqual(d["timing"]["synchronization"], (sync_dict, sync_dict))
     transform_dict = { "translation": { "x":1.0,"y":2.0,"z":3.0 }, "rotation": { "pan":1.0,"tilt":2.0,"roll":3.0 } }
@@ -623,7 +639,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_timecode = {1,2,3,24,"24"}
 
-    value = Timecode(1,2,3,4,TimecodeFormat(24))
+    value = Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))
     clip.timing_timecode = (value,)
     self.assertEqual(clip.timing_timecode, (value,))
 
@@ -724,15 +740,15 @@ class ModelTest(unittest.TestCase):
         Timestamp(0,281474976710655)
 
   def test_timecode_format(self):
-    self.assertEqual(TimecodeFormat(24).to_int(), 24)
-    self.assertEqual(TimecodeFormat(24, 1).to_int(), 24)
-    self.assertEqual(TimecodeFormat(25).to_int(), 25)
-    self.assertEqual(TimecodeFormat(30).to_int(), 30)
-    self.assertEqual(TimecodeFormat(30, 1).to_int(), 30)
-    with self.assertRaises(TypeError):
+    self.assertEqual(TimecodeFormat(frame_rate=24).to_int(), 24)
+    self.assertEqual(TimecodeFormat(frame_rate=24, sub_frame=1).to_int(), 24)
+    self.assertEqual(TimecodeFormat(frame_rate=25).to_int(), 25)
+    self.assertEqual(TimecodeFormat(frame_rate=30).to_int(), 30)
+    self.assertEqual(TimecodeFormat(frame_rate=30, sub_frame=1).to_int(), 30)
+    with self.assertRaises(ValidationError):
       TimecodeFormat()
     with self.assertRaises(ValueError):
-      TimecodeFormat(0).to_int()
+      TimecodeFormat(frame_rate=0).to_int()
 
   def test_timecode_formats(self):
     with self.assertRaises(TypeError):
@@ -742,39 +758,39 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(TypeError):
       Timecode(0,0,0,0)
     with self.assertRaises(ValueError):
-      Timecode(0,0,0,0,TimecodeFormat(0))
-    self.assertTrue(TimingTimecode.validate(Timecode(0,0,0,0,TimecodeFormat(24))))
-    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,4,TimecodeFormat(24))))
-    self.assertTrue(TimingTimecode.validate(Timecode(23,59,59,23,TimecodeFormat(24))))
+      Timecode(0,0,0,0,TimecodeFormat(frame_rate=0))
+    self.assertTrue(TimingTimecode.validate(Timecode(0,0,0,0,TimecodeFormat(frame_rate=24))))
+    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))))
+    self.assertTrue(TimingTimecode.validate(Timecode(23,59,59,23,TimecodeFormat(frame_rate=24))))
     with self.assertRaises(ValueError):
-        Timecode(-1,2,3,4,TimecodeFormat(24))
+        Timecode(-1,2,3,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(24,2,3,4,TimecodeFormat(24))
+        Timecode(24,2,3,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,-1,3,4,TimecodeFormat(24))
+        Timecode(1,-1,3,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,60,3,4,TimecodeFormat(24))
+        Timecode(1,60,3,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,2,-1,4,TimecodeFormat(24))
+        Timecode(1,2,-1,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,2,60,4,TimecodeFormat(24))
+        Timecode(1,2,60,4,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,-1,TimecodeFormat(24))
+        Timecode(1,2,3,-1,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,24,TimecodeFormat(24))
+        Timecode(1,2,3,24,TimecodeFormat(frame_rate=24))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,24,TimecodeFormat(24, 1))
+        Timecode(1,2,3,24,TimecodeFormat(frame_rate=24, sub_frame=1))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,25,TimecodeFormat(25))
+        Timecode(1,2,3,25,TimecodeFormat(frame_rate=25))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,30,TimecodeFormat(30))
+        Timecode(1,2,3,30,TimecodeFormat(frame_rate=30))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,30,TimecodeFormat(30, 1))
-    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(120))))
+        Timecode(1,2,3,30,TimecodeFormat(frame_rate=30, sub_frame=1))
+    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(frame_rate=120))))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,120,TimecodeFormat(120))
+        Timecode(1,2,3,120,TimecodeFormat(frame_rate=120))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,120,TimecodeFormat(121))
+        Timecode(1,2,3,120,TimecodeFormat(frame_rate=121))
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
@@ -790,10 +806,10 @@ class ModelTest(unittest.TestCase):
         "subFrame": 0,
       }
     })
-    self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(24))))
+    self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))))
 
   def test_timecode_to_dict(self):
-    j = TimingTimecode.to_json(Timecode(1,2,3,4,TimecodeFormat(24)))
+    j = TimingTimecode.to_json(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24)))
     self.assertDictEqual(j, {
       "hours": 1,
       "minutes": 2,
@@ -1196,7 +1212,6 @@ class ModelTest(unittest.TestCase):
       clip.timing_synchronization = (sync, )
 
     sync.ptp.domain = 0
-    sync.ptp.offset = 0.0
     sync.ptp.leader_identity = "00:00:00:00:00:00"
     clip.timing_synchronization = (sync, )
     with self.assertRaises(ValueError):
