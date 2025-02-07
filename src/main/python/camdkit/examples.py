@@ -8,6 +8,8 @@ import uuid
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
+from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities, PTPLeaderTimeSource
+
 
 def get_recommended_static_example():
   clip = _get_recommended_static_clip()
@@ -27,7 +29,7 @@ def _add_recommended_static_clip_parameters(clip: Clip) -> Clip:
   clip.camera_label = "A"
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
-  clip.active_sensor_physical_dimensions = Dimensions(width=36.0,height=24.0)
+  clip.active_sensor_physical_dimensions = ActiveSensorPhysicalDimensions(width=36.0,height=24.0)
   return clip
 
 def _get_recommended_static_clip() -> Clip:
@@ -93,9 +95,9 @@ def _get_recommended_dynamic_clip():
   clip.tracker_slate = ("A101_A_4",)
   clip.tracker_notes = ("Example generated sample.",)
   # timing
-  clip.timing_mode = (TimingModeEnum.EXTERNAL,)
+  clip.timing_mode = (TimingMode.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=Fraction(24000, 1001))),)
   # transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
@@ -113,7 +115,7 @@ def _get_complete_dynamic_clip():
   clip = _get_recommended_dynamic_clip()
   # augmenting recommended values
   #   timing
-  clip.timing_mode = (TimingModeEnum.INTERNAL,)
+  clip.timing_mode = (TimingMode.INTERNAL,)
   #   transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
@@ -136,15 +138,14 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      PTP_PROFILES[2],
-      1,
-      "00:11:22:33:44:55",
-      SynchronizationPTPPriorities(128, 128),
-      0.00000005,
-      0.000123,
-      100,
-      "GNSS"
-    )
+      profile=PTPProfile.SMPTE_2059_2_2021,
+      domain=1,
+      leader_identity="00:11:22:33:44:55",
+      leader_priorities=SynchronizationPTPPriorities(128, 128),
+      leader_accuracy=0.00000005,
+      time_source=PTPLeaderTimeSource.GNSS,
+      mean_path_delay=0.000123,
+      vlan=100)
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)

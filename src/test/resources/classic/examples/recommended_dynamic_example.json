@@ -1,0 +1,81 @@
+{
+  "lens": {
+    "distortion": [
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      }
+    ],
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "fStop": 4.0,
+    "focalLength": 24.305,
+    "focusDistance": 10.0,
+    "projectionOffset": {
+      "x": 0.1,
+      "y": 0.2
+    }
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": [
+      0,
+      9,
+      1
+    ]
+  },
+  "sampleId": "urn:uuid:4e10f429-dde4-421d-bacf-bbbf2a5cbc31",
+  "sourceId": "urn:uuid:049900b8-b4c6-496e-914e-fe0d0e3c323e",
+  "sourceNumber": 1,
+  "timing": {
+    "mode": "external",
+    "sampleRate": {
+      "num": 24000,
+      "denom": 1001
+    },
+    "timecode": {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "format": {
+        "frameRate": {
+          "num": 24000,
+          "denom": 1001
+        }
+      }
+    }
+  },
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
+  },
+  "transforms": [
+    {
+      "translation": {
+        "x": 1.0,
+        "y": 2.0,
+        "z": 3.0
+      },
+      "rotation": {
+        "pan": 180.0,
+        "tilt": 90.0,
+        "roll": 45.0
+      },
+      "id": "Camera"
+    }
+  ]
+}
