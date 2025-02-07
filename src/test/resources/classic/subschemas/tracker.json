@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "notes": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string containing notes about tracking system"
+    },
+    "recording": {
+      "type": "boolean",
+      "description": "Boolean indicating whether tracking system is recording data"
+    },
+    "slate": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string describing the recording slate"
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string describing status of tracking system"
+    }
+  }
+}

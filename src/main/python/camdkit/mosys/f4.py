@@ -69,11 +69,11 @@ class F4AxisBlock:
   def to_timecode(self) -> Timecode:
      match ((self.axis_status >> 5) & 0b11):
        case 0b00:
-         format = TimecodeFormat(24)
+         format = TimecodeFormat(frame_rate=24)
        case 0b01:
-         format = TimecodeFormat(25)
+         format = TimecodeFormat(frame_rate=25)
        case 0b10:
-         format = TimecodeFormat(30)
+         format = TimecodeFormat(frame_rate=30)
 
      hours = (self.data_bits1 >> 2) % 24
      minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)
@@ -215,7 +215,7 @@ class F4PacketParser:
           case F4.FIELD_ID_HEIGHT:
             translation.z = self._axis_block_to_angle_linear_raw(axis_block, F4.LINEAR_FACTOR)
           case F4.FIELD_ID_ENTRANCE_PUPIL:
-            frame.lens_entrance_pupil_distance = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
+            frame.lens_entrance_pupil_offset = (Fraction(self._axis_block_to_lens_param(axis_block) * 1000),)
             pass
           case F4.FIELD_ID_LENS_DISTORTION_K1:
             k1 = self._axis_block_to_lens_param(axis_block)
