@@ -5,15 +5,72 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 import uuid
+import copy
+
+from pydantic import JsonValue
+from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities, PTPLeaderTimeSource
 
 
+def _unwrap_clip_to_pseudo_frame(wrapped_clip: JsonSchemaValue) -> JsonSchemaValue:
+  paths_to_unwrap: tuple[tuple[str, ...], ...] = (
+    ("globalStage",),
+    ("lens", "custom"),
+    ("lens", "distortion"),
+    ("lens", "distortionOffset"),
+    ("lens", "distortionOverscan"),
+    ("lens", "encoders"),
+    ("lens", "entrancePupilOffset"),
+    ("lens", "exposureFalloff"),
+    ("lens", "fStop"),
+    ("lens", "focalLength"),
+    ("lens", "focusDistance"),
+    ("lens", "projectionOffset"),
+    ("lens", "rawEncoders"),
+    ("lens", "tStop"),
+    ("lens", "undistortionOverscan"),
+    ("protocol",),
+    ("relatedSampleIds",),
+    ("sampleId",),
+    ("sourceId",),
+    ("sourceNumber",),
+    ("timing", "mode"),
+    ("timing", "recordedTimestamp"),
+    ("timing", "sampleRate"),
+    ("timing", "sampleTimestamp"),
+    ("timing", "sequenceNumber"),
+    ("timing", "synchronization"),
+    ("timing", "timecode"),
+    ("tracker", "notes"),
+    ("tracker", "recording"),
+    ("tracker", "slate"),
+    ("tracker", "status"),
+    ("transforms",)
+  )
+  clip = copy.deepcopy(wrapped_clip)
+  for path in paths_to_unwrap:
+    # REALLY brute-force
+    if len(path) == 1:
+      k0 = path[0]
+      if k0 in clip:
+        clip[k0] = clip[k0][0]
+    elif len(path) == 2:
+      k0 = path[0]
+      if k0 in clip:
+        k1 = path[1]
+        if k1 in clip[k0]:
+          clip[k0][k1] = clip[k0][k1][0]
+    else:
+      raise RuntimeError("That's too deep for me I'm afraid")
+  return clip
+
+
 def get_recommended_static_example():
   clip = _get_recommended_static_clip()
-  return clip.to_json(0)
+  return  _unwrap_clip_to_pseudo_frame(clip.to_json(0))
 
 def get_complete_static_example():
   clip = _get_complete_static_clip()
@@ -23,7 +80,7 @@ def get_complete_static_example():
     "pot1": 2435,
     "button1": False
   }
-  return clip_json
+  return _unwrap_clip_to_pseudo_frame(clip_json)
 
 def _add_recommended_static_clip_parameters(clip: Clip) -> Clip:
   clip.camera_label = "A"
@@ -66,7 +123,7 @@ def _get_complete_static_clip() -> Clip:
 
 def get_recommended_dynamic_example():
   clip = _get_recommended_dynamic_clip()
-  return clip.to_json(0)
+  return _unwrap_clip_to_pseudo_frame(clip.to_json(0))
 
 def get_complete_dynamic_example():
   clip = _get_complete_dynamic_clip()
@@ -77,7 +134,7 @@ def get_complete_dynamic_example():
     "pot1": 2435,
     "button1": False
   }
-  return clip_json
+  return _unwrap_clip_to_pseudo_frame(clip_json)
 
 def _example_transform_components() -> tuple[Vector3, Rotator3]:
   return Vector3(x=1.0, y=2.0, z=3.0), Rotator3(pan=180.0, tilt=90.0, roll=45.0)
