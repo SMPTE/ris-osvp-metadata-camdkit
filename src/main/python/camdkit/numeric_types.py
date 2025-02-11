@@ -34,25 +34,25 @@ MIN_INT_32: Final[int] = -2**31
 MAX_INT_32: Final[int] = 2**31-1
 MAX_UINT_48: Final[int] = 2**48-1
 
-type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
+SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
 
-type NonNegative8BitInt = Annotated[int, Field(..., ge=0, le=MAX_INT_8, strict=True)]
+NonNegative8BitInt = Annotated[int, Field(..., ge=0, le=MAX_INT_8, strict=True)]
 
-type StrictlyPositive8BitInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_8, strict=True)]
+StrictlyPositive8BitInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_8, strict=True)]
 
-type NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
+NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
 
-type NonNegative48BitInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_48, strict=True)]
+NonNegative48BitInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_48, strict=True)]
 
-type StrictlyPositiveInt = Annotated[int, Field(..., ge=1, le=MAX_UINT_32, strict=True)]
+StrictlyPositiveInt = Annotated[int, Field(..., ge=1, le=MAX_UINT_32, strict=True)]
 
-type NonNegativeFloat = Annotated[float, Field(..., ge=0, strict=True)]
+NonNegativeFloat = Annotated[float, Field(..., ge=0, strict=True)]
 
-type StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, strict=True)]
+StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, strict=True)]
 
-type NormalizedFloat = Annotated[float, Field(..., ge=0.0, le=1.0, strict=True)]
+NormalizedFloat = Annotated[float, Field(..., ge=0.0, le=1.0, strict=True)]
 
-type UnityOrGreaterFloat = Annotated[float, Field(..., ge=1.0, strict=True)]
+UnityOrGreaterFloat = Annotated[float, Field(..., ge=1.0, strict=True)]
 
 # init methods because by default Pydantic BaseModel doesn't let you use positional arguments,
 # and camdkit 0.9 uses that style of object instantiation

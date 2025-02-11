@@ -19,7 +19,7 @@ __all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'OPENTRACKIO_PROTOCOL_VERSION', 'Version
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
 OPENTRACKIO_PROTOCOL_VERSION = (0, 9, 1)
 
-type VersionComponent = Annotated[int, Field(ge=0, le=9)]
+VersionComponent = Annotated[int, Field(ge=0, le=9)]
 
 class VersionedProtocol(CompatibleBaseModel):
     name: NonBlankUTF8String

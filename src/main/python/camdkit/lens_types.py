@@ -110,7 +110,7 @@ class Distortion(CompatibleBaseModel):
         super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
-type Distortions = Annotated[tuple[Distortion, ...], Field(min_length=1)]
+Distortions = Annotated[tuple[Distortion, ...], Field(min_length=1)]
 
 class PlanarOffset(CompatibleBaseModel):
     x: float

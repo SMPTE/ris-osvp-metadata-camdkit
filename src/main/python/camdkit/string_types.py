@@ -16,8 +16,8 @@ __all__ = [
 ]
 
 MAX_STR_LENGTH: Final[int] = 1023
-type NonBlankUTF8String = Annotated[str, Field(min_length=1, max_length=MAX_STR_LENGTH)]
+NonBlankUTF8String = Annotated[str, Field(min_length=1, max_length=MAX_STR_LENGTH)]
 
 UUID_URN_PATTERN: Final[str] = r'^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
 
-type UUIDURN = Annotated[str, Field(pattern=UUID_URN_PATTERN)]
+UUIDURN = Annotated[str, Field(pattern=UUID_URN_PATTERN)]

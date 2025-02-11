@@ -53,7 +53,7 @@ class SenselDimensions(CompatibleBaseModel):
         super(SenselDimensions, self).__init__(width=width, height=height)
 
 
-type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
+ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):

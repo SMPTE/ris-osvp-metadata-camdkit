@@ -55,8 +55,8 @@ class Static(CompatibleBaseModel):
     lens: StaticLens = StaticLens()
     tracker: StaticTracker = StaticTracker()
 
-type ModelPath = tuple[str, ...]
-type TraversingFunction = Callable[[str, JsonSchemaValue, ModelPath, str], None]
+ModelPath = tuple[str, ...]
+TraversingFunction = Callable[[str, JsonSchemaValue, ModelPath, str], None]
 
 class Clip(CompatibleBaseModel):
 
