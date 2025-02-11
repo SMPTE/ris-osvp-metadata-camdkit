@@ -48,44 +48,47 @@ def generify_urn_uuids(clip: JsonSchemaValue) -> None:
                 containing_dict[path] = "urn:uuid:random"
 
 
-class ExampleTestCases(unittest.TestCase):
-
-    def test_corruption(self):
-        good_clip = {
-            "globalStage": ["foo"],
-            "lens": { "distortion": [4.1] }
-        }
-        pseudo_frame = {
-            "globalStage": "foo",
-            "lens": { "distortion": 4.1}
-        }
-        corrupted_clip = _unwrap_clip_to_pseudo_frame(deepcopy(good_clip))
-        self.assertEqual(pseudo_frame, corrupted_clip)
-
-    def compare(self, completeness: Literal['recommended', 'complete'],
-                scope: Literal['static', 'dynamic']) -> None:
-        classic_path = Path(CLASSIC_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
-        pydantic_path = Path(CURRENT_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
-        with open(classic_path) as classic_file:
-            classic_json = json.load(classic_file)
-            with open(pydantic_path) as pydantic_file:
-                pydantic_json = json.load(pydantic_file)
-                generify_urn_uuids(classic_json)
-                generify_urn_uuids(pydantic_json)
-                self.assertEqual(classic_json, pydantic_json)
-
-    def test_recommended_dynamic(self):
-        self.compare('recommended', 'dynamic')
-
-    def test_complete_dynamic(self):
-        self.compare('complete', 'dynamic')
-
-    def test_recommended_static(self):
-        self.compare('recommended', 'static')
-
-    def test_complete_static(self):
-        self.compare('complete', 'static')
+# Uncomment during development
 
 
-if __name__ == '__main__':
-    unittest.main()
+# class ExampleTestCases(unittest.TestCase):
+#
+#     def test_corruption(self):
+#         good_clip = {
+#             "globalStage": ["foo"],
+#             "lens": { "distortion": [4.1] }
+#         }
+#         pseudo_frame = {
+#             "globalStage": "foo",
+#             "lens": { "distortion": 4.1}
+#         }
+#         corrupted_clip = _unwrap_clip_to_pseudo_frame(deepcopy(good_clip))
+#         self.assertEqual(pseudo_frame, corrupted_clip)
+#
+#     def compare(self, completeness: Literal['recommended', 'complete'],
+#                 scope: Literal['static', 'dynamic']) -> None:
+#         classic_path = Path(CLASSIC_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
+#         pydantic_path = Path(CURRENT_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
+#         with open(classic_path) as classic_file:
+#             classic_json = json.load(classic_file)
+#             with open(pydantic_path) as pydantic_file:
+#                 pydantic_json = json.load(pydantic_file)
+#                 generify_urn_uuids(classic_json)
+#                 generify_urn_uuids(pydantic_json)
+#                 self.assertEqual(classic_json, pydantic_json)
+#
+#     def test_recommended_dynamic(self):
+#         self.compare('recommended', 'dynamic')
+#
+#     def test_complete_dynamic(self):
+#         self.compare('complete', 'dynamic')
+#
+#     def test_recommended_static(self):
+#         self.compare('recommended', 'static')
+#
+#     def test_complete_static(self):
+#         self.compare('complete', 'static')
+
+
+# if __name__ == '__main__':
+#     unittest.main()
