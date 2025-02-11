@@ -12,6 +12,31 @@
       "model": "Model15"
     }
   },
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
+  },
+  "timing": {
+    "mode": "external",
+    "sampleRate": {
+      "num": 24000,
+      "denom": 1001
+    },
+    "timecode": {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "format": {
+        "frameRate": {
+          "num": 24000,
+          "denom": 1001
+        }
+      }
+    }
+  },
   "lens": {
     "distortion": [
       {
@@ -48,34 +73,9 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:1839b4f6-603a-40a9-9bc6-1702d4e4f595",
-  "sourceId": "urn:uuid:6fa2c46f-24ce-4b39-9db9-7cece1a4c1ee",
+  "sampleId": "urn:uuid:7b9cf50b-86e2-4ff4-8532-ebbe808da691",
+  "sourceId": "urn:uuid:f20b70aa-d3ac-4527-8525-91b10a94f7f7",
   "sourceNumber": 1,
-  "timing": {
-    "mode": "external",
-    "sampleRate": {
-      "num": 24000,
-      "denom": 1001
-    },
-    "timecode": {
-      "hours": 1,
-      "minutes": 2,
-      "seconds": 3,
-      "frames": 4,
-      "format": {
-        "frameRate": {
-          "num": 24000,
-          "denom": 1001
-        }
-      }
-    }
-  },
-  "tracker": {
-    "notes": "Example generated sample.",
-    "recording": false,
-    "slate": "A101_A_4",
-    "status": "Optical Good"
-  },
   "transforms": [
     {
       "translation": {

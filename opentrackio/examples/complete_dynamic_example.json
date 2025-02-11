@@ -1,95 +1,10 @@
 {
-  "globalStage": {
-    "E": 100.0,
-    "N": 200.0,
-    "U": 300.0,
-    "lat0": 100.0,
-    "lon0": 200.0,
-    "h0": 300.0
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
   },
-  "lens": {
-    "custom": [
-      1.0,
-      2.0
-    ],
-    "distortionOffset": {
-      "x": 1.0,
-      "y": 2.0
-    },
-    "distortionOverscan": 1.1,
-    "distortion": [
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady D-U"
-      },
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady U-D"
-      }
-    ],
-    "encoders": {
-      "focus": 0.1,
-      "iris": 0.2,
-      "zoom": 0.3
-    },
-    "entrancePupilOffset": 0.123,
-    "exposureFalloff": {
-      "a1": 1.0,
-      "a2": 2.0,
-      "a3": 3.0
-    },
-    "fStop": 4.0,
-    "focalLength": 24.305,
-    "focusDistance": 10.0,
-    "projectionOffset": {
-      "x": 0.1,
-      "y": 0.2
-    },
-    "rawEncoders": {
-      "focus": 1000,
-      "iris": 2000,
-      "zoom": 3000
-    },
-    "tStop": 4.1,
-    "undistortionOverscan": 1.2
-  },
-  "protocol": {
-    "name": "OpenTrackIO",
-    "version": [
-      0,
-      9,
-      1
-    ]
-  },
-  "relatedSampleIds": [
-    "urn:uuid:bc427bb0-d680-4be1-b88a-6db0e0f43546",
-    "urn:uuid:13fce361-b506-43c8-b4a1-ea5200cc9840"
-  ],
-  "sampleId": "urn:uuid:39a91232-e8e7-4d8e-b6d7-9af515512a05",
-  "sourceId": "urn:uuid:06ba9a2e-6485-4112-bbeb-22fa84351ed1",
-  "sourceNumber": 1,
   "timing": {
     "mode": "internal",
     "recordedTimestamp": {
@@ -122,9 +37,9 @@
           "priority2": 128
         },
         "leaderAccuracy": 5e-08,
+        "timeSource": "GNSS",
         "meanPathDelay": 0.000123,
-        "vlan": 100,
-        "timeSource": "GNSS"
+        "vlan": 100
       }
     },
     "timecode": {
@@ -140,11 +55,96 @@
       }
     }
   },
-  "tracker": {
-    "notes": "Example generated sample.",
-    "recording": false,
-    "slate": "A101_A_4",
-    "status": "Optical Good"
+  "lens": {
+    "custom": [
+      1.0,
+      2.0
+    ],
+    "distortion": [
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady D-U"
+      },
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "model": "Brown-Conrady U-D"
+      }
+    ],
+    "distortionOverscan": 1.1,
+    "undistortionOverscan": 1.2,
+    "distortionOffset": {
+      "x": 1.0,
+      "y": 2.0
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "exposureFalloff": {
+      "a1": 1.0,
+      "a2": 2.0,
+      "a3": 3.0
+    },
+    "fStop": 4.0,
+    "focalLength": 24.305,
+    "focusDistance": 10.0,
+    "projectionOffset": {
+      "x": 0.1,
+      "y": 0.2
+    },
+    "rawEncoders": {
+      "focus": 1000,
+      "iris": 2000,
+      "zoom": 3000
+    },
+    "tStop": 4.1
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": [
+      0,
+      9,
+      1
+    ]
+  },
+  "sampleId": "urn:uuid:32178a5f-67de-4f93-bca4-918189a9308d",
+  "sourceId": "urn:uuid:ec0e3eb3-a5e1-4f3f-b119-5d177a037827",
+  "sourceNumber": 1,
+  "relatedSampleIds": [
+    "urn:uuid:bcd16f1c-cdcd-4981-b50f-3139749717b7",
+    "urn:uuid:9126b6be-ed09-4216-a950-cea7fc47a8bf"
+  ],
+  "globalStage": {
+    "E": 100.0,
+    "N": 200.0,
+    "U": 300.0,
+    "lat0": 100.0,
+    "lon0": 200.0,
+    "h0": 300.0
   },
   "transforms": [
     {
