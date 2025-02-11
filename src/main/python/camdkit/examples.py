@@ -5,13 +5,72 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 import uuid
+import copy
+
+from pydantic import JsonValue
+from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
+from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities, PTPLeaderTimeSource
+
+
+def _unwrap_clip_to_pseudo_frame(wrapped_clip: JsonSchemaValue) -> JsonSchemaValue:
+  paths_to_unwrap: tuple[tuple[str, ...], ...] = (
+    ("globalStage",),
+    ("lens", "custom"),
+    ("lens", "distortion"),
+    ("lens", "distortionOffset"),
+    ("lens", "distortionOverscan"),
+    ("lens", "encoders"),
+    ("lens", "entrancePupilOffset"),
+    ("lens", "exposureFalloff"),
+    ("lens", "fStop"),
+    ("lens", "focalLength"),
+    ("lens", "focusDistance"),
+    ("lens", "projectionOffset"),
+    ("lens", "rawEncoders"),
+    ("lens", "tStop"),
+    ("lens", "undistortionOverscan"),
+    ("protocol",),
+    ("relatedSampleIds",),
+    ("sampleId",),
+    ("sourceId",),
+    ("sourceNumber",),
+    ("timing", "mode"),
+    ("timing", "recordedTimestamp"),
+    ("timing", "sampleRate"),
+    ("timing", "sampleTimestamp"),
+    ("timing", "sequenceNumber"),
+    ("timing", "synchronization"),
+    ("timing", "timecode"),
+    ("tracker", "notes"),
+    ("tracker", "recording"),
+    ("tracker", "slate"),
+    ("tracker", "status"),
+    ("transforms",)
+  )
+  clip = copy.deepcopy(wrapped_clip)
+  for path in paths_to_unwrap:
+    # REALLY brute-force
+    if len(path) == 1:
+      k0 = path[0]
+      if k0 in clip:
+        clip[k0] = clip[k0][0]
+    elif len(path) == 2:
+      k0 = path[0]
+      if k0 in clip:
+        k1 = path[1]
+        if k1 in clip[k0]:
+          clip[k0][k1] = clip[k0][k1][0]
+    else:
+      raise RuntimeError("That's too deep for me I'm afraid")
+  return clip
+
 
 def get_recommended_static_example():
   clip = _get_recommended_static_clip()
-  return clip.to_json(0)
+  return  _unwrap_clip_to_pseudo_frame(clip.to_json(0))
 
 def get_complete_static_example():
   clip = _get_complete_static_clip()
@@ -21,13 +80,13 @@ def get_complete_static_example():
     "pot1": 2435,
     "button1": False
   }
-  return clip_json
+  return _unwrap_clip_to_pseudo_frame(clip_json)
 
 def _add_recommended_static_clip_parameters(clip: Clip) -> Clip:
   clip.camera_label = "A"
   clip.lens_make = "LensMaker"
   clip.lens_model = "Model15"
-  clip.active_sensor_physical_dimensions = Dimensions(width=36.0,height=24.0)
+  clip.active_sensor_physical_dimensions = ActiveSensorPhysicalDimensions(width=36.0,height=24.0)
   return clip
 
 def _get_recommended_static_clip() -> Clip:
@@ -64,7 +123,7 @@ def _get_complete_static_clip() -> Clip:
 
 def get_recommended_dynamic_example():
   clip = _get_recommended_dynamic_clip()
-  return clip.to_json(0)
+  return _unwrap_clip_to_pseudo_frame(clip.to_json(0))
 
 def get_complete_dynamic_example():
   clip = _get_complete_dynamic_clip()
@@ -75,7 +134,7 @@ def get_complete_dynamic_example():
     "pot1": 2435,
     "button1": False
   }
-  return clip_json
+  return _unwrap_clip_to_pseudo_frame(clip_json)
 
 def _example_transform_components() -> tuple[Vector3, Rotator3]:
   return Vector3(x=1.0, y=2.0, z=3.0), Rotator3(pan=180.0, tilt=90.0, roll=45.0)
@@ -93,9 +152,9 @@ def _get_recommended_dynamic_clip():
   clip.tracker_slate = ("A101_A_4",)
   clip.tracker_notes = ("Example generated sample.",)
   # timing
-  clip.timing_mode = (TimingModeEnum.EXTERNAL,)
+  clip.timing_mode = (TimingMode.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(Fraction(24000, 1001))),)
+  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=Fraction(24000, 1001))),)
   # transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
@@ -113,7 +172,7 @@ def _get_complete_dynamic_clip():
   clip = _get_recommended_dynamic_clip()
   # augmenting recommended values
   #   timing
-  clip.timing_mode = (TimingModeEnum.INTERNAL,)
+  clip.timing_mode = (TimingMode.INTERNAL,)
   #   transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Dolly"),
@@ -136,15 +195,14 @@ def _get_complete_dynamic_clip():
     locked=True,
     source=SynchronizationSourceEnum.PTP,
     ptp=SynchronizationPTP(
-      PTP_PROFILES[2],
-      1,
-      "00:11:22:33:44:55",
-      SynchronizationPTPPriorities(128, 128),
-      0.00000005,
-      0.000123,
-      100,
-      "GNSS"
-    )
+      profile=PTPProfile.SMPTE_2059_2_2021,
+      domain=1,
+      leader_identity="00:11:22:33:44:55",
+      leader_priorities=SynchronizationPTPPriorities(128, 128),
+      leader_accuracy=0.00000005,
+      time_source=PTPLeaderTimeSource.GNSS,
+      mean_path_delay=0.000123,
+      vlan=100)
   ),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
