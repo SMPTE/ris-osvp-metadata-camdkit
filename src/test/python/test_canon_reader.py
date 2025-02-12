@@ -21,7 +21,7 @@ class CanonReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 1600)                # ISO: 1600
 
-    self.assertEqual(clip.lens_focal_length[0], 18)      # focal_length: 18 mm
+    self.assertEqual(clip.lens_nominal_focal_length, 18)      # focal_length: 18 mm
 
     self.assertEqual(clip.lens_focus_distance[0], 0.5)   # focus_position: 0.5 mm
 

@@ -114,7 +114,7 @@ class ModelTest(unittest.TestCase):
 
     clip.lens_t_number = (2000, 4000)
     clip.lens_f_number = (1200, 2800)
-    clip.lens_focal_length = (2.0, 4.0)
+    clip.lens_pinhole_focal_length = (2.0, 4.0)
     clip.lens_focus_distance = (2, 4)
     clip.lens_entrance_pupil_offset = (1.23, 2.34)
     clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
@@ -211,7 +211,7 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(d["lens"]["tStop"], (2000, 4000))
     self.assertTupleEqual(d["lens"]["fStop"], (1200, 2800))
-    self.assertTupleEqual(d["lens"]["focalLength"], (2.0, 4.0))
+    self.assertTupleEqual(d["lens"]["pinholeFocalLength"], (2.0, 4.0))
     self.assertTupleEqual(d["lens"]["focusDistance"], (2, 4))
     self.assertTupleEqual(d["lens"]["entrancePupilOffset"], (1.23, 2.34))
     self.assertTupleEqual(d["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
@@ -366,21 +366,21 @@ class ModelTest(unittest.TestCase):
 
     self.assertTupleEqual(clip.lens_t_number, value)
 
-  def test_focal_length(self):
+  def test_pinhole_focal_length(self):
     clip = Clip()
 
-    self.assertIsNone(clip.lens_focal_length)
+    self.assertIsNone(clip.lens_pinhole_focal_length)
 
     with self.assertRaises(ValueError):
-      clip.lens_focal_length = 0
+      clip.lens_pinhole_focal_length = 0
     with self.assertRaises(ValueError):
-      clip.lens_focal_length = -1.0
+      clip.lens_pinhole_focal_length = -1.0
 
     value = (24.1, 24.2)
 
-    clip.lens_focal_length = value
+    clip.lens_pinhole_focal_length = value
 
-    self.assertTupleEqual(clip.lens_focal_length, value)
+    self.assertTupleEqual(clip.lens_pinhole_focal_length, value)
 
   def test_nominal_focal_length(self):
     clip = Clip()
@@ -390,11 +390,11 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.lens_nominal_focal_length = [Fraction(5,7)]
 
-    value = (100, 7)
+    value = 100.0
 
-    clip.lens_focal_length = value
+    clip.lens_nominal_focal_length = value
 
-    self.assertTupleEqual(clip.lens_focal_length, value)
+    self.assertEqual(clip.lens_nominal_focal_length, value)
 
   def test_focus_position(self):
     clip = Clip()

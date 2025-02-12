@@ -133,10 +133,10 @@
       "minimum": 0.0,
       "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
     },
-    "focalLength": {
+    "pinholeFocalLength": {
       "type": "number",
       "minimum": 0.0,
-      "description": "Focal length of the lens.",
+      "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
       "units": "millimeter"
     },
     "focusDistance": {
