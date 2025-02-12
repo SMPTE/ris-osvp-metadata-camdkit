@@ -262,13 +262,12 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     by the diameter of the entrance pupil.
     """
 
-    # TODO: file issue to get this renamed to lens_pinhole_focal_length in the clip and pinholeFocalLength in the JSON
-    focal_length: Annotated[tuple[NonNegativeFloat, ...] | None,
-      Field(alias="focalLength",
+    pinhole_focal_length: Annotated[tuple[NonNegativeFloat, ...] | None,
+      Field(alias="pinholeFocalLength",
             json_schema_extra={"units": MILLIMETER,
-                               "clip_property": "lens_focal_length",
+                               "clip_property": "lens_pinhole_focal_length",
                                "constraints": NON_NEGATIVE_REAL})] = None
-    """Focal length of the lens."""
+    """Distance between the pinhole and the image plane in the simple CGI pinhole camera model."""
 
     focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="focusDistance",

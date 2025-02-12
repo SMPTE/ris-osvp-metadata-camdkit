@@ -26,7 +26,7 @@ def _unwrap_clip_to_pseudo_frame(wrapped_clip: JsonSchemaValue) -> JsonSchemaVal
     ("lens", "entrancePupilOffset"),
     ("lens", "exposureFalloff"),
     ("lens", "fStop"),
-    ("lens", "focalLength"),
+    ("lens", "pinholeFocalLength"),
     ("lens", "focusDistance"),
     ("lens", "projectionOffset"),
     ("lens", "rawEncoders"),
@@ -160,7 +160,7 @@ def _get_recommended_dynamic_clip():
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
   # lens
   clip.lens_f_number = (4.0,)
-  clip.lens_focal_length = (24.305,)
+  clip.lens_pinhole_focal_length = (24.305,)
   clip.lens_focus_distance = (10.0,)
   clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)

@@ -39,7 +39,7 @@ class VeniceReaderTest(unittest.TestCase):
 
     self.assertEqual(clip.iso, 500)
 
-    self.assertEqual(clip.lens_focal_length[0], 32)
+    self.assertEqual(clip.lens_nominal_focal_length, 32)
 
     self.assertEqual(round(1000.0*clip.lens_t_number[0]), 2219)
 

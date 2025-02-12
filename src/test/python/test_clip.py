@@ -204,7 +204,7 @@ class ClipTestCases(unittest.TestCase):
         # reference values
         lens_t_number = (2000, 4000)
         lens_f_number = (1200, 2800)
-        lens_focal_length = (2.0, 4.0)
+        lens_pinhole_focal_length = (2.0, 4.0)
         lens_focus_distance = (2, 4)
         lens_entrance_pupil_offset = (1.23, 2.34)
         lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
@@ -236,9 +236,9 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_f_number)
         clip.lens_f_number = lens_f_number
         self.assertEqual(lens_f_number, clip.lens_f_number)
-        self.assertIsNone(clip.lens_focal_length)
-        clip.lens_focal_length = lens_focal_length
-        self.assertEqual(lens_focal_length, clip.lens_focal_length)
+        self.assertIsNone(clip.lens_pinhole_focal_length)
+        clip.lens_pinhole_focal_length = lens_pinhole_focal_length
+        self.assertEqual(lens_pinhole_focal_length, clip.lens_pinhole_focal_length)
         self.assertIsNone(clip.lens_focus_distance)
         clip.lens_focus_distance = lens_focus_distance
         self.assertEqual(lens_focus_distance, clip.lens_focus_distance)
@@ -277,7 +277,7 @@ class ClipTestCases(unittest.TestCase):
         # self.assertTupleEqual(clip_as_json["lens"]["custom"], lens_custom)
         self.assertTupleEqual(clip_as_json["lens"]["tStop"], lens_t_number)
         self.assertTupleEqual(clip_as_json["lens"]["fStop"], lens_f_number)
-        self.assertTupleEqual(clip_as_json["lens"]["focalLength"], lens_focal_length)
+        self.assertTupleEqual(clip_as_json["lens"]["pinholeFocalLength"], lens_pinhole_focal_length)
         self.assertTupleEqual(clip_as_json["lens"]["focusDistance"], lens_focus_distance)
         self.assertTupleEqual(clip_as_json["lens"]["entrancePupilOffset"], lens_entrance_pupil_offset)
         self.assertTupleEqual(clip_as_json["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },

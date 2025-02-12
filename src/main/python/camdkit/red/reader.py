@@ -77,7 +77,10 @@ def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Cli
 
   clip.shutter_angle = float(clip_metadata["Shutter (deg)"])
 
-  clip.lens_focal_length = tuple(int(m["Focal Length"]) for m in csv_data)
+  focal_lengths = set([float(m["Focal Length"]) for m in csv_data])
+  if len(focal_lengths) == 1:
+    focal_length = float(focal_lengths.pop())
+    clip.lens_nominal_focal_length = focal_length
 
   clip.lens_focus_distance = tuple(int(m["Focus Distance"]) for m in csv_data)
 
