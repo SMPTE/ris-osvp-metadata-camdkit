@@ -1659,9 +1659,9 @@ by the diameter of the entrance pupil.</p>
 <p>Regular</p>
 <h4 id="constraints-44" tabindex="-1"><a class="anchor" href="#constraints-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a non-negative real number.</p>
-<h3 id="focallength" tabindex="-1"><a class="anchor" href="#focallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focalLength</code></h3>
+<h3 id="pinholefocallength" tabindex="-1"><a class="anchor" href="#pinholefocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>pinholeFocalLength</code></h3>
 <h4 id="description-45" tabindex="-1"><a class="anchor" href="#description-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focal length of the lens.</p>
+<p>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</p>
 <h4 id="units-45" tabindex="-1"><a class="anchor" href="#units-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>millimeter</p>
 <h4 id="sampling-45" tabindex="-1"><a class="anchor" href="#sampling-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1855,7 +1855,7 @@ of precision.</p>
 <th>entrancePupilOffset</th>
 <th>exposureFalloff</th>
 <th>fStop</th>
-<th>focalLength</th>
+<th>pinholeFocalLength</th>
 <th>focusDistance</th>
 <th>projectionOffset</th>
 <th>rawEncoders</th>
@@ -1892,7 +1892,7 @@ of precision.</p>
 <td>+</td>
 <td>+</td>
 <td>+</td>
-<td></td>
+<td>+</td>
 <td></td>
 <td></td>
 <td></td>
@@ -1917,7 +1917,7 @@ of precision.</p>
 <td>+</td>
 <td></td>
 <td></td>
-<td>+</td>
+<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -1952,32 +1952,32 @@ of precision.</p>
 <td>+</td>
 <td>+</td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td>+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -2012,32 +2012,32 @@ of precision.</p>
 <td>+</td>
 <td>+</td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td>+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -2072,32 +2072,32 @@ of precision.</p>
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td>+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -2821,10 +2821,10 @@ of precision.</p>
           "minimum": 0.0,
           "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
         },
-        "focalLength": {
+        "pinholeFocalLength": {
           "type": "number",
           "minimum": 0.0,
-          "description": "Focal length of the lens.",
+          "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
           "units": "millimeter"
         },
         "focusDistance": {

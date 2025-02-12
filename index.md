@@ -1007,11 +1007,11 @@ Regular
 
 The parameter shall be a non-negative real number.
 
-### `focalLength`
+### `pinholeFocalLength`
 
 #### Description
 
-Focal length of the lens.
+Distance between the pinhole and the image plane in the simple CGI pinhole camera model.
 
 #### Units
 
@@ -1280,12 +1280,12 @@ Each component of each transform shall contain Real numbers.
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | duration | captureFrameRate | activeSensorPhysicalDimensions | activeSensorResolution | make | model | serialNumber | firmwareVersion | label | anamorphicSqueeze | isoSpeed | fdlLink | shutterAngle | distortionOverscanMax | undistortionOverscanMax | distortionIsProjection | make | model | serialNumber | firmwareVersion | nominalFocalLength | make | model | serialNumber | firmwareVersion | notes | recording | slate | status | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | custom | distortion | distortionOverscan | undistortionOverscan | distortionOffset | encoders | entrancePupilOffset | exposureFalloff | fStop | focalLength | focusDistance | projectionOffset | rawEncoders | tStop | protocol | sampleId | sourceId | sourceNumber | relatedSampleIds | globalStage | transforms |
+| Reader      | duration | captureFrameRate | activeSensorPhysicalDimensions | activeSensorResolution | make | model | serialNumber | firmwareVersion | label | anamorphicSqueeze | isoSpeed | fdlLink | shutterAngle | distortionOverscanMax | undistortionOverscanMax | distortionIsProjection | make | model | serialNumber | firmwareVersion | nominalFocalLength | make | model | serialNumber | firmwareVersion | notes | recording | slate | status | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | custom | distortion | distortionOverscan | undistortionOverscan | distortionOffset | encoders | entrancePupilOffset | exposureFalloff | fStop | pinholeFocalLength | focusDistance | projectionOffset | rawEncoders | tStop | protocol | sampleId | sourceId | sourceNumber | relatedSampleIds | globalStage | transforms |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | | + | + | + | + | | + | + | | + | | | | + | + | + | + | | | | | | | | | | | | | | | | | | | | | | | + | | | + | + | | | + | | | | | | | |
-| ARRI | + | + | + | | + | + | + | | | + | + | | + | | | | + | + | + | | | | | | | | | | | | | | | | | | | | | | | | | | | + | + | | | + | | | | | | | |
-| Venice | + | + | + | | + | + | + | + | | + | + | | + | | | | | + | + | | | | | | | | | | | | | | | | | | | | | | | | | | | + | + | | | + | | | | | | | |
-| Canon | + | | | | + | | | | | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | + | + | | | + | | | | | | | |
+| RED | + | + | + | | + | + | + | + | | + | + | | + | | | | + | + | + | + | + | | | | | | | | | | | | | | | | | | | | | | + | | | | + | | | + | | | | | | | |
+| ARRI | + | + | + | | + | + | + | | | + | + | | + | | | | + | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
+| Venice | + | + | + | | + | + | + | + | | + | + | | + | | | | | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
+| Canon | + | | | | + | | | | | + | + | | + | | | | | | | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
 ## Clip JSON Schema
 
 ```{
@@ -1997,10 +1997,10 @@ The following table indicates the camera parameters supported by each of the rea
           "minimum": 0.0,
           "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
         },
-        "focalLength": {
+        "pinholeFocalLength": {
           "type": "number",
           "minimum": 0.0,
-          "description": "Focal length of the lens.",
+          "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
           "units": "millimeter"
         },
         "focusDistance": {

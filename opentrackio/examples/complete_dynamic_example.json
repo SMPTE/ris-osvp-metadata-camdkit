@@ -110,7 +110,7 @@
       "a3": 3.0
     },
     "fStop": 4.0,
-    "focalLength": 24.305,
+    "pinholeFocalLength": 24.305,
     "focusDistance": 10.0,
     "projectionOffset": {
       "x": 0.1,
@@ -131,12 +131,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:32178a5f-67de-4f93-bca4-918189a9308d",
-  "sourceId": "urn:uuid:ec0e3eb3-a5e1-4f3f-b119-5d177a037827",
+  "sampleId": "urn:uuid:e62a7ea3-556a-4245-99cf-91f5b00a721b",
+  "sourceId": "urn:uuid:5ad17dca-deaa-43ca-90d6-2674daca87c2",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:bcd16f1c-cdcd-4981-b50f-3139749717b7",
-    "urn:uuid:9126b6be-ed09-4216-a950-cea7fc47a8bf"
+    "urn:uuid:de4cee4b-727a-40df-a924-1a14a93288c0",
+    "urn:uuid:a52ee16c-1e9c-47bc-b374-d22ec3a32e33"
   ],
   "globalStage": {
     "E": 100.0,

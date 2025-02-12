@@ -45,7 +45,7 @@
     },
     "entrancePupilOffset": 0.123,
     "fStop": 4.0,
-    "focalLength": 24.305,
+    "pinholeFocalLength": 24.305,
     "focusDistance": 10.0,
     "projectionOffset": {
       "x": 0.1,
@@ -60,8 +60,8 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:dcf3c53d-dfed-4737-84f8-f13f3977caac",
-  "sourceId": "urn:uuid:31dfa85f-2145-492e-83cf-e3291455e895",
+  "sampleId": "urn:uuid:aa186ef6-b94b-4f9e-a800-e11be5a01232",
+  "sourceId": "urn:uuid:732d0a1c-15da-4717-ac21-e27ca7a85f10",
   "sourceNumber": 1,
   "transforms": [
     {

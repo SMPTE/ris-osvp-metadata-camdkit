@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:300cc9c0-b130-4776-8b40-e06ae8cce3a4",
+      "fdlLink": "urn:uuid:c0f27c71-1a95-4e8c-b423-914540439bc7",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -157,7 +157,7 @@
       "a3": 3.0
     },
     "fStop": 4.0,
-    "focalLength": 24.305,
+    "pinholeFocalLength": 24.305,
     "focusDistance": 10.0,
     "projectionOffset": {
       "x": 0.1,
@@ -178,12 +178,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:e3171c01-b058-4731-967a-bc477344aed9",
-  "sourceId": "urn:uuid:e35e0bca-4392-4e44-b446-04ec2866c15c",
+  "sampleId": "urn:uuid:cb54d2f7-3967-4ff5-9217-b106d7a35509",
+  "sourceId": "urn:uuid:2abe593b-321d-4890-a348-fd1cc70fe7a9",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:bce6bc29-6827-4871-967c-bc42a419c446",
-    "urn:uuid:8ff799cf-b833-4496-aed8-267cc1ba4531"
+    "urn:uuid:ddd387a0-4028-4001-a08d-1d704554a35a",
+    "urn:uuid:31327652-2766-4309-801a-202ede5a89d3"
   ],
   "globalStage": {
     "E": 100.0,
