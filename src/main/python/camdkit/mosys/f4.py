@@ -69,17 +69,21 @@ class F4AxisBlock:
   def to_timecode(self) -> Timecode:
      match ((self.axis_status >> 5) & 0b11):
        case 0b00:
-         format = TimecodeFormat(frame_rate=24)
+         frame_rate = StrictlyPositiveRational(24, 1)
        case 0b01:
-         format = TimecodeFormat(frame_rate=25)
+         frame_rate = StrictlyPositiveRational(25, 1)
        case 0b10:
-         format = TimecodeFormat(frame_rate=30)
+         frame_rate = StrictlyPositiveRational(30, 1)
+       case _:
+         raise ValueError("Invalid frame rate encoded in axis status")
 
      hours = (self.data_bits1 >> 2) % 24
      minutes = ((self.data_bits1 << 4) % 64) + ((self.data_bits2 >> 4) % 16)
      seconds = ((self.data_bits2 << 2) % 64) + ((self.data_bits3 >> 6) % 4)
      frames = self.data_bits3 % 64
-     return Timecode(hours,minutes,seconds,frames,format)
+     sub_frame = 0
+     return Timecode(hours=hours,minutes=minutes,seconds=seconds,frames=frames,
+                     frame_rate=frame_rate,sub_frame=sub_frame)
 
 class F4Packet:
   command_byte: int = 0
@@ -255,7 +259,7 @@ class F4PacketParser:
             pass
           case F4.FIELD_ID_TIMECODE:
             frame.timing_timecode = (axis_block.to_timecode(),)
-            frame_rate = frame.timing_timecode[0].format.frame_rate
+            frame_rate = frame.timing_timecode[0].frame_rate
             frame.timing_sample_rate = (frame_rate,)
             frequency = frame_rate
             pass

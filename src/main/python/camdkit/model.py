@@ -7,7 +7,6 @@ from camdkit.lens_types import ExposureFalloff as LensExposureFalloff
 from camdkit.lens_types import FizEncoders as LensEncoders
 from camdkit.lens_types import ProjectionOffset as LensProjectionOffset
 from camdkit.lens_types import RawFizEncoders as LensRawEncoders
-from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.timing_types import Synchronization
 from camdkit.timing_types import Timecode as TimingTimecode
 from camdkit.timing_types import Timestamp as TimingTimestamp
