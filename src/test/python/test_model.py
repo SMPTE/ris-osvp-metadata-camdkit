@@ -59,6 +59,7 @@ class ModelTest(unittest.TestCase):
     clip.lens_firmware = "1-dev.1"
     clip.lens_serial_number = "123456789"
     clip.lens_nominal_focal_length = 24
+    clip.lens_calibration_history = ("LensMaker 123", "TrackerMaker 123")
     clip.shutter_angle = 180
     # Regular parameters
     clip.sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
@@ -152,6 +153,7 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
     self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
     self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
+    self.assertEqual(d["static"]["lens"]["calibrationHistory"], ("LensMaker 123", "TrackerMaker 123"))
     self.assertEqual(d["static"]["tracker"]["make"], "ABCD")
     self.assertEqual(d["static"]["tracker"]["model"], "EFGH")
     self.assertEqual(d["static"]["tracker"]["serialNumber"], "1234567890A")
@@ -395,6 +397,20 @@ class ModelTest(unittest.TestCase):
     clip.lens_nominal_focal_length = value
 
     self.assertEqual(clip.lens_nominal_focal_length, value)
+
+  def test_calibration_history(self):
+    clip = Clip()
+
+    self.assertIsNone(clip.lens_calibration_history)
+
+    with self.assertRaises(ValueError):
+      clip.lens_calibration_history = "Test"
+
+    value = ("Test", "Test")
+
+    clip.lens_calibration_history = value
+
+    self.assertEqual(clip.lens_calibration_history, value)
 
   def test_focus_position(self):
     clip = Clip()

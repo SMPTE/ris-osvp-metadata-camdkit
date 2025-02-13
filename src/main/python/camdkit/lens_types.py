@@ -83,6 +83,14 @@ class StaticLens(CompatibleBaseModel):
     """Nominal focal length of the lens. The number printed on the side
     of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
     """
+    calibration_history: Annotated[tuple[str, ...] | None,
+      Field(alias="calibrationHistory",
+            json_schema_extra={"clip_property": "lens_calibration_history",
+                               "type": "array",
+                               "items":
+                               { "type": "string", "minLength": 1, "maxLength": 1023 }
+                               })] = None
+    """List of free strings that describe the history of calibrations of the lens."""
 
 
 class Distortion(CompatibleBaseModel):

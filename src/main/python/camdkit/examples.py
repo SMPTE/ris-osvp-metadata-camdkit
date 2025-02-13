@@ -112,6 +112,7 @@ def _get_complete_static_clip() -> Clip:
   clip.lens_distortion_overscan_max = 1.2
   clip.lens_undistortion_overscan_max = 1.3
   clip.lens_nominal_focal_length = 14
+  clip.lens_calibration_history = ("LensMaker 123", "TrackerMaker 123")
   clip.lens_serial_number = "1234567890A"
   clip.shutter_angle = 45.0
   clip.tracker_model = "Tracker"
