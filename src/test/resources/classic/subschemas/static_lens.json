@@ -2,14 +2,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "distortionIsProjection": {
-      "type": "boolean",
-      "description": "Indicator that the OpenLensIO distortion model is the Projection\nCharacterization, not the Field-Of-View Characterization. This is \nprimarily relevant when storing overscan values, not in transmission\nas the overscan should be calculated by the consumer.\n"
-    },
     "distortionOverscanMax": {
       "type": "number",
       "minimum": 1.0,
-      "description": "Static maximum overscan factor on lens distortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
+      "description": "Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
     },
     "firmwareVersion": {
       "type": "string",
@@ -53,7 +49,7 @@
     "undistortionOverscanMax": {
       "type": "number",
       "minimum": 1.0,
-      "description": "Static maximum overscan factor on lens undistortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
+      "description": "Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
     }
   }
 }

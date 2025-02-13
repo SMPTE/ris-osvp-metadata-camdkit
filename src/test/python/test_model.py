@@ -49,7 +49,6 @@ class ModelTest(unittest.TestCase):
     clip.fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
     clip.iso = 13
     clip.lens_distortion_overscan_max = 1.2
-    clip.lens_distortion_is_projection = False
     clip.lens_undistortion_overscan_max = 1.2
     clip.lens_make = "ABC"
     clip.lens_model = "FGH"
@@ -147,7 +146,6 @@ class ModelTest(unittest.TestCase):
     self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
     self.assertEqual(d["static"]["camera"]["label"], "A")
     self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
-    self.assertEqual(d["static"]["lens"]["distortionIsProjection"], False)
     self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
     self.assertEqual(d["static"]["lens"]["make"], "ABC")
     self.assertEqual(d["static"]["lens"]["model"], "FGH")
@@ -934,19 +932,6 @@ class ModelTest(unittest.TestCase):
       "iris": 5,
       "zoom": 5,
     })
-  def test_lens_distortion_is_projection(self):
-    clip = Clip()
-
-    self.assertIsNone(clip.lens_distortion_is_projection)
-
-    with self.assertRaises(ValueError):
-      clip.lens_distortion_is_projection = ""
-    with self.assertRaises(ValueError):
-      clip.lens_distortion_is_projection = -1.0
-
-    value = True
-    clip.lens_distortion_is_projection = value
-    self.assertEqual(clip.lens_distortion_is_projection, value)
 
   def test_lens_distortion_overscan(self):
     clip = Clip()
