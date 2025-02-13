@@ -61,11 +61,21 @@ class TimingMode(StrEnum):
     INTERNAL = "internal"
     EXTERNAL = "external"
 
-class TimecodeFormat(CompatibleBaseModel):
-    """The timecode format is defined as a rational frame rate and - where a
-    signal with sub-frames is described, such as an interlaced signal - an
-    index of which sub-frame is referred to by the timecode.
+
+class Timecode(CompatibleBaseModel):
+    """SMPTE timecode of the sample. Timecode is a standard for labeling
+    individual frames of data in media systems and is useful for
+    inter-frame synchronization. Frame rate is a rational number, allowing
+    drop frame rates such as that colloquially called 29.97 to be
+    represented exactly, as 30000/1001. The timecode frame rate may differ
+    from the sample frequency. The zero-based sub-frame field allows for finer
+    division of the frame, e.g. interlaced frames have two sub-frames,
+    one per field.
     """
+    hours: int = Field(..., ge=0, le=23, strict=True)
+    minutes: int = Field(..., ge=0, le=59, strict=True)
+    seconds: int = Field(..., ge=0, le=59, strict=True)
+    frames: int = Field(..., ge=0, le=119, strict=True)
     frame_rate: Annotated[StrictlyPositiveRational, Field(alias="frameRate")]
     sub_frame: Annotated[NonNegativeInt, Field(alias="subFrame", strict=True)] = 0
 
@@ -75,31 +85,9 @@ class TimecodeFormat(CompatibleBaseModel):
     def coerce_frame_rate_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
-    def to_int(self) -> int:
-        return Fraction(self.frame_rate.num, self.frame_rate.denom).__ceil__()
-
-
-class Timecode(CompatibleBaseModel):
-    """SMPTE timecode of the sample. Timecode is a standard for labeling
-    individual frames of data in media systems and is useful for
-    inter-frame synchronization.
-    - format.frameRate: The frame rate as a rational number. Drop frame
-    rates such as 29.97 should be represented as e.g. 30000/1001. The
-    timecode frame rate may differ from the sample frequency.
-    """
-    hours: int = Field(..., ge=0, le=23, strict=True)
-    minutes: int = Field(..., ge=0, le=59, strict=True)
-    seconds: int = Field(..., ge=0, le=59, strict=True)
-    frames: int = Field(..., ge=0, le=119, strict=True)
-    format: TimecodeFormat
-
-    def __init__(self, hours: int, minutes: int, seconds: int, frames: int, format: TimecodeFormat):
-        super(Timecode, self).__init__(hours=hours, minutes=minutes, seconds=seconds, frames=frames,
-                                       format=format)
-
     @model_validator(mode="after")
     def check_frames_allowed_by_format(self):
-        if self.frames >= self.format.to_int():
+        if self.frames >= Fraction(self.frame_rate.num, self.frame_rate.denom).__ceil__():
             raise ValueError("The frame number must be less than the frame rate.")
         return self
 

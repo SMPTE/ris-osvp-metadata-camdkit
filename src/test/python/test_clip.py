@@ -17,7 +17,7 @@ from camdkit.lens_types import (ExposureFalloff,
                                 FizEncoders, RawFizEncoders)
 from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
-from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, SynchronizationSource, \
+from camdkit.timing_types import Timestamp, Timecode, SynchronizationSource, \
     SynchronizationOffsets, SynchronizationPTP, Synchronization, PTPProfile, SynchronizationPTPPriorities
 from camdkit.transform_types import Vector3, Rotator3, Transform
 from camdkit.clip import Clip
@@ -310,12 +310,12 @@ class ClipTestCases(unittest.TestCase):
         timing_sequence_number = (0, 1)
         sample_rate = StrictlyPositiveRational(24000, 1001)
         timing_sample_rate = (sample_rate, sample_rate)
-        timecode0 = Timecode(1, 2, 3, 4,
-                            TimecodeFormat(frame_rate=StrictlyPositiveRational(24, 1),
-                                           sub_frame=0))
-        timecode1= Timecode(1, 2, 3, 5,
-                            TimecodeFormat(frame_rate=StrictlyPositiveRational(24, 1),
-                                           sub_frame=1))
+        timecode0 = Timecode(hours=1, minutes=2, seconds=3,frames=4,
+                            frame_rate=StrictlyPositiveRational(24, 1),
+                            sub_frame=0)
+        timecode1= Timecode(hours=1, minutes=2, seconds=3, frames=5,
+                            frame_rate=StrictlyPositiveRational(24, 1),
+                            sub_frame=1)
         timing_timecode = (timecode0, timecode1)
         ptp = SynchronizationPTP(profile=PTPProfile.SMPTE_2059_2_2021,
                                  domain=1,
@@ -370,10 +370,10 @@ class ClipTestCases(unittest.TestCase):
             {"num": 24000, "denom": 1001}))
         self.assertTupleEqual(clip_as_json["timing"]["timecode"], (
             {"hours":1, "minutes":2, "seconds":3, "frames":4,
-             "format": {"frameRate": {"num": 24, "denom": 1}}},
+             # no subFrame serialized because value was that of the default
+             "frameRate": {"num": 24, "denom": 1}},
             {"hours": 1,"minutes": 2,"seconds": 3,"frames": 5,
-             "format": {"frameRate": {"num": 24, "denom": 1},
-                        "subFrame": 1}}))
+             "frameRate": {"num": 24, "denom": 1}, "subFrame": 1}))
         expected_synchronization_dict = {
             "locked": True,
             "source": "ptp",

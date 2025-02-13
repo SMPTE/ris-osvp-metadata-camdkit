@@ -9,15 +9,14 @@
 import json
 import unittest
 from pathlib import Path
+from typing import Final
 
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.numeric_types import (MAX_INT_8, MAX_UINT_32, MAX_UINT_48,
                                    Rational, StrictlyPositiveRational)
-from camdkit.timing_types import (TimingMode,
-                                  TimecodeFormat,
-                                  Timecode,
+from camdkit.timing_types import (Timecode,
                                   Timestamp,
                                   SynchronizationSource,
                                   SynchronizationOffsets,
@@ -27,6 +26,7 @@ from camdkit.timing_types import (TimingMode,
                                   Timing, SynchronizationPTPPriorities)
 
 
+MAX_FRAME_RATE_FPS: Final[int] = 120
 
 CLASSIC_TIMING_SCHEMA_PATH = Path("src/test/resources/classic/subschemas/timing.json")
 CLASSIC_TIMING_SCHEMA: JsonSchemaValue | None = None
@@ -44,125 +44,120 @@ def tearDownModule():
 
 class TimingTestCases(unittest.TestCase):
 
-    def test_timecode_format(self):
-        with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate=StrictlyPositiveRational(0,1),
-                           sub_frame=0)
-        with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate=StrictlyPositiveRational(-1, 1),
-                           sub_frame=0)
-        with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate=StrictlyPositiveRational(0, 1),
-                           sub_frame=0)
-        frame_rate_30fps_num = 30
-        frame_rate_30fps_denom = 1
-        frame_rate_30fps = StrictlyPositiveRational(frame_rate_30fps_num,
-                                                    frame_rate_30fps_denom)
-        frame_rate_ntsc_broadcast_num = 30000
-        frame_rate_ntsc_broadcast_denom = 1001
-        frame_rate_ntsc_broadcast = StrictlyPositiveRational(frame_rate_ntsc_broadcast_num,
-                                                             frame_rate_ntsc_broadcast_denom)
-        sub_frame_0: int = 0
-        sub_frame_1: int = 1
-        tf = TimecodeFormat(frame_rate=frame_rate_30fps,
-                            sub_frame=sub_frame_0)
-        self.assertEqual(tf.frame_rate, frame_rate_30fps)
-        self.assertEqual(tf.sub_frame, sub_frame_0)
-
-        with self.assertRaises(ValidationError):
-            tf.frame_rate = "foo"
-        with self.assertRaises(ValidationError):
-            tf.frame_rate = 29.976
-        with self.assertRaises(ValidationError):
-            tf.frame_rate = StrictlyPositiveRational(-1, 1)
-        with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate=frame_rate_30fps, sub_frame="foo")
-        with self.assertRaises(ValidationError):
-            TimecodeFormat(frame_rate=frame_rate_30fps, sub_frame=1.0)
-        frame_rate_ntsc_broadcast = StrictlyPositiveRational(30000, 1001)
-        tf.frame_rate = frame_rate_ntsc_broadcast
-        self.assertEqual(tf.frame_rate, frame_rate_ntsc_broadcast)
-
-        with self.assertRaises(ValidationError):
-            tf.sub_frame = "foo"
-        tf.sub_frame = sub_frame_1
-        self.assertEqual(tf.sub_frame, sub_frame_1)
-
-        timecode_format_as_json = TimecodeFormat.to_json(tf)
-        self.assertEqual(timecode_format_as_json["frameRate"]["num"],
-                         frame_rate_ntsc_broadcast_num)
-        self.assertEqual(timecode_format_as_json["frameRate"]["denom"],
-                         frame_rate_ntsc_broadcast_denom)
-        self.assertEqual(timecode_format_as_json["subFrame"], sub_frame_1)
-
-        timecode_format_from_json = TimecodeFormat.from_json(timecode_format_as_json)
-        self.assertEqual(tf, timecode_format_from_json)
-
-        full_expected_schema: JsonSchemaValue = CLASSIC_TIMING_SCHEMA
-        self.assertIn("properties", full_expected_schema)
-        self.assertIn("timecode", full_expected_schema["properties"])
-        self.assertIn("properties", full_expected_schema["properties"]["timecode"])
-        self.assertIn("format", full_expected_schema["properties"]["timecode"]["properties"])
-        expected_schema = full_expected_schema["properties"]["timecode"]["properties"]["format"]
-        actual_schema = TimecodeFormat.make_json_schema()
-        self.assertEqual(expected_schema, actual_schema)
 
     def test_timecode(self):
-        thirty_fps_num = 30
-        thirty_fps_denom = 1
-        sub_frame = 0
-        valid_timecode_format = TimecodeFormat(frame_rate=StrictlyPositiveRational(thirty_fps_num, thirty_fps_denom),
-                                               sub_frame=sub_frame)
+        valid_frame_rate_num: Final[int] = 30
+        valid_frame_rate_denom: Final[int] = 1
+        valid_frame_rate: Final[StrictlyPositiveRational] = (
+            StrictlyPositiveRational(valid_frame_rate_num,
+                                     valid_frame_rate_denom))
+        max_valid_frame_rate: Final[StrictlyPositiveRational] = (
+            StrictlyPositiveRational(MAX_FRAME_RATE_FPS, 1))
+        valid_sub_frame: Final[int] = 0
+
+        # test hours during TC creation
         with self.assertRaises(ValidationError):
-            Timecode("foo", 0, 0, 0, valid_timecode_format)
+            Timecode(hours="foo", minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0.0, 0, 0, 0, valid_timecode_format)
+            Timecode(hours=0.0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(-1, 0, 0, 0, valid_timecode_format)
+            Timecode(hours=-1, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(24, 0, 0, 0, valid_timecode_format)
-        tc = Timecode(0, 0, 0, 0, valid_timecode_format)
+            Timecode(hours=24, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         self.assertEqual(0, tc.hours)
-        tc = Timecode(23, 0, 0, 0, valid_timecode_format)
-        self.assertEqual(23, tc.hours)
+
+        # test minutes during TC creation
         with self.assertRaises(ValidationError):
-            Timecode(0, "foo", 0, 0, valid_timecode_format)
+            Timecode(hours=0, minutes="foo", seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0.0, 0, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=0.0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, -1, 0, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=-1, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 60, 0, 0, valid_timecode_format)
-        tc = Timecode(0, 59, 0, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=60, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        tc = Timecode(hours=0, minutes=59, seconds=0, frames=0,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         self.assertEqual(59, tc.minutes)
+
+        # test seconds during TC creation
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, "foo", 0, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds="foo", frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0.0, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=0.0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, -1, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=-1, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 60, 0, valid_timecode_format)
-        tc = Timecode(0, 0, 59, 0, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=60, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame= valid_sub_frame)
+        tc = Timecode(hours=0, minutes=0, seconds=59, frames=0,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         self.assertEqual(59, tc.seconds)
+
+        # test frames during TC creation
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, "foo", valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=0, frames="foo",
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, 0.0, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=0, frames=0.0,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, -1, valid_timecode_format)
+            Timecode(hours=0, minutes=0, seconds=0, frames=-1,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, thirty_fps_num, valid_timecode_format)
-        tc = Timecode(0, 0, 0, thirty_fps_num - 1, valid_timecode_format)
-        self.assertEqual(thirty_fps_num - 1, tc.frames)
+            Timecode(hours=0, minutes=0, seconds=0, frames=MAX_FRAME_RATE_FPS,
+                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        tc = Timecode(hours=0, minutes=0, seconds=0, frames=MAX_FRAME_RATE_FPS - 1,
+                      frame_rate=max_valid_frame_rate, sub_frame=valid_sub_frame)
+        self.assertEqual(MAX_FRAME_RATE_FPS - 1, tc.frames)
+
+        # test frame rates during TC creation
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, 0, "foo")
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate="foo", sub_frame=valid_sub_frame)
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=0.0, sub_frame=valid_sub_frame)
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=-1, sub_frame=valid_sub_frame)
+        tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        self.assertEqual(valid_frame_rate, tc.frame_rate)
+
+        # test sub-frames during TC creation
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame="foo")
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=0.0)
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate, sub_frame=-1)
+        tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        self.assertEqual(valid_sub_frame, tc.sub_frame)
 
         valid_hours: int = 1
         valid_minutes: int = 2
         valid_seconds: int =  3
         valid_frames: int = 4
-        tc = Timecode(valid_hours, valid_minutes, valid_seconds, valid_frames, valid_timecode_format)
+        tc = Timecode(hours=valid_hours, minutes=valid_minutes, seconds=valid_seconds, frames=valid_frames,
+                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+        # test assigning value of hours field
         with self.assertRaises(ValidationError):
             tc.hours = "foo"
         with self.assertRaises(ValidationError):
@@ -171,6 +166,7 @@ class TimingTestCases(unittest.TestCase):
             tc.hours = -1
         with self.assertRaises(ValidationError):
             tc.hours = 24
+        # test assigning value of minutes field
         with self.assertRaises(ValidationError):
             tc.minutes = "foo"
         with self.assertRaises(ValidationError):
@@ -179,6 +175,7 @@ class TimingTestCases(unittest.TestCase):
             tc.minutes = -1
         with self.assertRaises(ValidationError):
             tc.minutes = 60
+        # test assigning value of seconds field
         with self.assertRaises(ValidationError):
             tc.seconds = "foo"
         with self.assertRaises(ValidationError):
@@ -187,6 +184,7 @@ class TimingTestCases(unittest.TestCase):
             tc.seconds = -1
         with self.assertRaises(ValidationError):
             tc.seconds = 60
+        # test assigning value of frames field
         with self.assertRaises(ValidationError):
             tc.frames = "foo"
         with self.assertRaises(ValidationError):
@@ -194,19 +192,35 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             tc.frames = -1
         with self.assertRaises(ValidationError):
-            tc.frames = 120
+            tc.frames = MAX_FRAME_RATE_FPS
+
+        # test assigning value of frame rate
         with self.assertRaises(ValidationError):
-            tc.format = "foo"
+            tc.frame_rate = "foo"
         with self.assertRaises(ValidationError):
-            tc.format = 0.0
+            tc.frame_rate = 0.0
         with self.assertRaises(ValidationError):
-            tc.format = 0
-        doubled_hours: int = valid_hours * 2
-        doubled_minutes: int = valid_minutes * 2
-        doubled_seconds: int = valid_seconds * 2
-        doubled_frames: int = valid_frames * 2
-        thirty_fps_drop_frame_format = TimecodeFormat(frame_rate=StrictlyPositiveRational(30000, 1001),
-                                                      sub_frame=0)
+            tc.frame_rate = -1
+        with self.assertRaises(ValidationError):
+            tc.frame_rate = Rational(-4,1)
+
+        # test assigning value of sub_frame
+        with self.assertRaises(ValidationError):
+            tc.sub_frame = "foo"
+        with self.assertRaises(ValidationError):
+            tc.sub_frame = 0.0
+        with self.assertRaises(ValidationError):
+            tc.sub_frame = -1
+        with self.assertRaises(ValidationError):
+            tc.sub_frame = Rational(-4, 1)
+
+        doubled_hours: Final[int] = valid_hours * 2
+        doubled_minutes: Final[int] = valid_minutes * 2
+        doubled_seconds: Final[int] = valid_seconds * 2
+        doubled_frames: Final[int] = valid_frames * 2
+        doubled_frame_rate: Final[StrictlyPositiveRational] = StrictlyPositiveRational(
+            2 * valid_frame_rate_num, valid_frame_rate_denom)
+        doubled_sub_frame: Final[int] = 2
         tc.hours = doubled_hours
         self.assertEqual(tc.hours, doubled_hours)
         tc.minutes = doubled_minutes
@@ -215,15 +229,19 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(tc.seconds, doubled_seconds)
         tc.frames = doubled_frames
         self.assertEqual(tc.frames, doubled_frames)
-        tc.format = thirty_fps_drop_frame_format
-        self.assertEqual(tc.format, thirty_fps_drop_frame_format)
+        tc.frame_rate = doubled_frame_rate
+        self.assertEqual(tc.frame_rate, doubled_frame_rate)
+        tc.sub_frame = doubled_sub_frame
+        self.assertEqual(tc.sub_frame, doubled_sub_frame)
 
         timecode_as_json = Timecode.to_json(tc)
         self.assertEqual(timecode_as_json["hours"], doubled_hours)
         self.assertEqual(timecode_as_json["minutes"], doubled_minutes)
         self.assertEqual(timecode_as_json["seconds"], doubled_seconds)
         self.assertEqual(timecode_as_json["frames"], doubled_frames)
-        self.assertEqual(timecode_as_json["format"], TimecodeFormat.to_json(thirty_fps_drop_frame_format))
+        self.assertEqual(timecode_as_json["frameRate"],
+                         StrictlyPositiveRational.to_json(doubled_frame_rate))
+        self.assertEqual(timecode_as_json["subFrame"], doubled_sub_frame)
 
         timecode_from_json = Timecode.from_json(timecode_as_json)
         self.assertEqual(tc, timecode_from_json)
