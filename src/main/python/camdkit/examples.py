@@ -200,7 +200,7 @@ def _get_complete_dynamic_clip():
       leader_identity="00:11:22:33:44:55",
       leader_priorities=SynchronizationPTPPriorities(128, 128),
       leader_accuracy=0.00000005,
-      time_source=PTPLeaderTimeSource.GNSS,
+      leader_time_source=PTPLeaderTimeSource.GNSS,
       mean_path_delay=0.000123,
       vlan=100)
   ),)

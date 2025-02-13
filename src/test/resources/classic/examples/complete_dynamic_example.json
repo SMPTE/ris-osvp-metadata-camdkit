@@ -124,7 +124,7 @@
         "leaderAccuracy": 5e-08,
         "meanPathDelay": 0.000123,
         "vlan": 100,
-        "timeSource": "GNSS"
+        "leaderTimeSource": "GNSS"
       }
     },
     "timecode": {
