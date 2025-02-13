@@ -694,12 +694,12 @@
         },
         "fStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
         },
         "pinholeFocalLength": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
           "units": "millimeter"
         },
@@ -768,7 +768,7 @@
         },
         "tStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n"
         }
       },

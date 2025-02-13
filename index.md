@@ -1007,7 +1007,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a real number greater than 0.
 
 ### `pinholeFocalLength`
 
@@ -1025,7 +1025,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a real number greater than 0.
 
 ### `focusDistance`
 
@@ -1106,7 +1106,7 @@ Regular
 
 #### Constraints
 
-The parameter shall be a non-negative real number.
+The parameter shall be a real number greater than 0.
 
 ### `protocol`
 
@@ -1986,12 +1986,12 @@ The following table indicates the camera parameters supported by each of the rea
         },
         "fStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
         },
         "pinholeFocalLength": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
           "units": "millimeter"
         },
@@ -2060,7 +2060,7 @@ The following table indicates the camera parameters supported by each of the rea
         },
         "tStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n"
         }
       },

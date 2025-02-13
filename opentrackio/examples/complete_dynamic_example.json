@@ -129,12 +129,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:26139df0-c929-475b-9867-ee0598c4b510",
-  "sourceId": "urn:uuid:554fdfde-9f21-4643-8536-86e7e0a67fd6",
+  "sampleId": "urn:uuid:b05c01fd-2d80-4b9b-b2f7-98df69a35b9c",
+  "sourceId": "urn:uuid:49396427-3b52-4f55-be04-2ae6934e15db",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:c06b8ba0-e7c4-48dd-ac08-34a1197040c5",
-    "urn:uuid:5513410c-d2fc-4527-8727-3f6f7cb1759a"
+    "urn:uuid:4d02c3a8-c8c9-4f5c-89a1-eb4a45cf8db7",
+    "urn:uuid:653407eb-ad13-417a-bcca-6fc0303684e1"
   ],
   "globalStage": {
     "E": 100.0,

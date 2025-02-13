@@ -110,8 +110,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:9d9c2b2b-3c53-4826-b46c-f04508a9c57e&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:56d4632e-2b6c-4368-9252-3723c8894612&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:d6b914ee-11f6-4f52-b6ae-77c318a59cf7&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:93de4617-9e73-4456-85da-6f837ce4ad67&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -209,8 +209,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:3909211c-2d28-43d7-8dc4-277536bf3bf9&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:be640b94-914c-48cc-9a90-7f70613f7e54&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:9a1b2445-4083-4bf4-9d0a-7b40ed7cf517&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:f15597cb-3480-4dac-bc80-6c51db46a33b&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -264,7 +264,7 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:871b5637-feb8-496a-bbdb-fde48adabeba&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:1f2accad-1fe3-420b-a24a-b167f69420b6&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
@@ -413,12 +413,12 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:13ffa9e0-6879-4426-9025-b838254d26a8&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:d5d6b3b5-a7df-4749-8e98-6ee8d85dc8bf&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:9bab35c7-fdfb-41a3-8ca8-cb0cedf31398&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:a269c548-c084-4929-a066-98909770b855&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:b3bb4173-ca2f-42fc-83a7-b19173263524&#34;,
-    &#34;urn:uuid:77dcb0fd-c25f-415b-93ca-9cd183f49daf&#34;
+    &#34;urn:uuid:091507e6-d6b1-49bf-ae34-059685516c5c&#34;,
+    &#34;urn:uuid:fcb9bf16-cbc6-4c3a-b667-4797dc51ab19&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -898,9 +898,9 @@ a lens
                     
                     <tr><td>fStop</td><td>lens</td><td>Regular</td><td>The linear f-number of the lens, equal to the focal length divided
 by the diameter of the entrance pupil.
-</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
+</td><td>None</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
-                    <tr><td>pinholeFocalLength</td><td>lens</td><td>Regular</td><td>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</td><td>millimeter</td><td>The parameter shall be a non-negative real number.</td></tr>
+                    <tr><td>pinholeFocalLength</td><td>lens</td><td>Regular</td><td>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</td><td>millimeter</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
                     <tr><td>focusDistance</td><td>lens</td><td>Regular</td><td>Focus distance/position of the lens</td><td>meter</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
@@ -917,7 +917,7 @@ The parameter shall contain at least one integer value for the FIZ encoders.
                     
                     <tr><td>tStop</td><td>lens</td><td>Regular</td><td>Linear t-number of the lens, equal to the F-number of the lens
 divided by the square root of the transmittance of the lens.
-</td><td>None</td><td>The parameter shall be a non-negative real number.</td></tr>
+</td><td>None</td><td>The parameter shall be a real number greater than 0.</td></tr>
                     
                     <tr><td>protocol</td><td>None</td><td>Regular</td><td>Name of the protocol in which the sample is being employed, and
 version of that protocol
@@ -1679,12 +1679,12 @@ of precision.
         },
         &#34;fStop&#34;: {
           &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 0.0,
+          &#34;exclusiveMinimum&#34;: 0.0,
           &#34;description&#34;: &#34;The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n&#34;
         },
         &#34;pinholeFocalLength&#34;: {
           &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 0.0,
+          &#34;exclusiveMinimum&#34;: 0.0,
           &#34;description&#34;: &#34;Distance between the pinhole and the image plane in the simple CGI pinhole camera model.&#34;,
           &#34;units&#34;: &#34;millimeter&#34;
         },
@@ -1753,7 +1753,7 @@ of precision.
         },
         &#34;tStop&#34;: {
           &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 0.0,
+          &#34;exclusiveMinimum&#34;: 0.0,
           &#34;description&#34;: &#34;Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n&#34;
         }
       },

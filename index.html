@@ -1658,7 +1658,7 @@ by the diameter of the entrance pupil.</p>
 <h4 id="sampling-44" tabindex="-1"><a class="anchor" href="#sampling-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-44" tabindex="-1"><a class="anchor" href="#constraints-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
+<p>The parameter shall be a real number greater than 0.</p>
 <h3 id="pinholefocallength" tabindex="-1"><a class="anchor" href="#pinholefocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>pinholeFocalLength</code></h3>
 <h4 id="description-45" tabindex="-1"><a class="anchor" href="#description-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</p>
@@ -1667,7 +1667,7 @@ by the diameter of the entrance pupil.</p>
 <h4 id="sampling-45" tabindex="-1"><a class="anchor" href="#sampling-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-45" tabindex="-1"><a class="anchor" href="#constraints-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
+<p>The parameter shall be a real number greater than 0.</p>
 <h3 id="focusdistance" tabindex="-1"><a class="anchor" href="#focusdistance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focusDistance</code></h3>
 <h4 id="description-46" tabindex="-1"><a class="anchor" href="#description-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Focus distance/position of the lens</p>
@@ -1707,7 +1707,7 @@ divided by the square root of the transmittance of the lens.</p>
 <h4 id="sampling-49" tabindex="-1"><a class="anchor" href="#sampling-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-49" tabindex="-1"><a class="anchor" href="#constraints-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a non-negative real number.</p>
+<p>The parameter shall be a real number greater than 0.</p>
 <h3 id="protocol" tabindex="-1"><a class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>protocol</code></h3>
 <h4 id="description-50" tabindex="-1"><a class="anchor" href="#description-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Name of the protocol in which the sample is being employed, and
@@ -2808,12 +2808,12 @@ of precision.</p>
         },
         "fStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
         },
         "pinholeFocalLength": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
           "units": "millimeter"
         },
@@ -2882,7 +2882,7 @@ of precision.</p>
         },
         "tStop": {
           "type": "number",
-          "minimum": 0.0,
+          "exclusiveMinimum": 0.0,
           "description": "Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n"
         }
       },
