@@ -99,7 +99,7 @@ class ModelTest(unittest.TestCase):
                              leader_identity="00:11:22:33:44:55",
                              leader_priorities=SynchronizationPTPPriorities(128, 128),
                              leader_accuracy=0.1,
-                             time_source=PTPLeaderTimeSource.GNSS,
+                             leader_time_source=PTPLeaderTimeSource.GNSS,
                              mean_path_delay=0.2,
                              vlan=100),
       source=SynchronizationSourceEnum.PTP)
@@ -201,7 +201,7 @@ class ModelTest(unittest.TestCase):
                           "leaderIdentity": "00:11:22:33:44:55",
                           "leaderPriorities": {"priority1": 128, "priority2": 128},
                           "leaderAccuracy": 0.1,
-                          "timeSource": PTPLeaderTimeSource.GNSS.value,
+                          "leaderTimeSource": PTPLeaderTimeSource.GNSS.value,
                           "meanPathDelay": 0.2,
                           "vlan": 100},
                   "offsets": {"translation":1.0, "rotation":2.0, "lensEncoders":3.0 } }

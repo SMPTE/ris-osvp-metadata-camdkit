@@ -151,8 +151,8 @@ class SynchronizationPTP(CompatibleBaseModel):
     leader_accuracy: Annotated[NonNegativeFloat,
       Field(alias="leaderAccuracy")]
 
-    time_source: Annotated[PTPLeaderTimeSource | None,
-      Field(alias="timeSource")] = None
+    leader_time_source: Annotated[PTPLeaderTimeSource | None,
+      Field(alias="leaderTimeSource")] = None
 
     mean_path_delay: Annotated[NonNegativeFloat,
       Field(alias="meanPathDelay")]
@@ -275,7 +275,7 @@ elapsed since the start of the epoch.
     following:
     - "vlan": Integer representing the VLAN ID for PTP traffic (e.g., 100 for
     VLAN 100)
-    - "timeSource": Indicates the leader's source of time, such as GNSS, atomic
+    - "leaderTimeSource": Indicates the leader's source of time, such as GNSS, atomic
     clock, or NTP
     - "genlock": The tracking device has an external black/burst or
     tri-level analog sync signal that is triggering the capture of

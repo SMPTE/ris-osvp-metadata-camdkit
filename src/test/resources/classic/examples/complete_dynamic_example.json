@@ -61,7 +61,7 @@
       "a3": 3.0
     },
     "fStop": 4.0,
-    "focalLength": 24.305,
+    "pinholeFocalLength": 24.305,
     "focusDistance": 10.0,
     "projectionOffset": {
       "x": 0.1,
@@ -124,7 +124,7 @@
         "leaderAccuracy": 5e-08,
         "meanPathDelay": 0.000123,
         "vlan": 100,
-        "timeSource": "GNSS"
+        "leaderTimeSource": "GNSS"
       }
     },
     "timecode": {
