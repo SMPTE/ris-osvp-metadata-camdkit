@@ -26,7 +26,7 @@ from pathlib import Path
 #                 with open("/tmp/sorted_current_schema_file.json", "w") as scusf:
 #                     json.dump(current_schema, scusf, indent=4, sort_keys=True)
 #                 self.assertEqual(classic_schema, current_schema)
-
-
+#
+#
 # if __name__ == '__main__':
 #     unittest.main()
