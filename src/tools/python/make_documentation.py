@@ -60,11 +60,12 @@ def generate_documentation(fp: typing.TextIO, doc, prefix):
     fp.write("\n")
     fp.write("\n")
 
-    fp.write("#### Constraints\n")
-    fp.write("\n")
-    fp.write(p["constraints"])
-    fp.write("\n")
-    fp.write("\n")
+    if "constraints" in p and p["constraints"]:
+      fp.write("#### Constraints\n")
+      fp.write("\n")
+      fp.write(p["constraints"])
+      fp.write("\n")
+      fp.write("\n")
 
 def generate_schema(fp: typing.TextIO, schema, title):
   fp.write(f"## {title} JSON Schema\n")
