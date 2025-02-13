@@ -290,7 +290,7 @@ class Clip(CompatibleBaseModel):
         return result
 
     def to_json(self, i: Optional[int] = None) -> Self:
-        if i:
+        if i != None:
             single_frame_clip: Self =  self[i]
             return CompatibleBaseModel.to_json(single_frame_clip)
         return CompatibleBaseModel.to_json(self)
