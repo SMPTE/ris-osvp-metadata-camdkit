@@ -784,10 +784,12 @@ The parameter shall contain the required valid fields.
 
 SMPTE timecode of the sample. Timecode is a standard for labeling
 individual frames of data in media systems and is useful for
-inter-frame synchronization.
-- format.frameRate: The frame rate as a rational number. Drop frame
-rates such as 29.97 should be represented as e.g. 30000/1001. The
-timecode frame rate may differ from the sample frequency.
+inter-frame synchronization. Frame rate is a rational number, allowing
+drop frame rates such as that colloquially called 29.97 to be
+represented exactly, as 30000/1001. The timecode frame rate may differ
+from the sample frequency. The zero-based sub-frame field allows for finer
+division of the frame, e.g. interlaced frames have two sub-frames,
+one per field.
 
 
 #### Units
@@ -1809,40 +1811,30 @@ The following table indicates the camera parameters supported by each of the rea
               "maximum": 119,
               "minimum": 0
             },
-            "format": {
+            "frameRate": {
               "type": "object",
               "properties": {
-                "frameRate": {
-                  "type": "object",
-                  "properties": {
-                    "num": {
-                      "type": "integer",
-                      "maximum": 2147483647,
-                      "minimum": 1
-                    },
-                    "denom": {
-                      "type": "integer",
-                      "maximum": 4294967295,
-                      "minimum": 1
-                    }
-                  },
-                  "required": [
-                    "num",
-                    "denom"
-                  ],
-                  "additionalProperties": false
+                "num": {
+                  "type": "integer",
+                  "maximum": 2147483647,
+                  "minimum": 1
                 },
-                "subFrame": {
+                "denom": {
                   "type": "integer",
                   "maximum": 4294967295,
-                  "minimum": 0
+                  "minimum": 1
                 }
               },
               "required": [
-                "frameRate"
+                "num",
+                "denom"
               ],
-              "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
               "additionalProperties": false
+            },
+            "subFrame": {
+              "type": "integer",
+              "maximum": 4294967295,
+              "minimum": 0
             }
           },
           "required": [
@@ -1850,9 +1842,9 @@ The following table indicates the camera parameters supported by each of the rea
             "minutes",
             "seconds",
             "frames",
-            "format"
+            "frameRate"
           ],
-          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.\n- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n",
+          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization. Frame rate is a rational number, allowing\ndrop frame rates such as that colloquially called 29.97 to be\nrepresented exactly, as 30000/1001. The timecode frame rate may differ\nfrom the sample frequency. The zero-based sub-frame field allows for finer\ndivision of the frame, e.g. interlaced frames have two sub-frames,\none per field.\n",
           "additionalProperties": false
         }
       },

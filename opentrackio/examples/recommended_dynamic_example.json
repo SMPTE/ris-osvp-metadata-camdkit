@@ -16,11 +16,9 @@
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
-          "num": 24000,
-          "denom": 1001
-        }
+      "frameRate": {
+        "num": 24000,
+        "denom": 1001
       }
     }
   },
@@ -60,8 +58,8 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:aa186ef6-b94b-4f9e-a800-e11be5a01232",
-  "sourceId": "urn:uuid:732d0a1c-15da-4717-ac21-e27ca7a85f10",
+  "sampleId": "urn:uuid:9d9c2b2b-3c53-4826-b46c-f04508a9c57e",
+  "sourceId": "urn:uuid:56d4632e-2b6c-4368-9252-3723c8894612",
   "sourceNumber": 1,
   "transforms": [
     {

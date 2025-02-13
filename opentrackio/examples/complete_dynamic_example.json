@@ -47,11 +47,9 @@
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
-          "num": 24000,
-          "denom": 1001
-        }
+      "frameRate": {
+        "num": 24000,
+        "denom": 1001
       }
     }
   },
@@ -131,12 +129,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:e62a7ea3-556a-4245-99cf-91f5b00a721b",
-  "sourceId": "urn:uuid:5ad17dca-deaa-43ca-90d6-2674daca87c2",
+  "sampleId": "urn:uuid:26139df0-c929-475b-9867-ee0598c4b510",
+  "sourceId": "urn:uuid:554fdfde-9f21-4643-8536-86e7e0a67fd6",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:de4cee4b-727a-40df-a924-1a14a93288c0",
-    "urn:uuid:a52ee16c-1e9c-47bc-b374-d22ec3a32e33"
+    "urn:uuid:c06b8ba0-e7c4-48dd-ac08-34a1197040c5",
+    "urn:uuid:5513410c-d2fc-4527-8727-3f6f7cb1759a"
   ],
   "globalStage": {
     "E": 100.0,
