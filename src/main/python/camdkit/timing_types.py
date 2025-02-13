@@ -216,7 +216,7 @@ elapsed since the start of the epoch.
                                "constraints": STRICTLY_POSITIVE_RATIONAL})] = None
     """Sample frame rate as a rational number. Drop frame rates such as
     29.97 should be represented as e.g. 30000/1001. In a variable rate
-    system this should is estimated from the last sample delta time.
+    system this should be estimated from the last sample delta time.
     """
 
     sample_timestamp: Annotated[tuple[Timestamp, ...] | None,
