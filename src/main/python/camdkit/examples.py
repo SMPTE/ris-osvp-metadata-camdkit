@@ -7,7 +7,6 @@
 import uuid
 import copy
 
-from pydantic import JsonValue
 from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.framework import *
@@ -155,7 +154,8 @@ def _get_recommended_dynamic_clip():
   # timing
   clip.timing_mode = (TimingMode.EXTERNAL,)
   clip.timing_sample_rate = (Fraction(24000, 1001),)
-  clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=Fraction(24000, 1001))),)
+  clip.timing_timecode = (Timecode(hours=1,minutes=2,seconds=3,frames=4,
+                                   frame_rate=StrictlyPositiveRational(24000, 1001)),)
   # transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)

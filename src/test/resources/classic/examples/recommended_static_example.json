@@ -33,7 +33,7 @@
     },
     "entrancePupilOffset": 0.123,
     "fStop": 4.0,
-    "focalLength": 24.305,
+    "pinholeFocalLength": 24.305,
     "focusDistance": 10.0,
     "projectionOffset": {
       "x": 0.1,

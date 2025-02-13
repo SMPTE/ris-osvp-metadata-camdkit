@@ -8,8 +8,9 @@ from camdkit.lens_types import (FizEncoders, RawFizEncoders,
                                 ExposureFalloff,
                                 Distortion, DistortionOffset,
                                 ProjectionOffset)
+from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.timing_types import SynchronizationSource as SynchronizationSourceEnum
-from camdkit.timing_types import (PTPProfile, Timestamp, TimecodeFormat,
+from camdkit.timing_types import (PTPProfile, Timestamp,
                                   TimingMode, Timecode,
                                   SynchronizationOffsets, SynchronizationPTPPriorities, SynchronizationPTP,
                                   Synchronization)

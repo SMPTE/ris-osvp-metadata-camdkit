@@ -262,19 +262,19 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     a lens
     """
 
-    f_number: Annotated[tuple[NonNegativeFloat, ...] | None,
+    f_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="fStop",
             json_schema_extra={"clip_property": "lens_f_number",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """The linear f-number of the lens, equal to the focal length divided
     by the diameter of the entrance pupil.
     """
 
-    pinhole_focal_length: Annotated[tuple[NonNegativeFloat, ...] | None,
+    pinhole_focal_length: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="pinholeFocalLength",
             json_schema_extra={"units": MILLIMETER,
                                "clip_property": "lens_pinhole_focal_length",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Distance between the pinhole and the image plane in the simple CGI pinhole camera model."""
 
     focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
@@ -307,10 +307,10 @@ The parameter shall contain at least one integer value for the FIZ encoders.
     homing / ranging has taken place.
     """
 
-    t_number: Annotated[tuple[NonNegativeFloat, ...] | None,
+    t_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="tStop",
             json_schema_extra={"clip_property": "lens_t_number",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Linear t-number of the lens, equal to the F-number of the lens
     divided by the square root of the transmittance of the lens.
     """

@@ -8,11 +8,12 @@
 
 import unittest
 import os
+import sys
 import json
 
 from pathlib import Path
 
-from typing import Any
+from typing import Any, Final
 
 from pydantic import ValidationError
 from pydantic.json_schema import JsonSchemaValue
@@ -47,6 +48,51 @@ class LensTypesTestCases(unittest.TestCase):
     #   verify one can set the object's attributes to new values
     #   when applicable, verify that trying to instantiate with arguments of the correct type
     #     but out-of-range or otherwise invalid values fail
+
+    def test_nominal_focal_length(self):
+        valid_nominal_focal_length: Final[float] = 1.0
+        with self.assertRaises(ValidationError):
+            StaticLens(nominal_focal_length="foo")
+        with self.assertRaises(ValidationError):
+            StaticLens(nominal_focal_length=0+1j)
+        with self.assertRaises(ValidationError):
+            StaticLens(nominal_focal_length=-1)
+        with self.assertRaises(ValidationError):
+            StaticLens(nominal_focal_length=0)
+        static_lens = StaticLens(nominal_focal_length=sys.float_info.epsilon)
+        self.assertEqual(sys.float_info.epsilon, static_lens.nominal_focal_length)
+        static_lens.nominal_focal_length = valid_nominal_focal_length
+        self.assertEqual(valid_nominal_focal_length, static_lens.nominal_focal_length)
+
+    def test_f_number(self):
+        valid_f_number: Final[tuple[float, ...]] = (1.0,)
+        with self.assertRaises(ValidationError):
+            Lens(f_number=("foo",))
+        with self.assertRaises(ValidationError):
+            Lens(f_number=(0 + 1j,))
+        with self.assertRaises(ValidationError):
+            Lens(f_number=(-1,))
+        with self.assertRaises(ValidationError):
+            Lens(f_number=(0,))
+        static_lens = Lens(f_number=(sys.float_info.epsilon,))
+        self.assertEqual((sys.float_info.epsilon,), static_lens.f_number)
+        static_lens.f_number = valid_f_number
+        self.assertEqual(valid_f_number, static_lens.f_number)
+
+    def test_t_number(self):
+        valid_t_number: Final[tuple[float, ...]] = (1.0,)
+        with self.assertRaises(ValidationError):
+            Lens(t_number=("foo",))
+        with self.assertRaises(ValidationError):
+            Lens(t_number=(0 + 1j),)
+        with self.assertRaises(ValidationError):
+            Lens(t_number=(-1,))
+        with self.assertRaises(ValidationError):
+            Lens(t_number=(0,))
+        static_lens = Lens(t_number=(sys.float_info.epsilon,))
+        self.assertEqual((sys.float_info.epsilon,), static_lens.t_number)
+        static_lens.t_number = valid_t_number
+        self.assertEqual(valid_t_number, static_lens.t_number)
 
     def test_distortion(self):
         with self.assertRaises(TypeError):

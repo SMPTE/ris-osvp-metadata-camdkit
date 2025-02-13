@@ -7,9 +7,6 @@
 '''Generic camera classic tests'''
 
 import unittest
-from fractions import Fraction
-
-from pydantic import ValidationError
 
 from camdkit.framework import *
 from camdkit.model import *
@@ -88,8 +85,12 @@ class ModelTest(unittest.TestCase):
                                       Timestamp(1718806001, 0))
     clip.timing_sequence_number = (0,1)
     clip.timing_sample_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
-    clip.timing_timecode = (Timecode(1,2,3,4,TimecodeFormat(frame_rate=24)),
-                            Timecode(1,2,3,5,TimecodeFormat(frame_rate=24)))
+    clip.timing_timecode = (Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                     frame_rate=StrictlyPositiveRational(24, 1),
+                                     sub_frame=0),
+                            Timecode(hours=1, minutes=2, seconds=3, frames=5,
+                                     frame_rate=StrictlyPositiveRational(24, 1),
+                                     sub_frame=0))
     sync = Synchronization(
       frequency=Fraction(24000, 1001),
       locked=True,
@@ -194,9 +195,9 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["timing"]["sampleRate"], ({ "num": 24000, "denom": 1001 }, { "num": 24000, "denom": 1001 }))
     self.assertTupleEqual(d["timing"]["timecode"],
                           ({ "hours":1,"minutes":2,"seconds":3,"frames":4,
-                             "format": { "frameRate": { "num": 24, "denom": 1 }}},
+                             "frameRate": { "num": 24, "denom": 1 }},
                            { "hours":1,"minutes":2,"seconds":3,"frames":5,
-                             "format": { "frameRate": { "num": 24, "denom": 1 }}}))
+                             "frameRate": { "num": 24, "denom": 1 }}))
     sync_dict = { "present":True,"locked":True,"frequency":{ "num": 24000, "denom": 1001 },"source":"ptp",
                   "ptp": {"profile": PTPProfile.SMPTE_2059_2_2021.value,
                           "domain":1,
@@ -655,7 +656,8 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.timing_timecode = {1,2,3,24,"24"}
 
-    value = Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))
+    value = Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                     frame_rate=StrictlyPositiveRational(24, 1))
     clip.timing_timecode = (value,)
     self.assertEqual(clip.timing_timecode, (value,))
 
@@ -755,58 +757,62 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
         Timestamp(0,281474976710655)
 
-  def test_timecode_format(self):
-    self.assertEqual(TimecodeFormat(frame_rate=24).to_int(), 24)
-    self.assertEqual(TimecodeFormat(frame_rate=24, sub_frame=1).to_int(), 24)
-    self.assertEqual(TimecodeFormat(frame_rate=25).to_int(), 25)
-    self.assertEqual(TimecodeFormat(frame_rate=30).to_int(), 30)
-    self.assertEqual(TimecodeFormat(frame_rate=30, sub_frame=1).to_int(), 30)
-    with self.assertRaises(ValidationError):
-      TimecodeFormat()
-    with self.assertRaises(ValueError):
-      TimecodeFormat(frame_rate=0).to_int()
 
-  def test_timecode_formats(self):
-    with self.assertRaises(TypeError):
-      Timecode()
-    with self.assertRaises(TypeError):
-      Timecode(1,2,3)
-    with self.assertRaises(TypeError):
-      Timecode(0,0,0,0)
+  def test_timecode(self):
     with self.assertRaises(ValueError):
-      Timecode(0,0,0,0,TimecodeFormat(frame_rate=0))
-    self.assertTrue(TimingTimecode.validate(Timecode(0,0,0,0,TimecodeFormat(frame_rate=24))))
-    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))))
-    self.assertTrue(TimingTimecode.validate(Timecode(23,59,59,23,TimecodeFormat(frame_rate=24))))
+      Timecode(hours=0, minutes=0, seconds=0, frames=0,
+               frame_rate=StrictlyPositiveRational(0,1),
+               sub_frame=0)
+    self.assertTrue(TimingTimecode.validate(Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                                                     frame_rate=StrictlyPositiveRational(24, 1))))
+    self.assertTrue(TimingTimecode.validate(Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                                     frame_rate=StrictlyPositiveRational(24, 1))))
+    self.assertTrue(TimingTimecode.validate(Timecode(hours=23, minutes=59, seconds=59, frames=23,
+                                                     frame_rate=StrictlyPositiveRational(24, 1))))
     with self.assertRaises(ValueError):
-        Timecode(-1,2,3,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=-1, seconds=2, minutes=3, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(24,2,3,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=24, seconds=2, minutes=3, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,-1,3,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=-1, minutes=3, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,60,3,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=60, minutes=3, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,-1,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=2, minutes=-1, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,60,4,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=2, minutes=60, frames=4,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,-1,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=2, minutes=3, frames=-1,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,24,TimecodeFormat(frame_rate=24))
+        Timecode(hours=1, seconds=2, minutes=3, frames=24,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,24,TimecodeFormat(frame_rate=24, sub_frame=1))
+        Timecode(hours=1, seconds=2, minutes=3, frames=24,
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=1)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,25,TimecodeFormat(frame_rate=25))
+        Timecode(hours=1, seconds=2, minutes=3, frames=25,
+        frame_rate=StrictlyPositiveRational(25, 1), sub_frame=1)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,30,TimecodeFormat(frame_rate=30))
+        Timecode(hours=1, seconds=2, minutes=3, frames=30,
+        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,30,TimecodeFormat(frame_rate=30, sub_frame=1))
-    self.assertTrue(TimingTimecode.validate(Timecode(1,2,3,119,TimecodeFormat(frame_rate=120))))
+        Timecode(hours=1, seconds=2, minutes=3, frames=30,
+        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1)
+    self.assertTrue(TimingTimecode.validate(Timecode(hours=1, minutes=2, seconds=3, frames=119,
+                                                     frame_rate=StrictlyPositiveRational(120, 1), sub_frame=0)))
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,120,TimecodeFormat(frame_rate=120))
+        Timecode(hours=1, seconds=2, minutes=3, frames=120,
+        frame_rate=StrictlyPositiveRational(120, 1), sub_frame=0)
     with self.assertRaises(ValueError):
-        Timecode(1,2,3,120,TimecodeFormat(frame_rate=121))
+        Timecode(hours=1, seconds=2, minutes=3, frames=120,
+        frame_rate=StrictlyPositiveRational(121, 1), sub_frame=0)
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
@@ -814,28 +820,43 @@ class ModelTest(unittest.TestCase):
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
+      "frameRate": {
           "num": 24,
           "denom": 1
         },
-        "subFrame": 0,
-      }
+      "subFrame": 0,
     })
-    self.assertEqual(str(r), str(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24))))
+    self.assertEqual(str(r), str(Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                          frame_rate=StrictlyPositiveRational(24, 1),
+                                          sub_frame=0)))
 
   def test_timecode_to_dict(self):
-    j = TimingTimecode.to_json(Timecode(1,2,3,4,TimecodeFormat(frame_rate=24)))
-    self.assertDictEqual(j, {
+    j0 = TimingTimecode.to_json(Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                        frame_rate=StrictlyPositiveRational(24, 1),
+                                        sub_frame=0))
+    # since the explicit sub_frame of zero matches the default, it isn't serialized
+    self.assertDictEqual(j0, {
       "hours": 1,
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
+      "frameRate": {
           "num": 24,
           "denom": 1
-        }}})
+        }})
+    j1 = TimingTimecode.to_json(Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                         frame_rate=StrictlyPositiveRational(24, 1),
+                                         sub_frame=1))
+    self.assertDictEqual(j1, {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "frameRate": {
+        "num": 24,
+        "denom": 1
+      },
+      "subFrame": 1})
 
   def test_lens_encoders_limits(self):
     clip = Clip()
