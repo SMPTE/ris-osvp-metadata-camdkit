@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:1f2accad-1fe3-420b-a24a-b167f69420b6",
+      "fdlLink": "urn:uuid:d5675b41-af98-4f8d-a037-df3a5a2ed39b",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -84,7 +84,7 @@
           "priority2": 128
         },
         "leaderAccuracy": 5e-08,
-        "timeSource": "GNSS",
+        "leaderTimeSource": "GNSS",
         "meanPathDelay": 0.000123,
         "vlan": 100
       }
@@ -176,12 +176,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:9bab35c7-fdfb-41a3-8ca8-cb0cedf31398",
-  "sourceId": "urn:uuid:a269c548-c084-4929-a066-98909770b855",
+  "sampleId": "urn:uuid:b56b8ee6-9111-414a-8f9b-ac7224f8bafc",
+  "sourceId": "urn:uuid:cd130d19-7a2b-4ce1-a632-855aec3cfef1",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:091507e6-d6b1-49bf-ae34-059685516c5c",
-    "urn:uuid:fcb9bf16-cbc6-4c3a-b667-4797dc51ab19"
+    "urn:uuid:a03d5cf4-2d38-4f62-96f2-7e05f0e17f31",
+    "urn:uuid:fd0b150d-0d83-40d5-80ec-37d11a188245"
   ],
   "globalStage": {
     "E": 100.0,

@@ -110,8 +110,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:d6b914ee-11f6-4f52-b6ae-77c318a59cf7&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:93de4617-9e73-4456-85da-6f837ce4ad67&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:3fdbee17-a947-42e7-931d-f0d6bcfe802b&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:8ce9fe04-ce5c-4bc4-aa50-6f0382dfe471&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -209,8 +209,8 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:9a1b2445-4083-4bf4-9d0a-7b40ed7cf517&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:f15597cb-3480-4dac-bc80-6c51db46a33b&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:663fd4f4-067f-4179-a89c-9b11974042e2&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:b1a092f3-35be-491a-8f75-86c5dca9dead&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -264,7 +264,7 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:1f2accad-1fe3-420b-a24a-b167f69420b6&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:d5675b41-af98-4f8d-a037-df3a5a2ed39b&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
@@ -321,7 +321,7 @@
           &#34;priority2&#34;: 128
         },
         &#34;leaderAccuracy&#34;: 5e-08,
-        &#34;timeSource&#34;: &#34;GNSS&#34;,
+        &#34;leaderTimeSource&#34;: &#34;GNSS&#34;,
         &#34;meanPathDelay&#34;: 0.000123,
         &#34;vlan&#34;: 100
       }
@@ -413,12 +413,12 @@
       1
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:9bab35c7-fdfb-41a3-8ca8-cb0cedf31398&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:a269c548-c084-4929-a066-98909770b855&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:b56b8ee6-9111-414a-8f9b-ac7224f8bafc&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:cd130d19-7a2b-4ce1-a632-855aec3cfef1&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:091507e6-d6b1-49bf-ae34-059685516c5c&#34;,
-    &#34;urn:uuid:fcb9bf16-cbc6-4c3a-b667-4797dc51ab19&#34;
+    &#34;urn:uuid:a03d5cf4-2d38-4f62-96f2-7e05f0e17f31&#34;,
+    &#34;urn:uuid:fd0b150d-0d83-40d5-80ec-37d11a188245&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -818,7 +818,7 @@ source: The source of synchronization must be defined as one of the
 following:
 - &#34;vlan&#34;: Integer representing the VLAN ID for PTP traffic (e.g., 100 for
 VLAN 100)
-- &#34;timeSource&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic
+- &#34;leaderTimeSource&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic
 clock, or NTP
 - &#34;genlock&#34;: The tracking device has an external black/burst or
 tri-level analog sync signal that is triggering the capture of
@@ -1445,7 +1445,7 @@ of precision.
                   &#34;type&#34;: &#34;number&#34;,
                   &#34;minimum&#34;: 0.0
                 },
-                &#34;timeSource&#34;: {
+                &#34;leaderTimeSource&#34;: {
                   &#34;enum&#34;: [
                     &#34;GNSS&#34;,
                     &#34;Atomic clock&#34;,
@@ -1479,7 +1479,7 @@ of precision.
             &#34;source&#34;
           ],
           &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP leader, then this object\ncontains:\n- \&#34;profile\&#34;: Specifies the PTP profile in use. This defines the operational\nrules and parameters for synchronization. For example \&#34;SMPTE ST2059-2:2021\&#34;\nfor SMPTE 2110 based systems, or \&#34;IEEE Std 1588-2019\&#34; or\n\&#34;IEEE Std 802.1AS-2020\&#34; for industrial applications\n- \&#34;domain\&#34;: Identifies the PTP domain the device belongs to. Devices in the\nsame domain can synchronize with each other\n- \&#34;leaderIdentity\&#34;: The unique identifier (usually MAC address) of the\ncurrent PTP leader (grandmaster)\n- \&#34;leaderPriorities\&#34;: The priority values of the leader used in the Best\nMaster Clock Algorithm (BMCA). Lower values indicate higher priority\n- \&#34;priority1\&#34;: Static priority set by the administrator\n- \&#34;priority2\&#34;: Dynamic priority based on the leader&#39;s role or clock quality\n- \&#34;leaderAccuracy\&#34;: The timing offset in seconds from the sample timestamp\nto the PTP timestamp\n- \&#34;meanPathDelay\&#34;: The average round-trip delay between the device and the\nPTP leader, measured in seconds\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \&#34;vlan\&#34;: Integer representing the VLAN ID for PTP traffic (e.g., 100 for\nVLAN 100)\n- \&#34;timeSource\&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic\nclock, or NTP\n- \&#34;genlock\&#34;: The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \&#34;videoIn\&#34;: The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \&#34;ptp\&#34;: The tracking device is locked to a PTP leader\n- \&#34;ntp\&#34;: The tracking device is locked to an NTP server\n&#34;
+          &#34;description&#34;: &#34;Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP leader, then this object\ncontains:\n- \&#34;profile\&#34;: Specifies the PTP profile in use. This defines the operational\nrules and parameters for synchronization. For example \&#34;SMPTE ST2059-2:2021\&#34;\nfor SMPTE 2110 based systems, or \&#34;IEEE Std 1588-2019\&#34; or\n\&#34;IEEE Std 802.1AS-2020\&#34; for industrial applications\n- \&#34;domain\&#34;: Identifies the PTP domain the device belongs to. Devices in the\nsame domain can synchronize with each other\n- \&#34;leaderIdentity\&#34;: The unique identifier (usually MAC address) of the\ncurrent PTP leader (grandmaster)\n- \&#34;leaderPriorities\&#34;: The priority values of the leader used in the Best\nMaster Clock Algorithm (BMCA). Lower values indicate higher priority\n- \&#34;priority1\&#34;: Static priority set by the administrator\n- \&#34;priority2\&#34;: Dynamic priority based on the leader&#39;s role or clock quality\n- \&#34;leaderAccuracy\&#34;: The timing offset in seconds from the sample timestamp\nto the PTP timestamp\n- \&#34;meanPathDelay\&#34;: The average round-trip delay between the device and the\nPTP leader, measured in seconds\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \&#34;vlan\&#34;: Integer representing the VLAN ID for PTP traffic (e.g., 100 for\nVLAN 100)\n- \&#34;leaderTimeSource\&#34;: Indicates the leader&#39;s source of time, such as GNSS, atomic\nclock, or NTP\n- \&#34;genlock\&#34;: The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \&#34;videoIn\&#34;: The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \&#34;ptp\&#34;: The tracking device is locked to a PTP leader\n- \&#34;ntp\&#34;: The tracking device is locked to an NTP server\n&#34;
         },
         &#34;timecode&#34;: {
           &#34;type&#34;: &#34;object&#34;,

@@ -37,7 +37,7 @@
           "priority2": 128
         },
         "leaderAccuracy": 5e-08,
-        "timeSource": "GNSS",
+        "leaderTimeSource": "GNSS",
         "meanPathDelay": 0.000123,
         "vlan": 100
       }
@@ -129,12 +129,12 @@
       1
     ]
   },
-  "sampleId": "urn:uuid:b05c01fd-2d80-4b9b-b2f7-98df69a35b9c",
-  "sourceId": "urn:uuid:49396427-3b52-4f55-be04-2ae6934e15db",
+  "sampleId": "urn:uuid:96290902-ba76-42b4-922f-2fc4e1ace862",
+  "sourceId": "urn:uuid:f6d8110e-2d07-4c78-9152-001b6f831671",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:4d02c3a8-c8c9-4f5c-89a1-eb4a45cf8db7",
-    "urn:uuid:653407eb-ad13-417a-bcca-6fc0303684e1"
+    "urn:uuid:4cfbfd9c-2c0e-4da5-ab70-92960e837056",
+    "urn:uuid:ac0a5cbe-4613-433b-8292-b1767e6b2c06"
   ],
   "globalStage": {
     "E": 100.0,
