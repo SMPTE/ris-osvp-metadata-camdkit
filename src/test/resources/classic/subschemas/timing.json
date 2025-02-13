@@ -164,14 +164,6 @@
               ],
               "type": "object"
             },
-            "timeSource": {
-              "enum": [
-                "GNSS",
-                "Atomic clock",
-                "NTP"
-              ],
-              "type": "string"
-            },
             "meanPathDelay": {
               "minimum": 0.0,
               "type": "number"
@@ -181,6 +173,14 @@
                 "IEEE Std 1588-2019",
                 "IEEE Std 802.1AS-2020",
                 "SMPTE ST2059-2:2021"
+              ],
+              "type": "string"
+            },
+            "timeSource": {
+              "enum": [
+                "GNSS",
+                "Atomic clock",
+                "NTP"
               ],
               "type": "string"
             },
@@ -218,40 +218,25 @@
     },
     "timecode": {
       "additionalProperties": false,
-      "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.\n- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n",
+      "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization. Frame rate is a rational number, allowing\ndrop frame rates such as that colloquially called 29.97 to be\nrepresented exactly, as 30000/1001. The timecode frame rate may differ\nfrom the sample frequency. The zero-based sub-frame field allows for finer\ndivision of the frame, e.g. interlaced frames have two sub-frames,\none per field.\n",
       "properties": {
-        "format": {
+        "frameRate": {
           "additionalProperties": false,
-          "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
           "properties": {
-            "frameRate": {
-              "additionalProperties": false,
-              "properties": {
-                "denom": {
-                  "maximum": 4294967295,
-                  "minimum": 1,
-                  "type": "integer"
-                },
-                "num": {
-                  "maximum": 2147483647,
-                  "minimum": 1,
-                  "type": "integer"
-                }
-              },
-              "required": [
-                "num",
-                "denom"
-              ],
-              "type": "object"
-            },
-            "subFrame": {
+            "denom": {
               "maximum": 4294967295,
-              "minimum": 0,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "num": {
+              "maximum": 2147483647,
+              "minimum": 1,
               "type": "integer"
             }
           },
           "required": [
-            "frameRate"
+            "num",
+            "denom"
           ],
           "type": "object"
         },
@@ -274,6 +259,11 @@
           "maximum": 59,
           "minimum": 0,
           "type": "integer"
+        },
+        "subFrame": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
         }
       },
       "required": [
@@ -281,7 +271,7 @@
         "minutes",
         "seconds",
         "frames",
-        "format"
+        "frameRate"
       ],
       "type": "object"
     }
