@@ -27,17 +27,20 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:d5675b41-af98-4f8d-a037-df3a5a2ed39b",
+      "fdlLink": "urn:uuid:ae30a353-da3e-42ea-8286-c5e9b15c8437",
       "shutterAngle": 45.0
     },
     "lens": {
       "distortionOverscanMax": 1.2,
       "undistortionOverscanMax": 1.3,
-      "distortionIsProjection": true,
       "make": "LensMaker",
       "model": "Model15",
       "serialNumber": "1234567890A",
-      "nominalFocalLength": 14.0
+      "nominalFocalLength": 14.0,
+      "calibrationHistory": [
+        "LensMaker 123",
+        "TrackerMaker 123"
+      ]
     },
     "tracker": {
       "make": "TrackerMaker",
@@ -173,15 +176,15 @@
     "version": [
       0,
       9,
-      1
+      3
     ]
   },
-  "sampleId": "urn:uuid:b56b8ee6-9111-414a-8f9b-ac7224f8bafc",
-  "sourceId": "urn:uuid:cd130d19-7a2b-4ce1-a632-855aec3cfef1",
+  "sampleId": "urn:uuid:06aebd8c-6ddc-42e0-8524-fad30d2e5c7e",
+  "sourceId": "urn:uuid:bd996958-9e6c-48e6-b344-ace796007fa8",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:a03d5cf4-2d38-4f62-96f2-7e05f0e17f31",
-    "urn:uuid:fd0b150d-0d83-40d5-80ec-37d11a188245"
+    "urn:uuid:7bf25974-5428-48b1-93a0-d641400f4bc8",
+    "urn:uuid:80186ea5-2622-4b15-88b3-ca6af3130167"
   ],
   "globalStage": {
     "E": 100.0,

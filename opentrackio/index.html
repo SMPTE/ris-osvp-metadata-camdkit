@@ -16,7 +16,7 @@
     <div class="header">
         <div class="headerInner">
             <a href="https://www.smpte.org/"><img src="img/logo_white.svg" class="headerLogo" /></a>
-            <h1>OpenTrackIO Documentation v(0, 9, 1)</h1>
+            <h1>OpenTrackIO Documentation v0.9.3</h1>
         </div>
     </div>
     <div class="wrapper">
@@ -107,11 +107,11 @@
     &#34;version&#34;: [
       0,
       9,
-      1
+      3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:3fdbee17-a947-42e7-931d-f0d6bcfe802b&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:8ce9fe04-ce5c-4bc4-aa50-6f0382dfe471&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:3cdf5fba-17d9-4db6-9a71-9345627c1e37&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:89b12504-1919-49f3-bda6-6df49db60b23&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -206,11 +206,11 @@
     &#34;version&#34;: [
       0,
       9,
-      1
+      3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:663fd4f4-067f-4179-a89c-9b11974042e2&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:b1a092f3-35be-491a-8f75-86c5dca9dead&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:f1c6d0c1-636b-41a3-b922-12256ba07b48&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:d15c1b65-a7f0-44ab-aca9-0fc40473490c&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -264,17 +264,20 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:d5675b41-af98-4f8d-a037-df3a5a2ed39b&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:ae30a353-da3e-42ea-8286-c5e9b15c8437&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
       &#34;distortionOverscanMax&#34;: 1.2,
       &#34;undistortionOverscanMax&#34;: 1.3,
-      &#34;distortionIsProjection&#34;: true,
       &#34;make&#34;: &#34;LensMaker&#34;,
       &#34;model&#34;: &#34;Model15&#34;,
       &#34;serialNumber&#34;: &#34;1234567890A&#34;,
-      &#34;nominalFocalLength&#34;: 14.0
+      &#34;nominalFocalLength&#34;: 14.0,
+      &#34;calibrationHistory&#34;: [
+        &#34;LensMaker 123&#34;,
+        &#34;TrackerMaker 123&#34;
+      ]
     },
     &#34;tracker&#34;: {
       &#34;make&#34;: &#34;TrackerMaker&#34;,
@@ -410,15 +413,15 @@
     &#34;version&#34;: [
       0,
       9,
-      1
+      3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:b56b8ee6-9111-414a-8f9b-ac7224f8bafc&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:cd130d19-7a2b-4ce1-a632-855aec3cfef1&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:06aebd8c-6ddc-42e0-8524-fad30d2e5c7e&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:bd996958-9e6c-48e6-b344-ace796007fa8&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:a03d5cf4-2d38-4f62-96f2-7e05f0e17f31&#34;,
-    &#34;urn:uuid:fd0b150d-0d83-40d5-80ec-37d11a188245&#34;
+    &#34;urn:uuid:7bf25974-5428-48b1-93a0-d641400f4bc8&#34;,
+    &#34;urn:uuid:80186ea5-2622-4b15-88b3-ca6af3130167&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -621,7 +624,22 @@
                   </tbody>
                 </table>
             </p>
-            
+            <button class="collapsible">Fletcher-16 reference code</button>
+            <div class="content">
+              <code><pre>
+uint16_t fletcher (const uint8_t* data, uint16_t len)
+{
+    if (!data) return 0;
+    uint8_t sum1 = 0;
+    uint8_t sum2 = 0;
+    while (len-- > 0) {
+        sum1 += *data++;
+        sum2 += sum1;
+    }
+    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
+}
+              </pre></code>
+            </div>
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
             <div class="content">
@@ -685,21 +703,17 @@ speed (in units of 1/s) is equal to the value of the parameter divided
 by 360 times the capture frame rate.
 </td><td>degree</td><td>The parameter shall be a real number in the range (0..360].</td></tr>
                     
-                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion. This is primarily
-relevant when storing overscan values, not in transmission as the
-overscan should be calculated by the consumer.
+                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion. This is alternative to
+providing dynamic overscan values each frame. Note it should be the maximum
+of both projection-matrix-based and field-of-view-based rendering as per the
+OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
-                    <tr><td>undistortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens undistortion. This is primarily
-relevant when storing overscan values, not in transmission as the
-overscan should be calculated by the consumer.
+                    <tr><td>undistortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens undistortion. This is alternative to
+providing dynamic overscan values each frame. Note it should be the maximum
+of both projection-matrix-based and field-of-view-based rendering as per the
+OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
-                    
-                    <tr><td>distortionIsProjection</td><td>lens</td><td>Static</td><td>Indicator that the OpenLensIO distortion model is the Projection
-Characterization, not the Field-Of-View Characterization. This is 
-primarily relevant when storing overscan values, not in transmission
-as the overscan should be calculated by the consumer.
-</td><td>None</td><td>The parameter shall be a boolean.</td></tr>
                     
                     <tr><td>make</td><td>lens</td><td>Static</td><td>Non-blank string naming lens manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
 codepoints.
@@ -720,6 +734,8 @@ codepoints.
                     <tr><td>nominalFocalLength</td><td>lens</td><td>Static</td><td>Nominal focal length of the lens. The number printed on the side
 of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
 </td><td>millimeter</td><td>The parameter shall be a real number greater than 0.</td></tr>
+                    
+                    <tr><td>calibrationHistory</td><td>lens</td><td>Static</td><td>List of free strings that describe the history of calibrations of the lens.</td><td>None</td><td>None</td></tr>
                     
                     <tr><td>make</td><td>tracker</td><td>Static</td><td>Non-blank string naming tracking device manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
 codepoints.
@@ -767,7 +783,7 @@ elapsed since the start of the epoch.
                     
                     <tr><td>sampleRate</td><td>timing</td><td>Regular</td><td>Sample frame rate as a rational number. Drop frame rates such as
 29.97 should be represented as e.g. 30000/1001. In a variable rate
-system this should is estimated from the last sample delta time.
+system this should be estimated from the last sample delta time.
 </td><td>None</td><td>The parameter shall be a rational number whose numerator
 is in the range [0..2,147,483,647] and denominator in the range
 (0..4,294,967,295].
@@ -859,14 +875,16 @@ maps Distorted to Undistorted coordinates).
 object the radial and tangential coefficients shall each be real numbers.
 </td></tr>
                     
-                    <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion. This is primarily relevant when
-storing overscan values, not in transmission as the overscan should be
-calculated by the consumer.
+                    <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion. Overscan may be provided by the
+producer but can also be overriden or calculated by the consumer. Note
+this should be the maximum of both projection-matrix-based and field-of-
+view-based rendering as per the OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
-                    <tr><td>undistortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens undistortion. This is primarily relevant when
-storing overscan values, not in transmission as the overscan should be
-calculated by the consumer.
+                    <tr><td>undistortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens undistortion. Overscan may be provided by the
+producer but can also be overriden or calculated by the consumer. Note
+this should be the maximum of both projection-matrix-based and field-of-
+view-based rendering as per the OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
                     <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera</td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
@@ -1158,16 +1176,12 @@ of precision.
             &#34;distortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
               &#34;minimum&#34;: 1.0,
-              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n&#34;
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n&#34;
             },
             &#34;undistortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
               &#34;minimum&#34;: 1.0,
-              &#34;description&#34;: &#34;Static maximum overscan factor on lens undistortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n&#34;
-            },
-            &#34;distortionIsProjection&#34;: {
-              &#34;type&#34;: &#34;boolean&#34;,
-              &#34;description&#34;: &#34;Indicator that the OpenLensIO distortion model is the Projection\nCharacterization, not the Field-Of-View Characterization. This is \nprimarily relevant when storing overscan values, not in transmission\nas the overscan should be calculated by the consumer.\n&#34;
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n&#34;
             },
             &#34;make&#34;: {
               &#34;type&#34;: &#34;string&#34;,
@@ -1198,6 +1212,15 @@ of precision.
               &#34;exclusiveMinimum&#34;: 0.0,
               &#34;description&#34;: &#34;Nominal focal length of the lens. The number printed on the side\nof a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.\n&#34;,
               &#34;units&#34;: &#34;millimeter&#34;
+            },
+            &#34;calibrationHistory&#34;: {
+              &#34;type&#34;: &#34;array&#34;,
+              &#34;description&#34;: &#34;List of free strings that describe the history of calibrations of the lens.&#34;,
+              &#34;items&#34;: {
+                &#34;type&#34;: &#34;string&#34;,
+                &#34;minLength&#34;: 1,
+                &#34;maxLength&#34;: 1023
+              }
             }
           },
           &#34;additionalProperties&#34;: false
@@ -1315,7 +1338,7 @@ of precision.
             &#34;denom&#34;
           ],
           &#34;additionalProperties&#34;: false,
-          &#34;description&#34;: &#34;Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should is estimated from the last sample delta time.\n&#34;
+          &#34;description&#34;: &#34;Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should be estimated from the last sample delta time.\n&#34;
         },
         &#34;sampleTimestamp&#34;: {
           &#34;type&#34;: &#34;object&#34;,
@@ -1589,12 +1612,12 @@ of precision.
         &#34;distortionOverscan&#34;: {
           &#34;type&#34;: &#34;number&#34;,
           &#34;minimum&#34;: 1.0,
-          &#34;description&#34;: &#34;Overscan factor on lens distortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n&#34;
+          &#34;description&#34;: &#34;Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n&#34;
         },
         &#34;undistortionOverscan&#34;: {
           &#34;type&#34;: &#34;number&#34;,
           &#34;minimum&#34;: 1.0,
-          &#34;description&#34;: &#34;Overscan factor on lens undistortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n&#34;
+          &#34;description&#34;: &#34;Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n&#34;
         },
         &#34;distortionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,

@@ -286,9 +286,10 @@ The parameter shall be a real number in the range (0..360].
 
 #### Description
 
-Static maximum overscan factor on lens distortion. This is primarily
-relevant when storing overscan values, not in transmission as the
-overscan should be calculated by the consumer.
+Static maximum overscan factor on lens distortion. This is alternative to
+providing dynamic overscan values each frame. Note it should be the maximum
+of both projection-matrix-based and field-of-view-based rendering as per the
+OpenLensIO documentation.
 
 
 #### Units
@@ -307,9 +308,10 @@ The parameter shall be a real number >= 1.
 
 #### Description
 
-Static maximum overscan factor on lens undistortion. This is primarily
-relevant when storing overscan values, not in transmission as the
-overscan should be calculated by the consumer.
+Static maximum overscan factor on lens undistortion. This is alternative to
+providing dynamic overscan values each frame. Note it should be the maximum
+of both projection-matrix-based and field-of-view-based rendering as per the
+OpenLensIO documentation.
 
 
 #### Units
@@ -323,28 +325,6 @@ Static
 #### Constraints
 
 The parameter shall be a real number >= 1.
-
-### `distortionIsProjection`
-
-#### Description
-
-Indicator that the OpenLensIO distortion model is the Projection
-Characterization, not the Field-Of-View Characterization. This is 
-primarily relevant when storing overscan values, not in transmission
-as the overscan should be calculated by the consumer.
-
-
-#### Units
-
-None
-
-#### Sampling
-
-Static
-
-#### Constraints
-
-The parameter shall be a boolean.
 
 ### `make`
 
@@ -445,6 +425,20 @@ Static
 #### Constraints
 
 The parameter shall be a real number greater than 0.
+
+### `calibrationHistory`
+
+#### Description
+
+List of free strings that describe the history of calibrations of the lens.
+
+#### Units
+
+None
+
+#### Sampling
+
+Static
 
 ### `make`
 
@@ -656,7 +650,7 @@ elapsed since the start of the epoch.
 
 Sample frame rate as a rational number. Drop frame rates such as
 29.97 should be represented as e.g. 30000/1001. In a variable rate
-system this should is estimated from the last sample delta time.
+system this should be estimated from the last sample delta time.
 
 
 #### Units
@@ -860,9 +854,10 @@ object the radial and tangential coefficients shall each be real numbers.
 
 #### Description
 
-Overscan factor on lens distortion. This is primarily relevant when
-storing overscan values, not in transmission as the overscan should be
-calculated by the consumer.
+Overscan factor on lens distortion. Overscan may be provided by the
+producer but can also be overriden or calculated by the consumer. Note
+this should be the maximum of both projection-matrix-based and field-of-
+view-based rendering as per the OpenLensIO documentation.
 
 
 #### Units
@@ -881,9 +876,10 @@ The parameter shall be a real number >= 1.
 
 #### Description
 
-Overscan factor on lens undistortion. This is primarily relevant when
-storing overscan values, not in transmission as the overscan should be
-calculated by the consumer.
+Overscan factor on lens undistortion. Overscan may be provided by the
+producer but can also be overriden or calculated by the consumer. Note
+this should be the maximum of both projection-matrix-based and field-of-
+view-based rendering as per the OpenLensIO documentation.
 
 
 #### Units
@@ -1282,12 +1278,12 @@ Each component of each transform shall contain Real numbers.
 
 The following table indicates the camera parameters supported by each of the readers.
 
-| Reader      | duration | captureFrameRate | activeSensorPhysicalDimensions | activeSensorResolution | make | model | serialNumber | firmwareVersion | label | anamorphicSqueeze | isoSpeed | fdlLink | shutterAngle | distortionOverscanMax | undistortionOverscanMax | distortionIsProjection | make | model | serialNumber | firmwareVersion | nominalFocalLength | make | model | serialNumber | firmwareVersion | notes | recording | slate | status | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | custom | distortion | distortionOverscan | undistortionOverscan | distortionOffset | encoders | entrancePupilOffset | exposureFalloff | fStop | pinholeFocalLength | focusDistance | projectionOffset | rawEncoders | tStop | protocol | sampleId | sourceId | sourceNumber | relatedSampleIds | globalStage | transforms |
+| Reader      | duration | captureFrameRate | activeSensorPhysicalDimensions | activeSensorResolution | make | model | serialNumber | firmwareVersion | label | anamorphicSqueeze | isoSpeed | fdlLink | shutterAngle | distortionOverscanMax | undistortionOverscanMax | make | model | serialNumber | firmwareVersion | nominalFocalLength | calibrationHistory | make | model | serialNumber | firmwareVersion | notes | recording | slate | status | mode | recordedTimestamp | sampleRate | sampleTimestamp | sequenceNumber | synchronization | timecode | custom | distortion | distortionOverscan | undistortionOverscan | distortionOffset | encoders | entrancePupilOffset | exposureFalloff | fStop | pinholeFocalLength | focusDistance | projectionOffset | rawEncoders | tStop | protocol | sampleId | sourceId | sourceNumber | relatedSampleIds | globalStage | transforms |
 | ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |
-| RED | + | + | + | | + | + | + | + | | + | + | | + | | | | + | + | + | + | + | | | | | | | | | | | | | | | | | | | | | | + | | | | + | | | + | | | | | | | |
-| ARRI | + | + | + | | + | + | + | | | + | + | | + | | | | + | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
-| Venice | + | + | + | | + | + | + | + | | + | + | | + | | | | | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
-| Canon | + | | | | + | | | | | + | + | | + | | | | | | | | + | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
+| RED | + | + | + | | + | + | + | + | | + | + | | + | | | + | + | + | + | + | | | | | | | | | | | | | | | | | | | | | | | + | | | | + | | | + | | | | | | | |
+| ARRI | + | + | + | | + | + | + | | | + | + | | + | | | + | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
+| Venice | + | + | + | | + | + | + | + | | + | + | | + | | | | + | + | | + | | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
+| Canon | + | | | | + | | | | | + | + | | + | | | | | | | + | | | | | | | | | | | | | | | | | | | | | | | | | | | + | | | + | | | | | | | |
 ## Clip JSON Schema
 
 ```{
@@ -1465,16 +1461,12 @@ The following table indicates the camera parameters supported by each of the rea
             "distortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens distortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
+              "description": "Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
             },
             "undistortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens undistortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
-            },
-            "distortionIsProjection": {
-              "type": "boolean",
-              "description": "Indicator that the OpenLensIO distortion model is the Projection\nCharacterization, not the Field-Of-View Characterization. This is \nprimarily relevant when storing overscan values, not in transmission\nas the overscan should be calculated by the consumer.\n"
+              "description": "Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
             },
             "make": {
               "type": "string",
@@ -1505,6 +1497,15 @@ The following table indicates the camera parameters supported by each of the rea
               "exclusiveMinimum": 0.0,
               "description": "Nominal focal length of the lens. The number printed on the side\nof a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.\n",
               "units": "millimeter"
+            },
+            "calibrationHistory": {
+              "type": "array",
+              "description": "List of free strings that describe the history of calibrations of the lens.",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
+              }
             }
           },
           "additionalProperties": false
@@ -1622,7 +1623,7 @@ The following table indicates the camera parameters supported by each of the rea
             "denom"
           ],
           "additionalProperties": false,
-          "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should is estimated from the last sample delta time.\n"
+          "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should be estimated from the last sample delta time.\n"
         },
         "sampleTimestamp": {
           "type": "object",
@@ -1896,12 +1897,12 @@ The following table indicates the camera parameters supported by each of the rea
         "distortionOverscan": {
           "type": "number",
           "minimum": 1.0,
-          "description": "Overscan factor on lens distortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
+          "description": "Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
         },
         "undistortionOverscan": {
           "type": "number",
           "minimum": 1.0,
-          "description": "Overscan factor on lens undistortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
+          "description": "Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
         },
         "distortionOffset": {
           "type": "object",
