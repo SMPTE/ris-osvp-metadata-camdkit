@@ -7,6 +7,7 @@
 """Tests for lens types"""
 
 import unittest
+import os
 import sys
 import json
 
@@ -138,9 +139,12 @@ class LensTypesTestCases(unittest.TestCase):
     def test_regular_lens_schemas_match(self):
         expected: JsonSchemaValue = CLASSIC_LENS_SCHEMA
         actual = Lens.make_json_schema()
-        with open("/tmp/sorted_expected_lens_schema.json", "w") as ef:
+        tmp_path = os.path.join(os.path.abspath(os.sep), "tmp")
+        if not os.path.exists(tmp_path):
+            os.mkdir(tmp_path)
+        with open(os.path.join(tmp_path, "sorted_expected_lens_schema.json"), "w") as ef:
             json.dump(expected, ef, indent=4, sort_keys=True)
-        with open("/tmp/sorted_actual_lens_schema.json", "w") as cf:
+        with open(os.path.join(tmp_path, "sorted_actual_lens_schema.json"), "w") as cf:
             json.dump(actual, cf, indent=4, sort_keys=True)
         self.assertEqual(expected, actual)
 

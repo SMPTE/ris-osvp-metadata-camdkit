@@ -29,28 +29,20 @@ class StaticLens(CompatibleBaseModel):
       Field(alias="distortionOverscanMax",
             json_schema_extra={"clip_property": "lens_distortion_overscan_max",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Static maximum overscan factor on lens distortion. This is primarily
-    relevant when storing overscan values, not in transmission as the
-    overscan should be calculated by the consumer.
+    """Static maximum overscan factor on lens distortion. This is alternative to
+    providing dynamic overscan values each frame. Note it should be the maximum
+    of both projection-matrix-based and field-of-view-based rendering as per the
+    OpenLensIO documentation.
     """
 
     undistortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
       Field(alias="undistortionOverscanMax",
             json_schema_extra={"clip_property": "lens_undistortion_overscan_max",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Static maximum overscan factor on lens undistortion. This is primarily
-    relevant when storing overscan values, not in transmission as the
-    overscan should be calculated by the consumer.
-    """
-
-    distortion_is_projection: Annotated[bool | None,
-      Field(alias="distortionIsProjection",
-            json_schema_extra={"clip_property": "lens_distortion_is_projection",
-                               "constraints": BOOLEAN})] = None
-    """Indicator that the OpenLensIO distortion model is the Projection
-    Characterization, not the Field-Of-View Characterization. This is 
-    primarily relevant when storing overscan values, not in transmission
-    as the overscan should be calculated by the consumer.
+    """Static maximum overscan factor on lens undistortion. This is alternative to
+    providing dynamic overscan values each frame. Note it should be the maximum
+    of both projection-matrix-based and field-of-view-based rendering as per the
+    OpenLensIO documentation.
     """
 
     make: Annotated[NonBlankUTF8String | None,
@@ -83,6 +75,14 @@ class StaticLens(CompatibleBaseModel):
     """Nominal focal length of the lens. The number printed on the side
     of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
     """
+    calibration_history: Annotated[tuple[str, ...] | None,
+      Field(alias="calibrationHistory",
+            json_schema_extra={"clip_property": "lens_calibration_history",
+                               "type": "array",
+                               "items":
+                               { "type": "string", "minLength": 1, "maxLength": 1023 }
+                               })] = None
+    """List of free strings that describe the history of calibrations of the lens."""
 
 
 class Distortion(CompatibleBaseModel):
@@ -192,18 +192,20 @@ object the radial and tangential coefficients shall each be real numbers.
       Field(alias="distortionOverscan",
             json_schema_extra={"clip_property": "lens_distortion_overscan",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Overscan factor on lens distortion. This is primarily relevant when
-    storing overscan values, not in transmission as the overscan should be
-    calculated by the consumer.
+    """Overscan factor on lens distortion. Overscan may be provided by the
+    producer but can also be overriden or calculated by the consumer. Note
+    this should be the maximum of both projection-matrix-based and field-of-
+    view-based rendering as per the OpenLensIO documentation.
     """
 
     undistortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None,
       Field(alias="undistortionOverscan",
             json_schema_extra={"clip_property": "lens_undistortion_overscan",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Overscan factor on lens undistortion. This is primarily relevant when
-    storing overscan values, not in transmission as the overscan should be
-    calculated by the consumer.
+    """Overscan factor on lens undistortion. Overscan may be provided by the
+    producer but can also be overriden or calculated by the consumer. Note
+    this should be the maximum of both projection-matrix-based and field-of-
+    view-based rendering as per the OpenLensIO documentation.
     """
 
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None,

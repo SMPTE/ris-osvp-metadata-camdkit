@@ -30,7 +30,7 @@
     "distortionOverscan": {
       "type": "number",
       "minimum": 1.0,
-      "description": "Overscan factor on lens distortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
+      "description": "Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
     },
     "distortion": {
       "type": "array",
@@ -210,7 +210,7 @@
     "undistortionOverscan": {
       "type": "number",
       "minimum": 1.0,
-      "description": "Overscan factor on lens undistortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
+      "description": "Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
     }
   }
 }

@@ -22,9 +22,10 @@ def main():
   args = parser.parse_args()
 
   # First 10 frames
-  frames = camdkit.mosys.reader.to_frames(args.frame_f4_path, 10)
-  # Print frame 0
-  print(json.dumps(frames[0], indent=2))
+  clip = camdkit.mosys.reader.to_clip(args.frame_f4_path, 10)
+  # Print frame 0 of the clip
+  print(json.dumps(clip.to_json(0), indent=2))
+  
   
 if __name__ == "__main__":
   main()

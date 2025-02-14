@@ -1,3 +1,12 @@
+// opentrackIO_parser.cpp
+//
+// Reference code for decoding opentrackIO messages
+// Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+//
+// License: this code is open-source under the FreeBSD License
+//
+// nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
+
 #include <iostream>
 #include <fstream>
 #include <string>

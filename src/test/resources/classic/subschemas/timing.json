@@ -33,7 +33,7 @@
     },
     "sampleRate": {
       "additionalProperties": false,
-      "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should is estimated from the last sample delta time.\n",
+      "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should be estimated from the last sample delta time.\n",
       "properties": {
         "denom": {
           "maximum": 4294967295,
