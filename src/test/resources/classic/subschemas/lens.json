@@ -1,21 +1,58 @@
 {
-  "type": "object",
   "additionalProperties": false,
   "properties": {
     "custom": {
-      "type": "array",
+      "description": "This list provides optional additional custom coefficients that can \nextend the existing lens model. The meaning of and how these characteristics\nare to be applied to a virtual camera would require negotiation between a\nparticular producer and consumer.\n",
       "items": {
         "type": "number"
       },
-      "description": "This list provides optional additional custom coefficients that can \nextend the existing lens model. The meaning of and how these characteristics\nare to be applied to a virtual camera would require negotiation between a\nparticular producer and consumer.\n"
+      "type": "array"
+    },
+    "distortion": {
+      "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key 'model' can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "model": {
+            "maxLength": 1023,
+            "minLength": 1,
+            "type": "string"
+          },
+          "overscan": {
+            "description": "Overscan factor on lens [un]distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n",
+            "items": {
+              "minimum": 1.0,
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "radial": {
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "tangential": {
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "model",
+          "radial"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
     },
     "distortionOffset": {
-      "type": "object",
       "additionalProperties": false,
-      "required": [
-        "x",
-        "y"
-      ],
+      "description": "Offset in x and y of the centre of distortion of the virtual camera",
       "properties": {
         "x": {
           "type": "number"
@@ -24,67 +61,15 @@
           "type": "number"
         }
       },
-      "description": "Offset in x and y of the centre of distortion of the virtual camera",
+      "required": [
+        "x",
+        "y"
+      ],
+      "type": "object",
       "units": "millimeter"
     },
-    "distortionOverscan": {
-      "type": "number",
-      "minimum": 1.0,
-      "description": "Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
-    },
-    "distortion": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "radial"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          },
-          "radial": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "minItems": 1
-          },
-          "tangential": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "minItems": 1
-          }
-        }
-      },
-      "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key 'model' can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n"
-    },
     "encoders": {
-      "type": "object",
       "additionalProperties": false,
-      "properties": {
-        "focus": {
-          "type": "number",
-          "minimum": 0.0,
-          "maximum": 1.0
-        },
-        "iris": {
-          "type": "number",
-          "minimum": 0.0,
-          "maximum": 1.0
-        },
-        "zoom": {
-          "type": "number",
-          "minimum": 0.0,
-          "maximum": 1.0
-        }
-      },
       "anyOf": [
         {
           "required": [
@@ -102,19 +87,34 @@
           ]
         }
       ],
-      "description": "Normalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer\nvalues) to ensure values remain independent of encoder resolution,\nminimum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that\ndemarcate the 0 and 1 range.\nValue should be provided in the following directions (if known):\nFocus:   0=infinite     1=closest\nIris:    0=open         1=closed\nZoom:    0=wide angle   1=telephoto\n"
+      "description": "Normalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer\nvalues) to ensure values remain independent of encoder resolution,\nminimum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that\ndemarcate the 0 and 1 range.\nValue should be provided in the following directions (if known):\nFocus:   0=infinite     1=closest\nIris:    0=open         1=closed\nZoom:    0=wide angle   1=telephoto\n",
+      "properties": {
+        "focus": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "iris": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "zoom": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        }
+      },
+      "type": "object"
     },
     "entrancePupilOffset": {
-      "type": "number",
       "description": "Offset of the entrance pupil relative to the nominal imaging plane\n(positive if the entrance pupil is located on the side of the nominal\nimaging plane that is towards the object, and negative otherwise).\nMeasured in meters as in a render engine it is often applied in the\nvirtual camera's transform chain.\n",
+      "type": "number",
       "units": "meter"
     },
     "exposureFalloff": {
-      "type": "object",
       "additionalProperties": false,
-      "required": [
-        "a1"
-      ],
+      "description": "Coefficients for calculating the exposure fall-off (vignetting) of\na lens\n",
       "properties": {
         "a1": {
           "type": "number"
@@ -126,32 +126,31 @@
           "type": "number"
         }
       },
-      "description": "Coefficients for calculating the exposure fall-off (vignetting) of\na lens\n"
+      "required": [
+        "a1"
+      ],
+      "type": "object"
     },
     "fStop": {
-      "type": "number",
+      "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n",
       "exclusiveMinimum": 0.0,
-      "description": "The linear f-number of the lens, equal to the focal length divided\nby the diameter of the entrance pupil.\n"
-    },
-    "pinholeFocalLength": {
-      "type": "number",
-      "exclusiveMinimum": 0.0,
-      "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
-      "units": "millimeter"
+      "type": "number"
     },
     "focusDistance": {
-      "type": "number",
-      "exclusiveMinimum": 0.0,
       "description": "Focus distance/position of the lens",
+      "exclusiveMinimum": 0.0,
+      "type": "number",
       "units": "meter"
     },
+    "pinholeFocalLength": {
+      "description": "Distance between the pinhole and the image plane in the simple CGI pinhole camera model.",
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "units": "millimeter"
+    },
     "projectionOffset": {
-      "type": "object",
       "additionalProperties": false,
-      "required": [
-        "x",
-        "y"
-      ],
+      "description": "Offset in x and y of the centre of perspective projection of the\nvirtual camera\n",
       "properties": {
         "x": {
           "type": "number"
@@ -160,29 +159,15 @@
           "type": "number"
         }
       },
-      "description": "Offset in x and y of the centre of perspective projection of the\nvirtual camera\n",
+      "required": [
+        "x",
+        "y"
+      ],
+      "type": "object",
       "units": "millimeter"
     },
     "rawEncoders": {
-      "type": "object",
       "additionalProperties": false,
-      "properties": {
-        "focus": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295
-        },
-        "iris": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295
-        },
-        "zoom": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295
-        }
-      },
       "anyOf": [
         {
           "required": [
@@ -200,17 +185,31 @@
           ]
         }
       ],
-      "description": "Raw encoder values for focus, iris and zoom.\nThese values are dependent on encoder resolution and before any\nhoming / ranging has taken place.\n"
+      "description": "Raw encoder values for focus, iris and zoom.\nThese values are dependent on encoder resolution and before any\nhoming / ranging has taken place.\n",
+      "properties": {
+        "focus": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "iris": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "zoom": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
     },
     "tStop": {
-      "type": "number",
+      "description": "Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n",
       "exclusiveMinimum": 0.0,
-      "description": "Linear t-number of the lens, equal to the F-number of the lens\ndivided by the square root of the transmittance of the lens.\n"
-    },
-    "undistortionOverscan": {
-      "type": "number",
-      "minimum": 1.0,
-      "description": "Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
+      "type": "number"
     }
-  }
+  },
+  "type": "object"
 }

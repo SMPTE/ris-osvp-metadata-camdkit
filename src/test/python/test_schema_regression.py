@@ -3,17 +3,18 @@ import unittest
 import json
 from pathlib import Path
 
-# from src.test.python.test_example_regression import CLASSIC, CURRENT
-
-# CLASSIC_SCHEMA_DIR: Path = CLASSIC
-# CLASSIC_SCHEMA = CLASSIC_SCHEMA_DIR / "schema.json"
-
-# CURRENT_SCHEMA_DIR: Path = CURRENT
-# CURRENT_SCHEMA = CURRENT_SCHEMA_DIR / "schema.json"
 
 # Uncomment during development
 
-
+# from src.test.python.test_example_regression import CLASSIC, CURRENT
+#
+# CLASSIC_SCHEMA_DIR: Path = CLASSIC
+# CLASSIC_SCHEMA = CLASSIC_SCHEMA_DIR / "schema.json"
+#
+# CURRENT_SCHEMA_DIR: Path = CURRENT
+# CURRENT_SCHEMA = CURRENT_SCHEMA_DIR / "schema.json"
+#
+#
 # class schemaTestCases(unittest.TestCase):
 #
 #     def test_current_schema_against_classic_schema(self):

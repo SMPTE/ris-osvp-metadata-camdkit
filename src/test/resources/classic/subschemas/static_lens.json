@@ -1,55 +1,55 @@
 {
-  "type": "object",
   "additionalProperties": false,
   "properties": {
-    "distortionOverscanMax": {
-      "type": "number",
-      "minimum": 1.0,
-      "description": "Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
-    },
-    "firmwareVersion": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string identifying lens firmware version"
-    },
-    "make": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string naming lens manufacturer"
-    },
-    "model": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023,
-      "description": "Non-blank string identifying lens model"
-    },
-    "nominalFocalLength": {
-      "type": "number",
-      "exclusiveMinimum": 0.0,
-      "description": "Nominal focal length of the lens. The number printed on the side\nof a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.\n",
-      "units": "millimeter"
-    },
     "calibrationHistory": {
-      "type": "array",
       "description": "List of free strings that describe the history of calibrations of the lens.",
       "items": {
-        "type": "string",
+        "maxLength": 1023,
         "minLength": 1,
-        "maxLength": 1023
-      }
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "distortionOverscanMax": {
+      "description": "Static maximum overscan factor on lens distortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n",
+      "minimum": 1.0,
+      "type": "number"
+    },
+    "firmwareVersion": {
+      "description": "Non-blank string identifying lens firmware version",
+      "maxLength": 1023,
+      "minLength": 1,
+      "type": "string"
+    },
+    "make": {
+      "description": "Non-blank string naming lens manufacturer",
+      "maxLength": 1023,
+      "minLength": 1,
+      "type": "string"
+    },
+    "model": {
+      "description": "Non-blank string identifying lens model",
+      "maxLength": 1023,
+      "minLength": 1,
+      "type": "string"
+    },
+    "nominalFocalLength": {
+      "description": "Nominal focal length of the lens. The number printed on the side\nof a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.\n",
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "units": "millimeter"
     },
     "serialNumber": {
-      "type": "string",
-      "minLength": 1,
+      "description": "Non-blank string uniquely identifying the lens",
       "maxLength": 1023,
-      "description": "Non-blank string uniquely identifying the lens"
+      "minLength": 1,
+      "type": "string"
     },
     "undistortionOverscanMax": {
-      "type": "number",
+      "description": "Static maximum overscan factor on lens undistortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n",
       "minimum": 1.0,
-      "description": "Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
+      "type": "number"
     }
-  }
+  },
+  "type": "object"
 }
