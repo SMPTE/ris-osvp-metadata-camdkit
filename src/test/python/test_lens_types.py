@@ -84,7 +84,7 @@ class LensTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Lens(t_number=("foo",))
         with self.assertRaises(ValidationError):
-            Lens(t_number=(0 + 1j),)
+            Lens(t_number=(0 + 1j,),)
         with self.assertRaises(ValidationError):
             Lens(t_number=(-1,))
         with self.assertRaises(ValidationError):
@@ -95,26 +95,77 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertEqual(valid_t_number, static_lens.t_number)
 
     def test_distortion(self):
-        with self.assertRaises(TypeError):
-            Distortion()
         with self.assertRaises(ValidationError):
-            Distortion(1)  # invalid: simple scalar of wrong type
-        with self.assertRaises(ValueError):
-            Distortion(tuple())  # invalid: empty radial tuple
+            Distortion()  # invalid: neither name nor data
         with self.assertRaises(ValidationError):
-            Distortion((1+1j,))  # invalid: radial tuple containing wrong type
-        Distortion((1.0,))  # valid: radial, no tangential, no model
+            Distortion(radial=(1.0,))  # invalid: radial, but no model
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel")  # invalid: name but no data
+        with self.assertRaises(ValidationError):
+            Distortion(model="", radial=(1,))  # blank model
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=1.0)  # scalar radial datum
         with self.assertRaises(ValueError):
-            Distortion((1.0,), tuple())  # invalid: empty tangential tuple
-        Distortion((1.0,), (1.0,))  # valid: radial, tangential, no model
+            Distortion(model="TestModel", radial=tuple())  # empty radial tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=("foo",))  # non-numeric radial tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1+1j,))  # non-float radial tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=tuple())  # empty radial tuple
+        Distortion(model="TestModel", radial=(1.0,))
+        Distortion(model="TestModel", radial=(1.0, 2.0))
         with self.assertRaises(ValueError):
-            Distortion((1.0,), (1.0,), "")  # invalid: blank model
-        valid = Distortion((1.0,), (1.0,), "Brown-Conrady")
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=tuple())  # empty tangential tuple
+        with self.assertRaises(ValueError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=1.0)  # scalar tangential datum
+        with self.assertRaises(ValueError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=("foo",))  # non-numeric tangential tuple
+        with self.assertRaises(ValueError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(0+1j, 0+2j))  # non-float tangential tuple
+        Distortion(model="TestModel", radial=(1.0,), tangential=(1.0,))
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=1.0)  # scalar overscan datum
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=tuple())  # empty overscan tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=tuple("foo"))  # non-numeric overscan tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=(0+1j, 0+2j))  # non-float overscan tuple
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=(-0.1,))  # negative overscan
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=(0.0,))  # zero overscan
+        with self.assertRaises(ValidationError):
+            Distortion(model="TestModel", radial=(1.0,),
+                       tangential=(1.0,),
+                       overscan=(1.0 - sys.float_info.epsilon,))  # zero overscan
+        valid = Distortion(model="Brown-Conrady",
+                           radial=(1.0,),
+                           tangential=(1.0,),
+                           overscan=(1.0,))
         Distortion.validate(valid)
         expected_json: dict[str, Any] = {
+            "model": "Brown-Conrady",
             "radial": (1.0,),
             "tangential": (1.0,),
-            "model": "Brown-Conrady"
+            "overscan": (1.0,)
         }
         json_from_instance: dict[str, Any] = Distortion.to_json(valid)
         self.assertDictEqual(expected_json, json_from_instance)
@@ -134,6 +185,13 @@ class LensTypesTestCases(unittest.TestCase):
     def test_static_lens_schemas_match(self):
         expected: JsonSchemaValue = CLASSIC_STATIC_LENS_SCHEMA
         actual = StaticLens.make_json_schema()
+        tmp_path = os.path.join(os.path.abspath(os.sep), "tmp")
+        if not os.path.exists(tmp_path):
+            os.mkdir(tmp_path)
+        with open(os.path.join(tmp_path, "sorted_expected_static_lens_schema.json"), "w") as ef:
+            json.dump(expected, ef, indent=4, sort_keys=True)
+        with open(os.path.join(tmp_path, "sorted_actual_static_lens_schema.json"), "w") as cf:
+            json.dump(actual, cf, indent=4, sort_keys=True)
         self.assertDictEqual(expected, actual)
 
     def test_regular_lens_schemas_match(self):

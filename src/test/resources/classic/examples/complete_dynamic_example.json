@@ -1,95 +1,10 @@
 {
-  "globalStage": {
-    "E": 100.0,
-    "N": 200.0,
-    "U": 300.0,
-    "lat0": 100.0,
-    "lon0": 200.0,
-    "h0": 300.0
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
   },
-  "lens": {
-    "custom": [
-      1.0,
-      2.0
-    ],
-    "distortionOffset": {
-      "x": 1.0,
-      "y": 2.0
-    },
-    "distortionOverscan": 1.1,
-    "distortion": [
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady D-U"
-      },
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady U-D"
-      }
-    ],
-    "encoders": {
-      "focus": 0.1,
-      "iris": 0.2,
-      "zoom": 0.3
-    },
-    "entrancePupilOffset": 0.123,
-    "exposureFalloff": {
-      "a1": 1.0,
-      "a2": 2.0,
-      "a3": 3.0
-    },
-    "fStop": 4.0,
-    "pinholeFocalLength": 24.305,
-    "focusDistance": 10.0,
-    "projectionOffset": {
-      "x": 0.1,
-      "y": 0.2
-    },
-    "rawEncoders": {
-      "focus": 1000,
-      "iris": 2000,
-      "zoom": 3000
-    },
-    "tStop": 4.1,
-    "undistortionOverscan": 1.2
-  },
-  "protocol": {
-    "name": "OpenTrackIO",
-    "version": [
-      0,
-      9,
-      1
-    ]
-  },
-  "relatedSampleIds": [
-    "urn:uuid:6429f6d4-0443-4e8a-b1c6-b5103defe1b5",
-    "urn:uuid:c23e2ce6-4928-4072-b40d-97f365e0bb39"
-  ],
-  "sampleId": "urn:uuid:2c0e718d-ca6f-4485-a6da-0c0e5319ea0b",
-  "sourceId": "urn:uuid:02f6a8f4-6c46-487b-be5e-d632d841a4e2",
-  "sourceNumber": 1,
   "timing": {
     "mode": "internal",
     "recordedTimestamp": {
@@ -122,9 +37,9 @@
           "priority2": 128
         },
         "leaderAccuracy": 5e-08,
+        "leaderTimeSource": "GNSS",
         "meanPathDelay": 0.000123,
-        "vlan": 100,
-        "leaderTimeSource": "GNSS"
+        "vlan": 100
       }
     },
     "timecode": {
@@ -132,19 +47,100 @@
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
-          "num": 24000,
-          "denom": 1001
-        }
+      "frameRate": {
+        "num": 24000,
+        "denom": 1001
       }
     }
   },
-  "tracker": {
-    "notes": "Example generated sample.",
-    "recording": false,
-    "slate": "A101_A_4",
-    "status": "Optical Good"
+  "lens": {
+    "custom": [
+      1.0,
+      2.0
+    ],
+    "distortion": [
+      {
+        "model": "Brown-Conrady D-U",
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      },
+      {
+        "model": "Brown-Conrady U-D",
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      }
+    ],
+    "distortionOffset": {
+      "x": 1.0,
+      "y": 2.0
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "exposureFalloff": {
+      "a1": 1.0,
+      "a2": 2.0,
+      "a3": 3.0
+    },
+    "fStop": 4.0,
+    "pinholeFocalLength": 24.305,
+    "focusDistance": 10.0,
+    "projectionOffset": {
+      "x": 0.1,
+      "y": 0.2
+    },
+    "rawEncoders": {
+      "focus": 1000,
+      "iris": 2000,
+      "zoom": 3000
+    },
+    "tStop": 4.1
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": [
+      0,
+      9,
+      3
+    ]
+  },
+  "sampleId": "urn:uuid:9db5acab-1147-4261-9c8e-dfb3877ebf8c",
+  "sourceId": "urn:uuid:e7578d21-6b1c-4b0d-a93d-a96fff20f43e",
+  "sourceNumber": 1,
+  "relatedSampleIds": [
+    "urn:uuid:a7db1b13-c8c4-40a5-8975-043d44ef816a",
+    "urn:uuid:47923efc-1c3b-483d-b1f5-693f9f99c94f"
+  ],
+  "globalStage": {
+    "E": 100.0,
+    "N": 200.0,
+    "U": 300.0,
+    "lat0": 100.0,
+    "lon0": 200.0,
+    "h0": 300.0
   },
   "transforms": [
     {

@@ -1,6 +1,14 @@
 {
   "static": {
+    "duration": {
+      "num": 1,
+      "denom": 25
+    },
     "camera": {
+      "captureFrameRate": {
+        "num": 24000,
+        "denom": 1001
+      },
       "activeSensorPhysicalDimensions": {
         "height": 24.0,
         "width": 36.0
@@ -9,134 +17,44 @@
         "height": 2160,
         "width": 3840
       },
+      "make": "CameraMaker",
+      "model": "Model20",
+      "serialNumber": "1234567890A",
+      "firmwareVersion": "1.2.3",
+      "label": "A",
       "anamorphicSqueeze": {
         "num": 1,
         "denom": 1
       },
-      "firmwareVersion": "1.2.3",
-      "label": "A",
-      "make": "CameraMaker",
-      "model": "Model20",
-      "serialNumber": "1234567890A",
-      "captureFrameRate": {
-        "num": 24000,
-        "denom": 1001
-      },
-      "fdlLink": "urn:uuid:da8c6d48-4e55-4fe7-80bf-f0f0411ffcf6",
       "isoSpeed": 4000,
+      "fdlLink": "urn:uuid:dfbd41f3-e816-4210-ab3b-a42db39ab23d",
       "shutterAngle": 45.0
     },
-    "duration": {
-      "num": 1,
-      "denom": 25
-    },
     "lens": {
-      "distortionIsProjection": true,
       "distortionOverscanMax": 1.2,
+      "undistortionOverscanMax": 1.3,
       "make": "LensMaker",
       "model": "Model15",
-      "nominalFocalLength": 14.0,
       "serialNumber": "1234567890A",
-      "undistortionOverscanMax": 1.3
+      "nominalFocalLength": 14.0,
+      "calibrationHistory": [
+        "LensMaker 123",
+        "TrackerMaker 123"
+      ]
     },
     "tracker": {
-      "firmwareVersion": "1.2.3",
       "make": "TrackerMaker",
       "model": "Tracker",
-      "serialNumber": "1234567890A"
+      "serialNumber": "1234567890A",
+      "firmwareVersion": "1.2.3"
     }
   },
-  "globalStage": {
-    "E": 100.0,
-    "N": 200.0,
-    "U": 300.0,
-    "lat0": 100.0,
-    "lon0": 200.0,
-    "h0": 300.0
+  "tracker": {
+    "notes": "Example generated sample.",
+    "recording": false,
+    "slate": "A101_A_4",
+    "status": "Optical Good"
   },
-  "lens": {
-    "custom": [
-      1.0,
-      2.0
-    ],
-    "distortionOffset": {
-      "x": 1.0,
-      "y": 2.0
-    },
-    "distortionOverscan": 1.1,
-    "distortion": [
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady D-U"
-      },
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "model": "Brown-Conrady U-D"
-      }
-    ],
-    "encoders": {
-      "focus": 0.1,
-      "iris": 0.2,
-      "zoom": 0.3
-    },
-    "entrancePupilOffset": 0.123,
-    "exposureFalloff": {
-      "a1": 1.0,
-      "a2": 2.0,
-      "a3": 3.0
-    },
-    "fStop": 4.0,
-    "pinholeFocalLength": 24.305,
-    "focusDistance": 10.0,
-    "projectionOffset": {
-      "x": 0.1,
-      "y": 0.2
-    },
-    "rawEncoders": {
-      "focus": 1000,
-      "iris": 2000,
-      "zoom": 3000
-    },
-    "tStop": 4.1,
-    "undistortionOverscan": 1.2
-  },
-  "protocol": {
-    "name": "OpenTrackIO",
-    "version": [
-      0,
-      9,
-      1
-    ]
-  },
-  "relatedSampleIds": [
-    "urn:uuid:f94dde88-b373-4184-a6a3-e0581f0ac2a3",
-    "urn:uuid:1edb5533-c7c6-4c16-afce-c6f058f16317"
-  ],
-  "sampleId": "urn:uuid:71451fbd-43d6-400a-9ba8-e4336b2bfa3c",
-  "sourceId": "urn:uuid:712a0217-1caf-48de-a79c-44db2cbbe458",
-  "sourceNumber": 1,
   "timing": {
     "mode": "internal",
     "recordedTimestamp": {
@@ -169,9 +87,9 @@
           "priority2": 128
         },
         "leaderAccuracy": 5e-08,
+        "leaderTimeSource": "GNSS",
         "meanPathDelay": 0.000123,
-        "vlan": 100,
-        "leaderTimeSource": "GNSS"
+        "vlan": 100
       }
     },
     "timecode": {
@@ -179,19 +97,100 @@
       "minutes": 2,
       "seconds": 3,
       "frames": 4,
-      "format": {
-        "frameRate": {
-          "num": 24000,
-          "denom": 1001
-        }
+      "frameRate": {
+        "num": 24000,
+        "denom": 1001
       }
     }
   },
-  "tracker": {
-    "notes": "Example generated sample.",
-    "recording": false,
-    "slate": "A101_A_4",
-    "status": "Optical Good"
+  "lens": {
+    "custom": [
+      1.0,
+      2.0
+    ],
+    "distortion": [
+      {
+        "model": "Brown-Conrady D-U",
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      },
+      {
+        "model": "Brown-Conrady U-D",
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ]
+      }
+    ],
+    "distortionOffset": {
+      "x": 1.0,
+      "y": 2.0
+    },
+    "encoders": {
+      "focus": 0.1,
+      "iris": 0.2,
+      "zoom": 0.3
+    },
+    "entrancePupilOffset": 0.123,
+    "exposureFalloff": {
+      "a1": 1.0,
+      "a2": 2.0,
+      "a3": 3.0
+    },
+    "fStop": 4.0,
+    "pinholeFocalLength": 24.305,
+    "focusDistance": 10.0,
+    "projectionOffset": {
+      "x": 0.1,
+      "y": 0.2
+    },
+    "rawEncoders": {
+      "focus": 1000,
+      "iris": 2000,
+      "zoom": 3000
+    },
+    "tStop": 4.1
+  },
+  "protocol": {
+    "name": "OpenTrackIO",
+    "version": [
+      0,
+      9,
+      3
+    ]
+  },
+  "sampleId": "urn:uuid:cbd63010-797c-4dfe-bec1-c9c98b6a5a1a",
+  "sourceId": "urn:uuid:b03802d9-0ef6-47ce-8911-8c34d510ff88",
+  "sourceNumber": 1,
+  "relatedSampleIds": [
+    "urn:uuid:5b64a524-634d-49f9-a4a3-fadd37a75700",
+    "urn:uuid:11666090-87af-49e1-a611-782a2704c2f3"
+  ],
+  "globalStage": {
+    "E": 100.0,
+    "N": 200.0,
+    "U": 300.0,
+    "lat0": 100.0,
+    "lon0": 200.0,
+    "h0": 300.0
   },
   "transforms": [
     {
