@@ -189,10 +189,12 @@ object the radial and tangential coefficients shall each be real numbers.
 """})] = None
     """A list of Distortion objects that each define the coefficients for
     calculating the distortion characteristics of a lens comprising radial
-    distortion coefficients of the spherical distortion (k1-N) and the
-    tangential distortion (p1-N). An optional key 'model' can be used that
-    describes the distortion model. The default is Brown-Conrady D-U (that
-    maps Distorted to Undistorted coordinates).
+    distortion coefficients of the spherical distortion (k1-N) and 
+    (optionally) the tangential distortion (p1-N). The key 'model'
+    names the distortion model. Typical values for 'model' include 
+    "Brown-Conrady D-U" when mapping distorted to undistorted coordinates,
+    and "Brown-Conrady U-D" when mapping undistorted to undistorted
+    coordinates.
     """
 
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None,

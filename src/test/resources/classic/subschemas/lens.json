@@ -9,7 +9,7 @@
       "type": "array"
     },
     "distortion": {
-      "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key 'model' can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n",
+      "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key 'model'\nnames the distortion model. Typical values for 'model' include \n\"Brown-Conrady D-U\" when mapping distorted to undistorted coordinates,\nand \"Brown-Conrady U-D\" when mapping undistorted to undistorted\ncoordinates.\n",
       "items": {
         "additionalProperties": false,
         "properties": {
