@@ -156,13 +156,13 @@ class LensTypesTestCases(unittest.TestCase):
             Distortion(model="TestModel", radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(1.0 - sys.float_info.epsilon,))  # zero overscan
-        valid = Distortion(model="Brown-Conrady",
+        valid = Distortion(model="Brown-Conrady D-U",
                            radial=(1.0,),
                            tangential=(1.0,),
                            overscan=(1.0,))
         Distortion.validate(valid)
         expected_json: dict[str, Any] = {
-            "model": "Brown-Conrady",
+            "model": "Brown-Conrady D-U",
             "radial": (1.0,),
             "tangential": (1.0,),
             "overscan": (1.0,)
