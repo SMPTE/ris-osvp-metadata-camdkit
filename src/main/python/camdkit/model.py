@@ -1,7 +1,6 @@
 from camdkit.clip import Clip
 
 from camdkit.camera_types import PhysicalDimensions as Dimensions
-from camdkit.lens_types import Distortion as LensDistortions
 from camdkit.lens_types import DistortionOffset as LensDistortionOffset
 from camdkit.lens_types import ExposureFalloff as LensExposureFalloff
 from camdkit.lens_types import FizEncoders as LensEncoders
