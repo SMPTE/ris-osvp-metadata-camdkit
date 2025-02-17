@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:ae30a353-da3e-42ea-8286-c5e9b15c8437",
+      "fdlLink": "urn:uuid:263ca97c-9502-480f-9979-afa8d8e53ace",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -179,12 +179,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:06aebd8c-6ddc-42e0-8524-fad30d2e5c7e",
-  "sourceId": "urn:uuid:bd996958-9e6c-48e6-b344-ace796007fa8",
+  "sampleId": "urn:uuid:c61a4bb5-5426-412d-abd1-daeed8071554",
+  "sourceId": "urn:uuid:565a8e5c-807e-4a19-8d60-d911bedb3b42",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:7bf25974-5428-48b1-93a0-d641400f4bc8",
-    "urn:uuid:80186ea5-2622-4b15-88b3-ca6af3130167"
+    "urn:uuid:d45e9747-f98b-42e6-8971-af6e584693b2",
+    "urn:uuid:d39719a8-8858-4567-8799-ce8bebb858b8"
   ],
   "globalStage": {
     "E": 100.0,
