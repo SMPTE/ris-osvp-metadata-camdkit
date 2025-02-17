@@ -210,8 +210,7 @@ class ClipTestCases(unittest.TestCase):
         lens_undistortion_overscan = (1.0, 1.0)
         lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                  ExposureFalloff(1.0, 2.0, 3.0))
-        lens_distortion_d_u = Distortion(model="Brown-Conrady D-U",
-                                         radial=(1.0, 2.0, 3.0),
+        lens_distortion_d_u = Distortion(radial=(1.0, 2.0, 3.0),
                                          tangential=(1.0, 2.0),
                                          overscan=lens_undistortion_overscan)
         lens_distortion_u_d = Distortion(model="Brown-Conrady U-D",

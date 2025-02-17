@@ -152,8 +152,7 @@ class LensTypesTestCases(unittest.TestCase):
             Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(1.0 - sys.float_info.epsilon,))  # zero overscan
-        valid = Distortion(model="Brown-Conrady D-U",
-                           radial=(1.0,),
+        valid = Distortion(radial=(1.0,),
                            tangential=(1.0,),
                            overscan=(1.0,))
         Distortion.validate(valid)

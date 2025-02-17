@@ -124,16 +124,14 @@ class ModelTest(unittest.TestCase):
                               RawFizEncoders(focus=1, iris=2, zoom=3))
     clip.lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                   ExposureFalloff(1.0, 2.0, 3.0))
-    clip.lens_distortions = ((Distortion(model="Brown-Conrady D-U",
-                                         radial=(1.0, 2.0, 3.0),
+    clip.lens_distortions = ((Distortion(radial=(1.0, 2.0, 3.0),
                                          tangential=(1.0, 2.0),
                                          overscan=(3.0, 4.0)),
                               Distortion(model="Brown-Conrady U-D",
                                          radial=(1.0, 2.0, 3.0),
                                          tangential=(1.0, 2.0),
                                          overscan=(1.0, 2.0))),
-                             (Distortion(model="Brown-Conrady D-U",
-                                         radial=(1.0, 2.0, 3.0),
+                             (Distortion(radial=(1.0, 2.0, 3.0),
                                          tangential=(1.0, 2.0),
                                          overscan=(3.0, 4.0)),
                               Distortion(model="Brown-Conrady U-D",
