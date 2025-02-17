@@ -206,8 +206,8 @@ class ClipTestCases(unittest.TestCase):
                          FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
         lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
                              RawFizEncoders(focus=1, iris=2, zoom=3))
-        lens_distortion_overscan = (1.0, 1.0)
-        lens_undistortion_overscan = (1.0, 1.0)
+        lens_distortion_overscan = 3.0
+        lens_undistortion_overscan = 4.0
         lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
                                  ExposureFalloff(1.0, 2.0, 3.0))
         lens_distortion_d_u = Distortion(radial=(1.0, 2.0, 3.0),

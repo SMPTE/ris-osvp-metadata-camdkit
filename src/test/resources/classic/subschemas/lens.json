@@ -20,11 +20,8 @@
           },
           "overscan": {
             "description": "Overscan factor on lens [un]distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n",
-            "items": {
-              "minimum": 1.0,
-              "type": "number"
-            },
-            "type": "array"
+            "minimum": 1.0,
+            "type": "number"
           },
           "radial": {
             "items": {

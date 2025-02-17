@@ -92,7 +92,7 @@ class Distortion(CompatibleBaseModel):
 
     tangential: Annotated[tuple[float, ...] | None, Field(min_length=1)] = None
 
-    overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None,
+    overscan: Annotated[UnityOrGreaterFloat | None,
     Field(alias="overscan",
           json_schema_extra={"constraints": REAL_AT_LEAST_UNITY})] = None
     """Overscan factor on lens [un]distortion. Overscan may be provided by the
@@ -107,8 +107,6 @@ class Distortion(CompatibleBaseModel):
             raise ValueError("radial distortion coefficient sequence must not be empty")
         if self.tangential is not None and len(self.tangential) == 0:
             raise ValueError("tangential distortion coefficient sequence, if provided, must not be empty")
-        if self.overscan is not None and len(self.overscan) == 0:
-            raise ValueError("[un]distortion overscan sequence, if provided, must not be empty")
         return self
 
 
