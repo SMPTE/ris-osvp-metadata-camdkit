@@ -167,10 +167,10 @@ def _get_recommended_dynamic_clip():
   clip.lens_distortions = ((Distortion(model="Brown-Conrady U-D",
                                        radial=(1.0, 2.0, 3.0),
                                        tangential=(1.0, 2.0),
-                                       overscan=(3.0, 4.0)),
+                                       overscan=3.0),
                             Distortion(radial=(1.0, 2.0, 3.0),
                                        tangential=(1.0, 2.0),
-                                       overscan=(1.0, 2.0)),
+                                       overscan=3.0),
                             ),)
   clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),)
   return clip
@@ -187,11 +187,13 @@ def _get_complete_dynamic_clip():
                       Transform(translation=v, rotation=r, scale=v, id="Camera")
                       ),)
   #   lens
-  clip.lens_distortions = ((Distortion(radial=(1.0, 2.0, 3.0, 4.0, 5.0, 6.0),
-                                       tangential=(1.0, 2.0)),
-                            Distortion(model="Brown-Conrady U-D",
+  clip.lens_distortions = ((Distortion(model="Brown-Conrady U-D",
                                        radial=(1.0, 2.0, 3.0, 4.0, 5.0, 6.0),
-                                       tangential=(1.0, 2.0)),),)
+                                       tangential=(1.0, 2.0),
+                                       overscan=3.0),
+                            Distortion(radial=(1.0, 2.0, 3.0, 4.0, 5.0, 6.0),
+                                       tangential=(1.0, 2.0),
+                                       overscan=2.0),),)
 
   # additions
   #   identity

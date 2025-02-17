@@ -127,22 +127,6 @@ class LensTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Distortion(radial=(1.0,),
                        tangential=(1.0,),
-                       overscan=1.0)  # scalar overscan datum
-        with self.assertRaises(ValidationError):
-            Distortion(radial=(1.0,),
-                       tangential=(1.0,),
-                       overscan=tuple())  # empty overscan tuple
-        with self.assertRaises(ValidationError):
-            Distortion(radial=(1.0,),
-                       tangential=(1.0,),
-                       overscan=tuple("foo"))  # non-numeric overscan tuple
-        with self.assertRaises(ValidationError):
-            Distortion(radial=(1.0,),
-                       tangential=(1.0,),
-                       overscan=(0+1j, 0+2j))  # non-float overscan tuple
-        with self.assertRaises(ValidationError):
-            Distortion(radial=(1.0,),
-                       tangential=(1.0,),
                        overscan=(-0.1,))  # negative overscan
         with self.assertRaises(ValidationError):
             Distortion(radial=(1.0,),
@@ -151,16 +135,16 @@ class LensTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Distortion(radial=(1.0,),
                        tangential=(1.0,),
-                       overscan=(1.0 - sys.float_info.epsilon,))  # zero overscan
+                       overscan=(1.0 - sys.float_info.epsilon))  # zero overscan
         valid = Distortion(radial=(1.0,),
                            tangential=(1.0,),
-                           overscan=(1.0,))
+                           overscan=1.0)
         Distortion.validate(valid)
         expected_json: dict[str, Any] = {
             # default model is not serialized
             "radial": (1.0,),
             "tangential": (1.0,),
-            "overscan": (1.0,)
+            "overscan": 1.0
         }
         json_from_instance: dict[str, Any] = Distortion.to_json(valid)
         self.assertDictEqual(expected_json, json_from_instance)

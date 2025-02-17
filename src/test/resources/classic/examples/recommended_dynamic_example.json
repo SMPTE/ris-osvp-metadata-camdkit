@@ -35,10 +35,7 @@
           1.0,
           2.0
         ],
-        "overscan": [
-          3.0,
-          4.0
-        ]
+        "overscan": 3.0
       },
       {
         "radial": [
@@ -50,10 +47,7 @@
           1.0,
           2.0
         ],
-        "overscan": [
-          1.0,
-          2.0
-        ]
+        "overscan": 3.0
       }
     ],
     "encoders": {
@@ -78,8 +72,8 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:5254fca2-0341-4b5c-880f-62524a191a8e",
-  "sourceId": "urn:uuid:173b9c3f-a85d-4257-a925-298b96f4ee7f",
+  "sampleId": "urn:uuid:11263db1-a34d-464a-8298-a870e6dd06d8",
+  "sourceId": "urn:uuid:f5cae770-bf07-4a6d-88e6-9ddbdff96e90",
   "sourceNumber": 1,
   "transforms": [
     {
