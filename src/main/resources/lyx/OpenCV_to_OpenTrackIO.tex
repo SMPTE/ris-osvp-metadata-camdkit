@@ -1,0 +1,195 @@
+%% LyX 2.3.6.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt,english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\date{}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+\title{Conversion of OpenCV to OpenTrackIO (OpenLensIO)\\
+lens calibration parameters}
+
+\maketitle
+If OpenCV lens calibration parameters are available for a camera/lens
+combination, how are these parameters converted to corresponding OpenTrackIO
+(OpenLensIO) lens calibration parameters?
+
+OpenCV definitions of parameters can be found here:
+\begin{quote}
+\texttt{https://docs.opencv.org/4.x/d9/d0c/group\_\_calib3d.html}
+\end{quote}
+whereas OpenTrackIO/OpenLensIO definitions of parameters can be found
+here:
+\begin{quote}
+\texttt{https://www.opentrackio.org/}
+\end{quote}
+(search for ``OpenLensIO mathematical lens model'') and will be
+referred to from now on as just OpenTrackIO parameters (omitting OpenLensIO).\\
+
+A few additional parameters for OpenTrackIO will be helpful and are
+defined first:
+
+The radius $r_{u}$ (distance from origin) of undistorted screen coordinates
+$\epsilon_{u}$:
+
+\[
+r_{u}=\sqrt{{\epsilon'_{x,u}}^{2}+{\epsilon'_{y,u}}^{2}}
+\]
+
+The pixel coordinates $\epsilon_{s}$, here expressed as shader coordinates
+$\varepsilon_{shader}$ but relative to the image center (not the
+upper left corner) and using a texture that has the same resolution
+as the camera image with width $w_{shader}$ and height $h_{shader}$
+(so the camera image is $w_{shader}$ pixels wide and $h_{shader}$
+pixels high, and $h_{shader}$ is different from $w_{shader}$ as
+opposed to the assumption of a square texture in the OpenLensIO documentation):
+
+\[
+\epsilon_{x,s}=\varepsilon_{x,shader}-\frac{w_{shader}}{2}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})
+\]
+
+\[
+\epsilon_{y,s}=\varepsilon_{y,shader}-\frac{h_{shader}}{2}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})
+\]
+
+Parameters $l_{1},...,l_{6}$ are the radial, $q_{1},q_{2}$ the tangential
+distortion parameters of the distortion function, which is the inverse
+of undistortion function U (formerly named D) defined in the OpenLensIO
+documentation with $k_{1},...,k_{6}$ as its radial, $p_{1},p_{2}$
+as its tangential distortion parameters (not to be confused with the
+OpenCV parameters of the same name but referring to the inverse operation).\\
+
+Using these additional definitions, the following table lists corresponding
+parameters for both lens models:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+OpenCV & Parameter & OpenTrackIO\tabularnewline
+\hline 
+\hline 
+$x',y'$ & undistorted screen coordinates & $\epsilon'_{x,u},\epsilon'_{y,u}$\tabularnewline
+\hline 
+$r$ & radius of undistorted coordinates & $r_{u}$\tabularnewline
+\hline 
+$x'',y''$ & distorted screen coordinates & $\epsilon'_{x,d},\epsilon'_{y,d}$\tabularnewline
+\hline 
+$u,v$ & pixel coordinates & $\epsilon_{x,s},\epsilon_{y,s}$\tabularnewline
+\hline 
+$f_{x},f_{y}$ & focal length & $F$\tabularnewline
+\hline 
+$c_{x},c_{y}$ & principal point / projection offset & $\Delta\mathbb{P}_{x},\Delta\mathbb{P}_{x}$\tabularnewline
+\hline 
+$k_{1},...,k_{6}$ & radial distortion & $l_{1},...,l_{6}$\tabularnewline
+\hline 
+$p_{1},p_{2}$ & tangential distortion & $q_{1},q_{2}$\tabularnewline
+\hline 
+\end{tabular}\medskip{}
+\par\end{center}
+
+The following equations follow straight from the parameter definitions:
+\begin{center}
+\begin{tabular}{ccccc}
+$\epsilon'_{x,u}=F\cdot x'$ &  & $\epsilon'_{x,d}=F\cdot x''$ &  & $\epsilon_{x,s}=u$\tabularnewline
+\noalign{\vskip\doublerulesep}
+$\epsilon'_{y,u}=F\cdot y'$ &  & $\epsilon'_{y,u}=F\cdot y''$ &  & $\epsilon_{y,s}=v$\tabularnewline
+\noalign{\vskip\doublerulesep}
+$r_{u}=F\cdot r$ &  &  &  & \tabularnewline
+\noalign{\vskip\doublerulesep}
+\end{tabular}
+\par\end{center}
+
+Focal length and projection offset parameters can be converted as
+follows:
+\[
+f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}
+\]
+
+Since this equation is true for any value of $x''$ it follows that
+\[
+F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}
+\]
+
+Likewise in y direction:
+\[
+f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}
+\]
+\[
+\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}
+\]
+
+Comparing individual components in the lens distortion formulas leads
+to the following conversions for distortion parameters, starting with
+radial distortion parameters in the numerator of the formula:
+\[
+k_{1}\cdot r^{2}=l_{1}\cdot r_{u}^{2}=l_{1}\cdot F^{2}\cdot r^{2}\qquad\Rightarrow\qquad l_{1}=\frac{k_{1}}{F^{2}}
+\]
+\[
+k_{2}\cdot r^{4}=l_{3}\cdot r_{u}^{4}=l_{3}\cdot F^{4}\cdot r^{4}\qquad\Rightarrow\qquad l_{3}=\frac{k_{2}}{F^{4}}
+\]
+\[
+k_{3}\cdot r^{6}=l_{5}\cdot r_{u}^{6}=l_{5}\cdot F^{6}\cdot r^{6}\qquad\Rightarrow\qquad l_{5}=\frac{k_{3}}{F^{6}}
+\]
+
+Likewise for the radial distortion parameters in the denominator of
+the formula:
+\[
+l_{2}=\frac{k_{4}}{F^{2}}\qquad\qquad l_{4}=\frac{k_{5}}{F^{4}}\qquad\qquad l_{6}=\frac{k_{6}}{F^{6}}
+\]
+
+Finally, the same type of comparison leads to this conversion of tangential
+distortion parameters:
+\[
+p_{1}\cdot x'\cdot y'=q_{1}\cdot\epsilon'_{x,u}\cdot\epsilon'_{y,u}=q_{1}\cdot F\cdot x'\cdot F\cdot y'\qquad\Rightarrow\qquad q_{1}=\frac{p_{1}}{F^{2}}
+\]
+\begin{align*}
+p_{2}(r^{2}+2{x'}^{2}) & =q_{2}(r^{2}+2{\epsilon'_{x,u}}^{2})\\
+ & =q_{2}((F\cdot r)^{2}+2(F\cdot x')^{2})\\
+ & =q_{2}\cdot F^{2}(r^{2}+2{x'}^{2})\qquad\Rightarrow\qquad q_{2}=\frac{p_{2}}{F^{2}}
+\end{align*}
+\medskip{}
+
+This is a summary of all conversions:\\
+
+\begin{tabular}{lccc}
+\noalign{\vskip\doublerulesep}
+focal length: & \multicolumn{3}{c}{$F=\frac{w}{w_{shader}}\cdot f_{x}=\frac{h}{h_{shader}}\cdot f_{y}$}\tabularnewline[\doublerulesep]
+\noalign{\vskip\doublerulesep}
+\noalign{\vskip\doublerulesep}
+projection offset: & $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}\quad$ &  & $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}\quad$\tabularnewline[\doublerulesep]
+\noalign{\vskip\doublerulesep}
+\noalign{\vskip\doublerulesep}
+radial distortion: & $l_{1}=\frac{k_{1}}{F^{2}}$ & $l_{3}=\frac{k_{2}}{F^{4}}$ & $l_{5}=\frac{k_{3}}{F^{6}}$\tabularnewline[\doublerulesep]
+\noalign{\vskip\doublerulesep}
+\noalign{\vskip\doublerulesep}
+ & $l_{2}=\frac{k_{4}}{F^{2}}$ & $l_{4}=\frac{k_{5}}{F^{4}}$ & $l_{6}=\frac{k_{6}}{F^{6}}$\tabularnewline[\doublerulesep]
+\noalign{\vskip\doublerulesep}
+\noalign{\vskip\doublerulesep}
+tangential distortion: & $q_{1}=\frac{p_{1}}{F^{2}}$ & $q_{2}=\frac{p_{2}}{F^{2}}$ & \tabularnewline[\doublerulesep]
+\noalign{\vskip\doublerulesep}
+\end{tabular}\\
+\medskip{}
+
+\emph{Important note:} The OpenCV parameters implicitly depend on
+the pixel resolution of the camera image $(w_{shader},h_{shader})$
+and the size of the image sensor $(w,h)$. By applying the conversions
+above, the resulting OpenTrackIO parameters do \emph{not} depend on
+camera image resolution and image sensor size anymore. It is therefore
+possible (within practical limits) to replace the camera or switch
+it to a different sensor resolution (different sampling mode) without
+the need to recalibrate all lens parameters!
+\end{document}
