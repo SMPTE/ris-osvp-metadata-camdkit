@@ -15,7 +15,7 @@ from cbor2 import dumps, loads, load
 from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 
-OTRK_VERSION = {0, 9, 2}
+OTRK_VERSION = {1, 0, 0}
 OTRK_IDENTIFIER = b'OTrk' 
 OTRK_IDENTIFIER_LENGTH = 4
 OTRK_HEADER_LENGTH = 16
@@ -357,7 +357,7 @@ class OpenTrackIOProtocol:
     def get_protocol_version(self):
         """Version of the protocol to which this sample conforms"""
         if self.validate_dict_elements(self.pd,["protocol","version"]):
-            return str(self.pd["protocol"]["version"])
+            return ".".join(str(v) for v in self.pd["protocol"]["version"])
         else:
             return None
 
