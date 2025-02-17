@@ -1,0 +1,1179 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\date{}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "helvet" "default"
+\font_typewriter "courier" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 95 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\rightmargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Conversion of OpenCV to OpenTrackIO (OpenLensIO)
+\begin_inset Newline newline
+\end_inset
+
+lens calibration parameters
+\end_layout
+
+\begin_layout Standard
+If OpenCV lens calibration parameters are available for a camera/lens combinatio
+n, how are these parameters converted to corresponding OpenTrackIO (OpenLensIO)
+ lens calibration parameters?
+\end_layout
+
+\begin_layout Standard
+OpenCV definitions of parameters can be found here:
+\end_layout
+
+\begin_layout Quote
+
+\family typewriter
+https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html
+\end_layout
+
+\begin_layout Standard
+whereas OpenTrackIO/OpenLensIO definitions of parameters can be found here:
+\end_layout
+
+\begin_layout Quote
+
+\family typewriter
+https://www.opentrackio.org/
+\end_layout
+
+\begin_layout Standard
+(search for 
+\begin_inset Quotes eld
+\end_inset
+
+OpenLensIO mathematical lens model
+\begin_inset Quotes erd
+\end_inset
+
+) and will be referred to from now on as just OpenTrackIO parameters (omitting
+ OpenLensIO).
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A few additional parameters for OpenTrackIO will be helpful and are defined
+ first:
+\end_layout
+
+\begin_layout Standard
+The radius 
+\begin_inset Formula $r_{u}$
+\end_inset
+
+ (distance from origin) of undistorted screen coordinates 
+\begin_inset Formula $\epsilon_{u}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+r_{u}=\sqrt{{\epsilon'_{x,u}}^{2}+{\epsilon'_{y,u}}^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The pixel coordinates 
+\begin_inset Formula $\epsilon_{s}$
+\end_inset
+
+, here expressed as shader coordinates 
+\begin_inset Formula $\varepsilon_{shader}$
+\end_inset
+
+ but relative to the image center (not the upper left corner) and using
+ a texture that has the same resolution as the camera image with width 
+\begin_inset Formula $w_{shader}$
+\end_inset
+
+ and height 
+\begin_inset Formula $h_{shader}$
+\end_inset
+
+ (so the camera image is 
+\begin_inset Formula $w_{shader}$
+\end_inset
+
+ pixels wide and 
+\begin_inset Formula $h_{shader}$
+\end_inset
+
+ pixels high, and 
+\begin_inset Formula $h_{shader}$
+\end_inset
+
+ is different from 
+\begin_inset Formula $w_{shader}$
+\end_inset
+
+ as opposed to the assumption of a square texture in the OpenLensIO documentatio
+n):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\epsilon_{x,s}=\varepsilon_{x,shader}-\frac{w_{shader}}{2}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\epsilon_{y,s}=\varepsilon_{y,shader}-\frac{h_{shader}}{2}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Parameters 
+\begin_inset Formula $l_{1},...,l_{6}$
+\end_inset
+
+ are the radial, 
+\begin_inset Formula $q_{1},q_{2}$
+\end_inset
+
+ the tangential distortion parameters of the distortion function, which
+ is the inverse of undistortion function U (formerly named D) defined in
+ the OpenLensIO documentation with 
+\begin_inset Formula $k_{1},...,k_{6}$
+\end_inset
+
+ as its radial, 
+\begin_inset Formula $p_{1},p_{2}$
+\end_inset
+
+ as its tangential distortion parameters (not to be confused with the OpenCV
+ parameters of the same name but referring to the inverse operation).
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using these additional definitions, the following table lists corresponding
+ parameters for both lens models:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OpenCV
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parameter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OpenTrackIO
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x',y'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+undistorted screen coordinates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{x,u},\epsilon'_{y,u}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $r$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+radius of undistorted coordinates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $r_{u}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x'',y''$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+distorted screen coordinates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{x,d},\epsilon'_{y,d}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $u,v$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pixel coordinates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon_{x,s},\epsilon_{y,s}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f_{x},f_{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+focal length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $F$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $c_{x},c_{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+principal point / projection offset
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Delta\mathbb{P}_{x},\Delta\mathbb{P}_{x}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{1},...,k_{6}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+radial distortion
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{1},...,l_{6}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p_{1},p_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tangential distortion
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $q_{1},q_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following equations follow straight from the parameter definitions:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row interlinespace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{x,u}=F\cdot x'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{x,d}=F\cdot x''$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon_{x,s}=u$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row interlinespace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{y,u}=F\cdot y'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon'_{y,u}=F\cdot y''$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon_{y,s}=v$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row interlinespace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $r_{u}=F\cdot r$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Focal length and projection offset parameters can be converted as follows:
+\begin_inset Formula 
+\[
+f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since this equation is true for any value of 
+\begin_inset Formula $x''$
+\end_inset
+
+ it follows that
+\begin_inset Formula 
+\[
+F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Likewise in y direction:
+\begin_inset Formula 
+\[
+f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comparing individual components in the lens distortion formulas leads to
+ the following conversions for distortion parameters, starting with radial
+ distortion parameters in the numerator of the formula:
+\begin_inset Formula 
+\[
+k_{1}\cdot r^{2}=l_{1}\cdot r_{u}^{2}=l_{1}\cdot F^{2}\cdot r^{2}\qquad\Rightarrow\qquad l_{1}=\frac{k_{1}}{F^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k_{2}\cdot r^{4}=l_{3}\cdot r_{u}^{4}=l_{3}\cdot F^{4}\cdot r^{4}\qquad\Rightarrow\qquad l_{3}=\frac{k_{2}}{F^{4}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k_{3}\cdot r^{6}=l_{5}\cdot r_{u}^{6}=l_{5}\cdot F^{6}\cdot r^{6}\qquad\Rightarrow\qquad l_{5}=\frac{k_{3}}{F^{6}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Likewise for the radial distortion parameters in the denominator of the
+ formula:
+\begin_inset Formula 
+\[
+l_{2}=\frac{k_{4}}{F^{2}}\qquad\qquad l_{4}=\frac{k_{5}}{F^{4}}\qquad\qquad l_{6}=\frac{k_{6}}{F^{6}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the same type of comparison leads to this conversion of tangential
+ distortion parameters:
+\begin_inset Formula 
+\[
+p_{1}\cdot x'\cdot y'=q_{1}\cdot\epsilon'_{x,u}\cdot\epsilon'_{y,u}=q_{1}\cdot F\cdot x'\cdot F\cdot y'\qquad\Rightarrow\qquad q_{1}=\frac{p_{1}}{F^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+p_{2}(r^{2}+2{x'}^{2}) & =q_{2}(r^{2}+2{\epsilon'_{x,u}}^{2})\\
+ & =q_{2}((F\cdot r)^{2}+2(F\cdot x')^{2})\\
+ & =q_{2}\cdot F^{2}(r^{2}+2{x'}^{2})\qquad\Rightarrow\qquad q_{2}=\frac{p_{2}}{F^{2}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a summary of all conversions:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+focal length:
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $F=\frac{w}{w_{shader}}\cdot f_{x}=\frac{h}{h_{shader}}\cdot f_{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+projection offset:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}\quad$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}\quad$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+radial distortion:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{1}=\frac{k_{1}}{F^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{3}=\frac{k_{2}}{F^{4}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{5}=\frac{k_{3}}{F^{6}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{2}=\frac{k_{4}}{F^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{4}=\frac{k_{5}}{F^{4}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $l_{6}=\frac{k_{6}}{F^{6}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tangential distortion:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $q_{1}=\frac{p_{1}}{F^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $q_{2}=\frac{p_{2}}{F^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Important note:
+\emph default
+ The OpenCV parameters implicitly depend on the pixel resolution of the
+ camera image 
+\begin_inset Formula $(w_{shader},h_{shader})$
+\end_inset
+
+ and the size of the image sensor 
+\begin_inset Formula $(w,h)$
+\end_inset
+
+.
+ By applying the conversions above, the resulting OpenTrackIO parameters
+ do 
+\emph on
+not
+\emph default
+ depend on camera image resolution and image sensor size anymore.
+ It is therefore possible (within practical limits) to replace the camera
+ or switch it to a different sensor resolution (different sampling mode)
+ without the need to recalibrate all lens parameters!
+\end_layout
+
+\end_body
+\end_document
