@@ -173,16 +173,12 @@
             "distortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens distortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
+              "description": "Static maximum overscan factor on lens distortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n"
             },
             "undistortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens undistortion. This is primarily\nrelevant when storing overscan values, not in transmission as the\noverscan should be calculated by the consumer.\n"
-            },
-            "distortionIsProjection": {
-              "type": "boolean",
-              "description": "Indicator that the OpenLensIO distortion model is the Projection\nCharacterization, not the Field-Of-View Characterization. This is \nprimarily relevant when storing overscan values, not in transmission\nas the overscan should be calculated by the consumer.\n"
+              "description": "Static maximum overscan factor on lens undistortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n"
             },
             "make": {
               "type": "string",
@@ -213,6 +209,15 @@
               "exclusiveMinimum": 0.0,
               "description": "Nominal focal length of the lens. The number printed on the side\nof a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.\n",
               "units": "millimeter"
+            },
+            "calibrationHistory": {
+              "type": "array",
+              "description": "List of free strings that describe the history of calibrations of the lens.",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
+              }
             }
           },
           "additionalProperties": false
@@ -330,7 +335,7 @@
             "denom"
           ],
           "additionalProperties": false,
-          "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should is estimated from the last sample delta time.\n"
+          "description": "Sample frame rate as a rational number. Drop frame rates such as\n29.97 should be represented as e.g. 30000/1001. In a variable rate\nsystem this should be estimated from the last sample delta time.\n"
         },
         "sampleTimestamp": {
           "type": "object",
@@ -519,40 +524,30 @@
               "maximum": 119,
               "minimum": 0
             },
-            "format": {
+            "frameRate": {
               "type": "object",
               "properties": {
-                "frameRate": {
-                  "type": "object",
-                  "properties": {
-                    "num": {
-                      "type": "integer",
-                      "maximum": 2147483647,
-                      "minimum": 1
-                    },
-                    "denom": {
-                      "type": "integer",
-                      "maximum": 4294967295,
-                      "minimum": 1
-                    }
-                  },
-                  "required": [
-                    "num",
-                    "denom"
-                  ],
-                  "additionalProperties": false
+                "num": {
+                  "type": "integer",
+                  "maximum": 2147483647,
+                  "minimum": 1
                 },
-                "subFrame": {
+                "denom": {
                   "type": "integer",
                   "maximum": 4294967295,
-                  "minimum": 0
+                  "minimum": 1
                 }
               },
               "required": [
-                "frameRate"
+                "num",
+                "denom"
               ],
-              "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
               "additionalProperties": false
+            },
+            "subFrame": {
+              "type": "integer",
+              "maximum": 4294967295,
+              "minimum": 0
             }
           },
           "required": [
@@ -560,9 +555,9 @@
             "minutes",
             "seconds",
             "frames",
-            "format"
+            "frameRate"
           ],
-          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.\n- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n",
+          "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization. Frame rate is a rational number, allowing\ndrop frame rates such as that colloquially called 29.97 to be\nrepresented exactly, as 30000/1001. The timecode frame rate may differ\nfrom the sample frequency. The zero-based sub-frame field allows for finer\ndivision of the frame, e.g. interlaced frames have two sub-frames,\none per field.\n",
           "additionalProperties": false
         }
       },
@@ -583,6 +578,11 @@
           "items": {
             "type": "object",
             "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
+              },
               "radial": {
                 "type": "array",
                 "items": {
@@ -597,10 +597,13 @@
                 },
                 "minItems": 1
               },
-              "model": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1023
+              "overscan": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 1.0
+                },
+                "description": "Overscan factor on lens [un]distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
               }
             },
             "required": [
@@ -609,17 +612,7 @@
             "additionalProperties": false
           },
           "minItems": 1,
-          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key 'model' can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n"
-        },
-        "distortionOverscan": {
-          "type": "number",
-          "minimum": 1.0,
-          "description": "Overscan factor on lens distortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
-        },
-        "undistortionOverscan": {
-          "type": "number",
-          "minimum": 1.0,
-          "description": "Overscan factor on lens undistortion. This is primarily relevant when\nstoring overscan values, not in transmission as the overscan should be\ncalculated by the consumer.\n"
+          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key 'model'\nnames the distortion model. Typical values for 'model' include \n\"Brown-Conrady D-U\" when mapping distorted to undistorted coordinates,\nand \"Brown-Conrady U-D\" when mapping undistorted to undistorted\ncoordinates. If not provided, the default model is \"Brown-Conrady D-U\".\n"
         },
         "distortionOffset": {
           "type": "object",
