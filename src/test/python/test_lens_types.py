@@ -98,62 +98,58 @@ class LensTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Distortion()  # invalid: neither name nor data
         with self.assertRaises(ValidationError):
-            Distortion(radial=(1.0,))  # invalid: radial, but no model
-        with self.assertRaises(ValidationError):
-            Distortion(model="TestModel")  # invalid: name but no data
-        with self.assertRaises(ValidationError):
             Distortion(model="", radial=(1,))  # blank model
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=1.0)  # scalar radial datum
+            Distortion(radial=1.0)  # scalar radial datum
         with self.assertRaises(ValueError):
-            Distortion(model="TestModel", radial=tuple())  # empty radial tuple
+            Distortion(radial=tuple())  # empty radial tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=("foo",))  # non-numeric radial tuple
+            Distortion(radial=("foo",))  # non-numeric radial tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1+1j,))  # non-float radial tuple
+            Distortion(radial=(1+1j,))  # non-float radial tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=tuple())  # empty radial tuple
-        Distortion(model="TestModel", radial=(1.0,))
-        Distortion(model="TestModel", radial=(1.0, 2.0))
+            Distortion(radial=tuple())  # empty radial tuple
+        Distortion(radial=(1.0,))
+        Distortion(radial=(1.0, 2.0))
         with self.assertRaises(ValueError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=tuple())  # empty tangential tuple
         with self.assertRaises(ValueError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=1.0)  # scalar tangential datum
         with self.assertRaises(ValueError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=("foo",))  # non-numeric tangential tuple
         with self.assertRaises(ValueError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(0+1j, 0+2j))  # non-float tangential tuple
-        Distortion(model="TestModel", radial=(1.0,), tangential=(1.0,))
+        Distortion(radial=(1.0,), tangential=(1.0,))
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=1.0)  # scalar overscan datum
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=tuple())  # empty overscan tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=tuple("foo"))  # non-numeric overscan tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(0+1j, 0+2j))  # non-float overscan tuple
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(-0.1,))  # negative overscan
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(0.0,))  # zero overscan
         with self.assertRaises(ValidationError):
-            Distortion(model="TestModel", radial=(1.0,),
+            Distortion(radial=(1.0,),
                        tangential=(1.0,),
                        overscan=(1.0 - sys.float_info.epsilon,))  # zero overscan
         valid = Distortion(model="Brown-Conrady D-U",
@@ -162,7 +158,7 @@ class LensTypesTestCases(unittest.TestCase):
                            overscan=(1.0,))
         Distortion.validate(valid)
         expected_json: dict[str, Any] = {
-            "model": "Brown-Conrady D-U",
+            # default model is not serialized
             "radial": (1.0,),
             "tangential": (1.0,),
             "overscan": (1.0,)

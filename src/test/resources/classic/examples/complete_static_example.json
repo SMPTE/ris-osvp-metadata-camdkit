@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:dfbd41f3-e816-4210-ab3b-a42db39ab23d",
+      "fdlLink": "urn:uuid:2332452b-b54d-4b1f-b521-1991ff12ac69",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -110,7 +110,6 @@
     ],
     "distortion": [
       {
-        "model": "Brown-Conrady D-U",
         "radial": [
           1.0,
           2.0,
@@ -177,12 +176,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:cbd63010-797c-4dfe-bec1-c9c98b6a5a1a",
-  "sourceId": "urn:uuid:b03802d9-0ef6-47ce-8911-8c34d510ff88",
+  "sampleId": "urn:uuid:13aeb455-55cc-43b6-a7a6-42da11eea9b2",
+  "sourceId": "urn:uuid:31359dfa-4556-440c-bb0a-bd04863fa063",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:5b64a524-634d-49f9-a4a3-fadd37a75700",
-    "urn:uuid:11666090-87af-49e1-a611-782a2704c2f3"
+    "urn:uuid:d6ea6ac1-970f-49b9-8797-466e75a05f4b",
+    "urn:uuid:ff3b9aa3-c7df-4e35-99a8-957f14fde26f"
   ],
   "globalStage": {
     "E": 100.0,

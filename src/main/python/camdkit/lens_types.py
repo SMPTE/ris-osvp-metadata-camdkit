@@ -86,7 +86,7 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    model: NonBlankUTF8String
+    model: Annotated[NonBlankUTF8String, Field(default="Brown-Conrady D-U")]
 
     radial: Annotated[tuple[float, ...], Field(min_length=1)]
 
@@ -110,11 +110,6 @@ class Distortion(CompatibleBaseModel):
         if self.overscan is not None and len(self.overscan) == 0:
             raise ValueError("[un]distortion overscan sequence, if provided, must not be empty")
         return self
-
-    # def __init__(self, radial: tuple[float, ...],  # positional __init__() for compatibility
-    #              tangential: tuple[float, ...] | None = None,
-    #              model: str | None = None):
-    #     super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
 Distortions = Annotated[tuple[Distortion, ...], Field(min_length=1)]
@@ -194,7 +189,7 @@ object the radial and tangential coefficients shall each be real numbers.
     names the distortion model. Typical values for 'model' include 
     "Brown-Conrady D-U" when mapping distorted to undistorted coordinates,
     and "Brown-Conrady U-D" when mapping undistorted to undistorted
-    coordinates.
+    coordinates. If not provided, the default model is "Brown-Conrady D-U".
     """
 
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None,

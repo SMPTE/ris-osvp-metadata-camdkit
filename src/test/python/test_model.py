@@ -231,7 +231,7 @@ class ModelTest(unittest.TestCase):
                                                      { "focus":1, "iris":2, "zoom":3 }))
     self.assertTupleEqual(d["lens"]["exposureFalloff"], ({ "a1":1.0,"a2":2.0,"a3":3.0 },
                                                          { "a1":1.0,"a2":2.0,"a3":3.0 }))
-    self.assertTupleEqual(d["lens"]["distortion"], (({"model": "Brown-Conrady D-U",
+    self.assertTupleEqual(d["lens"]["distortion"], (({  # default model is not serialized
                                                       "radial":(1.0,2.0,3.0),
                                                       "tangential":(1.0,2.0),
                                                       "overscan": (3.0, 4.0)},
@@ -239,7 +239,7 @@ class ModelTest(unittest.TestCase):
                                                       "radial":(1.0, 2.0, 3.0),
                                                       "tangential":(1.0,2.0),
                                                       "overscan": (1.0, 2.0)}),
-                                                    ({"model": "Brown-Conrady D-U",
+                                                    ({  # default model is not serialized
                                                       "radial": (1.0, 2.0, 3.0),
                                                       "tangential": (1.0, 2.0),
                                                       "overscan": (3.0, 4.0)},
@@ -1029,7 +1029,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(TypeError):
       clip.lens_distortions = (Distortion((1.0,)),)
     with self.assertRaises(ValueError):
-      clip.lens_distortions = (Distortion(model="TestModel", radial=(1.0, 2.0), tangential=tuple()),)
+      clip.lens_distortions = (Distortion(radial=(1.0, 2.0), tangential=tuple()),)
     with self.assertRaises(ValueError):
       clip.lens_distortions = ((Distortion(radial=tuple()),),)
     with self.assertRaises(ValueError):
@@ -1041,14 +1041,14 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.lens_distortions = ((Distortion(model="", tangential=(1.0, 2.0), radial=(1.0, 2.0)),),)
 
-    ((Distortion(model="TestModel", radial=(1.0,)),),)
-    ((Distortion(model="TestModel", radial=(1.0, 2.0)),),)
-    ((Distortion(model="TestModel", radial=(-1.0, 1.0, -1.0)),),)
-    ((Distortion(model="TestModel", radial=(1.0,),
+    ((Distortion(radial=(1.0,)),),)
+    ((Distortion(radial=(1.0, 2.0)),),)
+    ((Distortion(radial=(-1.0, 1.0, -1.0)),),)
+    ((Distortion(radial=(1.0,),
                  tangential=(0.0,)),),)
-    ((Distortion(model="TestModel", radial=(1.0, 2.0),
+    ((Distortion(radial=(1.0, 2.0),
                  tangential=(1.0, 2.0)),),)
-    value = ((Distortion(model="TestModel", radial=(-1.0, 1.0, -1.0),
+    value = ((Distortion(radial=(-1.0, 1.0, -1.0),
                          tangential=(1.0, 2.0, 3.0)),),)
     clip.lens_distortions = value
     self.assertTupleEqual(clip.lens_distortions, value)

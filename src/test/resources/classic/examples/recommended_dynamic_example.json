@@ -41,7 +41,6 @@
         ]
       },
       {
-        "model": "Brown-Conrady D-U",
         "radial": [
           1.0,
           2.0,
@@ -79,8 +78,8 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:c2248d10-ce9d-4a37-b122-6c6e45aed541",
-  "sourceId": "urn:uuid:19473b15-cca2-4a87-810e-9b48912a0c85",
+  "sampleId": "urn:uuid:5254fca2-0341-4b5c-880f-62524a191a8e",
+  "sourceId": "urn:uuid:173b9c3f-a85d-4257-a925-298b96f4ee7f",
   "sourceNumber": 1,
   "transforms": [
     {

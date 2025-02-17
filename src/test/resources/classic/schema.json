@@ -607,13 +607,12 @@
               }
             },
             "required": [
-              "model",
               "radial"
             ],
             "additionalProperties": false
           },
           "minItems": 1,
-          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key 'model'\nnames the distortion model. Typical values for 'model' include \n\"Brown-Conrady D-U\" when mapping distorted to undistorted coordinates,\nand \"Brown-Conrady U-D\" when mapping undistorted to undistorted\ncoordinates.\n"
+          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key 'model'\nnames the distortion model. Typical values for 'model' include \n\"Brown-Conrady D-U\" when mapping distorted to undistorted coordinates,\nand \"Brown-Conrady U-D\" when mapping undistorted to undistorted\ncoordinates. If not provided, the default model is \"Brown-Conrady D-U\".\n"
         },
         "distortionOffset": {
           "type": "object",

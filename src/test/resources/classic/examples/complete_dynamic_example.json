@@ -60,7 +60,6 @@
     ],
     "distortion": [
       {
-        "model": "Brown-Conrady D-U",
         "radial": [
           1.0,
           2.0,
@@ -127,12 +126,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:9db5acab-1147-4261-9c8e-dfb3877ebf8c",
-  "sourceId": "urn:uuid:e7578d21-6b1c-4b0d-a93d-a96fff20f43e",
+  "sampleId": "urn:uuid:2baa0af3-9777-47e5-9080-ffc5263855a7",
+  "sourceId": "urn:uuid:3ec58939-c824-49d3-bc30-7f3242a6bf67",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:a7db1b13-c8c4-40a5-8975-043d44ef816a",
-    "urn:uuid:47923efc-1c3b-483d-b1f5-693f9f99c94f"
+    "urn:uuid:86899885-a66e-4a2d-a8ce-cc9ce24cab3c",
+    "urn:uuid:1a01ff41-0abe-4813-b718-952a7aa7684a"
   ],
   "globalStage": {
     "E": 100.0,
