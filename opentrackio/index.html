@@ -39,7 +39,7 @@
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the Consumer (although for high-quality tracking for Virtual Production see the recommended set of fields in the samples <a href="#recommended">below</a>).</p>
             <p>OpenTrackIO employs a right-handed coordinate system where the Z-axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example, in an LED volume Y would point towards the centre of the LED wall and X would point towards camera-right.</p>
-            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v0_9_0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production.</p>
+            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v1-0-0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production. See <a href="res/OpenCV_to_OpenTrackIO.pdf" target="_blank">here</a> for conversion mathematics from the OpenCV model.</p>
             <img class="img-inline" src="img/Coordinate_System.svg" /><img class="img-inline" src="img/Axis_Rotation.svg" /></span>
             
             <h2>Software resources</h2>
@@ -110,8 +110,8 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:20e20e46-a095-428c-85e2-551fc9365bbc&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:c702896c-da83-40ab-9cfa-fc960c61e456&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a997d0ee-4279-406b-b97f-8c142c08eaae&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:9313b9c5-3022-491f-b5ed-add66d5238f1&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -209,8 +209,8 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:c9b2946d-1318-4dcc-b629-fde52557fe8a&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:b2d7cfd3-78a3-4a17-a7e3-983eed006480&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:7b1ea13d-0b9c-4ab8-8b41-5d33f6fce290&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:ae1f836c-9393-4e0e-9d0f-86a420ab89ff&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -264,7 +264,7 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:263ca97c-9502-480f-9979-afa8d8e53ace&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:5cfe5d0e-510e-4525-92ee-e121ab948914&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
@@ -416,12 +416,12 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:c61a4bb5-5426-412d-abd1-daeed8071554&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:565a8e5c-807e-4a19-8d60-d911bedb3b42&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:20df5151-3db1-4173-96b0-957b049ca3fc&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:0a2a8073-507b-4b79-b5a1-2bb670fcf45e&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:d45e9747-f98b-42e6-8971-af6e584693b2&#34;,
-    &#34;urn:uuid:d39719a8-8858-4567-8799-ce8bebb858b8&#34;
+    &#34;urn:uuid:77e25dae-bc10-4e85-aec7-57a70d053d6a&#34;,
+    &#34;urn:uuid:1da6c001-c041-4c2e-9afa-54186f07b245&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -1943,7 +1943,7 @@ of precision.
             <ul>
                 <li>Improved session and transport specifications and reference examples</li>
                 <li>SMPTE 2110 -41 and -42 integration</li>
-                <li>Anamorphic lens mathematics and enhanced vignette model (in OpenLensIO)</li>
+                <li>Anamorphic lens mathematics and enhanced vignette model (in <a href="res/OpenLensIO_v1-0-0.pdf" target="_blank">OpenLensIO</a>)</li>
                 <li>Device discovery</li>
             </ul>
         </div>
