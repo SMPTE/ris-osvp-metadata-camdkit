@@ -86,7 +86,7 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    model: Annotated[NonBlankUTF8String, Field(default="Brown-Conrady D-U")]
+    model: Annotated[NonBlankUTF8String | None, Field(default="Brown-Conrady D-U")]
 
     radial: Annotated[tuple[float, ...], Field(min_length=1)]
 

@@ -164,13 +164,9 @@ def _get_recommended_dynamic_clip():
   clip.lens_focus_distance = (10.0,)
   clip.lens_entrance_pupil_offset = (0.123,)
   clip.lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),)
-  clip.lens_distortions = ((Distortion(model="Brown-Conrady U-D",
-                                       radial=(1.0, 2.0, 3.0),
+  clip.lens_distortions = ((Distortion(radial=(1.0, 2.0, 3.0),
                                        tangential=(1.0, 2.0),
-                                       overscan=3.0),
-                            Distortion(radial=(1.0, 2.0, 3.0),
-                                       tangential=(1.0, 2.0),
-                                       overscan=3.0),
+                                       overscan=3.1),
                             ),)
   clip.lens_projection_offset = (ProjectionOffset(0.1, 0.2),)
   return clip

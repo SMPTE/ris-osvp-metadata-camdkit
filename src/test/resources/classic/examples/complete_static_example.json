@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:2332452b-b54d-4b1f-b521-1991ff12ac69",
+      "fdlLink": "urn:uuid:62ea03ac-ce56-43c6-ab8d-a9ec8a9ee7b3",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -110,20 +110,6 @@
     ],
     "distortion": [
       {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ]
-      },
-      {
         "model": "Brown-Conrady U-D",
         "radial": [
           1.0,
@@ -136,7 +122,23 @@
         "tangential": [
           1.0,
           2.0
-        ]
+        ],
+        "overscan": 3.0
+      },
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "overscan": 2.0
       }
     ],
     "distortionOffset": {
@@ -176,12 +178,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:13aeb455-55cc-43b6-a7a6-42da11eea9b2",
-  "sourceId": "urn:uuid:31359dfa-4556-440c-bb0a-bd04863fa063",
+  "sampleId": "urn:uuid:e3f34dae-b68c-47d9-99af-e0bfc277723c",
+  "sourceId": "urn:uuid:889eec71-62ca-4c7f-b1ef-4c2b16f4eacf",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:d6ea6ac1-970f-49b9-8797-466e75a05f4b",
-    "urn:uuid:ff3b9aa3-c7df-4e35-99a8-957f14fde26f"
+    "urn:uuid:b545b989-34b2-452a-9630-cf952d021a3f",
+    "urn:uuid:dd8ce967-21f2-444e-a007-5eb33333ca51"
   ],
   "globalStage": {
     "E": 100.0,

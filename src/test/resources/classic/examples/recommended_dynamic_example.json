@@ -25,7 +25,6 @@
   "lens": {
     "distortion": [
       {
-        "model": "Brown-Conrady U-D",
         "radial": [
           1.0,
           2.0,
@@ -35,19 +34,7 @@
           1.0,
           2.0
         ],
-        "overscan": 3.0
-      },
-      {
-        "radial": [
-          1.0,
-          2.0,
-          3.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ],
-        "overscan": 3.0
+        "overscan": 3.1
       }
     ],
     "encoders": {
@@ -72,8 +59,8 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:11263db1-a34d-464a-8298-a870e6dd06d8",
-  "sourceId": "urn:uuid:f5cae770-bf07-4a6d-88e6-9ddbdff96e90",
+  "sampleId": "urn:uuid:cd5677eb-b18d-4746-9dc3-2890c0711d52",
+  "sourceId": "urn:uuid:cd3713e1-cc63-4d7e-83d7-c984a6395d5f",
   "sourceNumber": 1,
   "transforms": [
     {
