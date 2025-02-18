@@ -1258,10 +1258,10 @@ by 360 times the capture frame rate.</p>
 <p>The parameter shall be a real number in the range (0..360].</p>
 <h3 id="distortionoverscanmax" tabindex="-1"><a class="anchor" href="#distortionoverscanmax" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionOverscanMax</code></h3>
 <h4 id="description-13" tabindex="-1"><a class="anchor" href="#description-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Static maximum overscan factor on lens distortion. This is alternative to
-providing dynamic overscan values each frame. Note it should be the maximum
-of both projection-matrix-based and field-of-view-based rendering as per the
-OpenLensIO documentation.</p>
+<p>Static maximum overscan factor on lens distortion. This is an
+alternative to providing dynamic overscan values each frame. Note it
+should be the maximum of both projection-matrix-based and
+field-of-view-based rendering as per the OpenLensIO documentation.</p>
 <h4 id="units-13" tabindex="-1"><a class="anchor" href="#units-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-13" tabindex="-1"><a class="anchor" href="#sampling-13" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1270,10 +1270,10 @@ OpenLensIO documentation.</p>
 <p>The parameter shall be a real number &gt;= 1.</p>
 <h3 id="undistortionoverscanmax" tabindex="-1"><a class="anchor" href="#undistortionoverscanmax" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>undistortionOverscanMax</code></h3>
 <h4 id="description-14" tabindex="-1"><a class="anchor" href="#description-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Static maximum overscan factor on lens undistortion. This is alternative to
-providing dynamic overscan values each frame. Note it should be the maximum
-of both projection-matrix-based and field-of-view-based rendering as per the
-OpenLensIO documentation.</p>
+<p>Static maximum overscan factor on lens undistortion. This is an
+alternative to providing dynamic overscan values each frame. Note it
+should be the maximum of both projection-matrix-based and
+field-of-view-based rendering as per the OpenLensIO documentation.</p>
 <h4 id="units-14" tabindex="-1"><a class="anchor" href="#units-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-14" tabindex="-1"><a class="anchor" href="#sampling-14" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1563,10 +1563,12 @@ The tuple can be empty</p>
 <h4 id="description-37" tabindex="-1"><a class="anchor" href="#description-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>A list of Distortion objects that each define the coefficients for
 calculating the distortion characteristics of a lens comprising radial
-distortion coefficients of the spherical distortion (k1-N) and the
-tangential distortion (p1-N). An optional key 'model' can be used that
-describes the distortion model. The default is Brown-Conrady D-U (that
-maps Distorted to Undistorted coordinates).</p>
+distortion coefficients of the spherical distortion (k1-N) and
+(optionally) the tangential distortion (p1-N). The key 'model'
+names the distortion model. Typical values for 'model' include
+"Brown-Conrady D-U" when mapping distorted to undistorted coordinates,
+and "Brown-Conrady U-D" when mapping undistorted to undistorted
+coordinates. If not provided, the default model is "Brown-Conrady D-U".</p>
 <h4 id="units-37" tabindex="-1"><a class="anchor" href="#units-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-37" tabindex="-1"><a class="anchor" href="#sampling-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
@@ -1574,41 +1576,17 @@ maps Distorted to Undistorted coordinates).</p>
 <h4 id="constraints-36" tabindex="-1"><a class="anchor" href="#constraints-36" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The list shall contain at least one Distortion object, and in each
 object the radial and tangential coefficients shall each be real numbers.</p>
-<h3 id="distortionoverscan" tabindex="-1"><a class="anchor" href="#distortionoverscan" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionOverscan</code></h3>
+<h3 id="distortionoffset" tabindex="-1"><a class="anchor" href="#distortionoffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionOffset</code></h3>
 <h4 id="description-38" tabindex="-1"><a class="anchor" href="#description-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Overscan factor on lens distortion. Overscan may be provided by the
-producer but can also be overriden or calculated by the consumer. Note
-this should be the maximum of both projection-matrix-based and field-of-
-view-based rendering as per the OpenLensIO documentation.</p>
+<p>Offset in x and y of the centre of distortion of the virtual camera</p>
 <h4 id="units-38" tabindex="-1"><a class="anchor" href="#units-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
+<p>millimeter</p>
 <h4 id="sampling-38" tabindex="-1"><a class="anchor" href="#sampling-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-37" tabindex="-1"><a class="anchor" href="#constraints-37" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number &gt;= 1.</p>
-<h3 id="undistortionoverscan" tabindex="-1"><a class="anchor" href="#undistortionoverscan" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>undistortionOverscan</code></h3>
-<h4 id="description-39" tabindex="-1"><a class="anchor" href="#description-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Overscan factor on lens undistortion. Overscan may be provided by the
-producer but can also be overriden or calculated by the consumer. Note
-this should be the maximum of both projection-matrix-based and field-of-
-view-based rendering as per the OpenLensIO documentation.</p>
-<h4 id="units-39" tabindex="-1"><a class="anchor" href="#units-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
-<h4 id="sampling-39" tabindex="-1"><a class="anchor" href="#sampling-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-38" tabindex="-1"><a class="anchor" href="#constraints-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number &gt;= 1.</p>
-<h3 id="distortionoffset" tabindex="-1"><a class="anchor" href="#distortionoffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>distortionOffset</code></h3>
-<h4 id="description-40" tabindex="-1"><a class="anchor" href="#description-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Offset in x and y of the centre of distortion of the virtual camera</p>
-<h4 id="units-40" tabindex="-1"><a class="anchor" href="#units-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
-<h4 id="sampling-40" tabindex="-1"><a class="anchor" href="#sampling-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-39" tabindex="-1"><a class="anchor" href="#constraints-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>X and Y centre shift shall each be real numbers.</p>
 <h3 id="encoders" tabindex="-1"><a class="anchor" href="#encoders" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>encoders</code></h3>
-<h4 id="description-41" tabindex="-1"><a class="anchor" href="#description-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-39" tabindex="-1"><a class="anchor" href="#description-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Normalised real numbers (0-1) for focus, iris and zoom.
 Encoders are represented in this way (as opposed to raw integer
 values) to ensure values remain independent of encoder resolution,
@@ -1619,164 +1597,164 @@ Value should be provided in the following directions (if known):
 Focus:   0=infinite     1=closest
 Iris:    0=open         1=closed
 Zoom:    0=wide angle   1=telephoto</p>
-<h4 id="units-41" tabindex="-1"><a class="anchor" href="#units-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-39" tabindex="-1"><a class="anchor" href="#units-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
-<h4 id="sampling-41" tabindex="-1"><a class="anchor" href="#sampling-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-39" tabindex="-1"><a class="anchor" href="#sampling-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-40" tabindex="-1"><a class="anchor" href="#constraints-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-38" tabindex="-1"><a class="anchor" href="#constraints-38" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.</p>
 <h3 id="entrancepupiloffset" tabindex="-1"><a class="anchor" href="#entrancepupiloffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>entrancePupilOffset</code></h3>
-<h4 id="description-42" tabindex="-1"><a class="anchor" href="#description-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-40" tabindex="-1"><a class="anchor" href="#description-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Offset of the entrance pupil relative to the nominal imaging plane
 (positive if the entrance pupil is located on the side of the nominal
 imaging plane that is towards the object, and negative otherwise).
 Measured in meters as in a render engine it is often applied in the
 virtual camera's transform chain.</p>
-<h4 id="units-42" tabindex="-1"><a class="anchor" href="#units-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-40" tabindex="-1"><a class="anchor" href="#units-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>meter</p>
+<h4 id="sampling-40" tabindex="-1"><a class="anchor" href="#sampling-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-39" tabindex="-1"><a class="anchor" href="#constraints-39" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a real number.</p>
+<h3 id="exposurefalloff" tabindex="-1"><a class="anchor" href="#exposurefalloff" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>exposureFalloff</code></h3>
+<h4 id="description-41" tabindex="-1"><a class="anchor" href="#description-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Coefficients for calculating the exposure fall-off (vignetting) of
+a lens</p>
+<h4 id="units-41" tabindex="-1"><a class="anchor" href="#units-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>None</p>
+<h4 id="sampling-41" tabindex="-1"><a class="anchor" href="#sampling-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-40" tabindex="-1"><a class="anchor" href="#constraints-40" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The coefficients shall each be real numbers.</p>
+<h3 id="fstop" tabindex="-1"><a class="anchor" href="#fstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fStop</code></h3>
+<h4 id="description-42" tabindex="-1"><a class="anchor" href="#description-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>The linear f-number of the lens, equal to the focal length divided
+by the diameter of the entrance pupil.</p>
+<h4 id="units-42" tabindex="-1"><a class="anchor" href="#units-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>None</p>
 <h4 id="sampling-42" tabindex="-1"><a class="anchor" href="#sampling-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-41" tabindex="-1"><a class="anchor" href="#constraints-41" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number.</p>
-<h3 id="exposurefalloff" tabindex="-1"><a class="anchor" href="#exposurefalloff" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>exposureFalloff</code></h3>
+<p>The parameter shall be a real number greater than 0.</p>
+<h3 id="pinholefocallength" tabindex="-1"><a class="anchor" href="#pinholefocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>pinholeFocalLength</code></h3>
 <h4 id="description-43" tabindex="-1"><a class="anchor" href="#description-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Coefficients for calculating the exposure fall-off (vignetting) of
-a lens</p>
+<p>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</p>
 <h4 id="units-43" tabindex="-1"><a class="anchor" href="#units-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
+<p>millimeter</p>
 <h4 id="sampling-43" tabindex="-1"><a class="anchor" href="#sampling-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-42" tabindex="-1"><a class="anchor" href="#constraints-42" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The coefficients shall each be real numbers.</p>
-<h3 id="fstop" tabindex="-1"><a class="anchor" href="#fstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>fStop</code></h3>
+<p>The parameter shall be a real number greater than 0.</p>
+<h3 id="focusdistance" tabindex="-1"><a class="anchor" href="#focusdistance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focusDistance</code></h3>
 <h4 id="description-44" tabindex="-1"><a class="anchor" href="#description-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>The linear f-number of the lens, equal to the focal length divided
-by the diameter of the entrance pupil.</p>
+<p>Focus distance/position of the lens</p>
 <h4 id="units-44" tabindex="-1"><a class="anchor" href="#units-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
+<p>meter</p>
 <h4 id="sampling-44" tabindex="-1"><a class="anchor" href="#sampling-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-43" tabindex="-1"><a class="anchor" href="#constraints-43" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a real number greater than 0.</p>
-<h3 id="pinholefocallength" tabindex="-1"><a class="anchor" href="#pinholefocallength" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>pinholeFocalLength</code></h3>
+<h3 id="projectionoffset" tabindex="-1"><a class="anchor" href="#projectionoffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>projectionOffset</code></h3>
 <h4 id="description-45" tabindex="-1"><a class="anchor" href="#description-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Distance between the pinhole and the image plane in the simple CGI pinhole camera model.</p>
+<p>Offset in x and y of the centre of perspective projection of the
+virtual camera</p>
 <h4 id="units-45" tabindex="-1"><a class="anchor" href="#units-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>millimeter</p>
 <h4 id="sampling-45" tabindex="-1"><a class="anchor" href="#sampling-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-44" tabindex="-1"><a class="anchor" href="#constraints-44" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number greater than 0.</p>
-<h3 id="focusdistance" tabindex="-1"><a class="anchor" href="#focusdistance" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>focusDistance</code></h3>
-<h4 id="description-46" tabindex="-1"><a class="anchor" href="#description-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Focus distance/position of the lens</p>
-<h4 id="units-46" tabindex="-1"><a class="anchor" href="#units-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>meter</p>
-<h4 id="sampling-46" tabindex="-1"><a class="anchor" href="#sampling-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-45" tabindex="-1"><a class="anchor" href="#constraints-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number greater than 0.</p>
-<h3 id="projectionoffset" tabindex="-1"><a class="anchor" href="#projectionoffset" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>projectionOffset</code></h3>
-<h4 id="description-47" tabindex="-1"><a class="anchor" href="#description-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Offset in x and y of the centre of perspective projection of the
-virtual camera</p>
-<h4 id="units-47" tabindex="-1"><a class="anchor" href="#units-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>millimeter</p>
-<h4 id="sampling-47" tabindex="-1"><a class="anchor" href="#sampling-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-46" tabindex="-1"><a class="anchor" href="#constraints-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>X and Y projection offset shall each be real numbers.</p>
 <h3 id="rawencoders" tabindex="-1"><a class="anchor" href="#rawencoders" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>rawEncoders</code></h3>
-<h4 id="description-48" tabindex="-1"><a class="anchor" href="#description-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-46" tabindex="-1"><a class="anchor" href="#description-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Raw encoder values for focus, iris and zoom.
 These values are dependent on encoder resolution and before any
 homing / ranging has taken place.</p>
+<h4 id="units-46" tabindex="-1"><a class="anchor" href="#units-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>None</p>
+<h4 id="sampling-46" tabindex="-1"><a class="anchor" href="#sampling-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-45" tabindex="-1"><a class="anchor" href="#constraints-45" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall contain at least one integer value for the FIZ encoders.</p>
+<h3 id="tstop" tabindex="-1"><a class="anchor" href="#tstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tStop</code></h3>
+<h4 id="description-47" tabindex="-1"><a class="anchor" href="#description-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Linear t-number of the lens, equal to the F-number of the lens
+divided by the square root of the transmittance of the lens.</p>
+<h4 id="units-47" tabindex="-1"><a class="anchor" href="#units-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<p>None</p>
+<h4 id="sampling-47" tabindex="-1"><a class="anchor" href="#sampling-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<p>Regular</p>
+<h4 id="constraints-46" tabindex="-1"><a class="anchor" href="#constraints-46" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<p>The parameter shall be a real number greater than 0.</p>
+<h3 id="protocol" tabindex="-1"><a class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>protocol</code></h3>
+<h4 id="description-48" tabindex="-1"><a class="anchor" href="#description-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<p>Name of the protocol in which the sample is being employed, and
+version of that protocol</p>
 <h4 id="units-48" tabindex="-1"><a class="anchor" href="#units-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-48" tabindex="-1"><a class="anchor" href="#sampling-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-47" tabindex="-1"><a class="anchor" href="#constraints-47" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall contain at least one integer value for the FIZ encoders.</p>
-<h3 id="tstop" tabindex="-1"><a class="anchor" href="#tstop" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>tStop</code></h3>
+<p>Protocol name is nonblank string; protocol version is basic x.y.z
+semantic versioning string</p>
+<h3 id="sampleid" tabindex="-1"><a class="anchor" href="#sampleid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sampleId</code></h3>
 <h4 id="description-49" tabindex="-1"><a class="anchor" href="#description-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Linear t-number of the lens, equal to the F-number of the lens
-divided by the square root of the transmittance of the lens.</p>
+<p>URN serving as unique identifier of the sample in which data is
+being transported.</p>
 <h4 id="units-49" tabindex="-1"><a class="anchor" href="#units-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-49" tabindex="-1"><a class="anchor" href="#sampling-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-48" tabindex="-1"><a class="anchor" href="#constraints-48" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a real number greater than 0.</p>
-<h3 id="protocol" tabindex="-1"><a class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>protocol</code></h3>
+<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
+Only lowercase characters shall be used.
+Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
+<h3 id="sourceid" tabindex="-1"><a class="anchor" href="#sourceid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceId</code></h3>
 <h4 id="description-50" tabindex="-1"><a class="anchor" href="#description-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Name of the protocol in which the sample is being employed, and
-version of that protocol</p>
+<p>URN serving as unique identifier of the source from which data is
+being transported.</p>
 <h4 id="units-50" tabindex="-1"><a class="anchor" href="#units-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-50" tabindex="-1"><a class="anchor" href="#sampling-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-49" tabindex="-1"><a class="anchor" href="#constraints-49" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>Protocol name is nonblank string; protocol version is basic x.y.z
-semantic versioning string</p>
-<h3 id="sampleid" tabindex="-1"><a class="anchor" href="#sampleid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sampleId</code></h3>
+<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
+Only lowercase characters shall be used.
+Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
+<h3 id="sourcenumber" tabindex="-1"><a class="anchor" href="#sourcenumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceNumber</code></h3>
 <h4 id="description-51" tabindex="-1"><a class="anchor" href="#description-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>URN serving as unique identifier of the sample in which data is
-being transported.</p>
+<p>Number that identifies the index of the stream from a source from which
+data is being transported. This is most important in the case where a source
+is producing multiple streams of samples.</p>
 <h4 id="units-51" tabindex="-1"><a class="anchor" href="#units-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-51" tabindex="-1"><a class="anchor" href="#sampling-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-50" tabindex="-1"><a class="anchor" href="#constraints-50" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
-Only lowercase characters shall be used.
-Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
-<h3 id="sourceid" tabindex="-1"><a class="anchor" href="#sourceid" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceId</code></h3>
+<p>The parameter shall be a integer in the range (0..4,294,967,295].</p>
+<h3 id="relatedsampleids" tabindex="-1"><a class="anchor" href="#relatedsampleids" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>relatedSampleIds</code></h3>
 <h4 id="description-52" tabindex="-1"><a class="anchor" href="#description-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>URN serving as unique identifier of the source from which data is
-being transported.</p>
+<p>List of sampleId properties of samples related to this sample. The
+existence of a sample with a given sampleId is not guaranteed.</p>
 <h4 id="units-52" tabindex="-1"><a class="anchor" href="#units-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>None</p>
 <h4 id="sampling-52" tabindex="-1"><a class="anchor" href="#sampling-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
 <h4 id="constraints-51" tabindex="-1"><a class="anchor" href="#constraints-51" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a UUID URN as specified in IETF RFC 4122.
-Only lowercase characters shall be used.
-Example: <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
-<h3 id="sourcenumber" tabindex="-1"><a class="anchor" href="#sourcenumber" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>sourceNumber</code></h3>
-<h4 id="description-53" tabindex="-1"><a class="anchor" href="#description-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>Number that identifies the index of the stream from a source from which
-data is being transported. This is most important in the case where a source
-is producing multiple streams of samples.</p>
-<h4 id="units-53" tabindex="-1"><a class="anchor" href="#units-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
-<h4 id="sampling-53" tabindex="-1"><a class="anchor" href="#sampling-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-52" tabindex="-1"><a class="anchor" href="#constraints-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
-<p>The parameter shall be a integer in the range (0..4,294,967,295].</p>
-<h3 id="relatedsampleids" tabindex="-1"><a class="anchor" href="#relatedsampleids" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>relatedSampleIds</code></h3>
-<h4 id="description-54" tabindex="-1"><a class="anchor" href="#description-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
-<p>List of sampleId properties of samples related to this sample. The
-existence of a sample with a given sampleId is not guaranteed.</p>
-<h4 id="units-54" tabindex="-1"><a class="anchor" href="#units-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
-<p>None</p>
-<h4 id="sampling-54" tabindex="-1"><a class="anchor" href="#sampling-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
-<p>Regular</p>
-<h4 id="constraints-53" tabindex="-1"><a class="anchor" href="#constraints-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>The parameter shall be a tuple of items of the class itemClass.
 The tuple can be empty</p>
 <h3 id="globalstage" tabindex="-1"><a class="anchor" href="#globalstage" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>globalStage</code></h3>
-<h4 id="description-55" tabindex="-1"><a class="anchor" href="#description-55" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-53" tabindex="-1"><a class="anchor" href="#description-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>Position of stage origin in global ENU and geodetic coordinates
 (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
 inside a moving vehicle.</p>
-<h4 id="units-55" tabindex="-1"><a class="anchor" href="#units-55" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-53" tabindex="-1"><a class="anchor" href="#units-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>meter</p>
-<h4 id="sampling-55" tabindex="-1"><a class="anchor" href="#sampling-55" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-53" tabindex="-1"><a class="anchor" href="#sampling-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-54" tabindex="-1"><a class="anchor" href="#constraints-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-52" tabindex="-1"><a class="anchor" href="#constraints-52" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>Each field in the GlobalPosition shall be a real number</p>
 <h3 id="transforms" tabindex="-1"><a class="anchor" href="#transforms" aria-hidden="true"><span class="octicon octicon-link"></span></a> <code>transforms</code></h3>
-<h4 id="description-56" tabindex="-1"><a class="anchor" href="#description-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
+<h4 id="description-54" tabindex="-1"><a class="anchor" href="#description-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Description</h4>
 <p>A list of transforms.
 Transforms are composed in order with the last in the list representing
 the X,Y,Z in meters of camera sensor relative to stage origin.
@@ -1797,11 +1775,11 @@ gimbal lock does not present the physical challenges of a robotic
 system.
 Conversion to and from quarternions is trivial with an acceptable loss
 of precision.</p>
-<h4 id="units-56" tabindex="-1"><a class="anchor" href="#units-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
+<h4 id="units-54" tabindex="-1"><a class="anchor" href="#units-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Units</h4>
 <p>meter / degree</p>
-<h4 id="sampling-56" tabindex="-1"><a class="anchor" href="#sampling-56" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
+<h4 id="sampling-54" tabindex="-1"><a class="anchor" href="#sampling-54" aria-hidden="true"><span class="octicon octicon-link"></span></a> Sampling</h4>
 <p>Regular</p>
-<h4 id="constraints-55" tabindex="-1"><a class="anchor" href="#constraints-55" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
+<h4 id="constraints-53" tabindex="-1"><a class="anchor" href="#constraints-53" aria-hidden="true"><span class="octicon octicon-link"></span></a> Constraints</h4>
 <p>Each component of each transform shall contain Real numbers.</p>
 <h2 id="reader-coverage" tabindex="-1"><a class="anchor" href="#reader-coverage" aria-hidden="true"><span class="octicon octicon-link"></span></a> Reader coverage</h2>
 <p>The following table indicates the camera parameters supported by each of the readers.</p>
@@ -1847,8 +1825,6 @@ of precision.</p>
 <th>timecode</th>
 <th>custom</th>
 <th>distortion</th>
-<th>distortionOverscan</th>
-<th>undistortionOverscan</th>
 <th>distortionOffset</th>
 <th>encoders</th>
 <th>entrancePupilOffset</th>
@@ -1891,8 +1867,6 @@ of precision.</p>
 <td>+</td>
 <td>+</td>
 <td>+</td>
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1975,8 +1949,6 @@ of precision.</p>
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -2035,8 +2007,6 @@ of precision.</p>
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
 <td>+</td>
 <td></td>
 <td></td>
@@ -2071,8 +2041,6 @@ of precision.</p>
 <td></td>
 <td></td>
 <td>+</td>
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -2286,12 +2254,12 @@ of precision.</p>
             "distortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
+              "description": "Static maximum overscan factor on lens distortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n"
             },
             "undistortionOverscanMax": {
               "type": "number",
               "minimum": 1.0,
-              "description": "Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n"
+              "description": "Static maximum overscan factor on lens undistortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n"
             },
             "make": {
               "type": "string",
@@ -2691,6 +2659,11 @@ of precision.</p>
           "items": {
             "type": "object",
             "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1023
+              },
               "radial": {
                 "type": "array",
                 "items": {
@@ -2705,10 +2678,10 @@ of precision.</p>
                 },
                 "minItems": 1
               },
-              "model": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1023
+              "overscan": {
+                "type": "number",
+                "minimum": 1.0,
+                "description": "Overscan factor on lens [un]distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
               }
             },
             "required": [
@@ -2717,17 +2690,7 @@ of precision.</p>
             "additionalProperties": false
           },
           "minItems": 1,
-          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key 'model' can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n"
-        },
-        "distortionOverscan": {
-          "type": "number",
-          "minimum": 1.0,
-          "description": "Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
-        },
-        "undistortionOverscan": {
-          "type": "number",
-          "minimum": 1.0,
-          "description": "Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n"
+          "description": "A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key 'model'\nnames the distortion model. Typical values for 'model' include \n\"Brown-Conrady D-U\" when mapping distorted to undistorted coordinates,\nand \"Brown-Conrady U-D\" when mapping undistorted to undistorted\ncoordinates. If not provided, the default model is \"Brown-Conrady D-U\".\n"
         },
         "distortionOffset": {
           "type": "object",

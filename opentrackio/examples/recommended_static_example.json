@@ -46,7 +46,8 @@
         "tangential": [
           1.0,
           2.0
-        ]
+        ],
+        "overscan": 3.1
       }
     ],
     "encoders": {
@@ -71,8 +72,8 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:7b1ea13d-0b9c-4ab8-8b41-5d33f6fce290",
-  "sourceId": "urn:uuid:ae1f836c-9393-4e0e-9d0f-86a420ab89ff",
+  "sampleId": "urn:uuid:a3202554-e1e9-4c95-ac9a-c99b70051742",
+  "sourceId": "urn:uuid:35340ea4-c749-4dc0-ab0c-5b35e21662b2",
   "sourceNumber": 1,
   "transforms": [
     {

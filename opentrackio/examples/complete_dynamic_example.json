@@ -60,6 +60,7 @@
     ],
     "distortion": [
       {
+        "model": "Brown-Conrady U-D",
         "radial": [
           1.0,
           2.0,
@@ -72,7 +73,7 @@
           1.0,
           2.0
         ],
-        "model": "Brown-Conrady D-U"
+        "overscan": 3.0
       },
       {
         "radial": [
@@ -87,11 +88,9 @@
           1.0,
           2.0
         ],
-        "model": "Brown-Conrady U-D"
+        "overscan": 2.0
       }
     ],
-    "distortionOverscan": 1.1,
-    "undistortionOverscan": 1.2,
     "distortionOffset": {
       "x": 1.0,
       "y": 2.0
@@ -129,12 +128,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:4934b66e-83cd-4208-8a33-2fccd9095c5b",
-  "sourceId": "urn:uuid:6ada0475-c4f6-4a7b-8cd4-c31d6470dfe6",
+  "sampleId": "urn:uuid:054e2760-6d73-4db1-b55e-8867a335af71",
+  "sourceId": "urn:uuid:44dbe363-a487-42ab-9c5e-144e47f74917",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:39011967-8cb3-4db0-a07d-6f5fdd5ae4a9",
-    "urn:uuid:53f25fba-4584-4704-9c2b-1db083f6d25d"
+    "urn:uuid:080f5fcb-e58e-4637-8cab-ad252ae83e48",
+    "urn:uuid:f3ef81b4-7efe-450d-bf12-1fe08e6ddb00"
   ],
   "globalStage": {
     "E": 100.0,

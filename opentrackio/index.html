@@ -85,7 +85,8 @@
         &#34;tangential&#34;: [
           1.0,
           2.0
-        ]
+        ],
+        &#34;overscan&#34;: 3.1
       }
     ],
     &#34;encoders&#34;: {
@@ -110,8 +111,8 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:a997d0ee-4279-406b-b97f-8c142c08eaae&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:9313b9c5-3022-491f-b5ed-add66d5238f1&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:6467a4d3-831a-4e75-8dcd-9c2ea4f93657&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:e0c70aba-0b7a-4578-96ca-1a2e1d8476a2&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -184,7 +185,8 @@
         &#34;tangential&#34;: [
           1.0,
           2.0
-        ]
+        ],
+        &#34;overscan&#34;: 3.1
       }
     ],
     &#34;encoders&#34;: {
@@ -209,8 +211,8 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:7b1ea13d-0b9c-4ab8-8b41-5d33f6fce290&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:ae1f836c-9393-4e0e-9d0f-86a420ab89ff&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a3202554-e1e9-4c95-ac9a-c99b70051742&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:35340ea4-c749-4dc0-ab0c-5b35e21662b2&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -264,7 +266,7 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:5cfe5d0e-510e-4525-92ee-e121ab948914&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:24114c60-c015-459d-92ea-73ea0c5ec77c&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
@@ -347,6 +349,7 @@
     ],
     &#34;distortion&#34;: [
       {
+        &#34;model&#34;: &#34;Brown-Conrady U-D&#34;,
         &#34;radial&#34;: [
           1.0,
           2.0,
@@ -359,7 +362,7 @@
           1.0,
           2.0
         ],
-        &#34;model&#34;: &#34;Brown-Conrady D-U&#34;
+        &#34;overscan&#34;: 3.0
       },
       {
         &#34;radial&#34;: [
@@ -374,11 +377,9 @@
           1.0,
           2.0
         ],
-        &#34;model&#34;: &#34;Brown-Conrady U-D&#34;
+        &#34;overscan&#34;: 2.0
       }
     ],
-    &#34;distortionOverscan&#34;: 1.1,
-    &#34;undistortionOverscan&#34;: 1.2,
     &#34;distortionOffset&#34;: {
       &#34;x&#34;: 1.0,
       &#34;y&#34;: 2.0
@@ -416,12 +417,12 @@
       3
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:20df5151-3db1-4173-96b0-957b049ca3fc&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:0a2a8073-507b-4b79-b5a1-2bb670fcf45e&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:63364311-048b-41e4-af81-0014926441fe&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:60a623aa-42e5-444f-b500-dce562580f87&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:77e25dae-bc10-4e85-aec7-57a70d053d6a&#34;,
-    &#34;urn:uuid:1da6c001-c041-4c2e-9afa-54186f07b245&#34;
+    &#34;urn:uuid:1cade892-0e87-4610-b25d-eaf9949547e7&#34;,
+    &#34;urn:uuid:de42a466-685d-4f00-ada7-59a713ab883b&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -703,16 +704,16 @@ speed (in units of 1/s) is equal to the value of the parameter divided
 by 360 times the capture frame rate.
 </td><td>degree</td><td>The parameter shall be a real number in the range (0..360].</td></tr>
                     
-                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion. This is alternative to
-providing dynamic overscan values each frame. Note it should be the maximum
-of both projection-matrix-based and field-of-view-based rendering as per the
-OpenLensIO documentation.
+                    <tr><td>distortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens distortion. This is an
+alternative to providing dynamic overscan values each frame. Note it
+should be the maximum of both projection-matrix-based and
+field-of-view-based rendering as per the OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
-                    <tr><td>undistortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens undistortion. This is alternative to
-providing dynamic overscan values each frame. Note it should be the maximum
-of both projection-matrix-based and field-of-view-based rendering as per the
-OpenLensIO documentation.
+                    <tr><td>undistortionOverscanMax</td><td>lens</td><td>Static</td><td>Static maximum overscan factor on lens undistortion. This is an
+alternative to providing dynamic overscan values each frame. Note it
+should be the maximum of both projection-matrix-based and
+field-of-view-based rendering as per the OpenLensIO documentation.
 </td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
                     <tr><td>make</td><td>lens</td><td>Static</td><td>Non-blank string naming lens manufacturer</td><td>None</td><td>The parameter shall be a Unicode string between 0 and 1023
@@ -867,25 +868,15 @@ The tuple can be empty
                     
                     <tr><td>distortion</td><td>lens</td><td>Regular</td><td>A list of Distortion objects that each define the coefficients for
 calculating the distortion characteristics of a lens comprising radial
-distortion coefficients of the spherical distortion (k1-N) and the
-tangential distortion (p1-N). An optional key &#39;model&#39; can be used that
-describes the distortion model. The default is Brown-Conrady D-U (that
-maps Distorted to Undistorted coordinates).
+distortion coefficients of the spherical distortion (k1-N) and 
+(optionally) the tangential distortion (p1-N). The key &#39;model&#39;
+names the distortion model. Typical values for &#39;model&#39; include 
+&#34;Brown-Conrady D-U&#34; when mapping distorted to undistorted coordinates,
+and &#34;Brown-Conrady U-D&#34; when mapping undistorted to undistorted
+coordinates. If not provided, the default model is &#34;Brown-Conrady D-U&#34;.
 </td><td>None</td><td>The list shall contain at least one Distortion object, and in each
 object the radial and tangential coefficients shall each be real numbers.
 </td></tr>
-                    
-                    <tr><td>distortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens distortion. Overscan may be provided by the
-producer but can also be overriden or calculated by the consumer. Note
-this should be the maximum of both projection-matrix-based and field-of-
-view-based rendering as per the OpenLensIO documentation.
-</td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
-                    
-                    <tr><td>undistortionOverscan</td><td>lens</td><td>Regular</td><td>Overscan factor on lens undistortion. Overscan may be provided by the
-producer but can also be overriden or calculated by the consumer. Note
-this should be the maximum of both projection-matrix-based and field-of-
-view-based rendering as per the OpenLensIO documentation.
-</td><td>None</td><td>The parameter shall be a real number &gt;= 1.</td></tr>
                     
                     <tr><td>distortionOffset</td><td>lens</td><td>Regular</td><td>Offset in x and y of the centre of distortion of the virtual camera</td><td>millimeter</td><td>X and Y centre shift shall each be real numbers.</td></tr>
                     
@@ -1176,12 +1167,12 @@ of precision.
             &#34;distortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
               &#34;minimum&#34;: 1.0,
-              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n&#34;
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens distortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n&#34;
             },
             &#34;undistortionOverscanMax&#34;: {
               &#34;type&#34;: &#34;number&#34;,
               &#34;minimum&#34;: 1.0,
-              &#34;description&#34;: &#34;Static maximum overscan factor on lens undistortion. This is alternative to\nproviding dynamic overscan values each frame. Note it should be the maximum\nof both projection-matrix-based and field-of-view-based rendering as per the\nOpenLensIO documentation.\n&#34;
+              &#34;description&#34;: &#34;Static maximum overscan factor on lens undistortion. This is an\nalternative to providing dynamic overscan values each frame. Note it\nshould be the maximum of both projection-matrix-based and\nfield-of-view-based rendering as per the OpenLensIO documentation.\n&#34;
             },
             &#34;make&#34;: {
               &#34;type&#34;: &#34;string&#34;,
@@ -1581,6 +1572,11 @@ of precision.
           &#34;items&#34;: {
             &#34;type&#34;: &#34;object&#34;,
             &#34;properties&#34;: {
+              &#34;model&#34;: {
+                &#34;type&#34;: &#34;string&#34;,
+                &#34;minLength&#34;: 1,
+                &#34;maxLength&#34;: 1023
+              },
               &#34;radial&#34;: {
                 &#34;type&#34;: &#34;array&#34;,
                 &#34;items&#34;: {
@@ -1595,10 +1591,10 @@ of precision.
                 },
                 &#34;minItems&#34;: 1
               },
-              &#34;model&#34;: {
-                &#34;type&#34;: &#34;string&#34;,
-                &#34;minLength&#34;: 1,
-                &#34;maxLength&#34;: 1023
+              &#34;overscan&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 1.0,
+                &#34;description&#34;: &#34;Overscan factor on lens [un]distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n&#34;
               }
             },
             &#34;required&#34;: [
@@ -1607,17 +1603,7 @@ of precision.
             &#34;additionalProperties&#34;: false
           },
           &#34;minItems&#34;: 1,
-          &#34;description&#34;: &#34;A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and the\ntangential distortion (p1-N). An optional key &#39;model&#39; can be used that\ndescribes the distortion model. The default is Brown-Conrady D-U (that\nmaps Distorted to Undistorted coordinates).\n&#34;
-        },
-        &#34;distortionOverscan&#34;: {
-          &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 1.0,
-          &#34;description&#34;: &#34;Overscan factor on lens distortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n&#34;
-        },
-        &#34;undistortionOverscan&#34;: {
-          &#34;type&#34;: &#34;number&#34;,
-          &#34;minimum&#34;: 1.0,
-          &#34;description&#34;: &#34;Overscan factor on lens undistortion. Overscan may be provided by the\nproducer but can also be overriden or calculated by the consumer. Note\nthis should be the maximum of both projection-matrix-based and field-of-\nview-based rendering as per the OpenLensIO documentation.\n&#34;
+          &#34;description&#34;: &#34;A list of Distortion objects that each define the coefficients for\ncalculating the distortion characteristics of a lens comprising radial\ndistortion coefficients of the spherical distortion (k1-N) and \n(optionally) the tangential distortion (p1-N). The key &#39;model&#39;\nnames the distortion model. Typical values for &#39;model&#39; include \n\&#34;Brown-Conrady D-U\&#34; when mapping distorted to undistorted coordinates,\nand \&#34;Brown-Conrady U-D\&#34; when mapping undistorted to undistorted\ncoordinates. If not provided, the default model is \&#34;Brown-Conrady D-U\&#34;.\n&#34;
         },
         &#34;distortionOffset&#34;: {
           &#34;type&#34;: &#34;object&#34;,

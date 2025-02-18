@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:5cfe5d0e-510e-4525-92ee-e121ab948914",
+      "fdlLink": "urn:uuid:24114c60-c015-459d-92ea-73ea0c5ec77c",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -110,6 +110,7 @@
     ],
     "distortion": [
       {
+        "model": "Brown-Conrady U-D",
         "radial": [
           1.0,
           2.0,
@@ -122,7 +123,7 @@
           1.0,
           2.0
         ],
-        "model": "Brown-Conrady D-U"
+        "overscan": 3.0
       },
       {
         "radial": [
@@ -137,11 +138,9 @@
           1.0,
           2.0
         ],
-        "model": "Brown-Conrady U-D"
+        "overscan": 2.0
       }
     ],
-    "distortionOverscan": 1.1,
-    "undistortionOverscan": 1.2,
     "distortionOffset": {
       "x": 1.0,
       "y": 2.0
@@ -179,12 +178,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:20df5151-3db1-4173-96b0-957b049ca3fc",
-  "sourceId": "urn:uuid:0a2a8073-507b-4b79-b5a1-2bb670fcf45e",
+  "sampleId": "urn:uuid:63364311-048b-41e4-af81-0014926441fe",
+  "sourceId": "urn:uuid:60a623aa-42e5-444f-b500-dce562580f87",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:77e25dae-bc10-4e85-aec7-57a70d053d6a",
-    "urn:uuid:1da6c001-c041-4c2e-9afa-54186f07b245"
+    "urn:uuid:1cade892-0e87-4610-b25d-eaf9949547e7",
+    "urn:uuid:de42a466-685d-4f00-ada7-59a713ab883b"
   ],
   "globalStage": {
     "E": 100.0,
