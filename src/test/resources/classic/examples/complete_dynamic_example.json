@@ -60,20 +60,6 @@
     ],
     "distortion": [
       {
-        "radial": [
-          1.0,
-          2.0,
-          3.0,
-          4.0,
-          5.0,
-          6.0
-        ],
-        "tangential": [
-          1.0,
-          2.0
-        ]
-      },
-      {
         "model": "Brown-Conrady U-D",
         "radial": [
           1.0,
@@ -86,7 +72,23 @@
         "tangential": [
           1.0,
           2.0
-        ]
+        ],
+        "overscan": 3.0
+      },
+      {
+        "radial": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "tangential": [
+          1.0,
+          2.0
+        ],
+        "overscan": 2.0
       }
     ],
     "distortionOffset": {
@@ -126,12 +128,12 @@
       3
     ]
   },
-  "sampleId": "urn:uuid:2baa0af3-9777-47e5-9080-ffc5263855a7",
-  "sourceId": "urn:uuid:3ec58939-c824-49d3-bc30-7f3242a6bf67",
+  "sampleId": "urn:uuid:d6c07388-2339-4b06-8964-8c89e86784b5",
+  "sourceId": "urn:uuid:c92adcfd-0969-4f0a-8cab-23c7d9b5135f",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:86899885-a66e-4a2d-a8ce-cc9ce24cab3c",
-    "urn:uuid:1a01ff41-0abe-4813-b718-952a7aa7684a"
+    "urn:uuid:cc337edd-0a84-4166-9a52-2083ae5aba1d",
+    "urn:uuid:ee3b7ede-60f3-4060-bd15-012ebda408e3"
   ],
   "globalStage": {
     "E": 100.0,
