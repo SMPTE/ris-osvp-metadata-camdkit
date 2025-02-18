@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:24114c60-c015-459d-92ea-73ea0c5ec77c",
+      "fdlLink": "urn:uuid:d64e9535-fe87-4bd3-a3f9-40f6ff74a0e4",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -173,17 +173,17 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      0
     ]
   },
-  "sampleId": "urn:uuid:63364311-048b-41e4-af81-0014926441fe",
-  "sourceId": "urn:uuid:60a623aa-42e5-444f-b500-dce562580f87",
+  "sampleId": "urn:uuid:0a7a7520-3740-439d-aec8-19c5b4a8de84",
+  "sourceId": "urn:uuid:3a90a5d3-0374-47aa-a308-cfa6c67e937d",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:1cade892-0e87-4610-b25d-eaf9949547e7",
-    "urn:uuid:de42a466-685d-4f00-ada7-59a713ab883b"
+    "urn:uuid:cdfed3c2-fa6a-443f-ab30-6c353972dd9b",
+    "urn:uuid:855e9880-2da2-4da6-834e-a6e1bab6950c"
   ],
   "globalStage": {
     "E": 100.0,

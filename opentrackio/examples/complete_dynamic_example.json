@@ -123,17 +123,17 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      0
     ]
   },
-  "sampleId": "urn:uuid:054e2760-6d73-4db1-b55e-8867a335af71",
-  "sourceId": "urn:uuid:44dbe363-a487-42ab-9c5e-144e47f74917",
+  "sampleId": "urn:uuid:8c6a8ab9-c4e1-40a7-bbee-253abe8ceb5f",
+  "sourceId": "urn:uuid:ae8429c6-7fc3-4526-8e72-a2c255e05975",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:080f5fcb-e58e-4637-8cab-ad252ae83e48",
-    "urn:uuid:f3ef81b4-7efe-450d-bf12-1fe08e6ddb00"
+    "urn:uuid:4e989ee0-caba-4cbf-904f-7ad2900ef01d",
+    "urn:uuid:6bbc175b-acaf-4751-8971-438e8d569867"
   ],
   "globalStage": {
     "E": 100.0,

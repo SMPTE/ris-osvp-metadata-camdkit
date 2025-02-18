@@ -54,13 +54,13 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      0
     ]
   },
-  "sampleId": "urn:uuid:6467a4d3-831a-4e75-8dcd-9c2ea4f93657",
-  "sourceId": "urn:uuid:e0c70aba-0b7a-4578-96ca-1a2e1d8476a2",
+  "sampleId": "urn:uuid:b5c4292e-8bb7-431d-a719-9f8efa04e916",
+  "sourceId": "urn:uuid:a44ae08e-f1e7-4fe9-952e-a043007073c9",
   "sourceNumber": 1,
   "transforms": [
     {

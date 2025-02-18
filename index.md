@@ -63,7 +63,7 @@ is in the range [0..2,147,483,647] and denominator in the range
 
 #### Description
 
-Height and width of the active area of the camera sensor in microns
+Height and width of the active area of the camera sensor in millimeters
 
 #### Units
 
@@ -1315,7 +1315,7 @@ The following table indicates the camera parameters supported by each of the rea
                 "height",
                 "width"
               ],
-              "description": "Height and width of the active area of the camera sensor in microns",
+              "description": "Height and width of the active area of the camera sensor in millimeters",
               "additionalProperties": false,
               "units": "millimeter"
             },
