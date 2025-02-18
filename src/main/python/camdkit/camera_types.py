@@ -29,7 +29,7 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN
 
 
 class PhysicalDimensions(CompatibleBaseModel):
-    """Height and width of the active area of the camera sensor in microns
+    """Height and width of the active area of the camera sensor in millimeters
     """
     height: Annotated[float, Field(ge=0.0, strict=True)]
     width: Annotated[float, Field(ge=0.0, strict=True)]

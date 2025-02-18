@@ -72,12 +72,12 @@ def main():
     print("Sample time PTP time is: {} sec".format(sample.get_sample_time()))
     print("Sample time PTP as a string: {}".format(sample.get_sample_time(TimeFormat.STRING)))
     print("Sample time PTP as timecode: {}".format(sample.get_sample_time(TimeFormat.TIMECODE)))
-    print("Sample time PTP elements: {} {} {} {} {} {}".format(sample.get_sample_time('yy'),
-        sample.get_sample_time('dd'),
-        sample.get_sample_time('hh'),
-        sample.get_sample_time('mm'),
-        sample.get_sample_time('ss'),
-        sample.get_sample_time('ns')))
+    print("Sample time PTP elements: {} {} {} {} {} {}".format(sample.get_sample_time(part='yy'),
+        sample.get_sample_time(part='dd'),
+        sample.get_sample_time(part='hh'),
+        sample.get_sample_time(part='mm'),
+        sample.get_sample_time(part='ss'),
+        sample.get_sample_time(part='ns')))
     print()
 
     snum = sample.get_tracking_device_serial_number()
@@ -108,7 +108,7 @@ def main():
         print("Active camera sensor height: {}, width: {} {}".format(height,width,units))
     else:
         print("Unknown camera sensor, wait for static sample to come in...")
-    fl_units = sample.sd["properties"]["lens"]["properties"]["focalLength"]["units"]
+    fl_units = sample.sd["properties"]["lens"]["properties"]["pinholeFocalLength"]["units"]
     print("Focal length is: {} {}".format(fl,fl_units))
     fd = sample.get_focus_distance()
     print("Focus distance is: {} cm".format(fd))
