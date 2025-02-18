@@ -286,7 +286,7 @@ class F4PacketParser:
       fov_radians = fov_h * math.pi / 180.0
       frame.lens_pinhole_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
       frame.lens_encoders = (FizEncoders(focus, iris, zoom),)
-      frame.lens_distortions = ((Distortion([k1, k2],),),)
+      frame.lens_distortions = ((Distortion(radial=(k1, k2),),),)
       frame.lens_projection_offset = (ProjectionOffset(cx, cy),)
     return frame
   

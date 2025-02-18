@@ -29,20 +29,20 @@ class StaticLens(CompatibleBaseModel):
       Field(alias="distortionOverscanMax",
             json_schema_extra={"clip_property": "lens_distortion_overscan_max",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Static maximum overscan factor on lens distortion. This is alternative to
-    providing dynamic overscan values each frame. Note it should be the maximum
-    of both projection-matrix-based and field-of-view-based rendering as per the
-    OpenLensIO documentation.
+    """Static maximum overscan factor on lens distortion. This is an
+    alternative to providing dynamic overscan values each frame. Note it
+    should be the maximum of both projection-matrix-based and
+    field-of-view-based rendering as per the OpenLensIO documentation.
     """
 
     undistortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
       Field(alias="undistortionOverscanMax",
             json_schema_extra={"clip_property": "lens_undistortion_overscan_max",
                                "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Static maximum overscan factor on lens undistortion. This is alternative to
-    providing dynamic overscan values each frame. Note it should be the maximum
-    of both projection-matrix-based and field-of-view-based rendering as per the
-    OpenLensIO documentation.
+    """Static maximum overscan factor on lens undistortion. This is an
+    alternative to providing dynamic overscan values each frame. Note it
+    should be the maximum of both projection-matrix-based and
+    field-of-view-based rendering as per the OpenLensIO documentation.
     """
 
     make: Annotated[NonBlankUTF8String | None,
@@ -86,15 +86,20 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    # TODO ask the group about strictness of type checking.
-    #    Let Pydantic convert silently?
-    #    Restore strict=True?
-    #    Change type to typing.Sequence? collections.abc.Sequence or collections.abc.MutableSequence?
-    # radial: Annotated[tuple[float, ...], Field(strict=True)]
-    # tangential: Annotated[tuple[float, ...] | None, Field(strict=True)] = None
+    model: Annotated[NonBlankUTF8String | None, Field(default="Brown-Conrady D-U")]
+
     radial: Annotated[tuple[float, ...], Field(min_length=1)]
+
     tangential: Annotated[tuple[float, ...] | None, Field(min_length=1)] = None
-    model: NonBlankUTF8String | None = None
+
+    overscan: Annotated[UnityOrGreaterFloat | None,
+    Field(alias="overscan",
+          json_schema_extra={"constraints": REAL_AT_LEAST_UNITY})] = None
+    """Overscan factor on lens [un]distortion. Overscan may be provided by the
+    producer but can also be overriden or calculated by the consumer. Note
+    this should be the maximum of both projection-matrix-based and field-of-
+    view-based rendering as per the OpenLensIO documentation.
+    """
 
     @model_validator(mode="after")
     def check_tuples_not_empty(self) -> Self:
@@ -103,11 +108,6 @@ class Distortion(CompatibleBaseModel):
         if self.tangential is not None and len(self.tangential) == 0:
             raise ValueError("tangential distortion coefficient sequence, if provided, must not be empty")
         return self
-
-    def __init__(self, radial: tuple[float, ...],  # positional __init__() for compatibility
-                 tangential: tuple[float, ...] | None = None,
-                 model: str | None = None):
-        super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
 Distortions = Annotated[tuple[Distortion, ...], Field(min_length=1)]
@@ -182,30 +182,12 @@ object the radial and tangential coefficients shall each be real numbers.
 """})] = None
     """A list of Distortion objects that each define the coefficients for
     calculating the distortion characteristics of a lens comprising radial
-    distortion coefficients of the spherical distortion (k1-N) and the
-    tangential distortion (p1-N). An optional key 'model' can be used that
-    describes the distortion model. The default is Brown-Conrady D-U (that
-    maps Distorted to Undistorted coordinates).
-    """
-
-    distortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None,
-      Field(alias="distortionOverscan",
-            json_schema_extra={"clip_property": "lens_distortion_overscan",
-                               "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Overscan factor on lens distortion. Overscan may be provided by the
-    producer but can also be overriden or calculated by the consumer. Note
-    this should be the maximum of both projection-matrix-based and field-of-
-    view-based rendering as per the OpenLensIO documentation.
-    """
-
-    undistortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None,
-      Field(alias="undistortionOverscan",
-            json_schema_extra={"clip_property": "lens_undistortion_overscan",
-                               "constraints": REAL_AT_LEAST_UNITY})] = None
-    """Overscan factor on lens undistortion. Overscan may be provided by the
-    producer but can also be overriden or calculated by the consumer. Note
-    this should be the maximum of both projection-matrix-based and field-of-
-    view-based rendering as per the OpenLensIO documentation.
+    distortion coefficients of the spherical distortion (k1-N) and 
+    (optionally) the tangential distortion (p1-N). The key 'model'
+    names the distortion model. Typical values for 'model' include 
+    "Brown-Conrady D-U" when mapping distorted to undistorted coordinates,
+    and "Brown-Conrady U-D" when mapping undistorted to undistorted
+    coordinates. If not provided, the default model is "Brown-Conrady D-U".
     """
 
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None,

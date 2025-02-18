@@ -43,6 +43,3 @@ class Transform(CompatibleBaseModel):
     rotation: Annotated[Rotator3, Field(json_schema_extra={"units": DEGREE})]
     scale: Annotated[Vector3 | None, Field()] = None
     id: Annotated[NonBlankUTF8String | None, Field()] = None
-
-    # Nothing in the original code base initializes Transform objects with
-    # positional arguments, thus, no need for one
