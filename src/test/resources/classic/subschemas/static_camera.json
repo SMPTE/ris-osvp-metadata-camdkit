@@ -19,7 +19,7 @@
           "minimum": 0.0
         }
       },
-      "description": "Height and width of the active area of the camera sensor in microns",
+      "description": "Height and width of the active area of the camera sensor in millimeters",
       "units": "millimeter"
     },
     "activeSensorResolution": {
