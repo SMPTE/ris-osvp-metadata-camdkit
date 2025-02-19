@@ -1,7 +1,7 @@
 # Changes to camdkit
 ## (in reverse chronological order of release)
 
-## Changes after 0.9.2 and before 0.9.3
+## Changes after 0.9.2 and before 1.0.0
 
 ### PTP code cleanup and fleshing out of PTP examples and unit tests
 
