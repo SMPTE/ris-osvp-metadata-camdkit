@@ -85,11 +85,12 @@ class FocusDistanceUnit(Enum):
         return conversion_factors[self.value]
         
 class TimeSource(Enum):
+    GENLOCK = "genlock"
+    VIDEO_IN = "videoIn"
     PTP = "ptp"
     NTP = "ntp"
-    GENLOCK = "genlock"
-    NONE = "none"
-    
+
+
 class PayloadFormat(Enum):
     JSON = 0x01
     CBOR = 0x02
@@ -415,7 +416,38 @@ class OpenTrackIOProtocol:
             return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
         else:
             return None
-            
+
+    def get_lens_encoders(self):
+        """Get the lens encoder values"""
+        if not self.validate_dict_elements(self.pd, ["lens"]):
+            raise OpenTrackIOException('Lens data not available.')
+
+        lens_data = self.pd['lens']
+
+        if 'encoders' in lens_data:
+            e = lens_data['encoders']
+            result = []
+            if 'focus' in e:
+                result.append(f'Focus: {e["focus"]:.3f}')
+            if 'iris' in e:
+                result.append(f'Iris: {e["iris"]:.3f}')
+            if 'zoom' in e:
+                result.append(f'Zoom: {e["zoom"]:.3f}')
+            return ', '.join(result)
+        elif 'rawEncoders' in lens_data:
+            e = lens_data['rawEncoders']
+            result = []
+            if 'focus' in e:
+                result.append(f'Focus: {e["focus"]}')
+            if 'iris' in e:
+                result.append(f'Iris: {e["iris"]}')
+            if 'zoom' in e:
+                result.append(f'Zoom: {e["zoom"]}')
+            return ', '.join(result)
+        else:
+            raise OpenTrackIOException('Lens encoder data not available.')
+
+
 class OpenTrackIOException(Exception):
             
     def __init__(self, message):
