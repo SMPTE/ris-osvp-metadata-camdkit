@@ -10,7 +10,7 @@ import math
 import struct
 from datetime import datetime, timedelta
 from enum import Enum
-from cbor2 import dumps, loads, load
+from cbor2 import loads
 from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 

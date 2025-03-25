@@ -13,6 +13,7 @@ import time
 import uuid
 
 import ntplib
+from cbor2 import dumps
 
 from opentrackio_lib import *
 
@@ -352,7 +353,7 @@ class OpenTrackIOPacketTransmitter:
             if len(payload) > OTRK_MAX_PAYLOAD_SIZE:
                 print(f"Payload exceeds {OTRK_MAX_PAYLOAD_SIZE} bytes, will be segmented")
 
-        return self._construct_udp_segments(payload, self._payload_format.value)
+        return self._construct_udp_segments(payload, self._payload_format)
 
     def _construct_udp_header(self,
                               sequence_number: int,
@@ -383,7 +384,7 @@ class OpenTrackIOPacketTransmitter:
         """
 
         reserved: int = 0  # Reserved field (1 byte)
-        encoding_byte: bytes = struct.pack('!B', encoding)  # Encoding (1 byte)
+        encoding_byte: bytes = struct.pack('!B', encoding.value)  # Encoding (1 byte)
         sequence_number_bytes: bytes = struct.pack('!H', sequence_number)  # Sequence number (2 bytes)
         segment_offset_bytes: bytes = struct.pack('!I', segment_offset)  # Segment offset (4 bytes)
 

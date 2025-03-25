@@ -13,6 +13,7 @@ import socket
 import time
 import urllib.error
 import urllib.request
+from typing import Any
 
 import ntplib
 
@@ -26,12 +27,12 @@ class OpenTrackIOArgumentParser:
         self._parser = argparse.ArgumentParser(description=f'OpenTrackIO {OTRK_VERSION} protocol receiver.')
         self._setup_parser()
 
-    def parse_args(self) -> dict[str, any]:
+    def parse_args(self) -> dict[str, Any]:
         """
         Parse command line arguments and return a configuration dictionary.
 
         Returns:
-            Dict[str, any]: Configuration dictionary containing parsed arguments:
+            Dict[str, Any]: Configuration dictionary containing parsed arguments:
                 - 'verbose': Boolean indicating verbose output.
                 - 'schema_text': The schema JSON text content.
                 - 'source_number': Source number to listen for.
@@ -39,7 +40,7 @@ class OpenTrackIOArgumentParser:
                 - 'multicast_group': Formatted multicast address.
         """
         args = self._parser.parse_args()
-        config: dict[str, any] = dict()
+        config: dict[str, Any] = dict()
 
         config['verbose'] = args.verbose
 
@@ -126,7 +127,7 @@ class OpenTrackIOArgumentParser:
 class OpenTrackIOPacketReceiver:
     """Class for receiving and processing OpenTrackIO packets"""
 
-    def __init__(self, config: dict[str, any]) -> None:
+    def __init__(self, config: dict[str, Any]) -> None:
         """
         Initialize the OpenTrackIO packet receiver.
 
