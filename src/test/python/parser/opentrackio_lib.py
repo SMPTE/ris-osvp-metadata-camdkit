@@ -6,7 +6,6 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 import json
-import os
 import math
 import struct
 from datetime import datetime, timedelta
@@ -301,7 +300,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["translation"]["units"]
         if self.verbose:
             print("Schema says camera translation units are: {}".format(schema_units))
-            print("Setting preferred camera translation units to: {0}".format(unit_str))
+            print("Setting preferred camera translation units to: {0}".format(unit.value))
         if schema_units == "meter":
             self.trans_mult = unit
         elif schema_units == None:
@@ -315,7 +314,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["rotation"]["units"]
         if self.verbose:
             print("Schema says camera rotation units are: {}".format(schema_units))
-            print("Setting preferred camera rotation units to: {0}".format(unit_str))
+            print("Setting preferred camera rotation units to: {0}".format(unit.value))
         if schema_units == "degree":
             self.rot_mult = unit
         elif schema_units == None:
@@ -329,7 +328,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"]
         if self.verbose:
             print("Schema says sample time units are: {}".format(schema_units))
-            print("Setting preferred sample time format to: {0}".format(format_str))
+            print("Setting preferred sample time format to: {0}".format(format.value))
         
         self.sample_time_format = format
 
@@ -341,7 +340,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
         if self.verbose:
             print("Schema says focus distance units are: {}".format(schema_units))
-            print("Setting preferred focus distance units to: {}".format(unit_str))
+            print("Setting preferred focus distance units to: {}".format(unit.value))
         if schema_units == "millimeter":
             self.focus_dist_mult = unit.conversion_factor_from_mm()
         elif schema_units == None:
