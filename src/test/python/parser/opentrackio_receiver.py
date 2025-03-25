@@ -25,9 +25,20 @@ class OpenTrackIOArgumentParser:
         self._parser = argparse.ArgumentParser(description=f'OpenTrackIO {OTRK_VERSION} protocol receiver.')
         self._setup_parser()
 
-    def parse_args(self):
+    def parse_args(self) -> dict[str, any]:
+        """
+        Parse command line arguments and return a configuration dictionary.
+
+        Returns:
+            Dict[str, any]: Configuration dictionary containing parsed arguments:
+                - 'verbose': Boolean indicating verbose output.
+                - 'schema_text': The schema JSON text content.
+                - 'source_number': Source number to listen for.
+                - 'port': Port number to listen on.
+                - 'multicast_group': Formatted multicast address.
+        """
         args = self._parser.parse_args()
-        config = dict()
+        config: dict[str, any] = dict()
 
         config['verbose'] = args.verbose
 
@@ -92,6 +103,7 @@ class OpenTrackIOArgumentParser:
         return config
 
     def _setup_parser(self):
+        """Configure argument parser with all required command line options."""
         self._parser.add_argument('-n', '--source', type=int,
                                   help='The Source Number (0-4294967295) to listen for.',
                                   default=OTRK_SOURCE_NUMBER)
@@ -113,10 +125,23 @@ class OpenTrackIOArgumentParser:
 class OpenTrackIOPacketReceiver:
     """Class for receiving and processing OpenTrackIO packets"""
 
-    def __init__(self, config):
-        self._verbose = config['verbose']
-        self._multicast_group = config['multicast_group']
-        self._multicast_port = config['port']
+    def __init__(self, config: dict[str, any]) -> None:
+        """
+        Initialize the OpenTrackIO packet receiver.
+
+        Args:
+            config: Configuration dictionary containing:
+                - 'verbose': Boolean for verbose output
+                - 'multicast_group': Multicast group address
+                - 'port': Port number to listen on
+                - 'schema_text': Schema JSON text
+
+        Raises:
+            Exception: If OpenTrackIO protocol parser initialization fails
+        """
+        self._verbose: bool = config['verbose']
+        self._multicast_group: str = config['multicast_group']
+        self._multicast_port: int = config['port']
 
         # Initialize protocol parser
         try:
@@ -125,19 +150,25 @@ class OpenTrackIOPacketReceiver:
             print(f'Error initializing OpenTrackIO protocol parser: {e}.')
             raise
 
-        self._sequence_number = 0
-        self._prev_sequence_number = 0
-        self._segment_buffer = bytearray()
-        self.encoding = None
-        self._timesource = None
-        self._ntpclient = ntplib.NTPClient()
-        self._ntpoffset = 0.0
-        self._packets_received = 0
-        self._last_receive_time = None
+        self._sequence_number: int = 0
+        self._prev_sequence_number: int = 0
+        self._segment_buffer: bytearray = bytearray()
+        self.encoding: Optional[PayloadFormat] = None
+        self._timesource: Optional[TimeSource] = None
+        self._ntpclient: ntplib.NTPClient = ntplib.NTPClient()
+        self._ntpoffset: float = 0.0
+        self._packets_received: int = 0
+        self._last_receive_time: Optional[float] = None
 
-    def start_receiving(self):
-        """Start receiving packets from the multicast group"""
-        # Set up multicast listening socket
+    def start_receiving(self) -> None:
+        """
+        Start receiving packets from the multicast group.
+        This method blocks indefinitely until interrupted (e.g., by keyboard interrupt).
+
+        Raises:
+            Exception: If socket setup fails
+        """
+
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -174,7 +205,8 @@ class OpenTrackIOPacketReceiver:
             sock.close()
 
     def _init_time_source(self):
-        """Initialize time synchronization based on time source"""
+        """Initialize time synchronization based on time source."""
+
         if self._timesource == TimeSource.PTP:
             if self._verbose:
                 print('Initializing PTP time source.')
@@ -202,8 +234,12 @@ class OpenTrackIOPacketReceiver:
             print('Unknown time source, using local system time.')
             return
 
-    def _get_local_timestamp(self):
-        """Get local timestamp adjusted for time source"""
+    def _get_local_timestamp(self) -> float:
+        """ Get local timestamp adjusted for time source offset.
+
+        Returns:
+            float: Current time in seconds (epoch time), adjusted for NTP offset if applicable.
+        """
         if self._timesource == TimeSource.NTP:
             timestamp = time.time() + self._ntpoffset
             return timestamp
@@ -211,8 +247,17 @@ class OpenTrackIOPacketReceiver:
 
             return time.time()
 
-    def _parse_packet(self, data):
-        """Parse an OpenTrackIO packet"""
+    def _parse_packet(self, data: bytes) -> bool:
+        """
+        Parse an OpenTrackIO packet and validate its contents.
+
+        Args:
+            data: Raw packet data bytes.
+
+        Returns:
+            bool: True if packet was successfully parsed, False otherwise.
+        """
+
         if len(data) < OTRK_HEADER_LENGTH:
             print('Invalid packet: Packet is too short.')
             return False
@@ -265,7 +310,16 @@ class OpenTrackIOPacketReceiver:
 
         return True
 
-    def _process_payload(self):
+    def _process_payload(self) -> bool:
+        """ Process a complete reassembled payload.
+
+        Decodes the payload according to its format (CBOR or JSON) and extracts
+        OpenTrackIO protocol data.
+
+        Returns:
+            bool: True if payload was successfully processed, False otherwise.
+        """
+
         try:
             if self.encoding == PayloadFormat.CBOR:
                 self.protocol.parse_cbor(bytes(self._segment_buffer))
@@ -273,7 +327,7 @@ class OpenTrackIOPacketReceiver:
                 self.protocol.parse_json(bytes(self._segment_buffer))
             else:
                 print(f'Unsupported payload format: {self.encoding}.')
-                self._segment_buffer = []
+                self._segment_buffer = bytearray()
                 return False
 
             if not self._timesource:
@@ -322,8 +376,16 @@ class OpenTrackIOPacketReceiver:
             print(f'Error displaying packet information: {e}.')
 
     @classmethod
-    def _fletcher16(cls, data):
-        """Calculate Fletcher-16 checksum"""
+    def _fletcher16(cls, data: bytes) -> bytes:
+        """
+        Calculate Fletcher-16 checksum for packet validation.
+
+        Args:
+            data: The data to calculate checksum for.
+
+        Returns:
+            bytes: Two-byte Fletcher-16 checksum.
+        """
         sum1 = 0
         sum2 = 0
         for b in data:
