@@ -37,6 +37,7 @@
 
 ### CMake ###
 CMakeLists.txt.user
+CMakeUserPresets.json
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
@@ -47,6 +48,9 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+# Python
+vevn
 
 ### CMake Patch ###
 # External projects

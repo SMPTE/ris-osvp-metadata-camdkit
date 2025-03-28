@@ -8,12 +8,9 @@
 // nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
 
 #include "opentrackIOlib.h"
-#include <iostream>
-#include <unordered_map>
-#include <cmath>
 
-#include <opentrackio-cpp/OpenTrackIOSample.h>
-#include <nlohmann/json.hpp>
+#include <iostream>
+#include <numbers>
 
 // constructor
 void OTProtocol::Init(std::string msg_text, std::string schema_text, bool verbose){
@@ -25,7 +22,7 @@ void OTProtocol::Init(std::string msg_text, std::string schema_text, bool verbos
     sample_time_format = "sec"; 
     focus_dist_mult = 1.0;
  }
-      
+
 // Read the schema which governs the interpretation of the protocol
 int OTProtocol::Import_schema(void) {
     if (!schema_str.empty()) {
@@ -217,7 +214,7 @@ void OTProtocol::Set_rotation_units(const std::string& unit_str) {
         if (unit_str == "deg") {
             rot_mult = 1.0;
         } else if (unit_str == "rad") {
-            rot_mult = M_PI / 180;
+            rot_mult = std::numbers::pi_v<float> / 180.f;
         }
     }
 }
@@ -257,9 +254,9 @@ void OTProtocol::Set_focus_distance_units(const std::string& unit_str) {
 }
 
 // The protocol to which this sample conforms
-std::string OTProtocol::Get_protocol() {
-    return sample.protocol->name + " v" + sample.protocol->version;
-}
+// std::string OTProtocol::Get_protocol() {
+//     return sample.protocol->name + " v" + sample.protocol->version;
+// }
 
 std::string OTProtocol::Get_slate(void) {
     if (sample.tracker->slate) {
