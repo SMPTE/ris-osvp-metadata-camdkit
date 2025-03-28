@@ -16,7 +16,11 @@ Activate the virtual environment (PowerShell)
 
 `conan install . --build=missing -s compiler.cppstd=20`
 
+Windows
 `cmake -S . -B ./build`
+
+Linux/MacOS
+`cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release`
 
 `cmake --build ./build --target opentrackio-parser --config Release`
 
@@ -27,3 +31,6 @@ Run in command prompt
 
 PowerShell
 `.\build\Release\opentrackio-parser.exe -f $PWD\opentrackio-json\complete_static_example.json -s $PWD\opentrackio-json\schema.json`
+
+Linux/MacOS
+`./build/opentrackio-parser -f $PWD/opentrackio_json/complete_static_example.json -s $PWD/opentrackio_json/schema.json`

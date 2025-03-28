@@ -300,7 +300,7 @@ double OpenTrackIOSampleParser::getTimecodeFormat() const
 // Valid args: "m", "cm", "mm", "in"
 void OpenTrackIOSampleParser::setTranslationUnits(const std::string& unit_str)
 {
-    const std::string_view schema_units = sd["properties"]["transforms"]["items"]["properties"]["translation"]["units"];
+    const std::string& schema_units = sd["properties"]["transforms"]["items"]["properties"]["translation"]["units"];
     if (_isVerbose)
     {
         std::cout << "Schema says camera translation units are: " << schema_units << std::endl;
@@ -316,7 +316,7 @@ void OpenTrackIOSampleParser::setTranslationUnits(const std::string& unit_str)
 // Valid args: "deg", "rad"
 void OpenTrackIOSampleParser::setRotationUnits(const std::string& unit_str)
 {
-    const std::string_view schema_units = sd["properties"]["transforms"]["items"]["properties"]["rotation"]["units"];
+    const std::string& schema_units = sd["properties"]["transforms"]["items"]["properties"]["rotation"]["units"];
     if (_isVerbose)
     {
         std::cout << "Schema says camera rotation units are: " << schema_units << std::endl;
@@ -342,7 +342,7 @@ void OpenTrackIOSampleParser::setSampleTimeFormat(const std::string& format_str)
 {
     if (_isVerbose)
     {
-        const std::string_view schema_units = sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"];
+        const std::string& schema_units = sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"];
         std::cout << "Schema says sample time units are: " << schema_units << std::endl;
         std::cout << "Setting preferred sample time format to: " << format_str << std::endl;
     }
@@ -356,7 +356,7 @@ void OpenTrackIOSampleParser::setSampleTimeFormat(const std::string& format_str)
 // Valid: "m","cm","mm","in"
 void OpenTrackIOSampleParser::setFocusDistanceUnits(const std::string& unit_str)
 {
-    std::string schema_units = sd["properties"]["lens"]["properties"]["focusDistance"]["units"];
+    const std::string& schema_units = sd["properties"]["lens"]["properties"]["focusDistance"]["units"];
     if (_isVerbose)
     {
         std::cout << "Schema says focus distance units are: " << schema_units << std::endl;
