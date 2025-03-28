@@ -2,6 +2,9 @@ required software
 python3
 cmake
 
+Linux/MacOS
+`sudo bash ./get-json-files.sh`
+
 `python -m venv vevn`
 
 Activate the virtual environment (Command Prompt)
@@ -12,7 +15,17 @@ Activate the virtual environment (PowerShell)
 
 `.\vevn\Scripts\Activate.ps1`
 
+Linux
+
+MacOS
+`source ./venv/bin/activate`
+
+
+
 `pip install conan`
+
+If it's your first time running conan you will need to create a profile with the following.
+`conan profile detect`
 
 `conan install . --build=missing -s compiler.cppstd=20`
 
