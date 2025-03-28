@@ -17,7 +17,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include <nlohmann/json.hpp>
 #include <opentrackio-cpp/OpenTrackIOSample.h>
@@ -26,54 +25,61 @@
 // msg_text: string containing a single json "sample"
 // schema_text: string containing a json schema for the protocol
 // verbose: Whether to print extra status during processing
-class OTProtocol
+class OpenTrackIOSampleParser
 {
 public:
     // class constructor
-    OTProtocol(std::string msg_text = "", std::string schema_text = "", bool verbose = false)
-    {
-        Init(msg_text, schema_text, verbose);
-    }
+    OpenTrackIOSampleParser(const std::string& msg_text, const std::string& schema_text, bool verbose);
+    ~OpenTrackIOSampleParser() = default;
 
-    void Init(std::string msg_text, std::string schema_text, bool verbose); // Initialize objects
-    int Import_schema(void); // Read the schema which governs the interpretation of the protocol
-    int Parse(void); // Ingest the text and store the JSON items in a dictionary
-    double Get_camera_trans(const std::string& dimension);
+    int importSchema(); // Read the schema which governs the interpretation of the protocol
 
-    double Get_camera_rot(const std::string& dimension);
+    bool parse(); // Ingest the text and store the JSON items in a dictionary
 
-    std::tuple<double, double, double> Get_camera_translations(void); // Return order: x,y,z
-    std::string Get_timecode(void); // Return house timecode
-    std::string Get_sample_time(const std::string& part = ""); // Time at which this sample was captured
-    double Get_timecode_framerate(void); // Frame rate which this timecode represents
-    void Set_trans_units(const std::string& unit_str); // Set user-preferred units for translations.
-    void Set_rotation_units(const std::string& unit_str); // Set user-preferred units for rotations.
-    void Set_sample_time_format(const std::string& format_str); // User preference for time format
-    void Set_focus_distance_units(const std::string& unit_str);
+    // TODO: change the guts of these.
+    double getTransform(const std::string& dimension) const;
+    double getRotation(const std::string& dimension) const;
+
+    std::tuple<double, double, double> getCameraTransform() const; // todo: bum tuples.
+
+    std::string getTimecode() const; // Return house timecode
+    std::string getSampleTime(const std::string& part = "") const; // Time at which this sample was captured
+    double getTimecodeFormat() const; // Frame rate which this timecode represents
+
+    int getSensoryResolutionHeight() const; // If present in this sample, the 'static' block has the active sensor dimensions
+    int getSensorResolutionWidth() const; // If present in this sample, the 'static' block has the active sensor dimensions
+    std::string getSensorDimensionsUnits();
+
+    std::string getTrackingDeviceSerialNumber() const;
+
+    double getFocalLength() const;
+
+    double getFocusDistance() const;
+
+    std::string getProtocol() const;
+
+    void setTranslationUnits(const std::string& unit_str); // Set user-preferred units for translations.
+    void setRotationUnits(const std::string& unit_str); // Set user-preferred units for rotations.
+    void setSampleTimeFormat(const std::string& format_str); // User preference for time format
+    void setFocusDistanceUnits(const std::string& unit_str);
 
     // Establish a user-preference for units of focus distance by storing a conversion factor.
-    // std::string Get_protocol(void); // The protocol to which this sample conforms
-    std::string Get_slate(void);
-
-    int Get_sensor_dim_height(void); // If present in this sample, the 'static' block has the active sensor dimensions
-    int Get_sensor_dim_width(void); // If present in this sample, the 'static' block has the active sensor dimensions
-    std::string Get_sensor_dim_units(void);
-
-    std::string Get_tracking_device_serial_number(void);
-
-    double Get_focal_length(void);
-
-    double Get_focus_distance(void);
+    std::string setSlate() const;
 
 private:
-    opentrackio::OpenTrackIOSample sample;
-    std::string sample_str;
-    std::string schema_str;
+    opentrackio::OpenTrackIOSample _sample;
+    std::string _sample_str;
+    std::string _schema_str;
+
     nlohmann::json sd;
-    bool verbose;
-    double trans_mult;
-    double rot_mult;
-    std::string sample_time_format;
-    std::vector<std::string> sample_time_formats = {"sec", "timecode", "string"};
-    double focus_dist_mult;
+
+    bool _isVerbose;
+
+    double _trans_mult = 1.0;
+    double _rot_mult = 1.0;
+    double _focus_dist_mult = 1.0;
+
+    std::string _sample_time_format = "sec"; // TODO: Maybe make an enum.
+
+    std::vector<std::string> _sample_time_formats = {"sec", "timecode", "string"}; // todo: check this out.
 };

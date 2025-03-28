@@ -27,8 +27,3 @@ target_link_libraries(
         PRIVATE
         opentrackio-cpp::opentrackio-cpp
         nlohmann_json::nlohmann_json)
-
-#get_target_property(JSON_INCLUDE_DIRS nlohmann_json::nlohmann_json INTERFACE_INCLUDE_DIRECTORIES)
-##target_include_directories(${PROJECT_NAME} PRIVATE ${JSON_INCLUDE_DIRS})
-#
-#message(STATUS "nlohmann_json include dirs: ${JSON_INCLUDE_DIRS}")

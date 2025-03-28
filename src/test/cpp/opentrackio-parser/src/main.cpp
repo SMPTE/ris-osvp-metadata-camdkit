@@ -15,23 +15,21 @@
 #include "argparse/argparse.hpp"
 #include "helpers/opentrackIOlib.h"
 
-#include "opentrackio-cpp/OpenTrackIOSample.h"
-
 
 int main(int argc, char* argv[])
 {
     argparse::ArgumentParser parser("OpenTrackIOProtocol parser");
 
     parser.add_argument("-f", "--file")
-            .help("The JSON input file.")
+            .help("OpenTrackIO JSON file to parse.")
             .default_value(std::string());
 
     parser.add_argument("-s", "--schema")
-            .help("The schema (JSON) input file.")
+            .help("The OpenTrackIO schema JSON file.")
             .default_value(std::string());
 
     parser.add_argument("-v", "--verbose")
-            .help("Make script more verbose")
+            .help("Verbose logging of the parsing process.")
             .default_value(false)
             .implicit_value(true);
 
@@ -52,17 +50,22 @@ int main(int argc, char* argv[])
 
     if (parser.is_used("--schema"))
     {
-        auto schemapath = parser.get<std::string>("--schema");
-        if (std::filesystem::exists(schemapath))
+        if (const auto schema_path = parser.get<std::string>("--schema");
+            std::filesystem::exists(schema_path))
         {
-            if (std::ifstream file(schemapath);
+            if (std::ifstream file(schema_path);
                 file.is_open())
             {
-                std::cout << "Reading OpenTrackIO schema file: " << schemapath << std::endl;
+                std::cout << "Reading OpenTrackIO schema file: " << schema_path << std::endl;
                 schema_text.assign(
                     (std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
                 file.close();
+            }
+
+            if (!schema_text.empty())
+            {
+                std::cout << "Successfully read schema." << std::endl;
             }
         }
     }
@@ -84,42 +87,50 @@ int main(int argc, char* argv[])
         }
     }
 
-    OTProtocol sample(sample_text, schema_text, verbose);
-    sample.Parse();
-    sample.Import_schema();
+    OpenTrackIOSampleParser sample(sample_text, schema_text, verbose);
+    if (!sample.parse())
+    {
+        std::cerr << "Failed to parse OpenTrackIO sample." << std::endl;
+        return 1;
+    }
 
-    sample.Set_trans_units("cm");
-    sample.Set_sample_time_format("sec");
-    sample.Set_focus_distance_units("cm");
-    sample.Set_rotation_units("deg");
+    sample.importSchema();
+
+    sample.setTranslationUnits("cm");
+    sample.setSampleTimeFormat("sec");
+    sample.setFocusDistanceUnits("cm");
+    sample.setRotationUnits("deg");
     std::cout << std::endl;
 
-    // std::string protocol = sample.Get_protocol();
-    std::string protocol = "OpenTrackIO v1.0.0";
-    std::string slate = sample.Get_slate();
-    std::cout << "Detected protocol: " << protocol << std::endl;
+    // todo: something is wrong with parsing protocol.
+    // std::string protocol = sample.getProtocol();
+    // std::cout << "Detected protocol: " << protocol << std::endl;
+
+    std::string slate = sample.setSlate();
     std::cout << "On slate: " << slate << std::endl;
-    std::string timecode = sample.Get_timecode();
+
+    std::string timecode = sample.getTimecode();
     std::cout << "Current camera timecode: " << timecode << std::endl;
-    double framerate = sample.Get_timecode_framerate();
+
+    double framerate = sample.getTimecodeFormat();
     std::cout << "At a camera frame rate of: " << std::fixed << std::setprecision(5) << framerate << std::endl;
     std::cout << std::endl;
 
-    std::cout << "Sample time PTP time is: " << sample.Get_sample_time() << " sec" << std::endl;
-    sample.Set_sample_time_format("string");
-    std::cout << "Sample time PTP as a string: " << sample.Get_sample_time() << std::endl;
-    sample.Set_sample_time_format("timecode");
-    std::cout << "Sample time PTP as timecode: " << sample.Get_sample_time() << std::endl;
-    std::cout << "Sample time PTP elements: " << sample.Get_sample_time("yy") << " "
-            << sample.Get_sample_time("dd") << " "
-            << sample.Get_sample_time("hh") << " "
-            << sample.Get_sample_time("mm") << " "
-            << sample.Get_sample_time("ss") << " "
-            << sample.Get_sample_time("ns") << std::endl;
+    std::cout << "Sample time PTP time is: " << sample.getSampleTime() << " sec" << std::endl;
+    sample.setSampleTimeFormat("string");
+    std::cout << "Sample time PTP as a string: " << sample.getSampleTime() << std::endl;
+    sample.setSampleTimeFormat("timecode");
+    std::cout << "Sample time PTP as timecode: " << sample.getSampleTime() << std::endl;
+    std::cout << "Sample time PTP elements: " << sample.getSampleTime("yy") << " "
+            << sample.getSampleTime("dd") << " "
+            << sample.getSampleTime("hh") << " "
+            << sample.getSampleTime("mm") << " "
+            << sample.getSampleTime("ss") << " "
+            << sample.getSampleTime("ns") << std::endl;
 
     std::cout << std::endl;
-
-    std::string snum = sample.Get_tracking_device_serial_number();
+    //
+    std::string snum = sample.getTrackingDeviceSerialNumber();
     if (!snum.empty())
     {
         std::cout << "Tracking device serial number: " << snum << std::endl;
@@ -129,30 +140,30 @@ int main(int argc, char* argv[])
         std::cout << "Unknown tracking device, wait for static sample to come in..." << std::endl;
     }
 
-    double posX = sample.Get_camera_trans("x");
-    double posY = sample.Get_camera_trans("y");
-    double posZ = sample.Get_camera_trans("z");
+    double posX = sample.getTransform("x");
+    double posY = sample.getTransform("y");
+    double posZ = sample.getTransform("z");
     std::cout << "Camera position is: (" << posX << "," << posY << "," << posZ << ") cm" << std::endl;
 
-    double rotX = sample.Get_camera_rot("p");
-    double rotY = sample.Get_camera_rot("t");
-    double rotZ = sample.Get_camera_rot("r");
+    double rotX = sample.getRotation("p");
+    double rotY = sample.getRotation("t");
+    double rotZ = sample.getRotation("r");
     std::cout << "Camera rotation is: (" << rotX << "," << rotY << "," << rotZ << ") deg" << std::endl;
 
-    sample.Set_rotation_units("rad");
-    rotX = sample.Get_camera_rot("p");
-    rotY = sample.Get_camera_rot("t");
-    rotZ = sample.Get_camera_rot("r");
+    sample.setRotationUnits("rad");
+    rotX = sample.getRotation("p");
+    rotY = sample.getRotation("t");
+    rotZ = sample.getRotation("r");
     std::cout << "Camera rotation is: (" << std::fixed << std::setprecision(5)
             << rotX << "," << rotY << "," << rotZ << ") radians" << std::endl;
     std::cout << std::endl;
 
-    double fl = sample.Get_focal_length();
-    if (double height = sample.Get_sensor_dim_height();
+    double fl = sample.getFocalLength();
+    if (double height = sample.getSensoryResolutionHeight();
         height != 0)
     {
-        double width = sample.Get_sensor_dim_width();
-        std::string units = sample.Get_sensor_dim_units();
+        double width = sample.getSensorResolutionWidth();
+        std::string units = sample.getSensorDimensionsUnits();
         std::cout << "Active camera sensor height: " << height << ", width: " << width << " " << units << std::endl;
     }
     else
@@ -162,11 +173,11 @@ int main(int argc, char* argv[])
 
     std::cout << "Focal length is: " << fl << std::endl;
 
-    double fd = sample.Get_focus_distance();
+    double fd = sample.getFocusDistance();
     std::cout << "Focus distance is: " << fd << " cm" << std::endl;
 
-    sample.Set_focus_distance_units("in");
-    fd = sample.Get_focus_distance();
+    sample.setFocusDistanceUnits("in");
+    fd = sample.getFocusDistance();
     std::cout << "Focus distance is: " << std::fixed << std::setprecision(4) << fd << " in" << std::endl;
 
     return 0;

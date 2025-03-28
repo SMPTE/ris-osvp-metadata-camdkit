@@ -49,6 +49,9 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+# OpentrackIO files.
+opentrackio-json/
+
 # Python
 vevn
 
