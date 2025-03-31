@@ -1,49 +1,117 @@
-required software
-python3
-cmake
+# OpenTrackIO Parser C++ Example
 
-Linux/MacOS
-`sudo bash ./get-json-files.sh`
+## Contents
 
-`python -m venv vevn`
+- [Overview](#overview)
+- [Required Software](#required-software)
+- [Setup Instructions](#setup-instructions)
+    - [Windows](#windows)
+    - [Linux/MacOS](#linuxmacos)
 
-Activate the virtual environment (Command Prompt)
+## Overview
 
-`.\vevn\Scripts\activate.bat`
+This C++ example implements a parser OpenTrackIO JSON samples. It provides functionality to parse, validate,
+and process OpenTrackIO JSON data. The parser includes methods for accessing values and scaling them to
+user-preferred units.
 
-Activate the virtual environment (PowerShell)
+## Required Software
+- C++20
+- Python 3.8 or higher
+- CMake
 
-`.\vevn\Scripts\Activate.ps1`
+## Setup Instructions
 
-Linux
+### Windows
 
-MacOS
-`source ./venv/bin/activate`
+1. Download OpenTrackIO schema and a sample examples.
+   ```
+   get-opentrackio-json.bat
+   ```
 
+2. Set up Python virtual environment
+   ```
+   python -m venv venv
+   ```
 
+   - Command Prompt:
+   ```
+   .\venv\Scripts\activate.bat
+   ```
 
-`pip install conan`
+   - PowerShell:
+   ```
+   .\venv\Scripts\Activate.ps1
+   ```
 
-If it's your first time running conan you will need to create a profile with the following.
-`conan profile detect`
+3. Set up Conan
+   ```
+   pip install conan
+   ```
+   
+   Set up Conan profile (first-time only)
+   ```
+   conan profile detect
+   ```
 
-`conan install . --build=missing -s compiler.cppstd=20`
+   Install Conan dependencies
+   ```
+   conan install . --build=missing -s compiler.cppstd=20 -s build_type=Release
+   conan install . --build=missing -s compiler.cppstd=20 -s build_type=Debug
+   ```
 
-Windows
-`cmake -S . -B ./build`
+4. Generate and build CMake
+   ```
+   cmake -S . -B ./build
+   cmake --build ./build --target opentrackio-parser --config Release
+   ```
 
-Linux/MacOS
-`cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release`
+5. Run OpenTrackIO parser
+    - Command Prompt:
+      ```
+      .\build\Release\opentrackio-parser.exe -f %CD%\opentrackio-json\complete_static_example.json -s %CD%\opentrackio-json\schema.json
+      ```
 
-`cmake --build ./build --target opentrackio-parser --config Release`
+    - PowerShell:
+      ```
+      .\build\Release\opentrackio-parser.exe -f $PWD\opentrackio-json\complete_static_example.json -s $PWD\opentrackio-json\schema.json
+      ```
 
-## Windows
+### Linux/MacOS
 
-Run in command prompt
-`.\build\Release\opentrackio-parser.exe -f %CD%\opentrackio-json\complete_static_example.json -s %CD%\opentrackio-json\schema.json`
+1. Download JSON files
+   ```
+   sudo bash ./get-opentrackio-files.sh
+   ```
 
-PowerShell
-`.\build\Release\opentrackio-parser.exe -f $PWD\opentrackio-json\complete_static_example.json -s $PWD\opentrackio-json\schema.json`
+2. Set up Python virtual environment
+   ```
+   python -m venv venv
+   source ./venv/bin/activate
+   ```
 
-Linux/MacOS
-`./build/opentrackio-parser -f $PWD/opentrackio_json/complete_static_example.json -s $PWD/opentrackio_json/schema.json`
+3. Install Conan
+   ```
+   pip install conan
+   ```
+
+   Set up Conan profile (first-time only)
+   ```
+   conan profile detect
+   ```
+
+   Install Conan dependencies
+   ```
+   conan install . --build=missing -s compiler.cppstd=20 -s build_type=Release
+   conan install . --build=missing -s compiler.cppstd=20 -s build_type=Debug
+   ```
+
+4. Generate and build CMake
+   ```
+   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
+   cmake --build ./build --target opentrackio-parser --config Release
+   ```
+
+5. Run OpenTrackIO parser
+   ```
+   ./build/opentrackio-parser -f $PWD/opentrackio-json/complete_static_example.json -s $PWD/opentrackio-json/schema.json
+   ```

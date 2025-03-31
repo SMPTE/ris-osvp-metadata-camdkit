@@ -13,7 +13,7 @@
 #include <filesystem>
 
 #include "argparse/argparse.hpp"
-#include "helpers/opentrackIOlib.h"
+#include "opentrackio-lib/OpenTrackIOParser.h"
 
 
 int main(int argc, char* argv[])
@@ -44,26 +44,26 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::string sample_text;
-    std::string schema_text;
+    std::string sampleText;
+    std::string schemaText;
     bool verbose = parser.get<bool>("--verbose");
 
     if (parser.is_used("--schema"))
     {
-        if (const auto schema_path = parser.get<std::string>("--schema");
-            std::filesystem::exists(schema_path))
+        if (const auto schemaPath = parser.get<std::string>("--schema");
+            std::filesystem::exists(schemaPath))
         {
-            if (std::ifstream file(schema_path);
+            if (std::ifstream file(schemaPath);
                 file.is_open())
             {
-                std::cout << "Reading OpenTrackIO schema file: " << schema_path << std::endl;
-                schema_text.assign(
+                std::cout << "Reading OpenTrackIO schema file: " << schemaPath << std::endl;
+                schemaText.assign(
                     (std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
                 file.close();
             }
 
-            if (!schema_text.empty())
+            if (!schemaText.empty())
             {
                 std::cout << "Successfully read schema." << std::endl;
             }
@@ -79,15 +79,16 @@ int main(int argc, char* argv[])
                 file.is_open())
             {
                 std::cout << "Reading OpenTrackIO sample file: " << filepath << std::endl;
-                sample_text.assign(
+                sampleText.assign(
                     (std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
+
                 file.close();
             }
         }
     }
 
-    OpenTrackIOSampleParser sample(sample_text, schema_text, verbose);
+    OpenTrackIOSampleParser sample(sampleText, schemaText, verbose);
     if (!sample.parse())
     {
         std::cerr << "Failed to parse OpenTrackIO sample." << std::endl;
@@ -96,30 +97,29 @@ int main(int argc, char* argv[])
 
     sample.importSchema();
 
-    sample.setTranslationUnits("cm");
-    sample.setSampleTimeFormat("sec");
-    sample.setFocusDistanceUnits("cm");
-    sample.setRotationUnits("deg");
+    sample.setTranslationUnits(opentrackio_parser::PositionUnits::Millimeters);
+    sample.setSampleTimeFormat(opentrackio_parser::SampleTimeFormat::Seconds);
+    sample.setFocusDistanceUnits(opentrackio_parser::PositionUnits::Centimeters);
+    sample.setRotationUnits(opentrackio_parser::RotationUnits::Degrees);
     std::cout << std::endl;
 
-    // todo: something is wrong with parsing protocol.
-    // std::string protocol = sample.getProtocol();
-    // std::cout << "Detected protocol: " << protocol << std::endl;
+    std::string protocol = sample.getProtocol();
+    std::cout << "Detected protocol: " << protocol << std::endl;
 
-    std::string slate = sample.setSlate();
+    std::string slate = sample.getSlate();
     std::cout << "On slate: " << slate << std::endl;
 
     std::string timecode = sample.getTimecode();
     std::cout << "Current camera timecode: " << timecode << std::endl;
 
-    double framerate = sample.getTimecodeFormat();
-    std::cout << "At a camera frame rate of: " << std::fixed << std::setprecision(5) << framerate << std::endl;
+    double sampleRate = sample.getSampleRate();
+    std::cout << "At a camera frame rate of: " << std::fixed << std::setprecision(5) << sampleRate << std::endl;
     std::cout << std::endl;
 
     std::cout << "Sample time PTP time is: " << sample.getSampleTime() << " sec" << std::endl;
-    sample.setSampleTimeFormat("string");
+    sample.setSampleTimeFormat(opentrackio_parser::SampleTimeFormat::Seconds);
     std::cout << "Sample time PTP as a string: " << sample.getSampleTime() << std::endl;
-    sample.setSampleTimeFormat("timecode");
+    sample.setSampleTimeFormat(opentrackio_parser::SampleTimeFormat::Timecode);
     std::cout << "Sample time PTP as timecode: " << sample.getSampleTime() << std::endl;
     std::cout << "Sample time PTP elements: " << sample.getSampleTime("yy") << " "
             << sample.getSampleTime("dd") << " "
@@ -129,11 +129,11 @@ int main(int argc, char* argv[])
             << sample.getSampleTime("ns") << std::endl;
 
     std::cout << std::endl;
-    //
-    std::string snum = sample.getTrackingDeviceSerialNumber();
-    if (!snum.empty())
+
+    if (std::string serialNumber = sample.getTrackingDeviceSerialNumber();
+        !serialNumber.empty())
     {
-        std::cout << "Tracking device serial number: " << snum << std::endl;
+        std::cout << "Tracking device serial number: " << serialNumber << std::endl;
     }
     else
     {
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
     double rotZ = sample.getRotation("r");
     std::cout << "Camera rotation is: (" << rotX << "," << rotY << "," << rotZ << ") deg" << std::endl;
 
-    sample.setRotationUnits("rad");
+    sample.setRotationUnits(opentrackio_parser::RotationUnits::Radians);
     rotX = sample.getRotation("p");
     rotY = sample.getRotation("t");
     rotZ = sample.getRotation("r");
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
     double fd = sample.getFocusDistance();
     std::cout << "Focus distance is: " << fd << " cm" << std::endl;
 
-    sample.setFocusDistanceUnits("in");
+    sample.setFocusDistanceUnits(opentrackio_parser::PositionUnits::Inches);
     fd = sample.getFocusDistance();
     std::cout << "Focus distance is: " << std::fixed << std::setprecision(4) << fd << " in" << std::endl;
 

@@ -5,9 +5,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(opentrackio-parser)
 
-message(STATUS "Liba -- ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/generators/")
-
-# todo: directory changes on linux, windows, and mac.
 if(WIN32)
     set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}/generators/" ${CMAKE_PREFIX_PATH})
 else()
@@ -20,12 +17,12 @@ find_package(nlohmann_json REQUIRED)
 add_executable(
         ${PROJECT_NAME}
         src/main.cpp
-        src/helpers/opentrackIOlib.cpp)
+        src/opentrackio-lib/OpenTrackIOParser.cpp)
 
 target_include_directories(
         ${PROJECT_NAME}
         PRIVATE
-        src/helpers
+        src/opentrackio-lib
         src/argparse)
 
 target_link_libraries(

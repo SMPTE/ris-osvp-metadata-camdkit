@@ -53,7 +53,7 @@ _deps
 opentrackio-json/
 
 # Python
-vevn
+venv
 
 ### CMake Patch ###
 # External projects
