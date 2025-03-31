@@ -80,12 +80,12 @@ user-preferred units.
 
 1. Download JSON files
    ```
-   sudo bash ./get-opentrackio-files.sh
+   sudo bash ./get-opentrackio-json.sh
    ```
 
 2. Set up Python virtual environment
    ```
-   python -m venv venv
+   python3 -m venv venv
    source ./venv/bin/activate
    ```
 
@@ -106,10 +106,17 @@ user-preferred units.
    ```
 
 4. Generate and build CMake
+   Release
    ```
    cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
    cmake --build ./build --target opentrackio-parser --config Release
    ```
+   
+    Debug
+    ```
+   cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug
+   cmake --build ./build --target opentrackio-parser --config Debug
+    ```
 
 5. Run OpenTrackIO parser
    ```
