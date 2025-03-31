@@ -55,41 +55,41 @@ OpenTrackIOSampleParser::OpenTrackIOSampleParser(const std::string& sample,
                                                                        _schemaStr(schema),
                                                                        _isVerbose(verbose)
 {
+    _isValid = parse();
+    _isValid &= importSchema();
 }
 
-int OpenTrackIOSampleParser::importSchema()
+bool OpenTrackIOSampleParser::importSchema()
 {
-    if (!_schemaStr.empty())
-    {
-        try
-        {
-            _schemaJson = nlohmann::json::parse(_schemaStr);
-        }
-        catch (nlohmann::json::parse_error&)
-        {
-            std::cout << "Got JSONDecodeError while decoding the sample!" << std::endl;
-            _schemaJson = nullptr;
-        }
-
-        if (_schemaJson.is_null())
-        {
-            std::cout << "Import_schema(): Failed to parse OpenTrackIO schema file." << std::endl;
-        }
-        else
-        {
-            std::cout << "Parsed the schema JSON successfully." << std::endl;
-            if (_isVerbose)
-            {
-                std::cout << "Contents of the parsed JSON schema dict:\n" << _schemaJson.dump(4) << "\n" << std::endl;
-            }
-        }
-    }
-    else
+    if (_schemaStr.empty())
     {
         std::cout << "ERROR: no schema provided!" << std::endl;
-        return -1;
+        return false;
     }
-    return 0;
+
+    try
+    {
+        _schemaJson = nlohmann::json::parse(_schemaStr);
+    }
+    catch (nlohmann::json::parse_error&)
+    {
+        std::cerr << "Got JSONDecodeError while decoding the sample!" << std::endl;
+        _schemaJson = nullptr;
+    }
+
+    if (_schemaJson.is_null())
+    {
+        std::cerr << "Import_schema(): Failed to parse OpenTrackIO schema file." << std::endl;
+        return false;
+    }
+
+    std::cout << "Parsed the schema JSON successfully." << std::endl;
+    if (_isVerbose)
+    {
+        std::cout << "Contents of the parsed JSON schema dict:\n" << _schemaJson.dump(4) << "\n" << std::endl;
+    }
+
+    return true;
 }
 
 bool OpenTrackIOSampleParser::parse()
@@ -127,79 +127,48 @@ bool OpenTrackIOSampleParser::parse()
     return true;
 }
 
-double OpenTrackIOSampleParser::getTransform(const std::string& dimension) const
+opentrackio_parser::Transform OpenTrackIOSampleParser::getCameraTransform() const
 {
     if (!_sample.transforms.has_value())
     {
-        return 0.0;
+        return {};
     }
 
     for (const auto& transform : _sample.transforms->transforms)
     {
         if (transform.id == "Camera")
         {
-            if (_isVerbose)
-            {
-                std::cout << "found camera, dim = " << dimension << ", mult factor: " << _transformMultiplier << std::endl;
-            }
-
-            if (dimension == "x")
-            {
-                return transform.translation.x * _transformMultiplier;
-            }
-
-            if (dimension == "y")
-            {
-                return transform.translation.y * _transformMultiplier;
-            }
-
-            if (dimension == "z")
-            {
-                return transform.translation.z * _transformMultiplier;
-            }
-
-            break;
+            return {
+                transform.translation.x * _transformMultiplier,
+                transform.translation.y * _transformMultiplier,
+                transform.translation.z * _transformMultiplier
+            };
         }
     }
-    return 0.0;
+
+    return {};
 }
 
-double OpenTrackIOSampleParser::getRotation(const std::string& dimension) const
+opentrackio_parser::Rotation OpenTrackIOSampleParser::getRotation() const
 {
     if (!_sample.transforms.has_value())
     {
-        return 0.0;
+        return {};
     }
 
     for (const auto& transform : _sample.transforms->transforms)
     {
         if (transform.id == "Camera")
         {
-            if (dimension == "p")
-            {
-                return transform.rotation.pan * _rotationMultiplier;
-            }
-
-            if (dimension == "t")
-            {
-                return transform.rotation.tilt * _rotationMultiplier;
-            }
-
-            if (dimension == "r")
-            {
-                return transform.rotation.roll * _rotationMultiplier;
-            }
-
-            break;
+            return {
+                transform.rotation.pan * _rotationMultiplier,
+                transform.rotation.tilt * _rotationMultiplier,
+                transform.rotation.roll * _rotationMultiplier
+            };
         }
     }
 
-    return 0.0;
-}
-
-std::tuple<double, double, double> OpenTrackIOSampleParser::getCameraTransform() const
-{
-    return std::make_tuple(getTransform("x"), getTransform("y"), getTransform("z"));
+    return {};
 }
 
 std::string OpenTrackIOSampleParser::getTimecode() const
@@ -226,20 +195,20 @@ std::string OpenTrackIOSampleParser::getSampleTime(const std::string& part) cons
     const uint32_t nano_seconds = _sample.timing->sampleTimestamp->nanoseconds;
 
     constexpr int epoch = 1'970; // PTP is since this epoch
-    constexpr int spm = 60; // seconds per minute. Common knowledge, but consistency is important
-    constexpr int sph = 3'600; // seconds per hour
-    constexpr int spd = 86'400; // sec per day
-    constexpr uint64_t spy = 31'536'000; // sec per year
+    constexpr int secondsPerMinute = 60;
+    constexpr int secondsPerHour = 3'600; // seconds per hour
+    constexpr int secondsPerDay = 86'400; // sec per day
+    constexpr uint64_t secondsPerYear = 31'536'000; // sec per year
 
     // separate into years, days, hours, min, sec
-    const double y_delta = static_cast<double>(seconds) / spy; // years since epoch
+    const double y_delta = static_cast<double>(seconds) / secondsPerYear; // years since epoch
     const uint32_t yr = std::floor(epoch + y_delta); // current year
-    const uint32_t sty = seconds - std::floor(y_delta) * spy; // seconds elapsed this year
-    const uint32_t day = std::floor(sty / spd); // current day of year
-    const uint32_t std = sty - day * spd; // seconds elapsed today (since midnight)
-    const uint32_t hr = std::floor(std / sph); // hours elapsed today
-    const uint32_t mn = std::floor((std - hr * sph) / spm); // remainder minutes
-    const uint32_t st = std - hr * sph - mn * spm; // remainder seconds
+    const uint32_t sty = seconds - std::floor(y_delta) * secondsPerYear; // seconds elapsed this year
+    const uint32_t day = std::floor(sty / secondsPerDay); // current day of year
+    const uint32_t std = sty - day * secondsPerDay; // seconds elapsed today (since midnight)
+    const uint32_t hr = std::floor(std / secondsPerHour); // hours elapsed today
+    const uint32_t mn = std::floor((std - hr * secondsPerHour) / secondsPerMinute); // remainder minutes
+    const uint32_t st = std - hr * secondsPerHour - mn * secondsPerMinute; // remainder seconds
 
     if (part.empty())
     {
@@ -442,7 +411,7 @@ std::string OpenTrackIOSampleParser::getTrackingDeviceSerialNumber() const
     return "";
 }
 
-double OpenTrackIOSampleParser::getFocalLength() const
+double OpenTrackIOSampleParser::getPineHoleFocalLength() const
 {
     if (_sample.lens.has_value() &&
         _sample.lens->pinholeFocalLength.has_value() &&

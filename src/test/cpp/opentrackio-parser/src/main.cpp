@@ -89,13 +89,11 @@ int main(int argc, char* argv[])
     }
 
     OpenTrackIOSampleParser sample(sampleText, schemaText, verbose);
-    if (!sample.parse())
+    if (!sample.isValid())
     {
-        std::cerr << "Failed to parse OpenTrackIO sample." << std::endl;
+        std::cerr << "OpenTrackIO sample is invalid." << std::endl;
         return 1;
     }
-
-    sample.importSchema();
 
     sample.setTranslationUnits(opentrackio_parser::PositionUnits::Millimeters);
     sample.setSampleTimeFormat(opentrackio_parser::SampleTimeFormat::Seconds);
@@ -140,25 +138,21 @@ int main(int argc, char* argv[])
         std::cout << "Unknown tracking device, wait for static sample to come in..." << std::endl;
     }
 
-    double posX = sample.getTransform("x");
-    double posY = sample.getTransform("y");
-    double posZ = sample.getTransform("z");
-    std::cout << "Camera position is: (" << posX << "," << posY << "," << posZ << ") cm" << std::endl;
+    auto [x, y, z] = sample.getCameraTransform();
+    std::cout << "Camera position is: (" << x << "," << y << "," << z <<
+            ") cm" << std::endl;
 
-    double rotX = sample.getRotation("p");
-    double rotY = sample.getRotation("t");
-    double rotZ = sample.getRotation("r");
-    std::cout << "Camera rotation is: (" << rotX << "," << rotY << "," << rotZ << ") deg" << std::endl;
+    auto rotation = sample.getRotation();
+    std::cout << "Camera rotation is: (" << rotation.pan << "," << rotation.tilt << "," << rotation.roll << ") deg" <<
+            std::endl;
 
     sample.setRotationUnits(opentrackio_parser::RotationUnits::Radians);
-    rotX = sample.getRotation("p");
-    rotY = sample.getRotation("t");
-    rotZ = sample.getRotation("r");
+    rotation = sample.getRotation();
     std::cout << "Camera rotation is: (" << std::fixed << std::setprecision(5)
-            << rotX << "," << rotY << "," << rotZ << ") radians" << std::endl;
+            << rotation.pan << "," << rotation.tilt << "," << rotation.roll << ") radians" << std::endl;
     std::cout << std::endl;
 
-    double fl = sample.getFocalLength();
+    double fl = sample.getPineHoleFocalLength();
     if (double height = sample.getSensoryResolutionHeight();
         height != 0)
     {

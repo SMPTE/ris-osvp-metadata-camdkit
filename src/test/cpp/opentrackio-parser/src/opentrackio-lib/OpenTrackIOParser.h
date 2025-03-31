@@ -7,13 +7,6 @@
 //
 // nlohmann JSON library licensed under the MIT License, Copyright (c) 2013-2022 Niels Lohmann
 
-// PROBLEMS: 
-// return tr["translation"]["z"].get<double>() * trans_mult; 
-// std::string hh = std::to_string(pd["timing"]["timecode"]["hours"].get<int>());
-// is template necessary? I think I should just cast
-// std::tuple<double, double, double> Get_camera_translations() {
-// omit tuple or the template?
-
 #pragma once
 
 #include <string>
@@ -82,60 +75,100 @@ namespace opentrackio_parser
                 return "Unsupported format";
         }
     }
+
+    struct Transform
+    {
+        double x = 0.0;
+        double y = 0.0;
+        double z = 0.0;
+    };
+
+    struct Rotation
+    {
+        double pan = 0.0;
+        double tilt = 0.0;
+        double roll = 0.0;
+    };
 }
 
-// Class to decode and interpret the OpenTrackIO protocol
-// msg_text: string containing a single json "sample"
-// schema_text: string containing a json schema for the protocol
-// verbose: Whether to print extra status during processing
+/**
+ * OpenTrackIOSampleParser provides functionality for parsing and extracting data from OpenTrackIO JSON samples.
+ *
+ * This class handles the parsing, validation and access to OpenTrackIO data, with features including:
+ * Unit conversion for position, rotation, and focus distance values.
+ * Access to camera transform and rotation data.
+ * Access to lens information (focal length, focus distance).
+ * Access to timing information (timecode, sample time).
+ * Access to camera sensor information.
+ *
+ * The parser supports customization of output units through dedicated setter methods,
+ * allowing consumers to work with their preferred measurement systems.
+ */
 class OpenTrackIOSampleParser
 {
 public:
-    // class constructor
+    /** Constructor that initializes the parser with sample data and schema. */
     OpenTrackIOSampleParser(const std::string& sample, const std::string& schema, bool verbose);
 
     ~OpenTrackIOSampleParser() = default;
 
-    int importSchema(); // Read the schema which governs the interpretation of the protocol
+    /** Returns whether the sample and schema has successfully been parsed. */
+    bool isValid() const { return _isValid; }
 
-    bool parse(); // Ingest the text and store the JSON items in a dictionary
+    /** Gets camera transform. */
+    opentrackio_parser::Transform getCameraTransform() const;
 
-    double getTransform(const std::string& dimension) const;
+    opentrackio_parser::Rotation getRotation() const;
 
-    double getRotation(const std::string& dimension) const;
-
-    std::tuple<double, double, double> getCameraTransform() const;
-
-    std::string getTimecode() const; // Return house timecode
-    std::string getSampleTime(const std::string& part = "") const; // Time at which this sample was captured
-
-    int getSensoryResolutionHeight() const;
-
-    // If present in this sample, the 'static' block has the active sensor dimensions
-    int getSensorResolutionWidth() const;
-
-    // If present in this sample, the 'static' block has the active sensor dimensions
-    std::string getSensorDimensionsUnits();
-
-    std::string getTrackingDeviceSerialNumber() const;
-
-    double getFocalLength() const;
-
-    double getFocusDistance() const;
-
-    double getSampleRate() const;
-
-    std::string getProtocol() const;
-
-    void setTranslationUnits(opentrackio_parser::PositionUnits unit); // Set user-preferred units for translations.
-    void setRotationUnits(opentrackio_parser::RotationUnits unit); // Set user-preferred units for rotations.
-    void setSampleTimeFormat(opentrackio_parser::SampleTimeFormat format); // User preference for time format
-    void setFocusDistanceUnits(opentrackio_parser::PositionUnits unit);
-
-    // Establish a user-preference for units of focus distance by storing a conversion factor.
+    /** Gets the slate (shot identification) information. */
     std::string getSlate() const;
 
+    /** Gets the camera timecode as a formatted string. */
+    std::string getTimecode() const;
+
+    /** Gets timestamp information, optionally filtered by part (yy, dd, hh, mm, ss, ns). */
+    std::string getSampleTime(const std::string& part = "") const;
+
+    /** Gets the camera's active sensor height in pixels. */
+    int getSensoryResolutionHeight() const;
+
+    /** Gets the camera's active sensor width in pixels. */
+    int getSensorResolutionWidth() const;
+
+    /** Gets the measurement units for sensor dimensions as stated in the schema. */
+    std::string getSensorDimensionsUnits();
+
+    /** Gets the tracking device's serial number. */
+    std::string getTrackingDeviceSerialNumber() const;
+
+    /** Gets the lens focal length in millimeters. */
+    double getPineHoleFocalLength() const;
+
+    /** Gets the lens focus distance in the configured units. */
+    double getFocusDistance() const;
+
+    /** Gets the sample frame rate. */
+    double getSampleRate() const;
+
+    /** Get the protocol name and version. */
+    std::string getProtocol() const;
+
+    /** Set measurement units format for transforms. */
+    void setTranslationUnits(opentrackio_parser::PositionUnits unit);
+
+    /** Set rotation units format. */
+    void setRotationUnits(opentrackio_parser::RotationUnits unit);
+
+    /** Set sample time format. */
+    void setSampleTimeFormat(opentrackio_parser::SampleTimeFormat format);
+
+    /** Set measurement units format for focus distance. */
+    void setFocusDistanceUnits(opentrackio_parser::PositionUnits unit);
+
 private:
+    bool importSchema();
+    bool parse();
+
     opentrackio::OpenTrackIOSample _sample;
     std::string _sampleStr;
     std::string _schemaStr;
@@ -143,6 +176,7 @@ private:
     nlohmann::json _schemaJson;
 
     bool _isVerbose;
+    bool _isValid = false;
 
     double _transformMultiplier = 1.0;
     double _rotationMultiplier = 1.0;
