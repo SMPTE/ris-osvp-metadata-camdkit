@@ -10,9 +10,8 @@
 
 ## Overview
 
-This C++ example implements a parser OpenTrackIO JSON samples. It provides functionality to parse, validate,
-and process OpenTrackIO JSON data. The parser includes methods for accessing values and scaling them to
-user-preferred units.
+This C++ example implements a simple OpenTrackIO JSON sample parser. The parser includes methods for accessing values 
+and scaling them to user-preferred units.
 
 ## Required Software
 - C++20
@@ -122,3 +121,4 @@ user-preferred units.
    ```
    ./build/opentrackio-parser -f $PWD/opentrackio-json/complete_static_example.json -s $PWD/opentrackio-json/schema.json
    ```
+   
