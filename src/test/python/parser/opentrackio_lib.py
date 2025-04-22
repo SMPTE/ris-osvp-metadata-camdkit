@@ -15,7 +15,7 @@ from cbor2 import dumps, loads, load
 from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 
-OTRK_VERSION = {1, 0, 0}
+OTRK_VERSION = (1, 0, 0)
 OTRK_IDENTIFIER = b'OTrk' 
 OTRK_IDENTIFIER_LENGTH = 4
 OTRK_HEADER_LENGTH = 16
