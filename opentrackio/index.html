@@ -111,8 +111,8 @@
       0
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:ef8bd434-b80a-4660-b19a-ac51ff85da78&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:646d32da-93b5-4cc5-9df5-f09bc28e0046&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:a140328f-6994-4f7f-8f37-1b3384224484&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:78658dc9-9414-4153-88fc-3b51ce4cd882&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -211,8 +211,8 @@
       0
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:d0cb6957-fae2-4fd3-9328-77b8733948b1&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:4c6400c7-ce56-490d-8448-14bad266c8a2&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:8d45b905-166a-4799-85c0-b3fe72575129&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:3331fd7c-e572-4589-ab32-ec6db2ec57b6&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;transforms&#34;: [
     {
@@ -266,7 +266,7 @@
         &#34;denom&#34;: 1
       },
       &#34;isoSpeed&#34;: 4000,
-      &#34;fdlLink&#34;: &#34;urn:uuid:6560fde2-117f-4fc4-85a1-fc74061279ab&#34;,
+      &#34;fdlLink&#34;: &#34;urn:uuid:965bedb4-8b44-49bc-bcb4-61469478d0de&#34;,
       &#34;shutterAngle&#34;: 45.0
     },
     &#34;lens&#34;: {
@@ -417,12 +417,12 @@
       0
     ]
   },
-  &#34;sampleId&#34;: &#34;urn:uuid:7add5331-4e27-400e-b54b-3645c5b7f04b&#34;,
-  &#34;sourceId&#34;: &#34;urn:uuid:1d5dd9c0-5642-45d5-bbc4-3e0f2baff546&#34;,
+  &#34;sampleId&#34;: &#34;urn:uuid:b1be3b5c-3e2a-4bf5-8b12-1c675dfdcadb&#34;,
+  &#34;sourceId&#34;: &#34;urn:uuid:96e0c0be-a4aa-4196-8b8b-457545a90f67&#34;,
   &#34;sourceNumber&#34;: 1,
   &#34;relatedSampleIds&#34;: [
-    &#34;urn:uuid:0764cf24-bb5a-449e-b67e-e5d39cb621b2&#34;,
-    &#34;urn:uuid:d2ea167e-e870-435e-927a-35389af7ab19&#34;
+    &#34;urn:uuid:4f75173b-960c-4bbe-95fc-13d6fbbfaaa5&#34;,
+    &#34;urn:uuid:73d8541f-c2c9-4d70-9dbe-453996b644f8&#34;
   ],
   &#34;globalStage&#34;: {
     &#34;E&#34;: 100.0,
@@ -625,21 +625,48 @@
                   </tbody>
                 </table>
             </p>
-            <button class="collapsible">Fletcher-16 reference code</button>
+            <button class="collapsible"><a href="https://en.wikipedia.org/wiki/Fletcher%27s_checksum">Fletcher-16</a> reference code</button>
             <div class="content">
               <code><pre>
 uint16_t fletcher (const uint8_t* data, uint16_t len)
 {
     if (!data) return 0;
-    uint8_t sum1 = 0;
-    uint8_t sum2 = 0;
+
+    uint16_t sum1 = 0;
+    uint16_t sum2 = 0;
+
     while (len-- > 0) {
-        sum1 += *data++;
-        sum2 += sum1;
+        sum1 = (sum1 + *data++) % 255;
+        sum2 = (sum2 + sum1) % 255;
     }
-    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
+    return (sum2 << 8) | sum1;
 }
               </pre></code>
+              <p>Optimized version</p>
+              <code><pre>
+uint16_t fletcher (const uint8_t* data, uint16_t len)
+{
+    if (!data) return 0;
+
+    uint32_t sum1 = 0;
+    uint32_t sum2 = 0;
+
+    while (len > 0)
+    {
+        uint32 block_len = len > 5802 ? 5802 : len;
+        len -= block_len;
+        do {
+            sum1 += *data++;
+            sum2 += sum1;
+        } while (--block_len);
+
+        sum1 %= 255;
+        sum2 %= 255;
+    }
+    return static_cast<uint16_t>((sum2 << 8) | sum1);
+}
+              </pre></code>
+
             </div>
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
