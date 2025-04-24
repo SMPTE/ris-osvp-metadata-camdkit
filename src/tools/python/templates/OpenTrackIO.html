@@ -204,21 +204,48 @@
                   </tbody>
                 </table>
             </p>
-            <button class="collapsible">Fletcher-16 reference code</button>
+            <button class="collapsible"><a href="https://en.wikipedia.org/wiki/Fletcher%27s_checksum">Fletcher-16</a> reference code</button>
             <div class="content">
               <code><pre>
 uint16_t fletcher (const uint8_t* data, uint16_t len)
 {
     if (!data) return 0;
-    uint8_t sum1 = 0;
-    uint8_t sum2 = 0;
+
+    uint16_t sum1 = 0;
+    uint16_t sum2 = 0;
+
     while (len-- > 0) {
-        sum1 += *data++;
-        sum2 += sum1;
+        sum1 = (sum1 + *data++) % 255;
+        sum2 = (sum2 + sum1) % 255;
     }
-    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
+    return (sum2 << 8) | sum1;
 }
               </pre></code>
+              <p>Optimized version</p>
+              <code><pre>
+uint16_t fletcher (const uint8_t* data, uint16_t len)
+{
+    if (!data) return 0;
+
+    uint32_t sum1 = 0;
+    uint32_t sum2 = 0;
+
+    while (len > 0)
+    {
+        uint32 block_len = len > 5802 ? 5802 : len;
+        len -= block_len;
+        do {
+            sum1 += *data++;
+            sum2 += sum1;
+        } while (--block_len);
+
+        sum1 %= 255;
+        sum2 %= 255;
+    }
+    return static_cast<uint16_t>((sum2 << 8) | sum1);
+}
+              </pre></code>
+
             </div>
             <h2>Description of all fields</h2>
             <button class="collapsible">Description of fields</button>
