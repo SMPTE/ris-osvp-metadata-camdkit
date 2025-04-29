@@ -42,9 +42,13 @@ class OpenTrackIOArgumentParser:
             elif time_source_str == "videoin":
                 config['time_source'] = TimeSource.VIDEO_IN
             else:
-                raise ValueError("Invalid time source.")
+                config['time_source'] = TimeSource.NONE
         except ValueError:
-            print("Error: Time source must be genlock, videoIn, ptp, or ntp.")
+            print("Error: Time source must be genlock, videoIn, ptp, ntp, or none.")
+            exit(-1)
+
+        if not (1 <= args.source <= 200):
+            print("Error: source number must be between 1 and 200.")
             exit(-1)
 
         config['source_number'] = args.source
@@ -52,6 +56,7 @@ class OpenTrackIOArgumentParser:
         if not (49152 <= args.port <= 65535):
             print("Error: port number must be between 49152 and 65535.")
             exit(-1)
+
         config['port'] = args.port
 
         if args.format.upper() == 'CBOR':
@@ -62,7 +67,7 @@ class OpenTrackIOArgumentParser:
             print("Error: Format must be JSON or CBOR.")
             exit(-1)
 
-        config['multicast_group'] = args.ip
+        config['multicast_group'] = f"{OTRK_MULTICAST_PREFIX}{config['source_number']}"
         config['debug'] = args.verbose
         config['num-segments'] = args.num_segments
 
@@ -84,10 +89,6 @@ class OpenTrackIOArgumentParser:
         self._parser.add_argument('-r', '--ref',
                                   help='The time source [genlock, videoIn, ptp, ntp] to use.',
                                   default='NTP')
-
-        self._parser.add_argument('-i', '--ip',
-                                  help='The IP address to send to. Default: 235.135.1.1',
-                                  default=f'{OTRK_MULTICAST_PREFIX}{OTRK_SOURCE_NUMBER}')
 
         self._parser.add_argument('-v', '--verbose',
                                   action='store_true',
@@ -392,16 +393,14 @@ class OpenTrackIOPacketTransmitter:
         l_and_payload_length: int = (int(last_segment) << 15) | payload_length
         l_and_payload_length_bytes: bytes = struct.pack('!H', l_and_payload_length)
 
-        header: bytes = (
-                OTRK_IDENTIFIER +
-                struct.pack('!B', reserved) +
-                encoding_byte +
-                sequence_number_bytes +
-                segment_offset_bytes +
-                l_and_payload_length_bytes
-        )
+        header: bytes = (OTRK_IDENTIFIER +
+                         struct.pack('!B', reserved) +
+                         encoding_byte +
+                         sequence_number_bytes +
+                         segment_offset_bytes +
+                         l_and_payload_length_bytes)
 
-        checksum: bytes = self._fletcher16(header + payload)
+        checksum: bytes = fletcher16(header + payload)
 
         if self._verbose:
             print(f'''
@@ -458,23 +457,6 @@ class OpenTrackIOPacketTransmitter:
             segments.append(header + segment_payload)
 
         return segments
-
-    @classmethod
-    def _fletcher16(cls, data: bytes) -> bytes:
-        """Implements the Fletcher-16 algorithm to generate a checksum for the packet.
-
-        Args:
-            data: The bytes to calculate the checksum for.
-
-        Returns:
-            bytes: A 2-byte Fletcher-16 checksum.
-        """
-        sum1: int = 0
-        sum2: int = 0
-        for b in data:
-            sum1 = (sum1 + b) % 255
-            sum2 = (sum2 + sum1) % 255
-        return bytes([sum1, sum2])
 
 
 def main():

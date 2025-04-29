@@ -15,7 +15,7 @@ from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 
 OTRK_VERSION = {1, 0, 0}
-OTRK_IDENTIFIER = b'OTrk' 
+OTRK_IDENTIFIER: bytes = b'OTrk'
 OTRK_IDENTIFIER_LENGTH = 4
 OTRK_HEADER_LENGTH = 16
 OTRK_SOURCE_NUMBER = 1
@@ -88,6 +88,7 @@ class TimeSource(Enum):
     VIDEO_IN = "videoIn"
     PTP = "ptp"
     NTP = "ntp"
+    NONE = "none"
     
 class PayloadFormat(Enum):
     JSON = 0x01

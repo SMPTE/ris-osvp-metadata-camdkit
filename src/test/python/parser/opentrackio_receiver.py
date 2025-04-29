@@ -83,8 +83,8 @@ class OpenTrackIOArgumentParser:
         config['schema_text'] = schematext
 
         if args.source is not None:
-            if not (0 <= args.source <= 4294967295):  # Using schema's maximum
-                print('Error: Source Number must be between 0 and 4294967295.')
+            if not (1 <= args.source <= 200):
+                print('Error: Source Number must be between 0 and 200.')
                 exit(-1)
             else:
                 config['source_number'] = args.source
@@ -107,7 +107,7 @@ class OpenTrackIOArgumentParser:
     def _setup_parser(self):
         """Configure argument parser with all required command line options."""
         self._parser.add_argument('-n', '--source', type=int,
-                                  help='The Source Number (0-4294967295) to listen for.',
+                                  help='The Source Number (1-200) to listen for.',
                                   default=OTRK_SOURCE_NUMBER)
 
         self._parser.add_argument('-p', '--port', type=int,
@@ -293,7 +293,7 @@ class OpenTrackIOPacketReceiver:
         # Verify checksum
         received_checksum = data[14:16]
         header_without_checksum = data[:14]
-        calculated_checksum = self._fletcher16(header_without_checksum + payload)
+        calculated_checksum = fletcher16(header_without_checksum + payload)
         if calculated_checksum != received_checksum:
             print(f'Invalid packet: Checksum mismatch.')
             return False
@@ -376,24 +376,6 @@ class OpenTrackIOPacketReceiver:
             print(f'  Lens encoders: {self.protocol.get_lens_encoders()}')
         except Exception as e:
             print(f'Error displaying packet information: {e}.')
-
-    @classmethod
-    def _fletcher16(cls, data: bytes) -> bytes:
-        """
-        Calculate Fletcher-16 checksum for packet validation.
-
-        Args:
-            data: The data to calculate checksum for.
-
-        Returns:
-            bytes: Two-byte Fletcher-16 checksum.
-        """
-        sum1 = 0
-        sum2 = 0
-        for b in data:
-            sum1 = (sum1 + b) % 255
-            sum2 = (sum2 + sum1) % 255
-        return struct.pack('!BB', sum1, sum2)
 
 
 def main():
