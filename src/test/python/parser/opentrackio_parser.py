@@ -10,8 +10,8 @@
 # Example run: python3 opentrackio_parser.py --file=opentrackio_sample.json --schema=opentrackio_schema.json
 # This is tested against the generated "complete_static_example" and "complete_dynamic_example" json
 
-import os
 import argparse
+import os
 from opentrackio_lib import *
 
 def main():
@@ -27,25 +27,25 @@ def main():
     schemapath = None
     filepath = None
 
-    if (args.schema):
+    if args.schema:
         if os.path.exists(args.schema):
             schemapath = args.schema
-            if (schemapath != None):        
+            if schemapath is not None:
                 with open(schemapath, 'r') as fd:
                     print("Reading OpenTrackIO schema file: {0}".format(schemapath))
                     lines = fd.readlines()
                     for line in lines:
                         schematext = schematext + line
-    if (args.file):
+    if args.file:
         if os.path.exists(args.file):
             filepath = args.file
-            if (filepath != None):        
+            if filepath is not None:
                 with open(filepath, 'r') as fd:
                     print("Reading OpenTrackIO sample file: {0}".format(filepath))
                     lines = fd.readlines()
                     for line in lines:
                         sample_text = sample_text + line
-    if (args.verbose):
+    if args.verbose:
         verbose = True
 
     if not filepath or not schemapath:
@@ -112,7 +112,7 @@ def main():
     print("Focal length is: {} {}".format(fl,fl_units))
     fd = sample.get_focus_distance()
     print("Focus distance is: {} cm".format(fd))
-    sample.set_focus_distance_units("in")     # end-user preferred units
+    sample.set_focus_distance_units(FocusDistanceUnit.INCH)     # end-user preferred units
     fd = sample.get_focus_distance()
     print("Focus distance is: {:.4} in".format(fd))
 
