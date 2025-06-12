@@ -8,8 +8,6 @@ env:
   AWS_REGION: us-east-1
   AWS_RIS_PUB_BUCKET: smpte-ris-pub
   AWS_RIS_PUB_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
-  AWS_OPENTRACKIO_BUCKET: opentrackio-www
-  AWS_OPENTRACKIO_ROLE: arn:aws:iam::189079736792:role/role-opentrackio-www
   RIS_PUB_PREFIX: https://ris-pub.smpte.org
   PYTHONPATH: src/main/python
 
@@ -30,6 +28,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - id: repo_basename
+        run: echo "VALUE=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
         with:
@@ -61,13 +62,6 @@ jobs:
           input_path: build/index.md
           output_dir: build/
 
-      - name: Deploy to GitHub pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -75,34 +69,22 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Create review copy at https://ris-pub.smpte.org/
-        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+        if: github.event_name == 'pull_request'
         id: deployRISpub
         shell: bash
         run: |
-          SNAP_PATH=${GITHUB_REPOSITORY#*/}/${GITHUB_SHA}
-          aws s3 sync ./build/ s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
+          SNAP_PATH=${{ steps.repo_basename.outputs.VALUE }}/${GITHUB_SHA}
+          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}/${SNAP_PATH}
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
 
       - name: Publish documentation at https://ris-pub.smpte.org/
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
-          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ env.AWS_OPENTRACKIO_ROLE }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Publish documentation at https://www.opentrackio.org/
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        shell: bash
-        run: |
-          aws s3 sync ./build/opentrackio s3://${{ env.AWS_OPENTRACKIO_BUCKET }}
+          aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}/${{ steps.repo_basename.outputs.VALUE }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
           message: |
-            [OpenTrackIO documentation](${{ env.RIS_PUB_PREFIX }}/${{ steps.deployRISpub.outputs.SNAP_PATH }}/opentrackio/)
+            [OpenTrackIO documentation](${{ env.RIS_PUB_PREFIX }}/${{ steps.repo_basename.outputs.VALUE }}/)
