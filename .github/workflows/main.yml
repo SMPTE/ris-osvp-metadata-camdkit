@@ -57,7 +57,7 @@ jobs:
           pipenv run python src/tools/python/make_documentation.py > build/index.md
 
       - name: Generate HTML
-        uses: BaileyJM02/markdown-to-pdf@v1.2.0
+        uses: BaileyJM02/markdown-to-pdf@v1
         with:
           input_path: build/index.md
           output_dir: build/
