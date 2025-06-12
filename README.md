@@ -106,7 +106,7 @@ Though initially the group had discussed using various compression schemes to mi
 
 ## Extension and maintenance
 
-The model documentation is [auto-generated](https://smpte.github.io/ris-osvp-metadata-camdkit/).
+The model documentation is [auto-generated](https://ris-pub.smpte.org/ris-osvp-metadata-camdkit/).
 
 For source readers (those modules that convert proprietary metadata into `camdkit` metadata), simply following the model of existing systems, and placing importer source and importer unit test source files alongside existing systems should suffice.
 
