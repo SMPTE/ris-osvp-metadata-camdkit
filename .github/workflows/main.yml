@@ -68,7 +68,7 @@ jobs:
           echo "SNAP_PATH=$SNAP_PATH" >> $GITHUB_OUTPUT
 
       - name: Publish documentation at https://ris-pub.smpte.org/
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
         shell: bash
         run: |
           aws s3 sync ./build/opentrackio s3://${{ env.AWS_RIS_PUB_BUCKET }}/${{ steps.repo_basename.outputs.VALUE }}
