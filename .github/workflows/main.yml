@@ -48,19 +48,9 @@ jobs:
         run: |
           pipenv run python -m unittest discover -v -s src/test/python
 
-      - name: Generate opentrackio documentation
+      - name: Generate documentation
         run: |
           pipenv run python src/tools/python/make_opentrackio_documentation.py
-
-      - name: Generate parameter documentation
-        run: |
-          pipenv run python src/tools/python/make_documentation.py > build/index.md
-
-      - name: Generate HTML
-        uses: BaileyJM02/markdown-to-pdf@v1
-        with:
-          input_path: build/index.md
-          output_dir: build/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
