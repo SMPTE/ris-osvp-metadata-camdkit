@@ -35,7 +35,7 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(str(clip.timing_timecode[8]),
                      str(Timecode(hours=15, minutes=3, seconds=47, frames=10,
                                   frame_rate=StrictlyPositiveRational(25,1),
-                                  sub_frame=0)))
+                                  sub_frame=0, dropFrame=False)))
     self.assertEqual(clip.transforms[9][0].translation, Vector3(x=-8.121, y=-185.368, z=119.806))
     self.assertEqual(clip.transforms[10][0].rotation, Rotator3(pan=-2.969, tilt=-28.03, roll=3.1))
     self.assertEqual(clip.lens_encoders[11], FizEncoders(focus=0.7643280029296875, zoom=0.0014190673828125))
