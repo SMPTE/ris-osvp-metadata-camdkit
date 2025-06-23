@@ -131,6 +131,9 @@
                 it should process only one instance.
             </p>
             <p>
+                Any packet that exceeds the UDP packet length limit (~64kB) should be segmented and noted as such in the header. If a multi-segment payload is incomplete due to one or more segments being lost in transmission, the entire payload should be discarded.
+            </p>
+            <p>
                 OpenTrackIO is a unidirectional protocol; however, if a Consumer receives a message that requires a response, the reply 
                 should be sent via unicast to the source address and port of the Producer from which the message originated. Guidelines 
                 for when and how devices should respond are outside the scope of the current version of OpenTrackIO, but may be included 
