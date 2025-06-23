@@ -72,7 +72,7 @@
             
             <h2>Transport recommendations</h2>
             <h3>UDP</h3>
-            <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems.</p>
+            <p>OpenTrackIO typically operates over IPv4 UDP. Support for IPv6 is not included in the current version of OpenTrackIO. When using IPv4 UDP, the below guidelines have been put in place to ensure interoperability between systems. Byte-ordering (or 'network order') is big-endian.</p>
             <h4>IP Addressing</h4>
             <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed, but implementation details are currently outside the scope of this document.</p>
             
