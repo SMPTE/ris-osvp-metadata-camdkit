@@ -6,17 +6,16 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 import json
-import os
 import math
 import struct
 from datetime import datetime, timedelta
 from enum import Enum
-from cbor2 import dumps, loads, load
+from cbor2 import loads
 from jsonschema import validate, ValidationError, SchemaError
 from typing import Optional
 
 OTRK_VERSION = (1, 0, 0)
-OTRK_IDENTIFIER = b'OTrk' 
+OTRK_IDENTIFIER: bytes = b'OTrk'
 OTRK_IDENTIFIER_LENGTH = 4
 OTRK_HEADER_LENGTH = 16
 OTRK_SOURCE_NUMBER = 1
@@ -85,9 +84,10 @@ class FocusDistanceUnit(Enum):
         return conversion_factors[self.value]
         
 class TimeSource(Enum):
+    GENLOCK = "genlock"
+    VIDEO_IN = "videoIn"
     PTP = "ptp"
     NTP = "ntp"
-    GENLOCK = "genlock"
     NONE = "none"
     
 class PayloadFormat(Enum):
@@ -301,7 +301,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["translation"]["units"]
         if self.verbose:
             print("Schema says camera translation units are: {}".format(schema_units))
-            print("Setting preferred camera translation units to: {0}".format(unit_str))
+            print("Setting preferred camera translation units to: {0}".format(unit.value))
         if schema_units == "meter":
             self.trans_mult = unit
         elif schema_units == None:
@@ -315,7 +315,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["transforms"]["items"]["properties"]["rotation"]["units"]
         if self.verbose:
             print("Schema says camera rotation units are: {}".format(schema_units))
-            print("Setting preferred camera rotation units to: {0}".format(unit_str))
+            print("Setting preferred camera rotation units to: {0}".format(unit.value))
         if schema_units == "degree":
             self.rot_mult = unit
         elif schema_units == None:
@@ -329,7 +329,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["timing"]["properties"]["sampleTimestamp"]["units"]
         if self.verbose:
             print("Schema says sample time units are: {}".format(schema_units))
-            print("Setting preferred sample time format to: {0}".format(format_str))
+            print("Setting preferred sample time format to: {0}".format(format.value))
         
         self.sample_time_format = format
 
@@ -341,7 +341,7 @@ class OpenTrackIOProtocol:
             schema_units = self.sd["properties"]["lens"]["properties"]["focusDistance"]["units"]
         if self.verbose:
             print("Schema says focus distance units are: {}".format(schema_units))
-            print("Setting preferred focus distance units to: {}".format(unit_str))
+            print("Setting preferred focus distance units to: {}".format(unit.value))
         if schema_units == "millimeter":
             self.focus_dist_mult = unit.conversion_factor_from_mm()
         elif schema_units == None:
@@ -415,7 +415,38 @@ class OpenTrackIOProtocol:
             return float(self.pd["lens"]["focusDistance"]) * self.focus_dist_mult
         else:
             return None
+
+    def get_lens_encoders(self):
+        """Returns the lens encoder values"""
+        if not self.validate_dict_elements(self.pd,["lens"]):
+            raise OpenTrackIOException('Lens data not available.')
+
+        lens_data = self.pd['lens']
+
+        if 'encoders' in lens_data:
+            e = lens_data['encoders']
+            result = []
+            if 'focus' in e:
+                result.append(f'Focus: {e["focus"]:.3f}')
+            if 'iris' in e:
+                result.append(f'Iris: {e["iris"]:.3f}')
+            if 'zoom' in e:
+                result.append(f'Zoom: {e["zoom"]:.3f}')
+            return ', '.join(result)
+        elif 'rawEncoders' in lens_data:
+            e = lens_data['rawEncoders']
+            result = []
+            if 'focus' in e:
+                result.append(f'Focus: {e["focus"]}')
+            if 'iris' in e:
+                result.append(f'Iris: {e["iris"]}')
+            if 'zoom' in e:
+                result.append(f'Zoom: {e["zoom"]}')
+            return ', '.join(result)
+        else:
+            raise OpenTrackIOException('Lens encoder data not available.')
             
+
 class OpenTrackIOException(Exception):
             
     def __init__(self, message):
