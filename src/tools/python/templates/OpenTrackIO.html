@@ -76,7 +76,7 @@
             <h4>IP Addressing</h4>
             <p>It is recommended that OpenTrackIO Producers use multicast addressing to deliver messages to Consumers to guarantee interoperability and ease of configuration. The use of unicast addressing is also allowed, but implementation details are currently outside the scope of this document.</p>
             
-            <p>Producers should transmit multicast messages according to the addressing scheme in the table below.</p>
+            <p>Producers should transmit multicast messages according to the addressing scheme in the table below. Allocated multicast addresses are from the IPv4 Local Scope and will be managed by routers in conformance with RFC 2365.</p>
                 
             <table>
                 <thead>
@@ -89,7 +89,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>235</td>
+                        <td>239</td>
                         <td>135</td>
                         <td>1</td>
                         <td>Source Number</td>
@@ -98,7 +98,7 @@
             </table>
                 
             <p>
-                The <strong>Source Number</strong> is a user-configurable 8-bit value (1–200) that determines the multicast IP address for a specific Source from a Producer. By embedding the Source Number in the 4th octet of the multicast IP address, this mechanism enables Producers and Consumers to exchange data for a given Source without requiring prior knowledge of the network topology or specific IP addresses.
+                The <strong>Source Number</strong> is a user-configurable 8-bit value (1-200) that determines the multicast IP address for a specific Source from a Producer. By embedding the Source Number in the 4th octet of the multicast IP address, this mechanism enables Producers and Consumers to exchange data for a given Source without requiring prior knowledge of the network topology or specific IP addresses.
             </p>
             <p>This design allows:</p>
             <ul>
@@ -109,7 +109,7 @@
             <h5>Example</h5>
             <p>In the example above, using a Producer with Source Number 14:</p>
             <ul>
-                <li><strong>IP Octet 1:</strong> 235</li>
+                <li><strong>IP Octet 1:</strong> 239</li>
                 <li><strong>IP Octet 2:</strong> 135</li>
                 <li><strong>IP Octet 3:</strong> 1</li>
                 <li><strong>IP Octet 4:</strong> 14</li>
@@ -120,7 +120,7 @@
                 It identifies a specific Source of data from a particular Producer. The Source Number must be explicitly configured and 
                 should <strong>not</strong> be inferred from the multicast address. Source Numbers above <strong>200</strong> are reserved 
                 for future expansion of the OpenTrackIO protocol and may not be used. Consumers shall discard any messages containing a 
-                Source Number of <strong>0</strong> or <strong>201–255</strong>.
+                Source Number of <strong>0</strong> or <strong>201-255</strong>.
             </p>
             <p>
                 The default destination UDP port for multicast messages is <strong>55555</strong>. Other ports may be used if necessary 
@@ -174,7 +174,7 @@
                     <tr>
                       <td>48-63</td>
                       <td>Sequence number</td>
-                      <td>2 bytes: A 16-bit unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
+                      <td>2 bytes: A 16-bit unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x00</code> to <code>UINT16</code>)</td>
                     </tr>
                     <tr>
                       <td>64-95</td>
