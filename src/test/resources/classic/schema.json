@@ -548,6 +548,9 @@
               "type": "integer",
               "maximum": 4294967295,
               "minimum": 0
+            },
+            "dropFrame": {
+              "type": "boolean"
             }
           },
           "required": [

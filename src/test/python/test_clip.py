@@ -297,10 +297,10 @@ class ClipTestCases(unittest.TestCase):
         timing_sample_rate = (sample_rate, sample_rate)
         timecode0 = Timecode(hours=1, minutes=2, seconds=3,frames=4,
                             frame_rate=StrictlyPositiveRational(24, 1),
-                            sub_frame=0)
+                            sub_frame=0,dropFrame=False)
         timecode1= Timecode(hours=1, minutes=2, seconds=3, frames=5,
                             frame_rate=StrictlyPositiveRational(24, 1),
-                            sub_frame=1)
+                            sub_frame=1,dropFrame=True)
         timing_timecode = (timecode0, timecode1)
         ptp = SynchronizationPTP(profile=PTPProfile.SMPTE_2059_2_2021,
                                  domain=1,
@@ -355,10 +355,10 @@ class ClipTestCases(unittest.TestCase):
             {"num": 24000, "denom": 1001}))
         self.assertTupleEqual(clip_as_json["timing"]["timecode"], (
             {"hours":1, "minutes":2, "seconds":3, "frames":4,
-             # no subFrame serialized because value was that of the default
+             # no subFrame / dropFrame serialized because values are the defaults
              "frameRate": {"num": 24, "denom": 1}},
             {"hours": 1,"minutes": 2,"seconds": 3,"frames": 5,
-             "frameRate": {"num": 24, "denom": 1}, "subFrame": 1}))
+             "frameRate": {"num": 24, "denom": 1}, "subFrame": 1, "dropFrame": True}))
         expected_synchronization_dict = {
             "locked": True,
             "source": "ptp",

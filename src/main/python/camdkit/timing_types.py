@@ -78,6 +78,7 @@ class Timecode(CompatibleBaseModel):
     frames: int = Field(..., ge=0, le=119, strict=True)
     frame_rate: Annotated[StrictlyPositiveRational, Field(alias="frameRate")]
     sub_frame: Annotated[NonNegativeInt, Field(alias="subFrame", strict=True)] = 0
+    dropFrame: bool | None = False
 
     # noinspection PyNestedDecorators
     @field_validator("frame_rate", mode="before")

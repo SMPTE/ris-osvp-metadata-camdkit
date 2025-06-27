@@ -86,10 +86,10 @@ class ModelTest(unittest.TestCase):
     clip.timing_sample_rate = (Fraction(24000, 1001), Fraction(24000, 1001))
     clip.timing_timecode = (Timecode(hours=1, minutes=2, seconds=3, frames=4,
                                      frame_rate=StrictlyPositiveRational(24, 1),
-                                     sub_frame=0),
+                                     sub_frame=0,dropFrame=False),
                             Timecode(hours=1, minutes=2, seconds=3, frames=5,
                                      frame_rate=StrictlyPositiveRational(24, 1),
-                                     sub_frame=0))
+                                     sub_frame=0,dropFrame=False))
     sync = Synchronization(
       frequency=Fraction(24000, 1001),
       locked=True,
@@ -778,7 +778,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       Timecode(hours=0, minutes=0, seconds=0, frames=0,
                frame_rate=StrictlyPositiveRational(0,1),
-               sub_frame=0)
+               sub_frame=0,dropFrame=False)
     self.assertTrue(TimingTimecode.validate(Timecode(hours=0, minutes=0, seconds=0, frames=0,
                                                      frame_rate=StrictlyPositiveRational(24, 1))))
     self.assertTrue(TimingTimecode.validate(Timecode(hours=1, minutes=2, seconds=3, frames=4,
@@ -787,48 +787,49 @@ class ModelTest(unittest.TestCase):
                                                      frame_rate=StrictlyPositiveRational(24, 1))))
     with self.assertRaises(ValueError):
         Timecode(hours=-1, seconds=2, minutes=3, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=24, seconds=2, minutes=3, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=-1, minutes=3, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=60, minutes=3, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=-1, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=60, frames=4,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=-1,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=24,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=24,
-        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=1)
+        frame_rate=StrictlyPositiveRational(24, 1), sub_frame=1, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=25,
-        frame_rate=StrictlyPositiveRational(25, 1), sub_frame=1)
+        frame_rate=StrictlyPositiveRational(25, 1), sub_frame=1, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=30,
-        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1)
+        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=30,
-        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1)
+        frame_rate=StrictlyPositiveRational(30, 1), sub_frame=1, dropFrame=False)
     self.assertTrue(TimingTimecode.validate(Timecode(hours=1, minutes=2, seconds=3, frames=119,
-                                                     frame_rate=StrictlyPositiveRational(120, 1), sub_frame=0)))
+                                                     frame_rate=StrictlyPositiveRational(120, 1),
+                                                     sub_frame=0, dropFrame=False)))
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=120,
-        frame_rate=StrictlyPositiveRational(120, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(120, 1), sub_frame=0, dropFrame=False)
     with self.assertRaises(ValueError):
         Timecode(hours=1, seconds=2, minutes=3, frames=120,
-        frame_rate=StrictlyPositiveRational(121, 1), sub_frame=0)
+        frame_rate=StrictlyPositiveRational(121, 1), sub_frame=0, dropFrame=False)
 
   def test_timecode_from_dict(self):
     r = TimingTimecode.from_json({
@@ -841,16 +842,17 @@ class ModelTest(unittest.TestCase):
           "denom": 1
         },
       "subFrame": 0,
+      "dropFrame": False,
     })
     self.assertEqual(str(r), str(Timecode(hours=1, minutes=2, seconds=3, frames=4,
                                           frame_rate=StrictlyPositiveRational(24, 1),
-                                          sub_frame=0)))
+                                          sub_frame=0, dropFrame=False)))
 
   def test_timecode_to_dict(self):
+    # If the explicit sub-frame or drop-frame is the default, it isn't serialized
     j0 = TimingTimecode.to_json(Timecode(hours=1, minutes=2, seconds=3, frames=4,
                                         frame_rate=StrictlyPositiveRational(24, 1),
-                                        sub_frame=0))
-    # since the explicit sub_frame of zero matches the default, it isn't serialized
+                                        sub_frame=0, dropFrame=False))
     self.assertDictEqual(j0, {
       "hours": 1,
       "minutes": 2,
@@ -862,7 +864,7 @@ class ModelTest(unittest.TestCase):
         }})
     j1 = TimingTimecode.to_json(Timecode(hours=1, minutes=2, seconds=3, frames=4,
                                          frame_rate=StrictlyPositiveRational(24, 1),
-                                         sub_frame=1))
+                                         sub_frame=1, dropFrame=False))
     self.assertDictEqual(j1, {
       "hours": 1,
       "minutes": 2,
@@ -873,6 +875,20 @@ class ModelTest(unittest.TestCase):
         "denom": 1
       },
       "subFrame": 1})
+    j2 = TimingTimecode.to_json(Timecode(hours=1, minutes=2, seconds=3, frames=4,
+                                         frame_rate=StrictlyPositiveRational(24, 1),
+                                         sub_frame=1, dropFrame=True))
+    self.assertDictEqual(j2, {
+      "hours": 1,
+      "minutes": 2,
+      "seconds": 3,
+      "frames": 4,
+      "frameRate": {
+        "num": 24,
+        "denom": 1
+      },
+      "subFrame": 1,
+      "dropFrame": True})
 
   def test_lens_encoders_limits(self):
     clip = Clip()

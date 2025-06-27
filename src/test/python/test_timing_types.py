@@ -54,109 +54,157 @@ class TimingTestCases(unittest.TestCase):
         max_valid_frame_rate: Final[StrictlyPositiveRational] = (
             StrictlyPositiveRational(MAX_FRAME_RATE_FPS, 1))
         valid_sub_frame: Final[int] = 0
+        valid_drop_frame: Final[bool] = False
 
         # test hours during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours="foo", minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0.0, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=-1, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=24, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(0, tc.hours)
 
         # test minutes during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes="foo", seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0.0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=-1, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=60, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=59, seconds=0, frames=0,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(59, tc.minutes)
 
         # test seconds during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds="foo", frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0.0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=-1, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=60, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame= valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame= valid_sub_frame, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=0, seconds=59, frames=0,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(59, tc.seconds)
 
         # test frames during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames="foo",
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0.0,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=-1,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=MAX_FRAME_RATE_FPS,
-                     frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=0, seconds=0, frames=MAX_FRAME_RATE_FPS - 1,
-                      frame_rate=max_valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=max_valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(MAX_FRAME_RATE_FPS - 1, tc.frames)
 
         # test frame rates during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate="foo", sub_frame=valid_sub_frame)
+                     frame_rate="foo",
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate=0.0, sub_frame=valid_sub_frame)
+                     frame_rate=0.0,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate=-1, sub_frame=valid_sub_frame)
+                     frame_rate=-1,
+                     sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(valid_frame_rate, tc.frame_rate)
 
         # test sub-frames during TC creation
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame="foo")
+                     frame_rate=valid_frame_rate,
+                     sub_frame="foo", dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=0.0)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=0.0, dropFrame=valid_drop_frame)
         with self.assertRaises(ValidationError):
             Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                     frame_rate=valid_frame_rate, sub_frame=-1)
+                     frame_rate=valid_frame_rate,
+                     sub_frame=-1, dropFrame=valid_drop_frame)
         tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         self.assertEqual(valid_sub_frame, tc.sub_frame)
+        
+        # test drop-frames during TC creation
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame="foo")
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=2)
+        with self.assertRaises(ValidationError):
+            Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                     frame_rate=valid_frame_rate,
+                     sub_frame=valid_sub_frame, dropFrame=-1)
+        tc = Timecode(hours=0, minutes=0, seconds=0, frames=0,
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
+        self.assertEqual(valid_drop_frame, tc.dropFrame)
 
         valid_hours: int = 1
         valid_minutes: int = 2
         valid_seconds: int =  3
         valid_frames: int = 4
         tc = Timecode(hours=valid_hours, minutes=valid_minutes, seconds=valid_seconds, frames=valid_frames,
-                      frame_rate=valid_frame_rate, sub_frame=valid_sub_frame)
+                      frame_rate=valid_frame_rate,
+                      sub_frame=valid_sub_frame, dropFrame=valid_drop_frame)
         # test assigning value of hours field
         with self.assertRaises(ValidationError):
             tc.hours = "foo"
@@ -214,6 +262,16 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             tc.sub_frame = Rational(-4, 1)
 
+        # test assigning value of dropFrame
+        with self.assertRaises(ValidationError):
+            tc.dropFrame = "foo"
+        with self.assertRaises(ValidationError):
+            tc.dropFrame = 2
+        with self.assertRaises(ValidationError):
+            tc.dropFrame = -1
+        with self.assertRaises(ValidationError):
+            tc.dropFrame = Rational(-4, 1)
+
         doubled_hours: Final[int] = valid_hours * 2
         doubled_minutes: Final[int] = valid_minutes * 2
         doubled_seconds: Final[int] = valid_seconds * 2
@@ -221,6 +279,7 @@ class TimingTestCases(unittest.TestCase):
         doubled_frame_rate: Final[StrictlyPositiveRational] = StrictlyPositiveRational(
             2 * valid_frame_rate_num, valid_frame_rate_denom)
         doubled_sub_frame: Final[int] = 2
+        doubled_drop_frame: Final[bool] = True
         tc.hours = doubled_hours
         self.assertEqual(tc.hours, doubled_hours)
         tc.minutes = doubled_minutes
@@ -233,6 +292,8 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(tc.frame_rate, doubled_frame_rate)
         tc.sub_frame = doubled_sub_frame
         self.assertEqual(tc.sub_frame, doubled_sub_frame)
+        tc.dropFrame = doubled_drop_frame
+        self.assertEqual(tc.dropFrame, doubled_drop_frame)
 
         timecode_as_json = Timecode.to_json(tc)
         self.assertEqual(timecode_as_json["hours"], doubled_hours)
@@ -242,6 +303,7 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(timecode_as_json["frameRate"],
                          StrictlyPositiveRational.to_json(doubled_frame_rate))
         self.assertEqual(timecode_as_json["subFrame"], doubled_sub_frame)
+        self.assertEqual(timecode_as_json["dropFrame"], doubled_drop_frame)
 
         timecode_from_json = Timecode.from_json(timecode_as_json)
         self.assertEqual(tc, timecode_from_json)
