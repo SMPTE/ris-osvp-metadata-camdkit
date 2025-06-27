@@ -14,7 +14,7 @@ env:
 jobs:
   build:
     if: >
-      github.repository_owner	== 'SMPTE' && (
+      github.repository_owner == 'SMPTE' && (
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
       || github.event_name == 'pull_request'
       || github.event_name == 'release'
