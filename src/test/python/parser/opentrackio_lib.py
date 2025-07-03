@@ -107,8 +107,8 @@ def fletcher16(data: bytes) -> bytes:
     sum1 = 0
     sum2 = 0
     for byte in data:
-        sum1 = (sum1 + byte) % 255
-        sum2 = (sum2 + sum1) % 255
+        sum1 = (sum1 + byte) % 256
+        sum2 = (sum2 + sum1) % 256
     checksum = (sum2 << 8) | sum1
     return struct.pack('!H', checksum)
 
