@@ -128,8 +128,10 @@ class Clip(CompatibleBaseModel):
                                "constraints": TRANSFORMS,
                                "uniqueItems": False})] = None
     """A list of transforms.
-    Transforms are composed in order with the last in the list representing
-    the X,Y,Z in meters of camera sensor relative to stage origin.
+    Transforms are composed in sequential order, starting with the first
+    transform in the list and concluding with the last transform in the list.
+    The compound transform contains the position (in meters) and orientation
+    (in degrees) of the camera sensor relative to stage origin.
     The Z axis points upwards and the coordinate system is right-handed.
     Y points in the forward camera direction (when pan, tilt and roll are
     zero).

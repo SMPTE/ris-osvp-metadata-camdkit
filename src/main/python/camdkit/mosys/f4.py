@@ -82,8 +82,9 @@ class F4AxisBlock:
      seconds = ((self.data_bits2 << 2) % 64) + ((self.data_bits3 >> 6) % 4)
      frames = self.data_bits3 % 64
      sub_frame = 0
+     dropFrame = False
      return Timecode(hours=hours,minutes=minutes,seconds=seconds,frames=frames,
-                     frame_rate=frame_rate,sub_frame=sub_frame)
+                     frame_rate=frame_rate,sub_frame=sub_frame,dropFrame=dropFrame)
 
 class F4Packet:
   command_byte: int = 0

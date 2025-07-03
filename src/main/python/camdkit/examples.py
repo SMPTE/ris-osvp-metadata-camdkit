@@ -152,9 +152,9 @@ def _get_recommended_dynamic_clip():
   clip.tracker_notes = ("Example generated sample.",)
   # timing
   clip.timing_mode = (TimingMode.EXTERNAL,)
-  clip.timing_sample_rate = (Fraction(24000, 1001),)
+  clip.timing_sample_rate = (Fraction(24, 1),)
   clip.timing_timecode = (Timecode(hours=1,minutes=2,seconds=3,frames=4,
-                                   frame_rate=StrictlyPositiveRational(24000, 1001)),)
+                                   frame_rate=StrictlyPositiveRational(24, 1)),)
   # transforms
   v, r = _example_transform_components()
   clip.transforms = ((Transform(translation=v, rotation=r, id="Camera"),),)
@@ -213,6 +213,9 @@ def _get_complete_dynamic_clip():
       mean_path_delay=0.000123,
       vlan=100)
   ),)
+  clip.timing_timecode = (Timecode(hours=1,minutes=2,seconds=3,frames=4,
+                                   frame_rate=StrictlyPositiveRational(24000, 1001),
+                                   sub_frame=1,dropFrame=True),)
   #   transforms
   clip.global_stage = (GlobalPosition(100.0,200.0,300.0,100.0,200.0,300.0),)
   v = Vector3(x=1.0, y=2.0, z=3.0)
