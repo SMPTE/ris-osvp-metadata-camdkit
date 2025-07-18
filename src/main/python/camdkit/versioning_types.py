@@ -17,7 +17,7 @@ from pydantic import Field
 __all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'OPENTRACKIO_PROTOCOL_VERSION', 'VersionedProtocol']
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
-OPENTRACKIO_PROTOCOL_VERSION = (1, 0, 0)
+OPENTRACKIO_PROTOCOL_VERSION = (1, 0, 1)
 
 VersionComponent = Annotated[int, Field(ge=0, le=9)]
 
