@@ -177,7 +177,7 @@
                     <tr>
                       <td>48-63</td>
                       <td>Sequence number</td>
-                      <td>2 bytes: A 16-bit unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x01</code> to <code>UINT16</code>)</td>
+                      <td>2 bytes: A 16-bit unsigned integer indicating the OpenTrackIO packet's unique sequence number (<code>0x00</code> to <code>UINT16</code>)</td>
                     </tr>
                     <tr>
                       <td>64-95</td>
@@ -213,39 +213,13 @@
 uint16_t fletcher (const uint8_t* data, uint16_t len)
 {
     if (!data) return 0;
-
-    uint16_t sum1 = 0;
-    uint16_t sum2 = 0;
-
+    uint8_t sum1 = 0;
+    uint8_t sum2 = 0;
     while (len-- > 0) {
-        sum1 = (sum1 + *data++) % 255;
-        sum2 = (sum2 + sum1) % 255;
+        sum1 += *data++;
+        sum2 += sum1;
     }
-    return (sum2 << 8) | sum1;
-}
-              </pre></code>
-              <p>Optimized version</p>
-              <code><pre>
-uint16_t fletcher (const uint8_t* data, uint16_t len)
-{
-    if (!data) return 0;
-
-    uint32_t sum1 = 0;
-    uint32_t sum2 = 0;
-
-    while (len > 0)
-    {
-        uint32 block_len = len > 5802 ? 5802 : len;
-        len -= block_len;
-        do {
-            sum1 += *data++;
-            sum2 += sum1;
-        } while (--block_len);
-
-        sum1 %= 255;
-        sum2 %= 255;
-    }
-    return static_cast<uint16_t>((sum2 << 8) | sum1);
+    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
 }
               </pre></code>
 
