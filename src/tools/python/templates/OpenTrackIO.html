@@ -229,23 +229,13 @@ uint16_t fletcher (const uint8_t* data, uint16_t len)
 uint16_t fletcher (const uint8_t* data, uint16_t len)
 {
     if (!data) return 0;
-
-    uint32_t sum1 = 0;
-    uint32_t sum2 = 0;
-
-    while (len > 0)
-    {
-        uint32 block_len = len > 5802 ? 5802 : len;
-        len -= block_len;
-        do {
-            sum1 += *data++;
-            sum2 += sum1;
-        } while (--block_len);
-
-        sum1 %= 256;
-        sum2 %= 256;
+    uint8_t sum1 = 0;
+    uint8_t sum2 = 0;
+    while (len-- > 0) {
+        sum1 += *data++;
+        sum2 += sum1;
     }
-    return static_cast<uint16_t>((sum2 << 8) | sum1);
+    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
 }
               </pre></code>
 
