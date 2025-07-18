@@ -19,7 +19,7 @@ Parsed the sample JSON successfully.
 Parsed the schema JSON successfully.
 
 Detected protocol: OpenTrackIO
-Protocol version: 1.0.0
+Protocol version: 1.0.1
 On slate: A101_A_4
 Current camera timecode: 01:02:03:04
 At a camera frame rate of: 23.976
