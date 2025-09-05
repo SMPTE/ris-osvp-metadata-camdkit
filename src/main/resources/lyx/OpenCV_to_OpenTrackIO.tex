@@ -5,6 +5,7 @@
 \usepackage[latin9]{inputenc}
 \usepackage[a4paper]{geometry}
 \geometry{verbose,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{units}
 \usepackage{amsmath}
 \usepackage{amssymb}
 
@@ -22,7 +23,8 @@
 \usepackage{babel}
 \begin{document}
 \title{Conversion of OpenCV to OpenTrackIO (OpenLensIO)\\
-lens calibration parameters}
+lens calibration parameters\\
+{\large{}Corrected version as of 2025-09-02}}
 
 \maketitle
 If OpenCV lens calibration parameters are available for a camera/lens
@@ -52,19 +54,18 @@ r_{u}=\sqrt{{\epsilon'_{x,u}}^{2}+{\epsilon'_{y,u}}^{2}}
 \]
 
 The pixel coordinates $\epsilon_{s}$, here expressed as shader coordinates
-$\varepsilon_{shader}$ but relative to the image center (not the
-upper left corner) and using a texture that has the same resolution
+$\varepsilon_{shader}$ using a texture that has the same resolution
 as the camera image with width $w_{shader}$ and height $h_{shader}$
 (so the camera image is $w_{shader}$ pixels wide and $h_{shader}$
 pixels high, and $h_{shader}$ is different from $w_{shader}$ as
 opposed to the assumption of a square texture in the OpenLensIO documentation):
 
 \[
-\epsilon_{x,s}=\varepsilon_{x,shader}-\frac{w_{shader}}{2}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})
+\epsilon_{x,s}=\varepsilon_{x,shader}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}+\frac{w_{shader}}{2}=\frac{w_{shader}}{w}\cdot\left(\epsilon'_{x,d}+\Delta\mathbb{P}_{x}\right)+\frac{w_{shader}}{2}
 \]
 
 \[
-\epsilon_{y,s}=\varepsilon_{y,shader}-\frac{h_{shader}}{2}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})
+\epsilon_{y,s}=\varepsilon_{y,shader}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}+\frac{h_{shader}}{2}=\frac{h_{shader}}{h}\cdot\left(\epsilon'_{y,d}+\Delta\mathbb{P}_{y}\right)+\frac{h_{shader}}{2}
 \]
 
 Parameters $l_{1},...,l_{6}$ are the radial, $q_{1},q_{2}$ the tangential
@@ -116,21 +117,27 @@ $r_{u}=F\cdot r$ &  &  &  & \tabularnewline
 Focal length and projection offset parameters can be converted as
 follows:
 \[
-f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}
+f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}\cdot\left(\epsilon'_{x,d}+\Delta\mathbb{P}_{x}\right)+\frac{w_{shader}}{2}=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}+\frac{w_{shader}}{2}
 \]
 
 Since this equation is true for any value of $x''$ it follows that
 \[
-F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}
+F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot\left(c_{x}-\frac{w_{shader}}{2}\right)
 \]
 
 Likewise in y direction:
 \[
-f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}
+f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}\cdot\left(\epsilon'_{y,d}+\Delta\mathbb{P}_{y}\right)+\frac{h_{shader}}{2}=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}+\frac{h_{shader}}{2}
 \]
 \[
-\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}
+\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot\left(c_{y}-\frac{h_{shader}}{2}\right)
 \]
+Note that in a previous version of this document the term $-\nicefrac{w_{shader}}{2}$
+in the calculation of $\Delta\mathbb{P}_{x}$ and the term $-\nicefrac{h_{shader}}{2}$
+in the calculation of $\Delta\mathbb{P}_{y}$ was missing due to the
+false assumption that the OpenCV coordinates $(u\quad v)^{T}$ as
+well as $(c_{x}\quad c_{y})^{T}$ have their origin in the middle
+of the image, while in fact the origin is in the upper left corner!
 
 Comparing individual components in the lens distortion formulas leads
 to the following conversions for distortion parameters, starting with
@@ -170,7 +177,7 @@ This is a summary of all conversions:\\
 focal length: & \multicolumn{3}{c}{$F=\frac{w}{w_{shader}}\cdot f_{x}=\frac{h}{h_{shader}}\cdot f_{y}$}\tabularnewline[\doublerulesep]
 \noalign{\vskip\doublerulesep}
 \noalign{\vskip\doublerulesep}
-projection offset: & $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}\quad$ &  & $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}\quad$\tabularnewline[\doublerulesep]
+projection offset: & $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot\left(c_{x}-\frac{w_{shader}}{2}\right)\quad$ &  & $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot\left(c_{y}-\frac{h_{shader}}{2}\right)\quad$\tabularnewline[\doublerulesep]
 \noalign{\vskip\doublerulesep}
 \noalign{\vskip\doublerulesep}
 radial distortion: & $l_{1}=\frac{k_{1}}{F^{2}}$ & $l_{3}=\frac{k_{2}}{F^{4}}$ & $l_{5}=\frac{k_{3}}{F^{6}}$\tabularnewline[\doublerulesep]
