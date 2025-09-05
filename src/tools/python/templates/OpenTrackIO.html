@@ -219,7 +219,7 @@ uint16_t fletcher (const uint8_t* data, uint16_t len)
         sum1 += *data++;
         sum2 += sum1;
     }
-    return ((uint16_t) sum1 << 8) | (uint16_t) sum2;
+    return ((uint16_t) sum2 << 8) | (uint16_t) sum1;
 }
               </pre></code>
 
