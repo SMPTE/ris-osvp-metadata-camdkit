@@ -1,6 +1,12 @@
 # Changes to camdkit
 ## (in reverse chronological order of release)
 
+## Changes after 1.0.0 and before 1.0.1
+
+- Fletcher algorithm updated to the mod 256 version
+- Sequence number range updated to allow 0
+- Multicast addressing range updated from the reserved 235.0.0.0 range to the IPv4 Local Scope as defined by RFC 2365.
+
 ## Changes after 0.9.2 and before 1.0.0
 
 ### PTP code cleanup and fleshing out of PTP examples and unit tests

@@ -299,7 +299,7 @@ class OpenTrackIOPacketTransmitter:
             },
             "protocol": {
                 "name": "OpenTrackIO",
-                "version": [1, 0, 0]
+                "version": OTRK_VERSION
             },
             "sampleId": f"urn:uuid:{self._sample_uuid}",
             "sourceId": f"urn:uuid:{self._source_uuid}",
