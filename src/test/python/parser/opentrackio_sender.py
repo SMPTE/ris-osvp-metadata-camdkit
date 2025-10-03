@@ -122,7 +122,7 @@ class OpenTrackIOPacketTransmitter:
         self._frame_counter: int = 0
 
         # Time synchronization state
-        self._sequence_number: int = 1
+        self._sequence_number: int = 0
         self._ref_offset_s: float = 0.0
         self.ntpclient: Optional[ntplib.NTPClient] = ntplib.NTPClient() if self._time_source == TimeSource.NTP else None
 
@@ -199,10 +199,8 @@ class OpenTrackIOPacketTransmitter:
         """Update header sequence number."""
 
         # Wrap around at 65535 (max 16-bit unsigned integer)
-        if self._sequence_number >= UINT16_MAX:
-            self._sequence_number = 1
-        else:
-            self._sequence_number += 1
+        self._sequence_number += 1
+        self._sequence_number &= 0xFFFF
 
     def _move_camera(self):
         """Update camera movement animation."""
@@ -349,7 +347,7 @@ class OpenTrackIOPacketTransmitter:
             payload = json.dumps(payload_data).encode('utf-8')
 
         # Debug output for payload sizes.
-        if self._verbose and self._sequence_number == 1:  # First packet only.
+        if self._verbose and self._sequence_number == 0:  # First packet only.
             print(f"Payload size: {len(payload)} bytes")
             if len(payload) > OTRK_MAX_PAYLOAD_SIZE:
                 print(f"Payload exceeds {OTRK_MAX_PAYLOAD_SIZE} bytes, will be segmented")

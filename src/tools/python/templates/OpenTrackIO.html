@@ -39,12 +39,13 @@
             <p>OpenTrackIO defines the schema of JSON samples that contain a wide range of metadata about the device, its transform(s), associated camera and lens. The full schema is given <a href="#schema">below</a> and can be <a href="schema.json" target="_blank">downloaded here</a>.</p>
             <p>All the fields described should be considered optional by the Consumer (although for high-quality tracking for Virtual Production see the recommended set of fields in the samples <a href="#recommended">below</a>).</p>
             <p>OpenTrackIO employs a right-handed coordinate system where the Z-axis points upwards and positive rotations are clockwise around the axis. Y points in the forward camera direction (when pan, tilt and roll are zero). For example, in an LED volume Y would point towards the centre of the LED wall and X would point towards camera-right.</p>
-            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v1-0-0.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production. See <a href="res/OpenCV_to_OpenTrackIO.pdf" target="_blank">here</a> for conversion mathematics from the OpenCV model.</p>
+            <p>OpenTrackIO employs the <a href="res/OpenLensIO_v1-0-1.pdf" target="_blank">OpenLensIO mathematical lens model</a> for the practical application of spherical lens distortion in Virtual Production. See <a href="res/OpenCV_to_OpenTrackIO.pdf" target="_blank">here</a> for conversion mathematics from the OpenCV model.</p>
             <img class="img-inline" src="img/Coordinate_System.svg" /><img class="img-inline" src="img/Axis_Rotation.svg" /></span>
             
             <h2>Software resources</h2>
             <p>OpenTrackIO's parameters are defined by <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit" target="_blank">CamDKit</a>. This repository includes examples for <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/main/python/camdkit/mosys" target="_blank">generating</a> and parsing data in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/python/parser" target="_blank">python</a> and <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">C++</a>.</p>
             <p>A C++ reference implementation of OpenTrackIO is available on <a href="https://github.com/mosys/opentrackio-cpp" target="_blank">Mo-Sys' GitHub</a> and a C++ port of the python parser is provided in <a href="https://github.com/SMPTE/ris-osvp-metadata-camdkit/tree/main/src/test/cpp/opentrackio-parser" target="_blank">CamDKit</a> that demonstrates linkage.</p>
+            <p>A tool to simulate the mathematical aspects of the OpenTrackIO specification is available in <a href="https://bitbucket.org/futureuniverse/opentrackio/src/master/" target="_blank">this repository.</a></p>
 
             <h2 id="recommended">OpenTrackIO sample</h2>
             <p>It is recommended that metadata samples are transmitted every frame (i.e. to coincide with the video frames from a camera). It provides a snapshot of the status of the tracking system at that instant.</p>
@@ -197,7 +198,7 @@
                     <tr>
                       <td>112-127</td>
                       <td>Checksum (Fletcher16)</td>
-                      <td>2 bytes: A 16-bit checksum computed using the Fletcher-16 algorithm, covering the header (excluding checksum bytes) and payload.</td>
+                      <td>2 bytes: A 16-bit checksum computed using the Fletcher-16 algorithm with a modulus of 256, covering the header (excluding checksum bytes) and payload.</td>
                     </tr>
                     <tr>
                       <td>128+</td>
@@ -213,39 +214,13 @@
 uint16_t fletcher (const uint8_t* data, uint16_t len)
 {
     if (!data) return 0;
-
-    uint16_t sum1 = 0;
-    uint16_t sum2 = 0;
-
+    uint8_t sum1 = 0;
+    uint8_t sum2 = 0;
     while (len-- > 0) {
-        sum1 = (sum1 + *data++) % 255;
-        sum2 = (sum2 + sum1) % 255;
+        sum1 += *data++;
+        sum2 += sum1;
     }
-    return (sum2 << 8) | sum1;
-}
-              </pre></code>
-              <p>Optimized version</p>
-              <code><pre>
-uint16_t fletcher (const uint8_t* data, uint16_t len)
-{
-    if (!data) return 0;
-
-    uint32_t sum1 = 0;
-    uint32_t sum2 = 0;
-
-    while (len > 0)
-    {
-        uint32 block_len = len > 5802 ? 5802 : len;
-        len -= block_len;
-        do {
-            sum1 += *data++;
-            sum2 += sum1;
-        } while (--block_len);
-
-        sum1 %= 255;
-        sum2 %= 255;
-    }
-    return static_cast<uint16_t>((sum2 << 8) | sum1);
+    return ((uint16_t) sum2 << 8) | (uint16_t) sum1;
 }
               </pre></code>
 
@@ -271,7 +246,7 @@ uint16_t fletcher (const uint8_t* data, uint16_t len)
             <ul>
                 <li>Improved session and transport specifications and reference examples</li>
                 <li>SMPTE 2110 -41 and -42 integration</li>
-                <li>Anamorphic lens mathematics and enhanced vignette model (in <a href="res/OpenLensIO_v1-0-0.pdf" target="_blank">OpenLensIO</a>)</li>
+                <li>Anamorphic lens mathematics and enhanced vignette model (in <a href="res/OpenLensIO_v1-0-1.pdf" target="_blank">OpenLensIO</a>)</li>
                 <li>Device discovery</li>
             </ul>
         </div>

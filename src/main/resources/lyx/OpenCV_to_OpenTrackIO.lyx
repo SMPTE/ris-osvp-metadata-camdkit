@@ -88,6 +88,12 @@ Conversion of OpenCV to OpenTrackIO (OpenLensIO)
 \end_inset
 
 lens calibration parameters
+\begin_inset Newline newline
+\end_inset
+
+
+\size large
+Corrected version as of 2025-09-02
 \end_layout
 
 \begin_layout Standard
@@ -170,8 +176,8 @@ The pixel coordinates
 \begin_inset Formula $\varepsilon_{shader}$
 \end_inset
 
- but relative to the image center (not the upper left corner) and using
- a texture that has the same resolution as the camera image with width 
+ using a texture that has the same resolution as the camera image with width
+ 
 \begin_inset Formula $w_{shader}$
 \end_inset
 
@@ -202,7 +208,7 @@ n):
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\epsilon_{x,s}=\varepsilon_{x,shader}-\frac{w_{shader}}{2}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})
+\epsilon_{x,s}=\varepsilon_{x,shader}=w_{shader}\cdot\frac{\epsilon_{x,d}}{w}+\frac{w_{shader}}{2}=\frac{w_{shader}}{w}\cdot\left(\epsilon'_{x,d}+\Delta\mathbb{P}_{x}\right)+\frac{w_{shader}}{2}
 \]
 
 \end_inset
@@ -213,7 +219,7 @@ n):
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\epsilon_{y,s}=\varepsilon_{y,shader}-\frac{h_{shader}}{2}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})
+\epsilon_{y,s}=\varepsilon_{y,shader}=h_{shader}\cdot\frac{\epsilon_{y,d}}{h}+\frac{h_{shader}}{2}=\frac{h_{shader}}{h}\cdot\left(\epsilon'_{y,d}+\Delta\mathbb{P}_{y}\right)+\frac{h_{shader}}{2}
 \]
 
 \end_inset
@@ -781,7 +787,7 @@ The following equations follow straight from the parameter definitions:
 Focal length and projection offset parameters can be converted as follows:
 \begin_inset Formula 
 \[
-f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}(\epsilon'_{x,d}+\Delta\mathbb{P}_{x})=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}
+f_{x}\cdot x''+c_{x}=u=\epsilon_{x,s}=\frac{w_{shader}}{w}\cdot\left(\epsilon'_{x,d}+\Delta\mathbb{P}_{x}\right)+\frac{w_{shader}}{2}=\frac{w_{shader}}{w}\cdot F\cdot x''+\frac{w_{shader}}{w}\cdot\Delta\mathbb{P}_{x}+\frac{w_{shader}}{2}
 \]
 
 \end_inset
@@ -797,7 +803,7 @@ Since this equation is true for any value of
  it follows that
 \begin_inset Formula 
 \[
-F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}
+F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot\left(c_{x}-\frac{w_{shader}}{2}\right)
 \]
 
 \end_inset
@@ -809,7 +815,7 @@ F=\frac{w}{w_{shader}}\cdot f_{x}\qquad\wedge\qquad\Delta\mathbb{P}_{x}=\frac{w}
 Likewise in y direction:
 \begin_inset Formula 
 \[
-f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delta\mathbb{P}_{y})=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}
+f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}\cdot\left(\epsilon'_{y,d}+\Delta\mathbb{P}_{y}\right)+\frac{h_{shader}}{2}=\frac{h_{shader}}{h}\cdot F\cdot y''+\frac{h_{shader}}{h}\cdot\Delta\mathbb{P}_{y}+\frac{h_{shader}}{2}
 \]
 
 \end_inset
@@ -817,12 +823,37 @@ f_{y}\cdot y''+c_{y}=v=\epsilon_{y,s}=\frac{h_{shader}}{h}(\epsilon'_{y,d}+\Delt
 
 \begin_inset Formula 
 \[
-\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}
+\Rightarrow\qquad F=\frac{h}{h_{shader}}\cdot f_{y}\qquad\wedge\qquad\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot\left(c_{y}-\frac{h_{shader}}{2}\right)
 \]
 
 \end_inset
 
+Note that in a previous version of this document the term 
+\begin_inset Formula $-\nicefrac{w_{shader}}{2}$
+\end_inset
 
+ in the calculation of 
+\begin_inset Formula $\Delta\mathbb{P}_{x}$
+\end_inset
+
+ and the term 
+\begin_inset Formula $-\nicefrac{h_{shader}}{2}$
+\end_inset
+
+ in the calculation of 
+\begin_inset Formula $\Delta\mathbb{P}_{y}$
+\end_inset
+
+ was missing due to the false assumption that the OpenCV coordinates 
+\begin_inset Formula $(u\quad v)^{T}$
+\end_inset
+
+ as well as 
+\begin_inset Formula $(c_{x}\quad c_{y})^{T}$
+\end_inset
+
+ have their origin in the middle of the image, while in fact the origin
+ is in the upper left corner!
 \end_layout
 
 \begin_layout Standard
@@ -966,7 +997,7 @@ projection offset:
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot c_{x}\quad$
+\begin_inset Formula $\Delta\mathbb{P}_{x}=\frac{w}{w_{shader}}\cdot\left(c_{x}-\frac{w_{shader}}{2}\right)\quad$
 \end_inset
 
 
@@ -987,7 +1018,7 @@ projection offset:
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot c_{y}\quad$
+\begin_inset Formula $\Delta\mathbb{P}_{y}=\frac{h}{h_{shader}}\cdot\left(c_{y}-\frac{h_{shader}}{2}\right)\quad$
 \end_inset
 
 
