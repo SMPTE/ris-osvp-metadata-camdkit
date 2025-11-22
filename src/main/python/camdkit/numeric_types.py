@@ -9,7 +9,7 @@
 import numbers
 from fractions import Fraction
 from typing import Any, Final, Annotated
-from pydantic import Field
+from pydantic import Field, BeforeValidator
 
 from camdkit.compatibility import CompatibleBaseModel
 
@@ -55,14 +55,27 @@ NormalizedFloat = Annotated[float, Field(..., ge=0.0, le=1.0, strict=True)]
 UnityOrGreaterFloat = Annotated[float, Field(..., ge=1.0, strict=True)]
 
 # init methods because by default Pydantic BaseModel doesn't let you use positional arguments,
-# and camdkit 0.9 uses that style of object instantiation
+# and camdkit uses that style of object instantiation
+
+def _is_nonzero_denominator(value: int) -> int:
+    if value == 0:
+        raise ValueError(f'Zero is an invalid value for a fraction denominator')
+    return value
+
+class NonzeroDenominatorFraction(CompatibleBaseModel):
+    numerator: int
+    denominator: int = Annotated[int, BeforeValidator(_is_nonzero_denominator)]
+
+def _reduce(num: int, denom: int) -> dict[str, int]:
+    reduced = NonzeroDenominatorFraction(numerator=num, denominator=denom)
+    return {'num': reduced.numerator, 'denom': reduced.denominator}
 
 class Rational(CompatibleBaseModel):
     num: int = Field(ge=MIN_INT_32, le=MAX_INT_32, strict=True)
     denom: int = Field(ge=1, le=MAX_UINT_32, strict=True)
 
     def __init__(self, num: int, denom: int) -> None:
-        super(Rational, self).__init__(num=num, denom=denom)
+        super(Rational, self).__init__(**_reduce(num=num, denom=denom))
 
     # Not the full set of operations; just enough to pass classic unit tests
     @staticmethod
@@ -94,7 +107,7 @@ class StrictlyPositiveRational(CompatibleBaseModel):
     denom: int = Field(ge=1, le=MAX_UINT_32, strict=True)
 
     def __init__(self, num: int, denom: int, ) -> None:
-        super(StrictlyPositiveRational, self).__init__(num=num, denom=denom)
+        super(StrictlyPositiveRational, self).__init__(**_reduce(num=num, denom=denom))
 
     # Not the full set of operations; just enough to pass classic unit tests
     @staticmethod
