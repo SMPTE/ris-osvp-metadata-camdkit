@@ -1,23 +1,13 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
+name = "pypi"
+
+[packages]
+camdkit = {editable = true, path = "."}
 
 [dev-packages]
-pylint = "==2.6.0"
-coverage = "*"
-jsonschema = "*"
-jinja2 = "*"
+camdkit = {editable = true, path = ".", extras = ["dev"]}
 
 [requires]
 python_version = "3.11"
-pydantic = "*"
-jsonref = "*"
-cbor2 = "*"
-ntplib = "*"
-
-[packages]
-pydantic = "*"
-jsonref = "*"
-cbor2 = "*"
-ntplib = "*"
