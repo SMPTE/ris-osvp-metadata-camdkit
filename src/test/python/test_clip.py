@@ -505,6 +505,35 @@ class ClipTestCases(unittest.TestCase):
         #     for doc_entry in sorted_doc:
         #         print_doc_entry(doc_entry, fp)
 
+    def test_to_pseudo_frame_json(self):
+        f_number: Final[tuple[float, ...]] = (4.0,)
+        global_stage: Final[tuple[GlobalPosition, ...]] = (
+            GlobalPosition(100.0, 200.0, 300.0, 100.0, 200.0, 300.0),
+        )
+        sample_id: Final[tuple[str, ...]] = (VALID_SAMPLE_ID,)
+        global_stage_dict: Final[dict] = {
+            "E": 100.0, "N": 200.0, "U": 300.0,
+            "lat0": 100.0, "lon0": 200.0, "h0": 300.0,
+        }
+
+        clip = Clip()
+        clip.lens_f_number = f_number
+        clip.global_stage = global_stage
+        clip.sample_id = sample_id
+
+        framed = clip.to_json(0)
+        pseudo = clip.to_pseudo_frame_json(0)
+
+        self.assertIsInstance(pseudo, dict)
+        # Frame-array form keeps single-frame fields as 1-element tuples
+        self.assertTupleEqual(framed["lens"]["fStop"], f_number)
+        self.assertTupleEqual(framed["sampleId"], sample_id)
+        self.assertTupleEqual(framed["globalStage"], (global_stage_dict,))
+        # Pseudo-frame form unwraps them to scalars / dicts
+        self.assertEqual(pseudo["lens"]["fStop"], 4.0)
+        self.assertEqual(pseudo["sampleId"], VALID_SAMPLE_ID)
+        self.assertEqual(pseudo["globalStage"], global_stage_dict)
+
 
 if __name__ == '__main__':
     unittest.main()
