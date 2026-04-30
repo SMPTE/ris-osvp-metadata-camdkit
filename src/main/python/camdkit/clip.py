@@ -18,6 +18,7 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    ARRAY,
                                    GLOBAL_POSITION,
                                    TRANSFORMS)
+from camdkit.utils import unwrap_clip_to_pseudo_frame
 from camdkit.units import METER, METERS_AND_DEGREES, SECOND
 from camdkit.numeric_types import (NonNegativeInt,
                                    StrictlyPositiveRational,
@@ -291,11 +292,14 @@ class Clip(CompatibleBaseModel):
         Clip.traverse_json_schema(Clip, full_schema, ('',), extractor)
         return result
 
-    def to_json(self, i: Optional[int] = None) -> Self:
+    def to_json(self, i: Optional[int] = None) -> dict:
         if i != None:
             single_frame_clip: Self =  self[i]
             return CompatibleBaseModel.to_json(single_frame_clip)
         return CompatibleBaseModel.to_json(self)
+
+    def to_pseudo_frame_json(self, i: int) -> JsonSchemaValue:
+        return unwrap_clip_to_pseudo_frame(self.to_json(i))
 
     def _print_non_none(self):
         full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)

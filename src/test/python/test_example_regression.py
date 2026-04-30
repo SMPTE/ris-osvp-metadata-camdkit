@@ -13,7 +13,7 @@ from typing import Literal
 
 from pydantic.json_schema import JsonSchemaValue
 
-from camdkit.examples import _unwrap_clip_to_pseudo_frame
+from camdkit.utils import unwrap_clip_to_pseudo_frame
 
 CLASSIC = Path("src/test/resources/classic")
 CLASSIC_EXAMPLES_DIR: Path = CLASSIC / "examples"
@@ -62,7 +62,7 @@ def generify_urn_uuids(clip: JsonSchemaValue) -> None:
 #             "globalStage": "foo",
 #             "lens": { "distortion": 4.1}
 #         }
-#         corrupted_clip = _unwrap_clip_to_pseudo_frame(deepcopy(good_clip))
+#         corrupted_clip = unwrap_clip_to_pseudo_frame(deepcopy(good_clip))
 #         self.assertEqual(pseudo_frame, corrupted_clip)
 #
 #     def compare(self, completeness: Literal['recommended', 'complete'],
