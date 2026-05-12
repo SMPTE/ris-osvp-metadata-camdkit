@@ -28,7 +28,7 @@ def to_clip(filename: str, frames: int = -1) -> Clip:
     offset = 0
     success = True
     count = 0
-    while success and (frames == -1 or (count <= frames)):
+    while success and (frames == -1 or (count < frames)):
       success, frame, packet_size = to_frame(data[offset:])
       if success:
         if offset == 0:
