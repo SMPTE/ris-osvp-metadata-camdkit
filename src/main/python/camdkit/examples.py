@@ -11,22 +11,20 @@ from pydantic.json_schema import JsonSchemaValue
 from camdkit.framework import *
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.timing_types import TimingMode, SynchronizationPTPPriorities, PTPLeaderTimeSource
-from camdkit.utils import unwrap_clip_to_pseudo_frame
 
 
 def get_recommended_static_example():
   clip = _get_recommended_static_clip()
-  return  unwrap_clip_to_pseudo_frame(clip.to_json(0))
+  return clip.to_pseudo_frame_json(0)
 
 def get_complete_static_example():
   clip = _get_complete_static_clip()
-  clip_json = clip.to_json(0)
-  # Add additional custom data
+  clip_json = clip.to_pseudo_frame_json(0)
   clip_json["custom"] = {
     "pot1": 2435,
     "button1": False
   }
-  return unwrap_clip_to_pseudo_frame(clip_json)
+  return clip_json
 
 def _add_recommended_static_clip_parameters(clip: Clip) -> Clip:
   clip.camera_label = "A"
@@ -69,18 +67,16 @@ def _get_complete_static_clip() -> Clip:
 
 def get_recommended_dynamic_example():
   clip = _get_recommended_dynamic_clip()
-  return unwrap_clip_to_pseudo_frame(clip.to_json(0))
+  return clip.to_pseudo_frame_json(0)
 
 def get_complete_dynamic_example():
   clip = _get_complete_dynamic_clip()
-  clip_json = clip.to_json(0)
-
-  # Add additional custom data
+  clip_json = clip.to_pseudo_frame_json(0)
   clip_json["custom"] = {
     "pot1": 2435,
     "button1": False
   }
-  return unwrap_clip_to_pseudo_frame(clip_json)
+  return clip_json
 
 def _example_transform_components() -> tuple[Vector3, Rotator3]:
   return Vector3(x=1.0, y=2.0, z=3.0), Rotator3(pan=180.0, tilt=90.0, roll=45.0)
