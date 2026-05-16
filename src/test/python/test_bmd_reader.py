@@ -6,6 +6,7 @@
 
 '''Blackmagic camera RAW reader tests'''
 
+import io
 import unittest
 
 import camdkit.bmd.reader
@@ -50,3 +51,8 @@ class BMDReaderTest(unittest.TestCase):
     self.assertEqual(clip.lens_t_number[0], 2.3)
 
     self.assertEqual(clip.shutter_angle, 180)
+
+  def test_no_frames_raises_value_error(self):
+    clip_only = io.StringIO("Clip Metadata\nmanufacturer: Blackmagic Design\n")
+    with self.assertRaises(ValueError):
+      camdkit.bmd.reader.to_clip(clip_only)
