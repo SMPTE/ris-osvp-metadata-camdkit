@@ -15,6 +15,7 @@ from camdkit.framework import (Vector3, Rotator3,
                                FizEncoders, Distortion, ProjectionOffset)
 from camdkit.model import OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.mosys import reader
+from camdkit.mosys.f4 import F4PacketParser
 
 class MoSysReaderTest(unittest.TestCase):
   
@@ -43,3 +44,29 @@ class MoSysReaderTest(unittest.TestCase):
     self.assertEqual(clip.lens_projection_offset[13], ProjectionOffset(-7.783590793609619, 6.896144866943359))
     self.assertAlmostEqual(clip.lens_pinhole_focal_length[14], 22.35, 2)
     self.assertEqual(int(clip.lens_focus_distance[15]*1000), 2313)
+
+
+class MoSysF4ParserUnitTest(unittest.TestCase):
+
+  # Minimal valid F4 packet: focal length (45°) + focus encoder — no timecode axis.
+  # Without a timecode axis, frequency stays None and Synchronization(frequency=None)
+  # raises a validation error. Checksum = (0x40 - sum(header+body)) % 256 = 0xfd.
+  _PACKET_NO_TIMECODE = bytes([
+    0xf4, 0x01, 0x02, 0x00,         # command, camera_id=1, axis_count=2, status=0
+    0x53, 0x42, 0x34, 0x00, 0x00,   # focal length FX axis: 45.0 degrees (IEEE 754)
+    0x03, 0x00, 0x00, 0x80, 0x00,   # focus encoder axis: 50%
+    0xfd,                             # checksum
+  ])
+
+  def test_no_timecode_axis_does_not_crash(self):
+    """get_tracking_frame() must not raise when no timecode axis is present.
+
+    frequency defaults to None. Without a guard, Synchronization(frequency=None)
+    raises a Pydantic validation error because frequency is StrictlyPositiveRational.
+    The parser must skip synchronization construction and leave
+    timing_synchronization unset.
+    """
+    parser = F4PacketParser()
+    self.assertTrue(parser.initialise(self._PACKET_NO_TIMECODE))
+    frame = parser.get_tracking_frame()
+    self.assertIsNone(frame.timing_synchronization)
