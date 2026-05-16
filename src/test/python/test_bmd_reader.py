@@ -6,6 +6,7 @@
 
 '''Blackmagic camera RAW reader tests'''
 
+import io
 import unittest
 
 import camdkit.bmd.reader
@@ -50,3 +51,17 @@ class BMDReaderTest(unittest.TestCase):
     self.assertEqual(clip.lens_t_number[0], 2.3)
 
     self.assertEqual(clip.shutter_angle, 180)
+
+  def test_focal_length_populated_without_shutter(self):
+    metadata = io.StringIO(
+      "Clip Metadata\n"
+      "manufacturer: Blackmagic Design\n"
+      "\n"
+      "Frame 0 Metadata\n"
+      "focal_length: 35mm\n"
+      "distance: 1000mm\n"
+      "aperture: T2.8\n"
+      "sensor_rate: 24,1,\n"
+    )
+    clip = camdkit.bmd.reader.to_clip(metadata)
+    self.assertEqual(clip.lens_nominal_focal_length, 35)
