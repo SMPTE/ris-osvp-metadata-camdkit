@@ -13,6 +13,7 @@ class CookeLensData:
   entrance_pupil_position: int
   aperture_value: int
 
+# @spec OPT-COOKE-001, OPT-COOKE-002
 def lens_data_from_binary_string(cooked_packed_bin_data: bytes) -> CookeLensData:
   sign = -1 if cooked_packed_bin_data[25] & 0b00100000 else 1
   entrance_pupil_position = sign * (((cooked_packed_bin_data[25] & 0b00001111) << 6) + (cooked_packed_bin_data[26] & 0b00111111))
@@ -23,5 +24,6 @@ def lens_data_from_binary_string(cooked_packed_bin_data: bytes) -> CookeLensData
 class CookeFixedData:
   firmware_version_number: str
 
+# @spec OPT-COOKE-003
 def fixed_data_from_string(cooked_fixed_data: str) -> CookeFixedData:
   return CookeFixedData(firmware_version_number=cooked_fixed_data[61:65])

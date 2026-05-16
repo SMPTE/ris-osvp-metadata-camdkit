@@ -23,6 +23,7 @@ _LENS_NAME_PIXEL_PITCH_MAP = {
   "DRAGON": 5
 }
 
+# @spec BRIDGE-IFACE-001, BRIDGE-RED-001, BRIDGE-RED-002, BRIDGE-RED-003
 def to_clip(meta_3_file: typing.IO, meta_5_file: typing.IO) -> camdkit.model.Clip:
   """Read RED camera metadata into a `Clip`.
   `meta_3_file`: Static camera metadata. CSV file generated using REDline (`REDline --silent --i {camera_file_path} --printMeta 3`)

@@ -246,6 +246,7 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
     def cleanup(self, schema: JsonSchemaValue) -> None:
         raise NotImplementedError()
 
+    # @spec PROTO-SCHEMA-003
     def generate(self, schema: JsonSchemaValue, mode='validation'):
         json_schema = super().generate(schema, mode=mode)
         json_schema = jsonref.replace_refs(json_schema, proxies=False, merge_props=True)
@@ -253,15 +254,18 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
         canonicalize_descriptions(json_schema)
         return json_schema
 
+# @spec PROTO-SCHEMA-001
 class InternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
     def cleanup(self, schema: JsonSchemaValue) -> None:
         scrub_excluded(schema, ALWAYS_EXCLUDED)
 
+# @spec PROTO-SCHEMA-002, PROTO-CORE-006
 class ExternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
     def cleanup(self, schema: JsonSchemaValue) -> None:
         scrub_excluded(schema, ALWAYS_EXCLUDED + EXCLUDED_CAMDKIT_INTERNALS)
 
 
+# @spec PROTO-SCHEMA-004, PROTO-SCHEMA-005
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
     """Base class for all camdkit parameters."""

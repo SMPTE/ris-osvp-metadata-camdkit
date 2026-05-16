@@ -209,6 +209,7 @@ class Clip(CompatibleBaseModel):
         # print(f"called setattr({cls}, {name}, {property(lambda s: 'foo', lambda s, v: None)}")
         # setattr(cls, name, property(lambda s: 'foo', lambda s, v: None))
 
+    # @spec PROTO-CORE-001
     @classmethod
     def setup_clip_properties(cls) -> type:
         def property_adder(property_name: str,
@@ -250,12 +251,14 @@ class Clip(CompatibleBaseModel):
         Clip.traverse_json_schema(Clip, full_schema, ('',), document_clip_property)
         return documentation
 
+    # @spec PROTO-CORE-005
     @classmethod
     def make_json_schema(cls, mode: JsonSchemaMode = 'serialization',
                          exclude_camdkit_internals: bool = True) -> JsonSchemaValue:
         result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(mode, exclude_camdkit_internals)
         return result
 
+    # @spec PROTO-CORE-003
     def append(self, other: Self) -> None:
         full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
 
@@ -274,6 +277,7 @@ class Clip(CompatibleBaseModel):
 
         Clip.traverse_json_schema(Clip, full_schema, ('',), appender)
 
+    # @spec PROTO-CORE-004
     def __getitem__(self, i) -> Self:
         full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
         result = Clip()
@@ -291,6 +295,7 @@ class Clip(CompatibleBaseModel):
         Clip.traverse_json_schema(Clip, full_schema, ('',), extractor)
         return result
 
+    # @spec PROTO-CORE-002
     def to_json(self, i: Optional[int] = None) -> Self:
         if i != None:
             single_frame_clip: Self =  self[i]

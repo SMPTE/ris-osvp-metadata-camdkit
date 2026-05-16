@@ -24,6 +24,7 @@ from camdkit.string_types import NonBlankUTF8String
 from camdkit.units import MILLIMETER, METER
 
 
+# @spec CAMID-LENS-001, CAMID-LENS-002, CAMID-LENS-003, CAMID-LENS-004
 class StaticLens(CompatibleBaseModel):
     distortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
       Field(alias="distortionOverscanMax",
@@ -85,6 +86,7 @@ class StaticLens(CompatibleBaseModel):
     """List of free strings that describe the history of calibrations of the lens."""
 
 
+# @spec OPT-DIST-001, OPT-DIST-002, OPT-DIST-003, OPT-DIST-004
 class Distortion(CompatibleBaseModel):
     model: Annotated[NonBlankUTF8String | None, Field(default="Brown-Conrady D-U")]
 
@@ -119,17 +121,20 @@ class PlanarOffset(CompatibleBaseModel):
     def __init__(self, x: float, y: float):
         super(PlanarOffset, self).__init__(x=x, y=y)
 
+# @spec OPT-OFFSET-001
 class DistortionOffset(PlanarOffset):
 
     def __init__(self, x: float, y: float):
         super(DistortionOffset, self).__init__(x=x, y=y)
 
+# @spec OPT-OFFSET-001
 class ProjectionOffset(PlanarOffset):
 
     def __init__(self, x: float, y: float):
         super(ProjectionOffset, self).__init__(x=x, y=y)
 
 
+# @spec OPT-ENC-001, OPT-ENC-002
 class FizEncoders(CompatibleBaseModel):
     focus: NormalizedFloat | None = None
     iris: NormalizedFloat | None = None
@@ -143,6 +148,7 @@ class FizEncoders(CompatibleBaseModel):
             raise ValueError("FizEncoders requires at least one of focus or iris or zoom")
 
 
+# @spec OPT-ENC-003, OPT-ENC-004
 class RawFizEncoders(CompatibleBaseModel):
     focus: NonNegativeInt | None = None
     iris: NonNegativeInt | None = None
@@ -155,6 +161,7 @@ class RawFizEncoders(CompatibleBaseModel):
         if self.focus is None and self.iris is None and self.zoom is None:
             raise ValueError("RawFizEncoders requires at least one of focus or iris or zoom")
 
+# @spec OPT-FALLOFF-001
 class ExposureFalloff(CompatibleBaseModel):
     a1: float
     a2: float | None = None

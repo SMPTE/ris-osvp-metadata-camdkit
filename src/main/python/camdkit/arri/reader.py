@@ -22,11 +22,13 @@ _CAMERA_FAMILY_PIXEL_PITCH_MAP = {
   ("ALEXALF", 4448) : Fraction(367000, 4448),
 }
 
+# @spec BRIDGE-ARRI-002
 def t_number_from_linear_iris_value(lin_value: int) -> typing.Optional[Fraction]:
   """Calculate t-number (regular iris values) from linear iris values
   """
   return math.pow(2, (lin_value - 1000)/1000/2)
 
+# @spec BRIDGE-IFACE-001, BRIDGE-ARRI-001, BRIDGE-ARRI-003
 def to_clip(csv_path: str) -> camdkit.model.Clip:
   """Read ARRI camera metadata into a `Clip`. `csv_path` is the path to a CSV
   file extracted using ARRI Meta Extract (AME)."""

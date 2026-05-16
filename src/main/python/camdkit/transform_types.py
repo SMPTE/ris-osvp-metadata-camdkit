@@ -14,6 +14,7 @@ from camdkit.compatibility import CompatibleBaseModel
 from camdkit.string_types import NonBlankUTF8String
 from camdkit.units import DEGREE, METER
 
+# @spec TRACK-TYPES-003
 class Vector3(CompatibleBaseModel):
     x: Annotated[float | None, Field()] = None
     y: Annotated[float | None, Field()] = None
@@ -26,6 +27,7 @@ class Vector3(CompatibleBaseModel):
         super(Vector3, self).__init__(x=x, y=y, z=z)
 
 
+# @spec TRACK-TYPES-004
 class Rotator3(CompatibleBaseModel):
     pan: Annotated[float | None, Field()] = None
     tilt: Annotated[float | None, Field()] = None
@@ -38,6 +40,7 @@ class Rotator3(CompatibleBaseModel):
         super(Rotator3, self).__init__(pan=pan, tilt=tilt, roll=roll)
 
 
+# @spec TRACK-TYPES-001, TRACK-TYPES-002
 class Transform(CompatibleBaseModel):
     translation: Annotated[Vector3, Field(json_schema_extra={"units": METER})]
     rotation: Annotated[Rotator3, Field(json_schema_extra={"units": DEGREE})]

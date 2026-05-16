@@ -1,0 +1,69 @@
+schema_version: 1
+last_updated: 2026-05-16
+
+arrows:
+  protocol-envelope:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: protocol-envelope.md
+    next: "Fix f-string warning in versioning_types.py:31; fix __ALL__ typo in units.py:174; add PROTO-EX-005 (streaming example)"
+    drift: null
+
+  camera-identity:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: camera-identity.md
+    next: "Investigate Canon frame rate derivation (CAMID-READ-006); implement Canon sensor dims (CAMID-READ-007); expand BMD pixel-pitch table beyond URSA Mini Pro 12K (CAMID-READ-008)"
+    drift: null
+
+  optical-characteristics:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: optical-characteristics.md
+    next: "Fix BMD indentation bug (bmd/reader.py:112-123, OPT-LENS-003 regression); wire ARRI entrance pupil (OPT-LENS-004); wire Venice entrance pupil (OPT-LENS-005); add Cooke input validation (OPT-COOKE-004)"
+    drift: null
+
+  spatial-tracking:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: spatial-tracking.md
+    next: "Remove dead import in transform_types.py:8; make F4 sensor size configurable (TRACK-F4-007); add GlobalPosition range validation (TRACK-F4-008)"
+    drift: null
+
+  temporal-synchronization:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: temporal-synchronization.md
+    next: "Add lt=1_000_000_000 upper bound to Timestamp.nanoseconds (TSYNC-TS-002); tighten SynchronizationPTP.domain to [0,127]"
+    drift: null
+
+  format-bridge:
+    status: AUDITED
+    sampled: 2026-05-16
+    audited: 2026-05-16
+    audited_sha: de5c56e9b2bbecff1b7a89ca6ad0c6ea2cd04ebd
+    blocks: []
+    blockedBy: []
+    detail: format-bridge.md
+    next: "Fix BMD raise-string bug (bmd/reader.py:45, BRIDGE-BMD-003); fix BMD indentation bug (bmd/reader.py:112-123, BRIDGE-BMD-004); fix ARRI assert (arri/reader.py:44, BRIDGE-ARRI-005)"
+    drift: null

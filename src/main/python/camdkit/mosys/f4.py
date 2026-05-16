@@ -95,6 +95,7 @@ class F4Packet:
   size: int = 0
   axis_block_list: list[F4AxisBlock] = []
 
+  # @spec TRACK-F4-001
   def initialise(self, buffer: bytes) -> bool:
     if len(buffer) == 0:
       return False
@@ -191,6 +192,7 @@ class F4PacketParser:
     self._initialised = True
     return True
        
+  # @spec TRACK-F4-002, TRACK-F4-003, TRACK-F4-004
   def get_tracking_frame(self) -> Clip:
     # Populates a Clip with a single frame of data of each parameter
     frame = Clip()

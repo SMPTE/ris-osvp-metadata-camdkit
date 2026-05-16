@@ -174,7 +174,7 @@ This is the normative example of how a broadcast-grade PTP-synchronized camera s
 3. `FrameRate` subclass pattern conflates value type and documentation carrier. If `FrameRate` instances are never used as runtime field values, consider replacing with a plain dataclass or constants dict.
 4. No reader other than Mo-Sys populates `timing.sample_timestamp`. For production file workflows (ARRI, RED, Venice, Canon, BMD), consumers receive no wall-clock timestamp even when one could be inferred from clip metadata.
 5. Mo-Sys F4 reader does not populate `timing.recorded_timestamp`. The F4 protocol carries timecode but not a full UTC/TAI timestamp. This gap may be intentional or a missing feature.
-6. `domain` field on `SynchronizationPTP` is annotated `[0..255]` in the field but the spec domain is `[0..127]`. Tests validate up to 127. The model accepts values 128–255 which are technically out of spec for most PTP profiles.
+6. ~~`domain` accepts 128–255~~: The model correctly enforces `[0..127]` via `NonNegative8BitInt` (MAX_INT_8). Values ≥ 128 are rejected by the validator. No gap exists here.
 
 ## References
 

@@ -17,6 +17,7 @@ _FRAME_HEADING_RE = re.compile(r"^Frame (\d+) Metadata$")
 _METADATA_LINE_RE = re.compile(r"^([^:]+): (.+)$")
 
 
+# @spec BRIDGE-IFACE-001, BRIDGE-BMD-001, BRIDGE-BMD-002
 def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
   """Read Blackmagic camera metadata into a `Clip`.
   `metadata_raw_sdk`: Output of the ExtractMetadata sample tool from the Blackmagic RAW SDK

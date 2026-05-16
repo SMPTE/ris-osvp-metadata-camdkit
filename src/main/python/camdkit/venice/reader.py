@@ -133,6 +133,7 @@ def t_number_from_frac_stop(frac_stop_str: str) -> typing.Optional[float]:
 def int_or_none(value: typing.Optional[str]) -> typing.Optional[int]:
   return int(value) if value is not None else None
 
+# @spec BRIDGE-IFACE-001, BRIDGE-VENICE-001, BRIDGE-VENICE-002, BRIDGE-VENICE-003, BRIDGE-VENICE-004, BRIDGE-VENICE-005
 def to_clip(static_file: typing.IO, dynamic_file: typing.IO) -> camdkit.model.Clip:
   """Read Sony Venice camera metadata into a `Clip`.
   `static_file`: Static camera metadata. XML file.

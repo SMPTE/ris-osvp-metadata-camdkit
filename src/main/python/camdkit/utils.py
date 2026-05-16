@@ -12,6 +12,7 @@ import numbers
 _WELL_KNOWN_FRACTIONAL_FPS = set([Fraction(24000, 1001), Fraction(30000, 1001), Fraction(60000, 1001), Fraction(120000, 1001)])
 _FPS_THRESHOLD = 0.01
 
+# @spec PROTO-CORE-008, PROTO-CORE-009, PROTO-CORE-010
 def guess_fps(fps: numbers.Real) -> Fraction:
   """Heuristically determines an exact fps value from an approximate one using
   well-known fps values."""

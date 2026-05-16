@@ -16,6 +16,7 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    NONBLANK_UTF8_MAX_1023_CHARS)
 
 
+# @spec CAMID-TRK-001
 class StaticTracker(CompatibleBaseModel):
     make: Annotated[NonBlankUTF8String | None,
       Field(json_schema_extra={"clip_property": "tracker_make",
@@ -40,6 +41,7 @@ class StaticTracker(CompatibleBaseModel):
     """Non-blank string identifying tracking device firmware version"""
 
 
+# @spec TRACK-DYN-001
 class Tracker(CompatibleBaseModel):
     notes: Annotated[tuple[NonBlankUTF8String, ...] | None,
       Field(json_schema_extra={"clip_property": "tracker_notes",
@@ -62,6 +64,7 @@ class Tracker(CompatibleBaseModel):
     """Non-blank string describing status of tracking system"""
 
 
+# @spec TRACK-TYPES-005
 class GlobalPosition(CompatibleBaseModel):
     """Global ENU and geodetic coördinates
     Reference:. https://en.wikipedia.org/wiki/Local_tangent_plane_coordinates

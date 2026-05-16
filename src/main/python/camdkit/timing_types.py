@@ -62,6 +62,7 @@ class TimingMode(StrEnum):
     EXTERNAL = "external"
 
 
+# @spec TSYNC-TC-001, TSYNC-TC-002, TSYNC-TC-003, TSYNC-TC-004
 class Timecode(CompatibleBaseModel):
     """SMPTE timecode of the sample. Timecode is a standard for labeling
     individual frames of data in media systems and is useful for
@@ -86,12 +87,14 @@ class Timecode(CompatibleBaseModel):
     def coerce_frame_rate_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
+    # @spec TSYNC-TC-001
     @model_validator(mode="after")
     def check_frames_allowed_by_format(self):
         if self.frames >= Fraction(self.frame_rate.num, self.frame_rate.denom).__ceil__():
             raise ValueError("The frame number must be less than the frame rate.")
         return self
 
+# @spec TSYNC-TS-001
 class Timestamp(CompatibleBaseModel):
     seconds: NonNegative48BitInt
     nanoseconds: NonNegativeInt
@@ -124,6 +127,7 @@ class SynchronizationOffsets(CompatibleBaseModel):
                                                      lensEncoders=lensEncoders)
 
 
+# @spec TSYNC-PTP-001, TSYNC-PTP-002, TSYNC-PTP-003, TSYNC-PTP-004, TSYNC-PTP-005
 class SynchronizationPTP(CompatibleBaseModel):
 
     profile: Annotated[PTPProfile, Field()]
@@ -177,6 +181,7 @@ class Synchronization(CompatibleBaseModel):
         return rationalize_strictly_and_positively(v)
 
 
+# @spec TSYNC-TIMING-001, TSYNC-TIMING-002, TSYNC-TIMING-003
 class Timing(CompatibleBaseModel):
     mode: Annotated[tuple[TimingMode, ...] | None,
       Field(json_schema_extra={"clip_property": "timing_mode",

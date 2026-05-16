@@ -16,6 +16,7 @@ import camdkit.model
 def _read_float32_as_hex(float32_hex: str) -> float:
   return struct.unpack('>f', bytes.fromhex(float32_hex))[0]
 
+# @spec BRIDGE-IFACE-001, BRIDGE-CANON-001, BRIDGE-CANON-002, BRIDGE-CANON-003, BRIDGE-CANON-004
 def to_clip(static_csv: typing.IO, frames_csv: typing.IO) -> camdkit.model.Clip:
   """Read Canon camera metadata into a `Clip`.
   `static_csv`: Static camera metadata.

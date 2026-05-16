@@ -28,6 +28,7 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN
 # work, but for now it's a wish, not something for a to-do list.
 
 
+# @spec CAMID-CAM-002
 class PhysicalDimensions(CompatibleBaseModel):
     """Height and width of the active area of the camera sensor in millimeters
     """
@@ -41,6 +42,7 @@ class PhysicalDimensions(CompatibleBaseModel):
         super(PhysicalDimensions, self).__init__(width=width, height=height)
 
 
+# @spec CAMID-CAM-003
 class SenselDimensions(CompatibleBaseModel):
     """Photosite resolution of the active area of the camera sensor in pixels"""
     height: Annotated[int, Field(ge=0, le=MAX_INT_32)]
@@ -53,9 +55,11 @@ class SenselDimensions(CompatibleBaseModel):
         super(SenselDimensions, self).__init__(width=width, height=height)
 
 
+# @spec CAMID-CAM-004
 ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
+# @spec CAMID-CAM-001, CAMID-CAM-005, CAMID-CAM-006
 class StaticCamera(CompatibleBaseModel):
     capture_frame_rate: Annotated[StrictlyPositiveRational | None,
       Field(alias="captureFrameRate",

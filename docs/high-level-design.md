@@ -190,7 +190,7 @@ camdkit explicitly does **not**:
 | Step | Status | Description |
 |---|---|---|
 | 1 | ✅ Complete | Hypothesis property tests: JSON roundtrip + schema agreement |
-| 2 | Upcoming | Metamorphic tests (key order, numeric normalization, geometric identity) |
+| 2 | ✅ Complete | Metamorphic tests (key order, numeric normalization, geometric identity) |
 | 3 | Planned | Independent Python spec model + differential testing against camdkit |
 | 4 | Planned | OpenCV↔OpenTrackIO projection differential tests |
 | 5 | Long-term | Lean proof kernel through Layer D |

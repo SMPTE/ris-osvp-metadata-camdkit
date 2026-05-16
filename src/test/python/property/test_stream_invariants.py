@@ -199,6 +199,42 @@ class TimingCoherenceTests(unittest.TestCase):
         self.assertEqual(recovered.nanoseconds, overflow_ns,
             "Nanosecond overflow value is preserved, not rejected or normalised")
 
+    # --- PTP domain boundary ---
+
+    def test_ptp_domain_boundary_127_accepted_128_rejected(self):
+        """SynchronizationPTP.domain is correctly bounded to [0..127].
+
+        The model uses NonNegative8BitInt (MAX_INT_8 = 127), matching the spec's
+        PTP domain range for SMPTE ST2059-2 and IEEE 1588 profiles. Domain=127
+        is the valid maximum; domain=128 is rejected by the validator.
+
+        Non-vacuous: an earlier LLD draft claimed this was a gap (the full byte
+        range [0..255] was accepted). Verified against the actual model — the
+        constraint IS enforced.
+        """
+        # 127 is the valid maximum and must be accepted
+        ptp = SynchronizationPTP(
+            profile=PTPProfile.SMPTE_2059_2_2021,
+            domain=127,
+            leader_identity="00:11:22:33:44:55",
+            leader_priorities=SynchronizationPTPPriorities(1, 2),
+            leader_accuracy=0.0,
+            mean_path_delay=0.0,
+        )
+        recovered = SynchronizationPTP.from_json(SynchronizationPTP.to_json(ptp))
+        self.assertEqual(recovered.domain, 127)
+
+        # 128 is one past the valid maximum and must be rejected
+        with self.assertRaises(Exception):
+            SynchronizationPTP(
+                profile=PTPProfile.SMPTE_2059_2_2021,
+                domain=128,
+                leader_identity="00:11:22:33:44:55",
+                leader_priorities=SynchronizationPTPPriorities(1, 2),
+                leader_accuracy=0.0,
+                mean_path_delay=0.0,
+            )
+
     # --- Timecode frame boundary ---
 
     def test_timecode_frame_at_max_valid_is_accepted(self):

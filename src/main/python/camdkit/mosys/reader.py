@@ -18,6 +18,7 @@ def to_frame(data: bytes) -> Clip:
     frame = parser.get_tracking_frame()
   return success, frame, parser._packet.size
 
+# @spec BRIDGE-IFACE-001, TRACK-F4-005, TRACK-F4-006
 def to_clip(filename: str, frames: int = -1) -> Clip:
   """Read Mo-Sys F4 data into a Clip.
   `filename`: Filename of the f4 file.

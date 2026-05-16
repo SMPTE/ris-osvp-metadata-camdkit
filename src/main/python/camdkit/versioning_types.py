@@ -21,6 +21,7 @@ OPENTRACKIO_PROTOCOL_VERSION = (1, 0, 1)
 
 VersionComponent = Annotated[int, Field(ge=0, le=9)]
 
+# @spec PROTO-CORE-007
 class VersionedProtocol(CompatibleBaseModel):
     name: NonBlankUTF8String
     version: Annotated[tuple[VersionComponent, ...], Field(min_length=3, max_length=3)]
