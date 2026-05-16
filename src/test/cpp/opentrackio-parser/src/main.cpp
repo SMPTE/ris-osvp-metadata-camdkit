@@ -11,9 +11,149 @@
 #include <fstream>
 #include <string>
 #include <filesystem>
+#include <cstdio>
 
 #include "argparse/argparse.hpp"
 #include "opentrackio-lib/OpenTrackIOParser.h"
+
+
+// Emit normalized JSON to stdout for the battery-tester harness.
+// Uses OpenTrackIOSample directly (already linked via opentrackio-cpp).
+static int emitJson(const std::string& sampleText)
+{
+    opentrackio::OpenTrackIOSample raw;
+    if (!raw.initialise(static_cast<std::string_view>(sampleText)))
+    {
+        for (const auto& e : raw.getErrors())
+            std::cerr << "Error: " << e << "\n";
+        return 1;
+    }
+
+    nlohmann::json out;
+
+    // Protocol
+    if (raw.protocol)
+    {
+        out["protocol.name"] = raw.protocol->name;
+        std::string ver;
+        for (size_t i = 0; i < raw.protocol->version.size(); ++i)
+        {
+            if (i > 0) ver += ".";
+            ver += std::to_string(raw.protocol->version[i]);
+        }
+        out["protocol.version"] = ver;
+    }
+    else
+    {
+        out["protocol.name"] = nullptr;
+        out["protocol.version"] = nullptr;
+    }
+
+    // Tracker
+    if (raw.tracker)
+    {
+        out["tracker.slate"] = raw.tracker->slate ? nlohmann::json(*raw.tracker->slate) : nlohmann::json(nullptr);
+        out["tracker.serialNumber"] = raw.tracker->serialNumber ? nlohmann::json(*raw.tracker->serialNumber) : nlohmann::json(nullptr);
+    }
+    else
+    {
+        out["tracker.slate"] = nullptr;
+        out["tracker.serialNumber"] = nullptr;
+    }
+
+    // Timing
+    if (raw.timing)
+    {
+        if (raw.timing->timecode)
+        {
+            const auto& tc = *raw.timing->timecode;
+            char buf[16];
+            std::snprintf(buf, sizeof(buf), "%02d:%02d:%02d:%02d",
+                          tc.hours, tc.minutes, tc.seconds, tc.frames);
+            out["timing.timecode"] = std::string(buf);
+        }
+        else { out["timing.timecode"] = nullptr; }
+
+        if (raw.timing->sampleTimestamp)
+        {
+            out["timing.sampleTimestamp.seconds"] = static_cast<int64_t>(raw.timing->sampleTimestamp->seconds);
+            out["timing.sampleTimestamp.nanoseconds"] = static_cast<int32_t>(raw.timing->sampleTimestamp->nanoseconds);
+        }
+        else
+        {
+            out["timing.sampleTimestamp.seconds"] = nullptr;
+            out["timing.sampleTimestamp.nanoseconds"] = nullptr;
+        }
+
+        if (raw.timing->sampleRate)
+            out["timing.sampleRate"] = static_cast<double>(raw.timing->sampleRate->numerator) / raw.timing->sampleRate->denominator;
+        else
+            out["timing.sampleRate"] = nullptr;
+    }
+    else
+    {
+        out["timing.timecode"] = nullptr;
+        out["timing.sampleTimestamp.seconds"] = nullptr;
+        out["timing.sampleTimestamp.nanoseconds"] = nullptr;
+        out["timing.sampleRate"] = nullptr;
+    }
+
+    // Camera
+    if (raw.camera && raw.camera->activeSensorResolution)
+    {
+        out["camera.activeSensorResolution.width"] = static_cast<int>(raw.camera->activeSensorResolution->width);
+        out["camera.activeSensorResolution.height"] = static_cast<int>(raw.camera->activeSensorResolution->height);
+    }
+    else
+    {
+        out["camera.activeSensorResolution.width"] = nullptr;
+        out["camera.activeSensorResolution.height"] = nullptr;
+    }
+
+    // Transforms — find "Camera" id
+    bool cameraFound = false;
+    if (raw.transforms)
+    {
+        for (const auto& t : raw.transforms->transforms)
+        {
+            if (t.id && *t.id == "Camera")
+            {
+                out["transforms.Camera.translation.x"] = t.translation.x;
+                out["transforms.Camera.translation.y"] = t.translation.y;
+                out["transforms.Camera.translation.z"] = t.translation.z;
+                out["transforms.Camera.rotation.pan"]  = t.rotation.pan;
+                out["transforms.Camera.rotation.tilt"] = t.rotation.tilt;
+                out["transforms.Camera.rotation.roll"] = t.rotation.roll;
+                cameraFound = true;
+                break;
+            }
+        }
+    }
+    if (!cameraFound)
+    {
+        out["transforms.Camera.translation.x"] = nullptr;
+        out["transforms.Camera.translation.y"] = nullptr;
+        out["transforms.Camera.translation.z"] = nullptr;
+        out["transforms.Camera.rotation.pan"]  = nullptr;
+        out["transforms.Camera.rotation.tilt"] = nullptr;
+        out["transforms.Camera.rotation.roll"] = nullptr;
+    }
+
+    // Lens
+    if (raw.lens)
+    {
+        out["lens.focusDistance"]      = raw.lens->focusDistance      ? nlohmann::json(*raw.lens->focusDistance)      : nlohmann::json(nullptr);
+        out["lens.pinholeFocalLength"] = raw.lens->pinholeFocalLength ? nlohmann::json(*raw.lens->pinholeFocalLength) : nlohmann::json(nullptr);
+    }
+    else
+    {
+        out["lens.focusDistance"]      = nullptr;
+        out["lens.pinholeFocalLength"] = nullptr;
+    }
+
+    std::cout << out.dump() << "\n";
+    return 0;
+}
 
 
 int main(int argc, char* argv[])
@@ -33,6 +173,11 @@ int main(int argc, char* argv[])
             .default_value(false)
             .implicit_value(true);
 
+    parser.add_argument("--json")
+            .help("Emit normalized JSON for battery-tester harness (no schema required).")
+            .default_value(false)
+            .implicit_value(true);
+
     try
     {
         parser.parse_args(argc, argv);
@@ -47,6 +192,7 @@ int main(int argc, char* argv[])
     std::string sampleText;
     std::string schemaText;
     bool verbose = parser.get<bool>("--verbose");
+    bool jsonMode = parser.get<bool>("--json");
 
     if (parser.is_used("--schema"))
     {
@@ -56,14 +202,14 @@ int main(int argc, char* argv[])
             if (std::ifstream file(schemaPath);
                 file.is_open())
             {
-                std::cout << "Reading OpenTrackIO schema file: " << schemaPath << std::endl;
+                if (!jsonMode) std::cout << "Reading OpenTrackIO schema file: " << schemaPath << std::endl;
                 schemaText.assign(
                     (std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
                 file.close();
             }
 
-            if (!schemaText.empty())
+            if (!schemaText.empty() && !jsonMode)
             {
                 std::cout << "Successfully read schema." << std::endl;
             }
@@ -78,7 +224,7 @@ int main(int argc, char* argv[])
             if (std::ifstream file(filepath);
                 file.is_open())
             {
-                std::cout << "Reading OpenTrackIO sample file: " << filepath << std::endl;
+                if (!jsonMode) std::cout << "Reading OpenTrackIO sample file: " << filepath << std::endl;
                 sampleText.assign(
                     (std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
@@ -87,6 +233,9 @@ int main(int argc, char* argv[])
             }
         }
     }
+
+    if (jsonMode)
+        return emitJson(sampleText);
 
     OpenTrackIOSampleParser sample(sampleText, schemaText, verbose);
     if (!sample.isValid())
