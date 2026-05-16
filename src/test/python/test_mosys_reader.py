@@ -21,6 +21,9 @@ class MoSysReaderTest(unittest.TestCase):
   def test_reader(self):
     clip = reader.to_clip("src/test/resources/mosys/A003_C001_01 15-03-47-01.f4", 20)
 
+    # Frame count contract: to_clip(f, n) must return exactly n frames (not n+1)
+    self.assertEqual(len(clip.sample_id), 20)
+
     # Test parameters against known values across multiple frames
     self.assertEqual(clip.protocol[0].name, OPENTRACKIO_PROTOCOL_NAME)
     self.assertEqual(clip.protocol[0].version, OPENTRACKIO_PROTOCOL_VERSION)
