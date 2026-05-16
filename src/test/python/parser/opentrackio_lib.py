@@ -404,8 +404,8 @@ class OpenTrackIOProtocol:
 
     def get_focal_length(self):
         """Return the current lens focal length"""
-        if self.validate_dict_elements(self.pd,["lens","focalLength"]):
-            return self.pd["lens"]["focalLength"]
+        if self.validate_dict_elements(self.pd,["lens","pinholeFocalLength"]):
+            return self.pd["lens"]["pinholeFocalLength"]
         else:
             return None
 
