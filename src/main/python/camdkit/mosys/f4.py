@@ -284,8 +284,9 @@ class F4PacketParser:
       frame.transforms = ((transform,),)
       # Assuming a full frame 35mm active sensor 36x24mm
       # f = 36/[2*tand(FoV/2)]
-      fov_radians = fov_h * math.pi / 180.0
-      frame.lens_pinhole_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
+      if fov_h != 0.0:
+        fov_radians = fov_h * math.pi / 180.0
+        frame.lens_pinhole_focal_length = (36.0 / (2.0 * math.tan(fov_radians/2.0)),)
       frame.lens_encoders = (FizEncoders(focus, iris, zoom),)
       frame.lens_distortions = ((Distortion(radial=(k1, k2),),),)
       frame.lens_projection_offset = (ProjectionOffset(cx, cy),)
