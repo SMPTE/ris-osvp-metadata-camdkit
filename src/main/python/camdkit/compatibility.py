@@ -9,7 +9,7 @@
 import jsonref
 
 from abc import abstractmethod
-from typing import Final, Any, Self
+from typing import Final, Any, Self, overload
 from copy import deepcopy
 
 from pydantic import BaseModel, ValidationError, ConfigDict
@@ -280,6 +280,14 @@ class CompatibleBaseModel(BaseModel):
             return True
         except ValidationError:
             return False
+
+    @overload
+    @classmethod
+    def to_json(cls, model_or_tuple: Self) -> dict: ...
+
+    @overload
+    @classmethod
+    def to_json(cls, model_or_tuple: tuple) -> tuple: ...
 
     @classmethod
     def to_json(cls, model_or_tuple: Self | tuple):
