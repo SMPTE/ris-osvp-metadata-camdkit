@@ -27,7 +27,7 @@
         "denom": 1
       },
       "isoSpeed": 4000,
-      "fdlLink": "urn:uuid:62ea03ac-ce56-43c6-ab8d-a9ec8a9ee7b3",
+      "fdlLink": "urn:uuid:30bdf4bb-e21c-45fb-a7f9-030f3abd9b61",
       "shutterAngle": 45.0
     },
     "lens": {
@@ -62,8 +62,8 @@
       "nanoseconds": 500000000
     },
     "sampleRate": {
-      "num": 24000,
-      "denom": 1001
+      "num": 24,
+      "denom": 1
     },
     "sampleTimestamp": {
       "seconds": 1718806554,
@@ -100,7 +100,9 @@
       "frameRate": {
         "num": 24000,
         "denom": 1001
-      }
+      },
+      "subFrame": 1,
+      "dropFrame": true
     }
   },
   "lens": {
@@ -173,17 +175,17 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      1
     ]
   },
-  "sampleId": "urn:uuid:e3f34dae-b68c-47d9-99af-e0bfc277723c",
-  "sourceId": "urn:uuid:889eec71-62ca-4c7f-b1ef-4c2b16f4eacf",
+  "sampleId": "urn:uuid:25a3119d-03b5-4d15-b4f8-904f43e90048",
+  "sourceId": "urn:uuid:8586316a-abd9-4454-ab5e-4c83dfb87837",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:b545b989-34b2-452a-9630-cf952d021a3f",
-    "urn:uuid:dd8ce967-21f2-444e-a007-5eb33333ca51"
+    "urn:uuid:c1ef855c-0c47-4db4-bd38-111ae234b771",
+    "urn:uuid:52bd25b4-da7d-4ec7-8f18-a13e645ff2c8"
   ],
   "globalStage": {
     "E": 100.0,
