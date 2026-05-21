@@ -42,7 +42,7 @@ def to_clip(metadata_file: typing.IO) -> camdkit.model.Clip:
 
 
   if len(frame_data) == 0:
-    raise "Camera data does not contain frame information"
+    raise ValueError("Camera data does not contain frame information")
 
   # read clip metadata
   clip = camdkit.model.Clip()
