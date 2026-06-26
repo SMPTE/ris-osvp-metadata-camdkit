@@ -6,6 +6,9 @@
 
 """ARRI camera reader tests"""
 
+from fractions import Fraction
+import os
+import tempfile
 import unittest
 
 from pydantic import BaseModel
@@ -294,6 +297,16 @@ class ARRIReaderTest(unittest.TestCase):
           self.assertAlmostEqual(clip.lens_t_number[0], reference.lens_t_number, 3)
 
       self.assertAlmostEqual(clip.shutter_angle, reference.shutter_angle, 1)
+  def test_non_meter_distance_unit_raises_value_error(self):
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, encoding="utf-8") as f:
+      f.write("Lens Distance Unit\tExposure Index ASA\tProject FPS\n")
+      f.write("Foot\t400\t24.000\n")
+      path = f.name
+    try:
+      with self.assertRaises(ValueError):
+        camdkit.arri.reader.to_clip(path)
+    finally:
+      os.unlink(path)
 
   def test_linear_iris_value(self):
     self.assertEqual(round(camdkit.arri.reader.t_number_from_linear_iris_value(6000) * 1000), 5657)

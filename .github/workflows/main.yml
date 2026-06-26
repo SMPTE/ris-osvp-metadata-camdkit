@@ -9,7 +9,6 @@ env:
   AWS_RIS_PUB_BUCKET: smpte-ris-pub
   AWS_RIS_PUB_ROLE: arn:aws:iam::189079736792:role/role-gh-ris-pub
   RIS_PUB_PREFIX: https://ris-pub.smpte.org
-  PYTHONPATH: src/main/python
 
 jobs:
   build:

@@ -1,3 +1,29 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "camdkit"
+version = "1.0.1"
+description = "OSVP Camera Metadata Toolkit"
+requires-python = "==3.11.*"
+dependencies = [
+    "pydantic",
+    "jsonref",
+    "cbor2",
+    "ntplib",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint==2.6.0",
+    "coverage",
+    "jsonschema",
+    "jinja2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src/main/python"]
+
+[tool.setuptools.package-dir]
+"" = "src/main/python"

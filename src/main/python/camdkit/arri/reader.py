@@ -52,7 +52,8 @@ def to_clip_from_csv(csv_path: str) -> camdkit.model.Clip:
 
     clip = camdkit.model.Clip()
 
-    assert csv_data[0]["Lens Distance Unit"] == "Meter"
+    if csv_data[0]["Lens Distance Unit"] != "Meter":
+      raise ValueError(f"Unsupported lens distance unit: {csv_data[0]['Lens Distance Unit']!r}; expected 'Meter'")
 
     clip.iso = int(csv_data[0]["Exposure Index ASA"])
 
