@@ -8,8 +8,8 @@
   "timing": {
     "mode": "external",
     "sampleRate": {
-      "num": 24000,
-      "denom": 1001
+      "num": 24,
+      "denom": 1
     },
     "timecode": {
       "hours": 1,
@@ -17,8 +17,8 @@
       "seconds": 3,
       "frames": 4,
       "frameRate": {
-        "num": 24000,
-        "denom": 1001
+        "num": 24,
+        "denom": 1
       }
     }
   },
@@ -54,13 +54,13 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      1
     ]
   },
-  "sampleId": "urn:uuid:cd5677eb-b18d-4746-9dc3-2890c0711d52",
-  "sourceId": "urn:uuid:cd3713e1-cc63-4d7e-83d7-c984a6395d5f",
+  "sampleId": "urn:uuid:aff9cd2f-e86f-4870-bcc2-c71a26decd34",
+  "sourceId": "urn:uuid:21d2fdf3-f13e-48f3-9706-185829f00ca5",
   "sourceNumber": 1,
   "transforms": [
     {

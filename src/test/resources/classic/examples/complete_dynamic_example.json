@@ -12,8 +12,8 @@
       "nanoseconds": 500000000
     },
     "sampleRate": {
-      "num": 24000,
-      "denom": 1001
+      "num": 24,
+      "denom": 1
     },
     "sampleTimestamp": {
       "seconds": 1718806554,
@@ -50,7 +50,9 @@
       "frameRate": {
         "num": 24000,
         "denom": 1001
-      }
+      },
+      "subFrame": 1,
+      "dropFrame": true
     }
   },
   "lens": {
@@ -123,17 +125,17 @@
   "protocol": {
     "name": "OpenTrackIO",
     "version": [
+      1,
       0,
-      9,
-      3
+      1
     ]
   },
-  "sampleId": "urn:uuid:a4034319-eea8-4fb5-9567-90047d82bbf1",
-  "sourceId": "urn:uuid:fc9bc480-02bd-4bd0-96c7-bce47197f720",
+  "sampleId": "urn:uuid:d637c435-d6f8-4851-931f-7f9c7487f311",
+  "sourceId": "urn:uuid:a10843bc-95fd-46b1-a8d3-bb79f01da177",
   "sourceNumber": 1,
   "relatedSampleIds": [
-    "urn:uuid:5210332e-0292-4f8e-a606-a23ebe2ae18e",
-    "urn:uuid:1cc04717-7d46-4d0b-ad42-5c0d8c1a5c40"
+    "urn:uuid:51d3eb3d-df3a-4994-8072-5bc7e62848d8",
+    "urn:uuid:a3b2b8fe-65af-487e-85ae-7a56bdc86d9b"
   ],
   "globalStage": {
     "E": 100.0,
