@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "camdkit"
 version = "1.0.1"
 description = "OSVP Camera Metadata Toolkit"
-requires-python = "==3.11.*"
+requires-python = ">=3.11"
 dependencies = [
     "pydantic",
     "jsonref",

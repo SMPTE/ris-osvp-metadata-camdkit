@@ -29,29 +29,25 @@ The remainder of this document will discuss how to install camdkit, and how to u
 
 ### Installation
 
-This is not to say that the tool use below is the only correct way to install `camdkit`, but it is perhaps the simplest.
+The recommended way to install and work with `camdkit` is [`uv`](https://docs.astral.sh/uv/). It manages the Python version, the virtual environment, and the dependencies from the lockfile in one step.
 
-* clone this repo
-
-`git clone ...`
-
-* install Python (https://www.python.org/)
-
-* install pipenv
-
-`pip install --user pipenv`
-
-* install dependencies
-
-`pipenv install --dev`
-
-* set the PYTHONPATH environment variable to `src/main/python`, e.g.
-
-`export PYTHONPATH=src/main/python`
-
-* convert RED camera files
-
-`pipenv run python src/main/python/camdkit/red/cli.py src/test/resources/red/A001_C066_0303LZ_001.static.csv src/test/resources/red/A001_C066_0303LZ_001.frames.csv`
+- clone this repo
+  ```bash
+  git clone https://github.com/SMPTE/ris-osvp-metadata-camdkit.git
+  ```
+- install `uv` (https://docs.astral.sh/uv/getting-started/installation/)
+- install dependencies (including the `dev` extras to run tests)
+  ```bash
+  uv sync --extra dev
+  ```
+- run tests
+  ```bash
+  uv run python -m unittest discover -s src/test/python -t src/test/python
+  ```
+- convert RED camera files
+  ```bash
+  uv run python src/main/python/camdkit/red/cli.py src/test/resources/red/A001_C066_0303LZ_001.static.csv src/test/resources/red/A001_C066_0303LZ_001.frames.csv
+  ```
 
 ## `Clip`, the foundational `camdkit` object
 The fundamental organizing tool for `camdkit` parameters is the `Clip` object. It holds parameter values, validates any new parameter values to be added or to replace existing values, and handles JSON serialization and deserialization.
