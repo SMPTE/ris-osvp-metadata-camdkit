@@ -271,13 +271,14 @@ class F4PacketParser:
       frame.timing_mode = ("internal",)
       frame.timing_sequence_number = (self._frame_number,)
       syncEnabled = (self._packet.status & (1 << 5)) != 0
-      sync = Synchronization(
-        locked=syncEnabled,
-        present=syncEnabled,
-        source=SynchronizationSourceEnum.GENLOCK,
-        frequency=frequency
-      )
-      frame.timing_synchronization = (sync,)
+      if frequency is not None:
+        sync = Synchronization(
+          locked=syncEnabled,
+          present=syncEnabled,
+          source=SynchronizationSourceEnum.GENLOCK,
+          frequency=frequency
+        )
+        frame.timing_synchronization = (sync,)
       # In this case there is only one transform
       transform = Transform(translation=translation, rotation=rotation)
       transform.id = f'Camera {self._packet.camera_id}'
