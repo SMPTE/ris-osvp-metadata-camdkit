@@ -72,3 +72,23 @@ class MoSysF4ParserUnitTest(unittest.TestCase):
     self.assertTrue(parser.initialise(self._PACKET_NO_FOCAL_LENGTH))
     frame = parser.get_tracking_frame()
     self.assertIsNone(frame.lens_pinhole_focal_length)
+
+  # Minimal valid F4 packet: timecode (25fps) + focal length axes only — no FIZ encoders.
+  # Bytes verified by hand: checksum = (0x40 - sum(header+body)) % 256 = 0x68.
+  _PACKET_NO_ENCODERS = bytes([
+    0xf4, 0x01, 0x02, 0x00,   # command, camera_id=1, axis_count=2, status=0
+    0xf8, 0x20, 0x00, 0x00, 0x00,   # timecode axis: 25fps, 00:00:00:00
+    0x53, 0x42, 0x34, 0x00, 0x00,   # focal length FX axis: 45.0 degrees (IEEE 754)
+    0x68,                             # checksum
+  ])
+
+  def test_no_encoder_axes_does_not_crash(self):
+    """get_tracking_frame() must not raise when no FIZ encoder axis is present.
+
+    FizEncoders raises ValueError if all three of focus/iris/zoom are None.
+    The parser must guard the construction and leave lens_encoders unset.
+    """
+    parser = F4PacketParser()
+    self.assertTrue(parser.initialise(self._PACKET_NO_ENCODERS))
+    frame = parser.get_tracking_frame()
+    self.assertIsNone(frame.lens_encoders)
