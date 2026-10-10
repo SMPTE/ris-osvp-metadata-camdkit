@@ -56,3 +56,17 @@ class BMDReaderTest(unittest.TestCase):
     clip_only = io.StringIO("Clip Metadata\nmanufacturer: Blackmagic Design\n")
     with self.assertRaises(ValueError):
       camdkit.bmd.reader.to_clip(clip_only)
+
+  def test_focal_length_populated_without_shutter(self):
+    metadata = io.StringIO(
+      "Clip Metadata\n"
+      "manufacturer: Blackmagic Design\n"
+      "\n"
+      "Frame 0 Metadata\n"
+      "focal_length: 35mm\n"
+      "distance: 1000mm\n"
+      "aperture: T2.8\n"
+      "sensor_rate: 24,1,\n"
+    )
+    clip = camdkit.bmd.reader.to_clip(metadata)
+    self.assertEqual(clip.lens_nominal_focal_length, 35)
